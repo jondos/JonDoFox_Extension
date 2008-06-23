@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+	<Description about="urn:mozilla:install-manifest">
+	
+		<em:id>{437be45a-4114-11dd-b9ab-71d256d89593}</em:id>
+		<em:name>JonDoFox</em:name>
+		<em:version>0.1-alpha-dev</em:version>
+		<em:description>JonDoFox shows customized error pages and instructions in case of proxy errors</em:description>
+		<em:creator>Johannes Renner</em:creator>
+		
+		<!-- optional items -->
+		<em:contributor>Philip Kaplycz</em:contributor>	
+		
+		<em:homepageURL>http://www.jondos.org/jondofox</em:homepageURL>
+	        <!-- <em:updateURL>http://jondofox.mozdev.org/update.rdf</em:updateURL> -->
+
+		<em:aboutURL>chrome://jondofox/content/about.xul</em:aboutURL>
+		<em:iconURL>chrome://jondofox/skin/icon.png</em:iconURL>
+       		<!-- <em:optionsURL>chrome://jondofox/content/settings.xul</em:optionsURL> -->
+                
+		<!-- Firefox -->
+		<em:targetApplication>
+			<Description>
+				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+				<em:minVersion>3.0</em:minVersion>
+				<em:maxVersion>3.0+</em:maxVersion>
+			</Description>
+		</em:targetApplication>
+
+	</Description>
+
+</RDF>
