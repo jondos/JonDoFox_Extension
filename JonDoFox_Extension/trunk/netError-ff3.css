@@ -4,20 +4,17 @@
  *
  *  Original styling by William Price <bugzilla@mob.rice.edu>
  *  Updated by: Michael Ventnor <m.ventnor@gmail.com>
- *  Updated for JonDoFox by: Johannes Renner <johannes.renner@jondos.de>
  */
 
-/*html {
+html {
   background: -moz-Dialog;
-}*/
+}
 
 body {
   margin: 0;
   padding: 0 1em;
   color: -moz-FieldText;
   font: message-box;
-  background: #fff url(chrome://jondofox/content/jondofox-colors.jpg) 0 0 no-repeat fixed;
-  /* url(chrome://browser/skin/tabbrowser/tab-active-bkgnd.png) !important */
 }
 
 h1 {
@@ -40,31 +37,21 @@ ul {
   list-style: square;
 }
 
-#errorPageContainer, div.errorPageContainer {
+#errorPageContainer {
   position: relative;
-  /* Rather define min and max? */
-  min-width: 13em;  
-  max-width: 65em;
-  /*margin: 4em auto; */
-  border: 2px solid #006699;
+  min-width: 13em;
+  max-width: 52em;
+  margin: 4em auto;
+  border: 1px solid ThreeDShadow;
   -moz-border-radius: 10px;
   padding: 3em;
   -moz-padding-start: 30px;
-  background: #fff url(chrome://jondofox/content/jondofox-background.jpg) 0 0 no-repeat fixed;
+  background: url("moz-icon://stock/gtk-dialog-warning?size=dialog") left 0 no-repeat -moz-Field;
   -moz-background-origin: content;
-  /* color: #000000;
-  font: 13px Verdana, sans-serif; */
 }
 
-/*#errorPageContainer.certerror {
+#errorPageContainer.certerror {
   background-image: url("chrome://global/skin/icons/sslWarning.png");
-}*/
-
-#body {
-  position: absolute;
-  top: 130px;
-  left: 170px;
-  align: left;
 }
 
 body[dir="rtl"] #errorPageContainer {
@@ -84,7 +71,7 @@ body[dir="rtl"] #errorPageContainer {
   border-bottom: 1px solid ThreeDLightShadow;
   padding-bottom: 1em;
   font-size: 130%;
-  /*white-space: pre-wrap;*/
+  white-space: pre-wrap;
 }
 
 #errorLongDesc {
