@@ -12,7 +12,7 @@
 <groupbox align="center" orient="horizontal">
 <vbox>
   <text value="JonDoFox-Extension" style="font-weight: bold; font-size: x-large;"/>
-  <text value="Version 0.1-alpha-dev"/>
+  <text value="Version 0.1a1"/>
   <separator class="thin"/>
   <text value="Created By:" style="font-weight: bold;"/>
   <text value="Johannes Renner" />
@@ -21,9 +21,9 @@
   <text value="Philipp Kaplycz" />
   <separator class="thin"/>
   <text value="Homepage:" style="font-weight: bold;"/>
-  <text value="http://www.jondos.org"
+  <text value="https://www.jondos.de"
         class="url"
-        onclick="window.open('http://www.jondos.org');"/>
+        onclick="window.open('https://www.jondos.de');"/>
   <separator class="thin"/>
 </vbox>
 <spring flex="1"/>
