@@ -15,10 +15,11 @@
   <text value="Version 0.1a1"/>
   <separator class="thin"/>
   <text value="Created By:" style="font-weight: bold;"/>
-  <text value="Johannes Renner" />
+  <text value="JonDos GmbH"/>
   <separator class="thin"/>
-  <text value="Contributor:" style="font-weight: bold;"/>
-  <text value="Philipp Kaplycz" />
+  <text value="Contributors:" style="font-weight: bold;"/>
+  <text value="Johannes Renner"/>  
+  <text value="Philipp Kaplycz"/>
   <separator class="thin"/>
   <text value="Homepage:" style="font-weight: bold;"/>
   <text value="https://www.jondos.de"
@@ -27,7 +28,7 @@
   <separator class="thin"/>
 </vbox>
 <spring flex="1"/>
-<image src="chrome://jondofox/skin/icon-128.png"/>
+<image src="chrome://jondofox/skin/icon-128x128.png"/>
 </groupbox>
 
 <hbox>

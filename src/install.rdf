@@ -7,16 +7,17 @@
 		<em:name>JonDoFox</em:name>
 		<em:version>0.1a1</em:version>
 		<em:description>Show customized error pages and instructions in case of proxy errors.</em:description>
-		<em:creator>Johannes Renner</em:creator>
+		<em:creator>JonDos GmbH</em:creator>
 		
 		<!-- optional items -->
+		<em:contributor>Johannes Renner</em:contributor>	
 		<em:contributor>Philipp Kaplycz</em:contributor>	
 		
 		<em:homepageURL>https://www.jondos.de/jondofox</em:homepageURL>
-	        <em:updateURL>https://www.jondos.de/files/downloads/update.rdf</em:updateURL> -->
+	        <em:updateURL>https://www.jondos.de/files/downloads/update.rdf</em:updateURL>
 
 		<em:aboutURL>chrome://jondofox/content/about.xul</em:aboutURL>
-		<em:iconURL>chrome://jondofox/skin/icon-64.png</em:iconURL>
+		<em:iconURL>chrome://jondofox/skin/icon-32x32.png</em:iconURL>
        		<!-- <em:optionsURL>chrome://jondofox/content/settings.xul</em:optionsURL> -->
                 
 		<!-- Firefox -->
