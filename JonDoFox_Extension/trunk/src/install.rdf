@@ -13,11 +13,12 @@
 		<em:contributor>Johannes Renner</em:contributor>	
 		<em:contributor>Philipp Kaplycz</em:contributor>	
 		
+		<!-- URLs -->
 		<em:homepageURL>https://www.jondos.de/jondofox</em:homepageURL>
 	        <em:updateURL>https://www.jondos.de/files/downloads/update.rdf</em:updateURL>
-
 		<em:aboutURL>chrome://jondofox/content/about.xul</em:aboutURL>
 		<em:iconURL>chrome://jondofox/skin/icon-32x32.png</em:iconURL>
+	        <!-- currently there are no settings -->
        		<!-- <em:optionsURL>chrome://jondofox/content/settings.xul</em:optionsURL> -->
                 
 		<!-- Firefox -->
@@ -25,7 +26,7 @@
 			<Description>
 				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
 				<em:minVersion>3.0</em:minVersion>
-				<em:maxVersion>3.0+</em:maxVersion>
+				<em:maxVersion>3.0.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>
 	</Description>
