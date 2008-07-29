@@ -5,7 +5,7 @@
 	<Description about="urn:mozilla:install-manifest">	
 		<em:id>{437be45a-4114-11dd-b9ab-71d256d89593}</em:id>
 		<em:name>JonDoFox</em:name>
-		<em:version>0.1a1</em:version>
+		<em:version>0.1a2</em:version>
 		<em:description>Show customized error pages and instructions in case of proxy errors.</em:description>
 		<em:creator>JonDos GmbH</em:creator>
 		
@@ -25,7 +25,7 @@
 		<em:targetApplication>
 			<Description>
 				<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
-				<em:minVersion>3.0</em:minVersion>
+				<em:minVersion>2.0</em:minVersion>
 				<em:maxVersion>3.0.*</em:maxVersion>
 			</Description>
 		</em:targetApplication>

@@ -58,7 +58,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>&loadError.label;</title>
-    <link rel="stylesheet" href="chrome://jondofox/content/jondofox.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="chrome://jondofox/skin/jondofox.css" type="text/css" media="all" />
     <!-- If the location of the favicon is changed here, the FAVICON_ERRORPAGE_URL symbol in
          toolkit/components/places/src/nsFaviconService.h should be updated. -->
     <link rel="icon" type="image/png" id="favicon" href="chrome://global/skin/icons/warning-16.png"/>
@@ -189,8 +189,12 @@
           // almost certainly useless.
           document.getElementById("errorTryAgain").style.display = "none";
           document.getElementById("errorPageContainer").setAttribute("class", "certerror");
-          addDomainErrorLink();
-        }
+          try {
+	    addDomainErrorLink();
+          } catch (e) {
+	    // Catch this exception to avoid an error in the console on view source
+	  }
+	}
         else {
           // Remove the override block for non-certificate errors.  CSS-hiding
           // isn't good enough here, because of bug 39098

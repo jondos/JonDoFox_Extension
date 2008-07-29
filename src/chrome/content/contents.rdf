@@ -7,14 +7,6 @@
 		<li resource="urn:mozilla:package:jondofox"/>
 	</Seq>
 
-	<Seq about="urn:mozilla:overlays">
-		<li resource="chrome://global/content/netError.xhtml"/>
-	</Seq>
-
-	<Seq about="chrome://global/content/netError.xhtml">
-		<li>chrome://jondofox/content/netError.xhtml</li>
-        </Seq>
-
 	<Description about="urn:mozilla:package:jondofox"
 		chrome:displayName="JonDoFox"
 		chrome:author="Johannes Renner"
@@ -23,5 +15,4 @@
 		chrome:extension="true"
 		chrome:description="JonDoFox customized error pages and instructions">
 	</Description>
-
 </RDF>
