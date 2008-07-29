@@ -7,16 +7,16 @@
  *  Updated for JonDoFox by: Johannes Renner <johannes.renner@jondos.de>
  */
 
-/*html {
-  background: -moz-Dialog;
-}*/
+html {
+  /* background: -moz-Dialog; */
+  background: #fff url(chrome://jondofox/content/jondofox-colors.jpg) 0 0 no-repeat fixed;
+}
 
 body {
   margin: 0;
   padding: 0 1em;
   color: -moz-FieldText;
   font: message-box;
-  background: #fff url(chrome://jondofox/content/jondofox-colors.jpg) 0 0 no-repeat fixed;
   /* url(chrome://browser/skin/tabbrowser/tab-active-bkgnd.png) !important */
 }
 

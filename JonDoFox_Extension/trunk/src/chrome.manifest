@@ -1,8 +1,17 @@
+# Content (Both lines are needed for compatibility)
 content jondofox chrome/content/
 content jondofox chrome/content/ contentaccessible=yes
 
+# TODO: Make use of locales
+#locale jondofox en-US chrome/locale/en-US/
+#locale jondofox de-DE chrome/locale/de-DE/
+
+# Skin
 skin jondofox classic/1.0 chrome/skin/
 
-override chrome://global/content/netError.xhtml chrome://jondofox/content/netError.xhtml
+# Overrides
+override chrome://global/content/netError.xhtml chrome://jondofox/content/netError-ff3.xhtml appversion>=3.0
+override chrome://global/content/netError.xhtml chrome://jondofox/content/netError-ff2.xhtml appversion<3.0
 
-#locale jondofox en-US chrome/locale/en-US/
+# TODO: Stylesheet
+#style chrome://global/skin/netError.css chrome://jondofox/skin/jondofox.css
