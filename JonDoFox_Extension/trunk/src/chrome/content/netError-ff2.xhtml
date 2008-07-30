@@ -11,6 +11,9 @@
   <!ENTITY % globalDTD
     SYSTEM "chrome://global/locale/global.dtd">
   %globalDTD;
+  <!ENTITY % jondofoxDTD
+    SYSTEM "chrome://jondofox/locale/jondofox.dtd">
+  %jondofoxDTD;
 ]>
 
 <!-- ***** BEGIN LICENSE BLOCK *****
@@ -148,27 +151,11 @@
           // Remove the regular errorPageContainer      
           var errContainer = document.getElementById("errorPageContainer");
           errContainer.parentNode.removeChild(errContainer);
-
-          if (navigator.language == "de")
-          {
-            // German browser --> remove english instructions
-            errContainer = document.getElementById("jondo-english");
-            errContainer.parentNode.removeChild(errContainer);
-          }
-          else
-          {
-            // Remove german instructions
-            errContainer = document.getElementById("jondo-german");
-            errContainer.parentNode.removeChild(errContainer);
-          }
         }
         else
 	{
           // Do not show any instructions
-	  var errContainer = document.getElementById("jondo-german");
-          errContainer.parentNode.removeChild(errContainer);
-
-          errContainer = document.getElementById("jondo-english");
+	  var errContainer = document.getElementById("instructions");
           errContainer.parentNode.removeChild(errContainer);
 	}
 	// END of inserted code
@@ -246,139 +233,50 @@
 
     </div>
 
-    <!-- BEGIN english instructions -->    
-    <div id="jondo-english">
+    <!-- BEGIN instructions -->    
+    <div id="instructions">
+      <!-- Title -->
       <div class="errorPageContainer">
-
 	<div id="errorTitle">
-  	  <h1 id="errorTitleText"> Did you start the JonDo program? </h1>
+  	  <h1 id="errorTitleText">&jondofox.instructions.titleQuestion;</h1>
       	</div>
-
       	<div id="errorLongContent">
 	  <div id="errorShortDesc">
-            <p id="errorShortDescText">Please start the JonDo client program. Otherwise, you 
-               won't be able to connect to the JonDonym service.</p>
-          </div>
+	    <p id='errorShortDescText'>&jondofox.instructions.titleText;</p>
+	  </div>
         </div>
-
       </div>
-
-      <div class="errorPageContainer">        
-        
+      <!-- Instructions -->
+      <div class="errorPageContainer">
         <div id="errorTitle">
-          <h1 id="errorTitleText"> Please install and start the JonDo client </h1>
+          <h1 id="errorTitleText">&jondofox.instructions.instrTitle;</h1>
       	</div>
-
       	<div id="errorLongContent">
           <div id="errorShortDesc">
-
-            <img src="chrome://jondofox/content/proxy-off-en.jpg"></img>
-
-            <p>For installation, temporarily disable the JonDo interface by choosing "None" in 
-               the proxy menu (click with left mouse button).</p>
-
-            <p><a href="https://www.jondos.de/en/download/" target="_blank">Now click here to visit the JonDo download 
-               site and get the client.</a></p>
-
-            <p>After starting the JonDo client, please reset the proxy setting to "JonDo".</p>
-
-            <img src="chrome://jondofox/content/proxy-off-en.jpg"></img>
-            <br /><br /><br /><br />
-            <h1>Attention: If you do not reset this setting to "JonDo", you will surf the web 
-               without anonymity!</h1>
-          
+            <p>&jondofox.instructions.proxyOffText;</p>
+	    &jondofox.instructions.proxyOffImage;
+	    <p>&jondofox.instructions.downloadLink;</p>
+            <p>&jondofox.instructions.proxyOnText;</p>  
+	    &jondofox.instructions.proxyOnImage;
+	    <br/><br/><br/>
+            <h1>&jondofox.instructions.instrWarning;</h1>
           </div>        
         </div>
-
       </div>
-
+      <!-- Test -->
       <div class="errorPageContainer">
-
         <div id="errorTitle">
-          <h1 id="errorTitleText"> Final test </h1>
+          <h1 id="errorTitleText">&jondofox.instructions.testTitle;</h1>
       	</div>
-
         <div id="errorLongContent">
           <div id="errorShortDesc">
-            <p>
-              <p><a href="https://www.jondos.de/en/anontest" target="_blank">Now click here to check your installation 
-                 with the JonDonym anonymity test.</a></p>
-              If one of these fields turns <b><font color="red">red</font></b> you may be identifyable or recognizable. 
-	      You should re-check your configuration and read the help files in this case.
-            </p>
+            <p>&jondofox.instructions.testLink;</p>
+	    <p>&jondofox.instructions.testDesc;</p>
           </div>
         </div>
-
       </div>
-    <!-- END english instructions -->    
     </div>
-
-    <!-- BEGIN german instructions -->
-    <div id="jondo-german">
-      <div class="errorPageContainer">
-
-        <div id="errorTitle">
-          <h1 id="errorTitleText"> Haben Sie das Programm JonDo gestartet? </h1>
-      	</div>
-
-      	<div id="errorLongContent">
-	  <div id="errorShortDesc">
-            <p id="errorShortDescText">Bitte starten sie das JonDo Programm. Anderfalls k&ouml;nnen Sie keine 
-	       Verbindung zum JonDonym-Dienst herstellen.</p>
-           </div>
-      	</div>
-
-      </div>
-
-      <div class="errorPageContainer">
-
-      	<div id="errorTitle">
-          <h1 id="errorTitleText"> Bitte installieren und starten Sie das Programm JonDo. </h1>
-      	</div>
-
-      	<div id="errorLongContent">
-          <div id="errorShortDesc">
-
-            <img src="chrome://jondofox/content/proxy-off-de.jpg"></img>
-
-            <p>Bitte deaktivieren Sie vor&uuml;bergehend die JonDo Schnittstelle durch w&auml;hlen von "None" im Proxy
-	       Men&uuml;.</p>
-
-            <p><a href="https://www.jondos.de/de/download/" target="_blank">Klicken Sie nun hier um die JonDo Webseite
-               zu besuchen und das JonDo Programm herunterzuladen.</a></p>
-
-            <p>Nachdem Sie das JonDo Programm gestartet haben setzen Sie die Proxy Einstellungen zur&uuml;ck zu 
-	       "JonDo".</p>
-
-            <img src="chrome://jondofox/content/proxy-on-de.jpg"></img>
-            <br /><br /><br /><br />
-            <h1>ACHTUNG: Falls Sie die Einstellungen nicht zu "JonDo" zur&uuml;cksetzen surfen Sie ohne 
-	       Anonymit&auml;tsschutz durch das Internet!</h1>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="errorPageContainer">
-
-        <div id="errorTitle">
-          <h1 id="errorTitleText"> Abschlie&szlig;ender Test </h1>
-      	</div>
-
-        <div id="errorLongContent">
-          <div id="errorShortDesc">
-            <p>
-              <p><a href="https://www.jondos.de/de/anontest" target="_blank">Klicken Sie nun hier um Ihre Installation
-                 mit dem JonDonym Anonymit&auml;tstest zu &uuml;berpr&uuml;fen.</a></p>
-              Falls eines der Felder im Anonymit&auml;tstest <b><font color="red">rot</font></b> ist kann man Sie im 
-              Internet identifizieren oder wiedererkennen. In diesem Fall sollten Sie ihre Einstellungen 
-	      &uuml;berpr&uuml;fen und die zugeh&ouml;rige Hilfe lesen.
-            </p>
-          </div>
-        </div>
-      </div>
-    <!-- END german instructions -->
-    </div>
+    <!-- END instructions -->
 
     <!-- END 'body'-DIV -->
     </div>

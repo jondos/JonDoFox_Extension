@@ -2,9 +2,9 @@
 content jondofox chrome/content/
 content jondofox chrome/content/ contentaccessible=yes
 
-# TODO: Make use of locales
-#locale jondofox en-US chrome/locale/en-US/
-#locale jondofox de-DE chrome/locale/de-DE/
+# Locales
+locale jondofox de-DE chrome/locale/de-DE/
+locale jondofox en-US chrome/locale/en-US/
 
 # Skin
 skin jondofox classic/1.0 chrome/skin/

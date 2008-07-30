@@ -1,0 +1,22 @@
+<!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
+<!ENTITY jondofox.instructions.titleText "Please start the JonDo client program. Otherwise, you won't be 
+   able to connect to the JonDonym service.">
+
+<!ENTITY jondofox.instructions.instrTitle "Please install and start the JonDo client:">
+<!ENTITY jondofox.instructions.proxyOffText "For installation, temporarily disable the JonDo interface by 
+   choosing &quot;None&quot; in the proxy menu:">
+<!ENTITY jondofox.instructions.proxyOffImage "<img src='chrome://jondofox/content/proxy-off-en.jpg'></img>">
+<!ENTITY jondofox.instructions.downloadLink "<a href='https://www.jondos.de/en/download/' target='_blank'>
+   Now click here to visit the JonDos download site and get the client program.</a>">
+<!ENTITY jondofox.instructions.proxyOnText "After starting the JonDo client, please reset proxy settings
+   to &quot;JonDo&quot;:">
+<!ENTITY jondofox.instructions.proxyOnImage "<img src='chrome://jondofox/content/proxy-on-en.jpg'></img>">
+<!ENTITY jondofox.instructions.instrWarning "Attention: If you do not reset proxy settings to 
+   &quot;JonDo&quot;, you will surf the web without anonymity!">
+
+<!ENTITY jondofox.instructions.testTitle "Final test:">
+<!ENTITY jondofox.instructions.testLink "<a href='https://www.jondos.de/en/anontest' target='_blank'>
+   Click here to check your installation using the JonDonym anonymity test.</a>">
+<!ENTITY jondofox.instructions.testDesc "If one of these fields turns <b><font color='red'>red</font></b> you 
+   might be identifyable or recognizable. You should re-check your configuration and read the help files in
+   this case.">
