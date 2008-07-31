@@ -1,6 +1,7 @@
 Changes in version 0.1a2 - xx.xx.2008
 
   Major improvements:    
+    o Replaced jpg's used in instructions by png's with transparent background
     o Making use of locales (until now only de-DE and en-US is supported)
     o Compatibility to Firefox 2 by providing different versions of the file
       netError.xhtml and defining 'appversion' in chrome.manifest
