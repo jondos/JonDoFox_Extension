@@ -1,9 +1,0 @@
-Changes in version 0.1a2 - xx.xx.2008
-
-  o Making use of locales (until now only de-DE and en-US is supported)
-  o Compatibility to Firefox 2 by defining 'appversion' in chrome.manifest
-  o Fixing a bug by catching an exception that was thrown on 'view source code'
-
-Changes in version 0.1a1 - 29.07.2008
-
-  o Tagged the initial version of the extension
