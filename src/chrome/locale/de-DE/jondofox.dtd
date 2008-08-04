@@ -1,6 +1,6 @@
 <!ENTITY jondofox.instructions.titleQuestion "Haben sie das Programm JonDo gestartet?">
-<!ENTITY jondofox.instructions.titleText "Bitte starten sie das Programm JonDo. Andernfalls können Sie 
-   keine Verbindung zum JonDonym-Dienst herstellen.">
+<!ENTITY jondofox.instructions.titleText "JonDoFox benötigt <b>zusätzlich</b> das Programm JonDo um eine 
+   Verbindung zum JonDonym-Dienst herzustellen.">
 
 <!ENTITY jondofox.instructions.instrTitle "Bitte installieren und starten Sie das Programm JonDo:">
 <!ENTITY jondofox.instructions.proxyOffText "Deaktivieren Sie hierzu vorübergehend die JonDo-Schnittstelle
