@@ -1,4 +1,10 @@
-Changes in version 0.1a2 - xx.xx.2008
+Changes in version 0.1a3 - 05.08.2008
+
+  Minor modifications:
+    o Modified instruction text
+    o Optimized png's in size
+
+Changes in version 0.1a2 - 01.08.2008
 
   Major improvements:    
     o Replaced jpg's used in instructions by png's with transparent background
