@@ -7,7 +7,7 @@
     <!-- Required properties -->
     <em:id>{437be45a-4114-11dd-b9ab-71d256d89593}</em:id>
     <em:name>JonDoFox</em:name>
-    <em:version>0.1a2</em:version>
+    <em:version>0.1a3</em:version>
     <em:description>Show customized error pages and instructions in case of proxy errors.</em:description>
     <em:creator>JonDos GmbH</em:creator>
 		
