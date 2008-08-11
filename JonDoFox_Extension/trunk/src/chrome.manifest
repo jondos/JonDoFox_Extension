@@ -1,6 +1,9 @@
-# Content (Both lines are needed for compatibility)
+# Content (both lines are needed for compatibility)
 content jondofox chrome/content/
 content jondofox chrome/content/ contentaccessible=yes
+
+# Overlay
+overlay chrome://browser/content/browser.xul chrome://jondofox/content/jondofox-overlay.xul
 
 # Locales
 locale jondofox de-DE chrome/locale/de-DE/
