@@ -1,5 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Dump information to the console?
@@ -15,7 +16,8 @@ function JDF_dump(msg) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Start of the code
+// JS hooking
+///////////////////////////////////////////////////////////////////////////////
 
 // Globals
 var m_JDF_inited = false;
@@ -27,44 +29,22 @@ var m_progress = Components.classes["@mozilla.org/docloaderservice;1"].
 /**
  * Hook JS variables within a document
  */
-function JDF_hookdoc(win, doc) {
-  JDF_dump("JDF_hookdoc(): " + win + ", " + doc);
-
-  // XXX What is this?
+function JDF_hook_document(win, doc) {
   if(typeof(win.wrappedJSObject) == 'undefined') {
-    JDF_dump("Type of win.wrappedJSObject is undefined, returning ..")
+    JDF_dump("No JSObject for '" + win.location + "', returning ..")
     return;
   }
-
-  //if (JDF_getPreferencesService().getBoolPref("extensions.a2s.disable")==true){
-  //  return;			
-  //}
+  JDF_dump("Hooking document: " + win.location);
 
   // m_JDF_jshooks contains sources of jshooks.js
   jshooks_code = m_JDF_jshooks;
 	
-  try {		
+  try {
     // Define sandbox variable
     var s = new Components.utils.Sandbox(win.wrappedJSObject);
-    s.window = win.wrappedJSObject; 
-              
-    // Übergeben der jew. Einstellung als Variablen an jshooks.js    
-    s.h_outerHeight = win.outerHeight;
-    s.h_outerWidth = win.outerWidth;
-    s.h_innerHeight = win.innerHeight;
-    s.h_innerWidth = win.innerWidth;
-    s.h_height = screen.height;
-    s.h_width = screen.width;   
-    s.h_pageName = win.name;
-        
-    // Leave defaults here
-    s.px = window.pageXOffset;
-    s.py = window.pageYOffset;
-    s.sx = window.screenX;
-    s.sy = window.screenY;
-		        
+    s.window = win.wrappedJSObject;
     var result = Components.utils.evalInSandbox(jshooks_code, s);
-    // XXX: Do something with the result?    
+    // TODO: Check the result
   } catch (e) {
     // TODO: Add more debugging
     window.alert("Exception in sandbox evaluation! " + e);        
@@ -112,6 +92,7 @@ function JDF_check_progress(aProgress, aRequest) {
   // This noise is a workaround for firefox bugs involving
   // enforcement of docShell.allowPlugins and docShell.allowJavascript
   // (Bugs 401296 and 409737 respectively) 
+  // TODO: Remove?
   try {
     if(aRequest) {
       var chanreq = aRequest.QueryInterface(Components.interfaces.nsIChannel);
@@ -123,7 +104,7 @@ function JDF_check_progress(aProgress, aRequest) {
     try {
       if(doc && doc.domain) {
         // Call hookdoc here
-        JDF_hookdoc(DOMWindow.window, doc);
+        JDF_hook_document(DOMWindow.window, doc);
       }
     } catch(e) { }        
   } else { }
@@ -202,30 +183,102 @@ function JDF_uninitialize(event) {
   m_progress.removeProgressListener(myExt_urlBarListener);
 }
 
-// FIXME: Not needed?
-var JDF_extension = {
-  init: function() {
-    JDF_initialize();
-  },
-  
-  uninit: function() {
-    JDF_uninitialize();
-  },
-  
-  // XXX For what?
-  oldURL: null,
-
-  // XXX For what?
-  processNewURL: function(aURI) {
-    if (aURI.spec == this.oldURL) return;    
-    // URL is new
-    alert(aURI.spec);
-    this.oldURL = aURI.spec;
-  }
-};
-
-// Initial logging
-JDF_dump("Starting Jondofox Extension, adding EventListeners ..");
 // Add listeners
-window.addEventListener("load", function() {JDF_extension.init()}, false);
-window.addEventListener("unload", function() {JDF_extension.uninit()}, false);
+// window.addEventListener("load", JDF_initialize, false);
+// window.addEventListener("unload", JDF_uninitialize, false);
+
+///////////////////////////////////////////////////////////////////////////////
+// User agent spoofing
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Set several overrides
+ */
+function JDF_set_user_agent()
+{
+  JDF_dump("Switching user agent");
+  //JDF_setStringPreference("general.appname.override", decodeURIComponent(appName));
+  //JDF_setStringPreference("general.appversion.override", decodeURIComponent(appVersion));
+
+  JDF_setStringPreference("general.platform.override", decodeURIComponent("Win32"));
+  JDF_setStringPreference("general.useragent.override", decodeURIComponent("Mozilla/5.0 Gecko/20070713 Firefox/2.0.0.0"));
+  
+  //JDF_setStringPreference("general.useragent.vendor", decodeURIComponent(vendor));
+  //JDF_setStringPreference("general.useragent.vendorSub", decodeURIComponent(vendorSub));
+}
+
+/**
+ * Clear all preferences that were set by us
+ */
+function JDF_clear_prefs() {
+  JDF_dump("Clearing preferences");
+  JDF_deletePreference("general.platform.override");
+  JDF_deletePreference("general.useragent.override");
+}
+
+/** Observer object */
+var JDF_observer = {
+
+  // Flag to indicate if preferences should be deleted
+  _clear_prefs : false,
+
+  observe : function(subject, topic, data) {
+    if (topic == "em-action-requested") {
+      // Filter on the item ID
+      subject.QueryInterface(Components.interfaces.nsIUpdateItem);
+      if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
+        if (data == "item-uninstalled" || data == "item-disabled") {
+          JDF_dump("Detected " + data);
+          this._clear_prefs = true;
+        } else if (data == "item-cancel-action") {
+          JDF_dump("Detected " + data);
+          this._clear_prefs = false;
+        }
+      }
+    // FIXME Right topics?
+    } else if (topic == "quit-application-granted" || topic == "xpcom-shutdown") {            
+      JDF_dump("Detected " + topic);
+      if (this._clear_prefs) {
+        JDF_clear_prefs();
+      }
+      // Observer de-registrieren
+      this.unregister( );
+    } else {
+      JDF_dump("Got topic " + topic);
+    }
+  },
+
+  // Called once on browser startup
+  register : function( ) {
+    JDF_dump("Registering observer");
+    // Register ourselves to process events
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+                             getService(Components.interfaces.nsIObserverService);
+    // TODO: Add more observers?    
+    //observerService.addObserver(this, "xul-window-destroyed", false);
+    
+    observerService.addObserver(this, "em-action-requested", false);
+    observerService.addObserver(this, "quit-application-granted", false);
+    observerService.addObserver(this, "xpcom-shutdown", false);
+  
+    // FIXME Set preferences here?
+    JDF_set_user_agent();
+  },
+
+  // Called once after uninstallation
+  unregister : function() {
+    JDF_dump("Unregistering observer");
+    // Stop processing events
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+                             getService(Components.interfaces.nsIObserverService);
+    // XXX: New
+    //observerService.removeObserver(this, "xul-window-destroyed", false);
+    
+    observerService.removeObserver(this, "em-action-requested");
+    observerService.removeObserver(this, "quit-application-granted");
+    observerService.removeObserver(this, "xpcom-shutdown");
+  }
+}
+
+// Register the observer once
+JDF_observer.register();

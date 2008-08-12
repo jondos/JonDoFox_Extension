@@ -3,5 +3,8 @@
 <overlay id="jondofox-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+<script src="chrome://jondofox/content/common/preferences.js" />
 <script src="chrome://jondofox/content/jondofox.js" />
+
 </overlay>
