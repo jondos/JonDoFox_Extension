@@ -4,42 +4,47 @@
 /**
  * Dump information to the console?
  */
-var JDF_debug = true;
+var m_JDF_debug = true;
 
 /**
  * Sends data to the console if we're in debug mode
- * @param msg The string containing the message to display
+ * @param msg The string containing the log message
  */
 function JDF_dump(msg) {
-  if (JDF_debug) dump("JDF --> " + msg + "\n");
+  if (m_JDF_debug) dump("JDF :: " + msg + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Start of the code
 
-// Init flag
+// Globals
 var m_JDF_inited = false;
+var m_JDF_jshooks = null;
 
-var progress = Components.classes["@mozilla.org/docloaderservice;1"].
+var m_progress = Components.classes["@mozilla.org/docloaderservice;1"].
        getService(Components.interfaces.nsIWebProgress);
 
-// Javascript hooks
+/**
+ * Hook JS variables within a document
+ */
 function JDF_hookdoc(win, doc) {
+  JDF_dump("JDF_hookdoc(): " + win + ", " + doc);
+
   // XXX What is this?
   if(typeof(win.wrappedJSObject) == 'undefined') {
+    JDF_dump("Type of win.wrappedJSObject is undefined, returning ..")
     return;
   }
-    
-  // Wenn die A2S-Funktionalität deaktiert ist: abbrechen
+
   //if (JDF_getPreferencesService().getBoolPref("extensions.a2s.disable")==true){
   //  return;			
   //}
 
-  // m_JDF_jshooks enthält den vollständigen Quellcode der Datei jshooks.js
-  str2 = m_JDF_jshooks;
+  // m_JDF_jshooks contains sources of jshooks.js
+  jshooks_code = m_JDF_jshooks;
 	
   try {		
-    // Definieren einer Sandbox-Variablen
+    // Define sandbox variable
     var s = new Components.utils.Sandbox(win.wrappedJSObject);
     s.window = win.wrappedJSObject; 
               
@@ -52,37 +57,49 @@ function JDF_hookdoc(win, doc) {
     s.h_width = screen.width;   
     s.h_pageName = win.name;
         
-    // Folgende Werte bei Standard-Werten belassen
+    // Leave defaults here
     s.px = window.pageXOffset;
     s.py = window.pageYOffset;
     s.sx = window.screenX;
     s.sy = window.screenY;
 		        
-    var result = Components.utils.evalInSandbox(str2, s);
-        
-    } catch (e) {
-        window.alert("Exception in sandbox evaluation.");        
-    }
+    var result = Components.utils.evalInSandbox(jshooks_code, s);
+    // XXX: Do something with the result?    
+  } catch (e) {
+    // TODO: Add more debugging
+    window.alert("Exception in sandbox evaluation! " + e);        
+  }
+}
+
+/**
+ * Read jshooks.js into member variable m_JDF_jshooks
+ */
+function JDF_init_jshooks() {
+  var nsio = Components.classes["@mozilla.org/network/io-service;1"].
+     getService(Components.interfaces.nsIIOService);
+  var channel = nsio.newChannel("chrome://jondofox/content/common/jshooks.js", 
+     null, null);
+  var istream = Components.classes["@mozilla.org/scriptableinputstream;1"].
+     createInstance(Components.interfaces.nsIScriptableInputStream);
+  // Open channel and read
+  istream.init(channel.open());
+  m_JDF_jshooks = istream.read(istream.available());
+  istream.close();
+  if (m_JDF_jshooks != null) {
+    m_JDF_inited = true;
+  }
+  JDF_dump("JDF_init_jshooks(): " + m_JDF_inited);
 }
 
 // Website request
 function JDF_check_progress(aProgress, aRequest) {
+  JDF_dump("JDF_check_progress(): " + aProgress + ", " + aRequest) 
+  // If this is the first call: init
   if (!m_JDF_inited) {
-    var nsio = Components.classes["@mozilla.org/network/io-service;1"].
-	          getService(Components.interfaces.nsIIOService);
-    var channel = nsio.newChannel("chrome://jondofox/content/common/jshooks.js", null, null);
-    var istream = Components.classes["@mozilla.org/scriptableinputstream;1"].
-	             createInstance(Components.interfaces.nsIScriptableInputStream);
-		
-    // Einlesen der jshooks.js Datei in eine Variable
-    istream.init(channel.open());
-    m_JDF_jshooks = istream.read(istream.available());
-    istream.close();        
-    m_JDF_inited = true;
+    JDF_init_jshooks();
   }
-  
+  // Get the window
   var DOMWindow = null;
-
   if(aProgress) {
     DOMWindow = aProgress.DOMWindow;        
   } else {
@@ -92,7 +109,6 @@ function JDF_check_progress(aProgress, aRequest) {
                      getInterface(Components.interfaces.nsIDOMWindow);
     } catch(e) { }
   }
-    
   // This noise is a workaround for firefox bugs involving
   // enforcement of docShell.allowPlugins and docShell.allowJavascript
   // (Bugs 401296 and 409737 respectively) 
@@ -106,14 +122,16 @@ function JDF_check_progress(aProgress, aRequest) {
     var doc = DOMWindow.document;
     try {
       if(doc && doc.domain) {
+        // Call hookdoc here
         JDF_hookdoc(DOMWindow.window, doc);
       }
     } catch(e) { }        
   } else { }
+  // XXX
   return 0;    
 }
 
-// WebListener
+// Define WebProgressListener
 var myExt_urlBarListener = {
   QueryInterface: function(aIID) {
    if (aIID.equals(Components.interfaces.nsIWebProgressListener) ||
@@ -131,7 +149,8 @@ var myExt_urlBarListener = {
       return JDF_check_progress(aProgress, aRequest);
   },
 
-  onProgressChange: function(aProgress, aRequest, curSelfProgress, maxSelfProgress, curTotalProgress, maxTotalProgress) { 
+  onProgressChange: function(aProgress, aRequest, curSelfProgress, 
+     maxSelfProgress, curTotalProgress, maxTotalProgress) { 
       return JDF_check_progress(aProgress, aRequest);
   },
   
@@ -143,22 +162,57 @@ var myExt_urlBarListener = {
   onLinkIconAvailable: function() { return 0; }
 };
 
-var jondofoxExtension = {  
+/**
+ * Initialize the extension
+ */
+function JDF_initialize(event) {
+  JDF_dump("JDF_initialize(): " + event);
+  var windowContent = window.document.getElementById("content");
+  // If the window content is set
+  if(windowContent)
+  {
+    // Try to remove the event listener
+    try {
+      window.removeEventListener("load", JDF_initialize, false);
+    } catch(exception) {
+      // Do nothing 
+    }
+  }
+  // Add WebProgressListener
+  m_progress.addProgressListener(myExt_urlBarListener,
+     Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
+}
+
+/**
+ * Uninitialize the extension
+ */
+function JDF_uninitialize(event) {
+  JDF_dump("JDF_uninitialize(): " + event);
+  var windowContent = window.document.getElementById("content");
+  // If the window content is set
+  if(windowContent) {
+    // Try to remove the event listener
+    try {
+      window.removeEventListener("close", JDF_uninitialize, false);
+    } catch(exception) {
+      // Do nothing
+    }
+  }
+  // Remove WebProgressListener
+  m_progress.removeProgressListener(myExt_urlBarListener);
+}
+
+// FIXME: Not needed?
+var JDF_extension = {
   init: function() {
-    // Call initialize
     JDF_initialize();
-    // Add listener
-    progress.addProgressListener(myExt_urlBarListener,
-       Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
   },
   
-  uninit: function() {  	
-    // Call uninitialize
+  uninit: function() {
     JDF_uninitialize();
-    // Remove listener
-    progress.removeProgressListener(myExt_urlBarListener);
   },
   
+  // XXX For what?
   oldURL: null,
 
   // XXX For what?
@@ -170,78 +224,8 @@ var jondofoxExtension = {
   }
 };
 
-// Initialize the extension
-function JDF_initialize(event)
-{
-  var windowContent = window.document.getElementById("content");
-        	
-  // If the window content is set
-  if(windowContent)
-  {
-    //var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);		
-    //a2s_setupLocalizedOptions();
-
-    //windowContent.addEventListener("load", JDF_pageLoad, true);
-
-    // If the observer service is set
-    //if(observerService)
-    //{
-    //  observerService.addObserver(JDFQuitObserver, "quit-application-requested", false);
-    //}
-
-    // Try to remove the event listener
-    try {
-      window.removeEventListener("load", JDF_initialize, false);
-    } catch(exception) {
-      // Do nothing
-    }
-        
-    // Initialisieren des A2S-Buttons
-    //if (a2s_getPreferencesService().getBoolPref("extensions.a2s.disable")==false){    	   	  	
-    //  document.getElementById("a2s-button").removeAttribute("default");	
-    //}
-    //else {
-    //  document.getElementById("a2s-button").setAttribute("default", "false");
-    //}  
-  }
-}
-
-// Uninitialize the extension
-function JDF_uninitialize(event)
-{
-  var windowContent = window.document.getElementById("content");
-
-  // If the window content is set
-  if(windowContent) {
-    //var observerService = Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
-
-    // If the observer service is set
-    //if(observerService) {
-      // Try to remove the observer
-      //try {
-      //  observerService.removeObserver(a2sQuitObserver, "quit-application-requested");
-      //} catch (exception) {
-        // Do nothing
-      //}
-    //}
-
-    // Try to remove the event listener
-    //try {
-    //  windowContent.removeEventListener("load", JDF_pageLoad, true);
-    //} catch(exception) {
-      // Do nothing
-    //}
-        
-    // Try to remove the event listener
-    try {
-      window.removeEventListener("close", JDF_uninitialize, false);
-    } catch(exception) {
-      // Do nothing
-    }
-  }
-}
-
-JDF_dump("Starting Jondofox Extension");
+// Initial logging
+JDF_dump("Starting Jondofox Extension, adding EventListeners ..");
 // Add listeners
-window.addEventListener("load", function() {jondofoxExtension.init()}, false);
-window.addEventListener("unload", function() {jondofoxExtension.uninit()}, false);
+window.addEventListener("load", function() {JDF_extension.init()}, false);
+window.addEventListener("unload", function() {JDF_extension.uninit()}, false);
