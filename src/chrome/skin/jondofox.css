@@ -64,7 +64,7 @@ ul {
   position: absolute;
   top: 130px;
   left: 170px;
-  align: left;
+  /* align: left; */
 }
 
 body[dir="rtl"] #errorPageContainer {
