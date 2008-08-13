@@ -16,6 +16,139 @@ function JDF_dump(msg) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// User agent spoofing
+///////////////////////////////////////////////////////////////////////////////
+
+var m_prefs_set = false;
+
+/**
+ * Set several overrides
+ */
+function JDF_set_user_agent()
+{
+  JDF_dump("Setting overrides");
+  
+  JDF_setStringPreference("general.appname.override", "Netscape");
+  JDF_setStringPreference("general.appversion.override", "5.0 (Windows; LANG)");
+  JDF_setStringPreference("general.buildID.override", "0");
+  JDF_setStringPreference("general.oscpu.override", "Windows NT 5.1");   
+  JDF_setStringPreference("general.platform.override", "Win32"); 
+  JDF_setStringPreference("general.productsub.override", "20080702");
+  JDF_setStringPreference("general.useragent.override", "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16");
+  JDF_setStringPreference("general.useragent.vendor", "");
+  JDF_setStringPreference("general.useragent.vendorSub", "");
+
+  m_prefs_set = true;
+}
+
+/**
+ * Clear all preferences that were set by us
+ */
+function JDF_clear_prefs() {
+  JDF_dump("Clearing preferences");
+
+  JDF_deletePreference("general.appname.override");
+  JDF_deletePreference("general.appversion.override");
+  JDF_deletePreference("general.buildID.override");
+  JDF_deletePreference("general.oscpu.override");
+  JDF_deletePreference("general.platform.override");
+  JDF_deletePreference("general.productsub.override");
+  JDF_deletePreference("general.useragent.override");
+  JDF_deletePreference("general.useragent.vendor");
+  JDF_deletePreference("general.useragent.vendorSub");
+}
+
+/**
+ * Return the current number of browser windows
+ */
+function JDF_get_window_count() {
+  var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
+     getService(Components.interfaces.nsIWindowWatcher);  
+  var window_enum = ww.getWindowEnumerator();
+  var count = 0;
+  while (window_enum.hasMoreElements()) {
+    count++;
+    window_enum.getNext();
+  }
+  return count;
+}
+
+/** Observer object */
+var JDF_observer = {
+
+  // Flag to indicate if preferences should be deleted
+  _clear_prefs : false,
+
+  observe : function(subject, topic, data) {
+    JDF_dump("Detected: " + subject + " - " + topic + " - " + data);
+    if (topic == "em-action-requested") {
+      // Filter on the item ID
+      subject.QueryInterface(Components.interfaces.nsIUpdateItem);
+      if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
+        if (data == "item-uninstalled" || data == "item-disabled") {
+          // Uninstall or disable
+          this._clear_prefs = true;
+        } else if (data == "item-cancel-action") {
+          // Cancellation ..
+          this._clear_prefs = false;
+        }
+      }
+    // Application quit
+    } else if (topic == "quit-application-granted") {
+      if (this._clear_prefs) {
+        // Clear preferences on shutdown
+        JDF_clear_prefs();
+      }
+      // Unregister the observer
+      this.unregister( );
+    // Window closed
+    } else if (topic == "xul-window-destroyed") {
+      var i = JDF_get_window_count();
+      JDF_dump("Closed window " + i);
+      // Last browser window standing:
+      // http://forums.mozillazine.org/viewtopic.php?t=308369
+      if (i == 0 && this._clear_prefs) {
+        JDF_clear_prefs();
+      }
+    }
+  },
+
+  register : function( ) {
+    JDF_dump("Registering observer");
+    // Register ourselves to process events
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+                             getService(Components.interfaces.nsIObserverService);
+    
+    observerService.addObserver(this, "em-action-requested", false);
+    observerService.addObserver(this, "quit-application-granted", false);
+    observerService.addObserver(this, "xpcom-shutdown", false);
+    observerService.addObserver(this, "xul-window-destroyed", false);    
+   
+    // XXX Set the preferences here? This is called whenever a new window is opened!
+    if (!m_prefs_set) {
+      JDF_set_user_agent();  
+    } else {
+      JDF_dump("User agent already set");
+    }
+  },
+
+  unregister : function() {
+    JDF_dump("Unregistering observer");
+    // Stop processing events
+    var observerService = Components.classes["@mozilla.org/observer-service;1"].
+                             getService(Components.interfaces.nsIObserverService);
+
+    observerService.removeObserver(this, "em-action-requested");
+    observerService.removeObserver(this, "quit-application-granted");    
+    observerService.removeObserver(this, "xpcom-shutdown");
+    observerService.removeObserver(this, "xul-window-destroyed", false);
+  }
+}
+
+// Register the observer once
+JDF_observer.register();
+
+///////////////////////////////////////////////////////////////////////////////
 // JS hooking
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -182,119 +315,3 @@ function JDF_uninitialize(event) {
 // Add listeners
 // window.addEventListener("load", JDF_initialize, false);
 // window.addEventListener("unload", JDF_uninitialize, false);
-
-///////////////////////////////////////////////////////////////////////////////
-// User agent spoofing
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Set several overrides
- */
-function JDF_set_user_agent()
-{
-  JDF_dump("Switching user agent");
-  
-  JDF_setStringPreference("general.platform.override", decodeURIComponent("Win32"));
-  JDF_setStringPreference("general.useragent.override", decodeURIComponent("Mozilla/5.0 Gecko/20070713 Firefox/2.0.0.0"));
-  
-  //JDF_setStringPreference("general.appname.override", decodeURIComponent(appName));
-  //JDF_setStringPreference("general.appversion.override", decodeURIComponent(appVersion));
-  //JDF_setStringPreference("general.useragent.vendor", decodeURIComponent(vendor));
-  //JDF_setStringPreference("general.useragent.vendorSub", decodeURIComponent(vendorSub));
-}
-
-/**
- * Clear all preferences that were set by us
- */
-function JDF_clear_prefs() {
-  JDF_dump("Clearing preferences");
-
-  JDF_deletePreference("general.platform.override");
-  JDF_deletePreference("general.useragent.override");
-}
-
-/**
- * Return the current number of browser windows
- */
-function JDF_get_window_count() {
-  var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
-     getService(Components.interfaces.nsIWindowWatcher);  
-  var window_enum = ww.getWindowEnumerator();
-  var count = 0;
-  while (window_enum.hasMoreElements()) {
-    count++;
-    window_enum.getNext();
-  }
-  return count;
-}
-
-/** Observer object */
-var JDF_observer = {
-
-  // Flag to indicate if preferences should be deleted
-  _clear_prefs : false,
-
-  observe : function(subject, topic, data) {
-    JDF_dump("Detected: " + subject + " - " + topic + " - " + data);
-    if (topic == "em-action-requested") {
-      // Filter on the item ID
-      subject.QueryInterface(Components.interfaces.nsIUpdateItem);
-      if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
-        if (data == "item-uninstalled" || data == "item-disabled") {
-          // Uninstall or disable
-          this._clear_prefs = true;
-        } else if (data == "item-cancel-action") {
-          // Cancellation ..
-          this._clear_prefs = false;
-        }
-      }
-    // Application quit
-    } else if (topic == "quit-application-granted") {
-      if (this._clear_prefs) {
-        // Clear preferences on shutdown
-        JDF_clear_prefs();
-      }
-      // Unregister the observer
-      this.unregister( );
-    // Window closed
-    } else if (topic == "xul-window-destroyed") {
-      var i = JDF_get_window_count();
-      JDF_dump("Closed window " + i);
-      // Last browser window standing:
-      // http://forums.mozillazine.org/viewtopic.php?t=308369
-      if (i == 0 && this._clear_prefs) {
-        JDF_clear_prefs();
-      }
-    }
-  },
-
-  register : function( ) {
-    JDF_dump("Registering observer");
-    // Register ourselves to process events
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].
-                             getService(Components.interfaces.nsIObserverService);
-    
-    observerService.addObserver(this, "em-action-requested", false);
-    observerService.addObserver(this, "quit-application-granted", false);
-    //observerService.addObserver(this, "xpcom-shutdown", false);
-    observerService.addObserver(this, "xul-window-destroyed", false);    
-   
-    // XXX Set the preferences here? This is called whenever a new window is opened!
-    JDF_set_user_agent();
-  },
-
-  unregister : function() {
-    JDF_dump("Unregistering observer");
-    // Stop processing events
-    var observerService = Components.classes["@mozilla.org/observer-service;1"].
-                             getService(Components.interfaces.nsIObserverService);
-
-    observerService.removeObserver(this, "em-action-requested");
-    observerService.removeObserver(this, "quit-application-granted");    
-    //observerService.removeObserver(this, "xpcom-shutdown");
-    observerService.removeObserver(this, "xul-window-destroyed", false);
-  }
-}
-
-// Register the observer once
-JDF_observer.register();
