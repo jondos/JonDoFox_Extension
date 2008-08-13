@@ -20,7 +20,6 @@ function JDF_dump(msg) {
 ///////////////////////////////////////////////////////////////////////////////
 
 // Globals
-var m_JDF_inited = false;
 var m_JDF_jshooks = null;
 
 var m_progress = Components.classes["@mozilla.org/docloaderservice;1"].
@@ -57,7 +56,7 @@ function JDF_hook_document(win, doc) {
 function JDF_init_jshooks() {
   var nsio = Components.classes["@mozilla.org/network/io-service;1"].
      getService(Components.interfaces.nsIIOService);
-  var channel = nsio.newChannel("chrome://jondofox/content/common/jshooks.js", 
+  var channel = nsio.newChannel("chrome://jondofox/content/jshooks.js", 
      null, null);
   var istream = Components.classes["@mozilla.org/scriptableinputstream;1"].
      createInstance(Components.interfaces.nsIScriptableInputStream);
@@ -65,17 +64,14 @@ function JDF_init_jshooks() {
   istream.init(channel.open());
   m_JDF_jshooks = istream.read(istream.available());
   istream.close();
-  if (m_JDF_jshooks != null) {
-    m_JDF_inited = true;
-  }
-  JDF_dump("JDF_init_jshooks(): " + m_JDF_inited);
+  JDF_dump("JDF_init_jshooks(): " + (m_JDF_jshooks != null));
 }
 
 // Website request
 function JDF_check_progress(aProgress, aRequest) {
   JDF_dump("JDF_check_progress(): " + aProgress + ", " + aRequest) 
   // If this is the first call: init
-  if (!m_JDF_inited) {
+  if (!m_JDF_jshooks) {
     JDF_init_jshooks();
   }
   // Get the window
@@ -197,12 +193,12 @@ function JDF_uninitialize(event) {
 function JDF_set_user_agent()
 {
   JDF_dump("Switching user agent");
-  //JDF_setStringPreference("general.appname.override", decodeURIComponent(appName));
-  //JDF_setStringPreference("general.appversion.override", decodeURIComponent(appVersion));
-
+  
   JDF_setStringPreference("general.platform.override", decodeURIComponent("Win32"));
   JDF_setStringPreference("general.useragent.override", decodeURIComponent("Mozilla/5.0 Gecko/20070713 Firefox/2.0.0.0"));
   
+  //JDF_setStringPreference("general.appname.override", decodeURIComponent(appName));
+  //JDF_setStringPreference("general.appversion.override", decodeURIComponent(appVersion));
   //JDF_setStringPreference("general.useragent.vendor", decodeURIComponent(vendor));
   //JDF_setStringPreference("general.useragent.vendorSub", decodeURIComponent(vendorSub));
 }
@@ -212,8 +208,24 @@ function JDF_set_user_agent()
  */
 function JDF_clear_prefs() {
   JDF_dump("Clearing preferences");
+
   JDF_deletePreference("general.platform.override");
   JDF_deletePreference("general.useragent.override");
+}
+
+/**
+ * Return the current number of browser windows
+ */
+function JDF_get_window_count() {
+  var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
+     getService(Components.interfaces.nsIWindowWatcher);  
+  var window_enum = ww.getWindowEnumerator();
+  var count = 0;
+  while (window_enum.hasMoreElements()) {
+    count++;
+    window_enum.getNext();
+  }
+  return count;
 }
 
 /** Observer object */
@@ -223,60 +235,64 @@ var JDF_observer = {
   _clear_prefs : false,
 
   observe : function(subject, topic, data) {
+    JDF_dump("Detected: " + subject + " - " + topic + " - " + data);
     if (topic == "em-action-requested") {
       // Filter on the item ID
       subject.QueryInterface(Components.interfaces.nsIUpdateItem);
       if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
         if (data == "item-uninstalled" || data == "item-disabled") {
-          JDF_dump("Detected " + data);
+          // Uninstall or disable
           this._clear_prefs = true;
         } else if (data == "item-cancel-action") {
-          JDF_dump("Detected " + data);
+          // Cancellation ..
           this._clear_prefs = false;
         }
       }
-    // FIXME Right topics?
-    } else if (topic == "quit-application-granted" || topic == "xpcom-shutdown") {            
-      JDF_dump("Detected " + topic);
+    // Application quit
+    } else if (topic == "quit-application-granted") {
       if (this._clear_prefs) {
+        // Clear preferences on shutdown
         JDF_clear_prefs();
       }
-      // Observer de-registrieren
+      // Unregister the observer
       this.unregister( );
-    } else {
-      JDF_dump("Got topic " + topic);
+    // Window closed
+    } else if (topic == "xul-window-destroyed") {
+      var i = JDF_get_window_count();
+      JDF_dump("Closed window " + i);
+      // Last browser window standing:
+      // http://forums.mozillazine.org/viewtopic.php?t=308369
+      if (i == 0 && this._clear_prefs) {
+        JDF_clear_prefs();
+      }
     }
   },
 
-  // Called once on browser startup
   register : function( ) {
     JDF_dump("Registering observer");
     // Register ourselves to process events
     var observerService = Components.classes["@mozilla.org/observer-service;1"].
                              getService(Components.interfaces.nsIObserverService);
-    // TODO: Add more observers?    
-    //observerService.addObserver(this, "xul-window-destroyed", false);
     
     observerService.addObserver(this, "em-action-requested", false);
     observerService.addObserver(this, "quit-application-granted", false);
-    observerService.addObserver(this, "xpcom-shutdown", false);
-  
-    // FIXME Set preferences here?
+    //observerService.addObserver(this, "xpcom-shutdown", false);
+    observerService.addObserver(this, "xul-window-destroyed", false);    
+   
+    // XXX Set the preferences here? This is called whenever a new window is opened!
     JDF_set_user_agent();
   },
 
-  // Called once after uninstallation
   unregister : function() {
     JDF_dump("Unregistering observer");
     // Stop processing events
     var observerService = Components.classes["@mozilla.org/observer-service;1"].
                              getService(Components.interfaces.nsIObserverService);
-    // XXX: New
-    //observerService.removeObserver(this, "xul-window-destroyed", false);
-    
+
     observerService.removeObserver(this, "em-action-requested");
-    observerService.removeObserver(this, "quit-application-granted");
-    observerService.removeObserver(this, "xpcom-shutdown");
+    observerService.removeObserver(this, "quit-application-granted");    
+    //observerService.removeObserver(this, "xpcom-shutdown");
+    observerService.removeObserver(this, "xul-window-destroyed", false);
   }
 }
 
