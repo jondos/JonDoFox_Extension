@@ -32,20 +32,18 @@ PreferencesHandler.prototype = {
     return this._preferencesService
   },
   
-  // Check if a preference is set
-  isPreferenceSet: function(preference) {
-    if(preference) {
-      return this._getPreferencesService().prefHasUserValue(preference);
-    }
-    return false;
-  },
-  
-  // Delete a preference
+  // Implemented methods include only those that are actually used
+
+  /**
+   * Delete any given preference
+   */
   deletePreference: function(preference) {
     this._getPreferencesService().clearUserPref(preference);
   },
-
-  // Set a string preference
+  
+  /**
+   * Set a string preference
+   */
   setStringPreference: function(preference, value) {
     if(preference) {   
       var supportsStringInterface = Components.interfaces.nsISupportsString;
@@ -77,7 +75,7 @@ var PreferencesHandlerFactory = {
       throw Components.results.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
-    // XXX: Singleton
+    // XXX: Singleton?
     if (PreferencesHandlerInstance == null)
       PreferencesHandlerInstance = new PreferencesHandler();
     return PreferencesHandlerInstance;
