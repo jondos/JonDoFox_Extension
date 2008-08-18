@@ -5,7 +5,8 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
 <!-- Include methods for handling of preferences first -->
-<script src="chrome://jondofox/content/preferences.js" />
+<!-- script src="chrome://jondofox/content/preferences.js" / -->
+
 <!-- Include jondofox.js to the scope of the browser -->
 <script src="chrome://jondofox/content/jondofox.js" />
 
