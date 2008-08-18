@@ -19,26 +19,26 @@ function JDF_dump(msg) {
 // User agent spoofing
 ///////////////////////////////////////////////////////////////////////////////
 
-var m_prefs_set = false;
+// Instantiate the preferences handler
+var m_JDF_prefs = Components.classes['@jondos.de/preferences-handler;1']
+                     .getService().wrappedJSObject;
 
 /**
  * Set several overrides
  */
 function JDF_set_user_agent()
 {
-  JDF_dump("Setting overrides");
+  JDF_dump("Setting user agent");
   
-  JDF_setStringPreference("general.appname.override", "Netscape");
-  JDF_setStringPreference("general.appversion.override", "5.0 (Windows; LANG)");
-  JDF_setStringPreference("general.buildID.override", "0");
-  JDF_setStringPreference("general.oscpu.override", "Windows NT 5.1");   
-  JDF_setStringPreference("general.platform.override", "Win32"); 
-  JDF_setStringPreference("general.productsub.override", "20080702");
-  JDF_setStringPreference("general.useragent.override", "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16");
-  JDF_setStringPreference("general.useragent.vendor", "");
-  JDF_setStringPreference("general.useragent.vendorSub", "");
-
-  m_prefs_set = true;
+  m_JDF_prefs.setStringPreference("general.appname.override", "Netscape");
+  m_JDF_prefs.setStringPreference("general.appversion.override", "5.0 (Windows; LANG)");
+  m_JDF_prefs.setStringPreference("general.buildID.override", "0");
+  m_JDF_prefs.setStringPreference("general.oscpu.override", "Windows NT 5.1");   
+  m_JDF_prefs.setStringPreference("general.platform.override", "Win32"); 
+  m_JDF_prefs.setStringPreference("general.productsub.override", "20080702");
+  m_JDF_prefs.setStringPreference("general.useragent.override", "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16");
+  m_JDF_prefs.setStringPreference("general.useragent.vendor", "");
+  m_JDF_prefs.setStringPreference("general.useragent.vendorSub", "");
 }
 
 /**
@@ -47,15 +47,15 @@ function JDF_set_user_agent()
 function JDF_clear_prefs() {
   JDF_dump("Clearing preferences");
 
-  JDF_deletePreference("general.appname.override");
-  JDF_deletePreference("general.appversion.override");
-  JDF_deletePreference("general.buildID.override");
-  JDF_deletePreference("general.oscpu.override");
-  JDF_deletePreference("general.platform.override");
-  JDF_deletePreference("general.productsub.override");
-  JDF_deletePreference("general.useragent.override");
-  JDF_deletePreference("general.useragent.vendor");
-  JDF_deletePreference("general.useragent.vendorSub");
+  m_JDF_prefs.deletePreference("general.appname.override");
+  m_JDF_prefs.deletePreference("general.appversion.override");
+  m_JDF_prefs.deletePreference("general.buildID.override");
+  m_JDF_prefs.deletePreference("general.oscpu.override");
+  m_JDF_prefs.deletePreference("general.platform.override");
+  m_JDF_prefs.deletePreference("general.productsub.override");
+  m_JDF_prefs.deletePreference("general.useragent.override");
+  m_JDF_prefs.deletePreference("general.useragent.vendor");
+  m_JDF_prefs.deletePreference("general.useragent.vendorSub");
 }
 
 /**
@@ -80,9 +80,9 @@ var JDF_observer = {
   _clear_prefs : false,
 
   observe : function(subject, topic, data) {
-    JDF_dump("Detected: " + subject + " - " + topic + " - " + data);
+    JDF_dump("Detected: " + subject + " :: " + topic + " :: " + data);
     if (topic == "em-action-requested") {
-      // Filter on the item ID
+      // Filter on the item ID here
       subject.QueryInterface(Components.interfaces.nsIUpdateItem);
       if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
         if (data == "item-uninstalled" || data == "item-disabled") {
@@ -101,7 +101,7 @@ var JDF_observer = {
       }
       // Unregister the observer
       this.unregister( );
-    // Window closed
+    // FIXME: Window closed
     } else if (topic == "xul-window-destroyed") {
       var i = JDF_get_window_count();
       JDF_dump("Closed window " + i);
@@ -124,12 +124,8 @@ var JDF_observer = {
     observerService.addObserver(this, "xpcom-shutdown", false);
     observerService.addObserver(this, "xul-window-destroyed", false);    
    
-    // XXX Set the preferences here? This is called whenever a new window is opened!
-    if (!m_prefs_set) {
-      JDF_set_user_agent();  
-    } else {
-      JDF_dump("User agent already set");
-    }
+    // FIXME Set preferences here? This is called whenever a new window opens!
+    JDF_set_user_agent();
   },
 
   unregister : function() {
@@ -145,7 +141,7 @@ var JDF_observer = {
   }
 }
 
-// Register the observer once
+// Register the observer once (FIXME: For every window?)
 JDF_observer.register();
 
 ///////////////////////////////////////////////////////////////////////////////

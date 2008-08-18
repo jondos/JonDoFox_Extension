@@ -1,8 +1,14 @@
+Changes in version 0.1a4 - xx.08.2008
+
+  New features:
+    o Setting overrides to unify user agent prefs for all users
+    o Including a preferences handler as a XPCOM component
+
 Changes in version 0.1a3 - 05.08.2008
 
   Minor modifications:
     o Modified instruction text
-    o Optimized png's in size
+    o Optimized png's in file sizes
 
 Changes in version 0.1a2 - 01.08.2008
 
