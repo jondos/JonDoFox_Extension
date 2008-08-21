@@ -10,5 +10,5 @@ fi
 echo \*\* Creating \'jondofox.xpi\':
 # Change directory
 cd src
-# Zip files
-zip -Xvr ../xpi/jondofox.xpi ./ -x "*.svn/*"
+# Zip files excluding all .*
+zip -Xvr ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp"
