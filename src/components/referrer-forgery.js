@@ -2,13 +2,10 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-m_debug = true;
+m_debug = false;
 
 // Log method
 function log(message) {
-  //var consoleService = Components.classes["@mozilla.org/consoleservice;1"].
-  //                        getService(Components.interfaces.nsIConsoleService);
-  //consoleService.logStringMessage("RefForgery: " + aMessage);
   if (m_debug) dump("RefForgery :: " + message + "\n");
 }
 
@@ -18,7 +15,7 @@ function log(message) {
 
 var refObserver = {
 
-  // Method to forge the referrer
+  // Method to forge a referrer
   refForgery: function(channel) {
     try {
       var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
@@ -30,7 +27,7 @@ var refObserver = {
       }
       return true;
     } catch (ex) {
-      // TODO: Dump exception  
+      log("Got exception: " + ex);
     }
     // FIXME Never reached?
     return false;
@@ -42,7 +39,7 @@ var refObserver = {
       httpChannel.QueryInterface(Components.interfaces.nsIChannel);
       this.refForgery(httpChannel);
     } catch (ex) {
-      // TODO: Dump something
+      log("Got exception: " + ex);
     }
   },
 
@@ -55,7 +52,7 @@ var refObserver = {
                         
       observers.addObserver(this, "http-on-modify-request", true);      
     } catch (ex) {
-      // TODO: Dump something
+      log("Got exception: " + ex);
     }
   },
 
@@ -77,7 +74,7 @@ var refObserver = {
           break;
       }
     } catch (ex) {
-      // TODO: Dump something
+      log("Got exception: " + ex);
     }
   },
 
@@ -86,7 +83,7 @@ var refObserver = {
     if (!iid.equals(Components.interfaces.nsISupports) &&
         !iid.equals(Components.interfaces.nsIObserver) &&
         !iid.equals(Components.interfaces.nsISupportsWeakReference))
-                        throw Components.results.NS_ERROR_NO_INTERFACE;            
+                        throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
 }
