@@ -153,12 +153,15 @@ var uaObserver = {
           break;
 
         case 'xul-window-destroyed':
-          log("Got topic --> " + topic);
+          // Get the closed window's index
           var i = this.getWindowCount();
-          log("Closed window " + i);
+          log("Window " + i + " --> " + topic);
           // Last browser window standing:
           // http://forums.mozillazine.org/viewtopic.php?t=308369
-          if (i == 0 && this.clearPrefs) { this.clearUserAgent(); }
+          if (i == 0 && this.clearPrefs) { 
+            this.clearUserAgent(); 
+            // XXX: Also unregister observers?
+          }
           break;
 
         default:
