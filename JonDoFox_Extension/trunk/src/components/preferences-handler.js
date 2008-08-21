@@ -1,4 +1,15 @@
 ///////////////////////////////////////////////////////////////////////////////
+// Debug stuff
+///////////////////////////////////////////////////////////////////////////////
+
+m_debug = true;
+
+// Log method
+function log(message) {
+  if (m_debug) dump("PrefsHandler :: " + message + "\n");
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -34,22 +45,34 @@ PreferencesHandler.prototype = {
   
   // Implemented methods include only those that are actually used
 
-  /**
-   * Delete any given preference
-   */
-  deletePreference: function(preference) {
-    this._getPreferencesService().clearUserPref(preference);
+  // Test if a preference is set
+  isPreferenceSet: function(preference) {
+    log("Is preference set? " + preference);
+    if(preference) {
+      return this._getPreferencesService().prefHasUserValue(preference);
+    }
+    return false;
+  },
+
+  // Delete a given preference
+  deletePreference: function(preference) {    
+    if (preference) {
+      // If a user preference is set
+      if (this.isPreferenceSet(preference)) {
+        log("Deleting preference: " + preference);
+        this._getPreferencesService().clearUserPref(preference);
+      }
+    }
   },
   
-  /**
-   * Set a string preference
-   */
+  // Set a string preference
   setStringPreference: function(preference, value) {
+    log("Setting preference: " + preference + " to " + value);
     if(preference) {   
       var supportsStringInterface = Components.interfaces.nsISupportsString;
       var string = Components.classes["@mozilla.org/supports-string;1"].
-         createInstance(supportsStringInterface);
-      string.data = value;		
+                      createInstance(supportsStringInterface);
+      string.data = value;
       // Set value
       this._getPreferencesService().setComplexValue(preference, 
          supportsStringInterface, string);
@@ -110,7 +133,9 @@ var PreferencesHandlerModule = {
     throw Components.results.NS_ERROR_NO_INTERFACE;
   },
 
-  canUnload: function(aCompMgr) { return true; }
+  canUnload: function(aCompMgr) { 
+    return true; 
+  }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
