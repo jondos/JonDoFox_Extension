@@ -15,7 +15,7 @@
     <em:developer>Johannes Renner</em:developer>	
     <em:contributor>Philipp Kaplycz</em:contributor>
     <!-- URLs -->
-    <em:homepageURL>https://www.jondos.de/jondofox</em:homepageURL>
+    <em:homepageURL>https://www.jondos.de/en/jondofox</em:homepageURL>
     <em:updateURL>https://www.jondos.de/files/downloads/update.rdf</em:updateURL>
     <em:aboutURL>chrome://jondofox/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://jondofox/skin/icon-32x32.png</em:iconURL>
