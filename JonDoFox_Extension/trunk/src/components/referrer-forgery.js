@@ -19,11 +19,16 @@ var refObserver = {
   refForgery: function(channel) {
     try {
       var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-      log("Setting referrer to " + ref);
+      log("Forging referrer to " + ref);
       // Set the 'Referer' here
       channel.setRequestHeader("Referer", ref, false);
       if (channel.referrer) {
-        channel.referrer.spec = ref;
+        // XXX: Only do this if it is necessary?
+        if (channel.referrer.spec != ref) {
+          channel.referrer.spec = ref;
+        } else {
+          log("channel.referrer.spec is already = ref = " + ref);
+        }
       }
       return true;
     } catch (ex) {

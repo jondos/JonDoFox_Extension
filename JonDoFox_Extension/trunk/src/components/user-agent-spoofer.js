@@ -10,8 +10,23 @@ function log(message) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Observer for XXX
+// Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
+
+// Override constants
+const appname = "Netscape";
+const appversion = "5.0 (Windows; LANG)";
+const buildID = "0";
+const oscpu = "Windows NT 5.1";
+const platform = "Win32";
+const productsub = "20080702";
+const useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16"; 
+const vendor = "";
+const vendorSub = "";
+
+// Replace LANG by the content of lang
+const reLang = new RegExp("LANG", "gm");
+const lang = "en-US";
 
 var uaObserver = {
 
@@ -31,15 +46,15 @@ var uaObserver = {
       // Get the preferences handler
       var prefsHandler = this.getPrefsHandler();
       // Set the preferences
-      prefsHandler.setStringPreference("general.appname.override", "Netscape");
-      prefsHandler.setStringPreference("general.appversion.override", "5.0 (Windows; LANG)");
-      prefsHandler.setStringPreference("general.buildID.override", "0");
-      prefsHandler.setStringPreference("general.oscpu.override", "Windows NT 5.1");   
-      prefsHandler.setStringPreference("general.platform.override", "Win32"); 
-      prefsHandler.setStringPreference("general.productsub.override", "20080702");
-      prefsHandler.setStringPreference("general.useragent.override", "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16");
-      prefsHandler.setStringPreference("general.useragent.vendor", "");
-      prefsHandler.setStringPreference("general.useragent.vendorSub", "");
+      prefsHandler.setStringPreference("general.appname.override", appname);
+      prefsHandler.setStringPreference("general.appversion.override", appversion.replace(reLang, lang));
+      prefsHandler.setStringPreference("general.buildID.override", buildID);
+      prefsHandler.setStringPreference("general.oscpu.override", oscpu);   
+      prefsHandler.setStringPreference("general.platform.override", platform); 
+      prefsHandler.setStringPreference("general.productsub.override", productsub);
+      prefsHandler.setStringPreference("general.useragent.override", useragent.replace(reLang, lang));
+      prefsHandler.setStringPreference("general.useragent.vendor", vendor);
+      prefsHandler.setStringPreference("general.useragent.vendorSub", vendorSub);
     } catch (ex) {
       log("setUserAgent: " + ex);
     }
@@ -86,7 +101,6 @@ var uaObserver = {
   unregisterObservers: function() {
     log("Unregistering observers");
     try {
-      // Stop processing events
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
       
@@ -99,7 +113,7 @@ var uaObserver = {
     }
   },
 
-  // XXX: Maybe not needed?
+  // XXX: Actually not needed
   getWindowCount: function() {
     var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
                 getService(Components.interfaces.nsIWindowWatcher);  
