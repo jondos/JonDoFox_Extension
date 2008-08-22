@@ -67,7 +67,7 @@ PreferencesHandler.prototype = {
   
   // Set a string preference
   setStringPreference: function(preference, value) {
-    log("Setting preference: " + preference + " to " + value);
+    log("Setting preference: " + preference + " to '" + value + "'");
     if(preference) {   
       var supportsStringInterface = Components.interfaces.nsISupportsString;
       var string = Components.classes["@mozilla.org/supports-string;1"].

@@ -24,7 +24,11 @@ const useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) G
 const vendor = "";
 const vendorSub = "";
 
-// Replace LANG by the content of lang
+// Accepted charsets, languages
+const charsets = "iso-8859-1,*,utf-8";
+const languages = "en-us, en";
+
+// Replace LANG in useragent, appversion by the content of lang
 const reLang = new RegExp("LANG", "gm");
 const lang = "en-US";
 
@@ -44,38 +48,42 @@ var uaObserver = {
     log("Setting user agent overrides");
     try {
       // Get the preferences handler
-      var prefsHandler = this.getPrefsHandler();
+      var ph = this.getPrefsHandler();
       // Set the preferences
-      prefsHandler.setStringPreference("general.appname.override", appname);
-      prefsHandler.setStringPreference("general.appversion.override", appversion.replace(reLang, lang));
-      prefsHandler.setStringPreference("general.buildID.override", buildID);
-      prefsHandler.setStringPreference("general.oscpu.override", oscpu);   
-      prefsHandler.setStringPreference("general.platform.override", platform); 
-      prefsHandler.setStringPreference("general.productsub.override", productsub);
-      prefsHandler.setStringPreference("general.useragent.override", useragent.replace(reLang, lang));
-      prefsHandler.setStringPreference("general.useragent.vendor", vendor);
-      prefsHandler.setStringPreference("general.useragent.vendorSub", vendorSub);
+      ph.setStringPreference("general.appname.override", appname);
+      ph.setStringPreference("general.appversion.override", appversion.replace(reLang, lang));
+      ph.setStringPreference("general.buildID.override", buildID);
+      ph.setStringPreference("general.oscpu.override", oscpu);   
+      ph.setStringPreference("general.platform.override", platform); 
+      ph.setStringPreference("general.productsub.override", productsub);
+      ph.setStringPreference("general.useragent.override", useragent.replace(reLang, lang));
+      ph.setStringPreference("general.useragent.vendor", vendor);
+      ph.setStringPreference("general.useragent.vendorSub", vendorSub);
+      // Spoof locales as well
+      ph.setStringPreference("intl.accept_charsets", charsets);
+      ph.setStringPreference("intl.accept_languages", languages)
     } catch (ex) {
       log("setUserAgent: " + ex);
     }
   },
 
   // Clear all preferences that were set by us
+  // TODO: Rather restore previous values
   clearUserAgent: function() {
     log("Clearing user agent overrides");
     try {
       // Get the preferences handler
-      var prefsHandler = this.getPrefsHandler();
+      var ph = this.getPrefsHandler();
       // Delete preferences if set
-      prefsHandler.deletePreference("general.appname.override");
-      prefsHandler.deletePreference("general.appversion.override");
-      prefsHandler.deletePreference("general.buildID.override");
-      prefsHandler.deletePreference("general.oscpu.override");
-      prefsHandler.deletePreference("general.platform.override");
-      prefsHandler.deletePreference("general.productsub.override");
-      prefsHandler.deletePreference("general.useragent.override");
-      prefsHandler.deletePreference("general.useragent.vendor");
-      prefsHandler.deletePreference("general.useragent.vendorSub");
+      ph.deletePreference("general.appname.override");
+      ph.deletePreference("general.appversion.override");
+      ph.deletePreference("general.buildID.override");
+      ph.deletePreference("general.oscpu.override");
+      ph.deletePreference("general.platform.override");
+      ph.deletePreference("general.productsub.override");
+      ph.deletePreference("general.useragent.override");
+      ph.deletePreference("general.useragent.vendor");
+      ph.deletePreference("general.useragent.vendorSub");
     } catch (ex) {
       log("clearUserAgent: " + ex);
     }
@@ -170,12 +178,13 @@ var uaObserver = {
           // Get the closed window's index
           var i = this.getWindowCount();
           log("Window " + i + " --> " + topic);
+          // XXX Currently do nothing .. let the code stay here though
           // Last browser window standing:
           // http://forums.mozillazine.org/viewtopic.php?t=308369
-          if (i == 0 && this.clearPrefs) { 
-            this.clearUserAgent(); 
+          //if (i == 0 && this.clearPrefs) { 
+            //this.clearUserAgent(); 
             // XXX: Also unregister observers?
-          }
+          //}
           break;
 
         default:
