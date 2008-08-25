@@ -2,7 +2,7 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-m_debug = false;
+m_debug = true;
 
 // Log method
 function log(message) {
@@ -48,14 +48,54 @@ var refObserver = {
     }
   },
 
+  // In case RefControl is installed, uninstall
+  removeRefControl: function() {
+    // RefControl uuid
+    var id = "{455D905A-D37C-4643-A9E2-F6FEFAA0424A}";
+    log("Checking for RefControl ..");
+    try {
+      // Get the extensions manager
+      var em = Components.classes["@mozilla.org/extensions/manager;1"].
+                  getService(Components.interfaces.nsIExtensionManager);
+      var loc = em.getInstallLocation(id);
+      // If present, uninstall
+      if (loc != null) {
+        em.uninstallItem(id);
+        log("RefControl found, uninstall ..");
+      } else {
+        log("RefControl not found");
+      }
+    } catch (ex) {
+      log("Got exception: " + ex);
+    }
+  },
+
   // This is called once on application startup
-  onAppStartup: function() {
-    log("App startup");
+  registerObservers: function() {
+    log("Register observers");
     try {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
-                        getService(Components.interfaces.nsIObserverService);
-                        
-      observers.addObserver(this, "http-on-modify-request", true);      
+                         getService(Components.interfaces.nsIObserverService);
+                       
+      // XXX: true or false?
+      observers.addObserver(this, "final-ui-startup", true);                 
+      observers.addObserver(this, "http-on-modify-request", true);
+      observers.addObserver(this, "quit-application-granted", true);
+    } catch (ex) {
+      log("Got exception: " + ex);
+    }
+  },
+
+  // Call this once on application shutdown
+  unregisterObservers: function() {
+    log("Unregister observers");
+    try {
+      var observers = Components.classes["@mozilla.org/observer-service;1"].
+                         getService(Components.interfaces.nsIObserverService);
+      
+      observers.removeObserver(this, "final-ui-startup");
+      observers.removeObserver(this, "http-on-modify-request");
+      observers.removeObserver(this, "quit-application-granted");
     } catch (ex) {
       log("Got exception: " + ex);
     }
@@ -71,11 +111,22 @@ var refObserver = {
           break;
 
         case 'app-startup':
-          this.onAppStartup();
+          log("Got topic --> " + topic);
+          this.registerObservers();
+          break;
+
+        case 'final-ui-startup':
+          log("Got topic --> " + topic);
+          this.removeRefControl();
+          break;
+        
+        case 'quit-application-granted':
+          log("Got topic --> " + topic);
+          this.unregisterObservers();
           break;
 
         default:
-          log("Unknown topic: " + topic);
+          log("!! Unknown topic: " + topic);
           break;
       }
     } catch (ex) {
@@ -107,7 +158,7 @@ var refForgery = {
 
   // Implement nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
-    log("Registering component: " + this.CLASS_NAME);
+    log("Registering ** " + this.CLASS_NAME + " **");
     if (this.firstTime) {
       this.firstTime = false;
       throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
@@ -123,7 +174,7 @@ var refForgery = {
   },
 
   unregisterSelf: function(compMgr, fileSpec, location) {
-    log("Unregistering component: " + this.CLASS_NAME);
+    log("Unregistering ** " + this.CLASS_NAME + " **");
     // Remove the auto-startup
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.unregisterFactoryLocation(this.CLASS_ID, fileSpec);

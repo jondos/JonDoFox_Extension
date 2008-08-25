@@ -91,7 +91,7 @@ var uaObserver = {
  
   // This is called once on application startup
   registerObservers: function() {
-    log("Registering observers");
+    log("Register observers");
     try {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                         getService(Components.interfaces.nsIObserverService);
@@ -107,7 +107,7 @@ var uaObserver = {
 
   // Called once on shutdown
   unregisterObservers: function() {
-    log("Unregistering observers");
+    log("Unregister observers");
     try {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
@@ -175,7 +175,7 @@ var uaObserver = {
           break;
 
         case 'xul-window-destroyed':
-          // Get the closed window's index
+          // Get the index of the closed window
           var i = this.getWindowCount();
           log("Window " + i + " --> " + topic);
           // XXX Currently do nothing .. let the code stay here though
@@ -220,7 +220,7 @@ var uaSpoof = {
 
   // Implement nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
-    log("Registering component: " + this.CLASS_NAME);
+    log("Registering ** " + this.CLASS_NAME + " **");
     if (this.firstTime) {
       this.firstTime = false;
       throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
@@ -236,7 +236,7 @@ var uaSpoof = {
   },
 
   unregisterSelf: function(compMgr, fileSpec, location) {
-    log("Unregistering component: " + this.CLASS_NAME);
+    log("Unregistering ** " + this.CLASS_NAME + " **");
     // Remove the auto-startup
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.unregisterFactoryLocation(this.CLASS_ID, fileSpec);
