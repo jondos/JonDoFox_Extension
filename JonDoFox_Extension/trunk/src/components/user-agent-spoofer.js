@@ -19,18 +19,26 @@ const appversion = "5.0 (Windows; LANG)";
 const buildID = "0";
 const oscpu = "Windows NT 5.1";
 const platform = "Win32";
-const productsub = "20080702";
-const useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16"; 
+
+const productsub = "20070713";
+//const productsub = "20080702";
+
+const useragent = "Mozilla/5.0 Gecko/20070713 Firefox/2.0.0.0";
+//const useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16"; 
+
+// Leave those empty
 const vendor = "";
 const vendorSub = "";
 
 // Accepted charsets, languages
-const charsets = "iso-8859-1,*,utf-8";
-const languages = "en-us, en";
+const acceptedCharsets = "utf-8,*";
+const defaultCharset = "utf-8";
+const languages = "en";
+const filetypes = "*/*";
 
 // Replace LANG in useragent, appversion by the content of lang
 const reLang = new RegExp("LANG", "gm");
-const lang = "en-US";
+const lang = "en";
 
 var uaObserver = {
 
@@ -56,19 +64,22 @@ var uaObserver = {
       ph.setStringPreference("general.oscpu.override", oscpu);   
       ph.setStringPreference("general.platform.override", platform); 
       ph.setStringPreference("general.productsub.override", productsub);
-      ph.setStringPreference("general.useragent.override", useragent.replace(reLang, lang));
+      ph.setStringPreference("general.useragent.override", useragent);
+      //ph.setStringPreference("general.useragent.override", useragent.replace(reLang, lang));
       ph.setStringPreference("general.useragent.vendor", vendor);
       ph.setStringPreference("general.useragent.vendorSub", vendorSub);
       // Spoof locales as well
-      ph.setStringPreference("intl.accept_charsets", charsets);
-      ph.setStringPreference("intl.accept_languages", languages)
+      ph.setStringPreference("intl.charset.default", defaultCharset);
+      //ph.setStringPreference("intl.accept_charsets", acceptedCharsets);
+      ph.setStringPreference("intl.accept_languages", languages);
+      ph.setStringPreference("network.http.accept.default", filetypes);
     } catch (ex) {
       log("setUserAgent: " + ex);
     }
   },
 
   // Clear all preferences that were set by us
-  // TODO: Rather restore previous values
+  // TODO: Restore previous values
   clearUserAgent: function() {
     log("Clearing user agent overrides");
     try {
@@ -121,7 +132,7 @@ var uaObserver = {
     }
   },
 
-  // XXX: Actually not needed
+  // Return the current number of browser windows (Currently not needed)
   getWindowCount: function() {
     var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
                 getService(Components.interfaces.nsIWindowWatcher);  
