@@ -23,11 +23,11 @@ var refObserver = {
       // Set the 'Referer' here
       channel.setRequestHeader("Referer", ref, false);
       if (channel.referrer) {
-        // XXX: Only do this if it is necessary?
+        // Set spec only if necessary, performance issue?
         if (channel.referrer.spec != ref) {
           channel.referrer.spec = ref;
         } else {
-          log("channel.referrer.spec is already = ref = " + ref);
+          log("!! channel.referrer.spec is already = " + ref);
         }
       }
       return true;
@@ -60,8 +60,8 @@ var refObserver = {
       var loc = em.getInstallLocation(id);
       // If present, uninstall
       if (loc != null) {
+        log("RefControl found, uninstalling ..");
         em.uninstallItem(id);
-        log("RefControl found, uninstall ..");
       } else {
         log("RefControl not found");
       }
