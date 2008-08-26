@@ -1,8 +1,9 @@
 Changes in version 0.1a4 - xx.08.2008
 
-  New features:
-    o Setting overrides to unify user agent prefs for all users
-    o Including a preferences handler as a XPCOM component
+  Added three XPCOM components:
+    o preferences-handler.js handle all kind of actions on preferences
+    o user-agent-spoofer.js setting prefs to unify user agent for all users
+    o referrer-forgery.js always sets the 'Referer' header to the current page
 
 Changes in version 0.1a3 - 05.08.2008
 
