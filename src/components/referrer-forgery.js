@@ -19,7 +19,7 @@ var refObserver = {
   refForgery: function(channel) {
     try {
       var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-      log("Forging referrer to " + ref);
+      //log("Forging referrer to " + ref);
       // Set the 'Referer' here
       channel.setRequestHeader("Referer", ref, false);
       if (channel.referrer) {

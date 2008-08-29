@@ -79,6 +79,25 @@ PreferencesHandler.prototype = {
     }
   },
 
+  // Return the value of a string preference
+  getStringPreference: function(preference) {
+    // If preference is given
+    if (preference) {
+      // FIXME: Look at this
+      // If not a user preference or a user preference is set
+      //if (this.isPreferenceSet(preference)) {
+        try {
+          log("Getting << " + preference + " >>");
+          return this._getPreferencesService().getComplexValue(preference, 
+             Components.interfaces.nsISupportsString).data;
+        } catch(exception) {
+          log("Exception: " + exception);
+        }
+      //}
+    }
+    return null;
+  },
+
   QueryInterface: function(aIID) {
     if (!aIID.equals(nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;

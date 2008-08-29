@@ -13,32 +13,16 @@ function log(message) {
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
-// Override constants
-const appname = "Netscape";
-const appversion = "5.0 (Windows; LANG)";
-const buildID = "0";
-const oscpu = "Windows NT 5.1";
-const platform = "Win32";
-
-const productsub = "20070713";
-//const productsub = "20080702";
-
-const useragent = "Mozilla/5.0 Gecko/20070713 Firefox/2.0.0.0";
-//const useragent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; LANG; rv:1.8.1.16) Gecko/20080702 Firefox/2.0.0.16"; 
-
-// Leave those empty
-const vendor = "";
-const vendorSub = "";
-
 // Accepted charsets, languages
 const acceptedCharsets = "utf-8,*";
 const defaultCharset = "utf-8";
 const languages = "en";
 const filetypes = "*/*";
 
-// Replace LANG in useragent, appversion by the content of lang
-const reLang = new RegExp("LANG", "gm");
-const lang = "en";
+// TODO: Replace LANG in useragent + appversion by the content of lang
+// Example: appversion.replace(reLang, lang)
+//const reLang = new RegExp("LANG", "gm");
+//const lang = "en";
 
 var uaObserver = {
 
@@ -58,16 +42,17 @@ var uaObserver = {
       // Get the preferences handler
       var ph = this.getPrefsHandler();
       // Set the preferences
-      ph.setStringPreference("general.appname.override", appname);
-      ph.setStringPreference("general.appversion.override", appversion.replace(reLang, lang));
-      ph.setStringPreference("general.buildID.override", buildID);
-      ph.setStringPreference("general.oscpu.override", oscpu);   
-      ph.setStringPreference("general.platform.override", platform); 
-      ph.setStringPreference("general.productsub.override", productsub);
-      ph.setStringPreference("general.useragent.override", useragent);
-      //ph.setStringPreference("general.useragent.override", useragent.replace(reLang, lang));
-      ph.setStringPreference("general.useragent.vendor", vendor);
-      ph.setStringPreference("general.useragent.vendorSub", vendorSub);
+      ph.setStringPreference("general.appname.override", ph.getStringPreference("extensions.jondofox.appname_override"));
+      ph.setStringPreference("general.appversion.override", ph.getStringPreference("extensions.jondofox.appversion_override"));
+      ph.setStringPreference("general.buildID.override", ph.getStringPreference("extensions.jondofox.buildID_override"));
+      ph.setStringPreference("general.oscpu.override", ph.getStringPreference("extensions.jondofox.oscpu_override"));   
+      ph.setStringPreference("general.platform.override", ph.getStringPreference("extensions.jondofox.platform_override")); 
+      ph.setStringPreference("general.productsub.override", ph.getStringPreference("extensions.jondofox.productsub_override"));
+      ph.setStringPreference("general.useragent.override", ph.getStringPreference("extensions.jondofox.useragent_override"));
+      // Vendor
+      ph.setStringPreference("general.useragent.vendor", ph.getStringPreference("extensions.jondofox.useragent_vendor"));
+      ph.setStringPreference("general.useragent.vendorSub", ph.getStringPreference("extensions.jondofox.useragent_vendorSub"));
+      
       // Spoof locales as well
       ph.setStringPreference("intl.charset.default", defaultCharset);
       //ph.setStringPreference("intl.accept_charsets", acceptedCharsets);
@@ -79,7 +64,7 @@ var uaObserver = {
   },
 
   // Clear all preferences that were set by us
-  // TODO: Restore previous values
+  // TODO: Rather restore previous values
   clearUserAgent: function() {
     log("Clearing user agent overrides");
     try {
