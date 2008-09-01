@@ -13,12 +13,6 @@ function log(message) {
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
-// Accepted charsets, languages
-const acceptedCharsets = "utf-8,*";
-const defaultCharset = "utf-8";
-const languages = "en";
-const filetypes = "*/*";
-
 // TODO: Replace LANG in useragent + appversion by the content of lang
 // Example: appversion.replace(reLang, lang)
 //const reLang = new RegExp("LANG", "gm");
@@ -51,13 +45,12 @@ var uaObserver = {
       ph.setStringPreference("general.useragent.override", ph.getStringPreference("extensions.jondofox.useragent_override"));
       // Vendor
       ph.setStringPreference("general.useragent.vendor", ph.getStringPreference("extensions.jondofox.useragent_vendor"));
-      ph.setStringPreference("general.useragent.vendorSub", ph.getStringPreference("extensions.jondofox.useragent_vendorSub"));
-      
+      ph.setStringPreference("general.useragent.vendorSub", ph.getStringPreference("extensions.jondofox.useragent_vendorSub"));      
       // Spoof locales as well
-      ph.setStringPreference("intl.charset.default", defaultCharset);
-      //ph.setStringPreference("intl.accept_charsets", acceptedCharsets);
-      ph.setStringPreference("intl.accept_languages", languages);
-      ph.setStringPreference("network.http.accept.default", filetypes);
+      ph.setStringPreference("intl.accept_languages", ph.getStringPreference("extensions.jondofox.accept_languages"));
+      ph.setStringPreference("intl.charset.default", ph.getStringPreference("extensions.jondofox.default_charset"));
+      ph.setStringPreference("intl.accept_charsets", ph.getStringPreference("extensions.jondofox.accept_charsets"));
+      ph.setStringPreference("network.http.accept.default", ph.getStringPreference("extensions.jondofox.accept_default"));
     } catch (ex) {
       log("setUserAgent: " + ex);
     }
@@ -184,7 +177,7 @@ var uaObserver = {
           break;
 
         default:
-          log("Unknown topic! --> " + topic);
+          log("!! Topic not handled --> " + topic);
           break;
       }
     } catch (ex) {
