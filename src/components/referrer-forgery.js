@@ -23,7 +23,7 @@ var refObserver = {
       // Set the 'Referer' here
       channel.setRequestHeader("Referer", ref, false);
       if (channel.referrer) {
-        // Set spec only if necessary, performance issue?
+        // Set spec only if necessary, XXX: performance issue?
         if (channel.referrer.spec != ref) {
           channel.referrer.spec = ref;
         } else {
@@ -49,7 +49,7 @@ var refObserver = {
   },
 
   // In case RefControl is installed, uninstall
-  removeRefControl: function() {
+  checkForRefControl: function() {
     // RefControl uuid
     var id = "{455D905A-D37C-4643-A9E2-F6FEFAA0424A}";
     log("Checking for RefControl ..");
@@ -78,7 +78,7 @@ var refObserver = {
                          getService(Components.interfaces.nsIObserverService);
                        
       // XXX: true or false?
-      observers.addObserver(this, "final-ui-startup", true);                 
+      observers.addObserver(this, "profile-do-change", true);                 
       observers.addObserver(this, "http-on-modify-request", true);
       observers.addObserver(this, "quit-application-granted", true);
     } catch (ex) {
@@ -93,7 +93,7 @@ var refObserver = {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
       
-      observers.removeObserver(this, "final-ui-startup");
+      observers.removeObserver(this, "profile-do-change");
       observers.removeObserver(this, "http-on-modify-request");
       observers.removeObserver(this, "quit-application-granted");
     } catch (ex) {
@@ -115,9 +115,9 @@ var refObserver = {
           this.registerObservers();
           break;
 
-        case 'final-ui-startup':
+        case 'profile-do-change':
           log("Got topic --> " + topic);
-          this.removeRefControl();
+          this.checkForRefControl();
           break;
         
         case 'quit-application-granted':
@@ -126,7 +126,7 @@ var refObserver = {
           break;
 
         default:
-          log("!! Unknown topic: " + topic);
+          log("!! Topic not handled --> " + topic);
           break;
       }
     } catch (ex) {

@@ -45,7 +45,8 @@ PreferencesHandler.prototype = {
   
   // Implemented methods include only those that are actually used
 
-  // Test if a preference is set
+  // Check whether preference has been changed from the default value
+  // When no default value exists, indicate whether preference exists
   isPreferenceSet: function(preference) {
     log("Is preference set? " + preference);
     if(preference) {
@@ -59,7 +60,7 @@ PreferencesHandler.prototype = {
     if (preference) {
       // If a user preference is set
       if (this.isPreferenceSet(preference)) {
-        log("Deleting preference: " + preference);
+        log("Deleting '" + preference + "'");
         this._getPreferencesService().clearUserPref(preference);
       }
     }
@@ -67,7 +68,7 @@ PreferencesHandler.prototype = {
   
   // Set a string preference
   setStringPreference: function(preference, value) {
-    log("Setting << " + preference + " >> to '" + value + "'");
+    log("Setting '" + preference + "' --> '" + value + "'");
     if(preference) {   
       var supportsStringInterface = Components.interfaces.nsISupportsString;
       var string = Components.classes["@mozilla.org/supports-string;1"].
@@ -83,16 +84,16 @@ PreferencesHandler.prototype = {
   getStringPreference: function(preference) {
     // If preference is given
     if (preference) {
-      // FIXME: Look at this
+      // TODO: Look at this
       // If not a user preference or a user preference is set
       //if (this.isPreferenceSet(preference)) {
-        try {
-          log("Getting << " + preference + " >>");
-          return this._getPreferencesService().getComplexValue(preference, 
-             Components.interfaces.nsISupportsString).data;
-        } catch(exception) {
-          log("Exception: " + exception);
-        }
+      try {
+        log("Getting '" + preference + "'");
+        return this._getPreferencesService().getComplexValue(preference, 
+                       Components.interfaces.nsISupportsString).data;
+      } catch(exception) {
+        log("Exception: " + exception);
+      }
       //}
     }
     return null;
@@ -117,7 +118,7 @@ var PreferencesHandlerFactory = {
       throw Components.results.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
-    // XXX: Singleton?
+    // Singleton
     if (PreferencesHandlerInstance == null)
       PreferencesHandlerInstance = new PreferencesHandler();
     return PreferencesHandlerInstance;
@@ -131,14 +132,14 @@ var PreferencesHandlerFactory = {
 var PreferencesHandlerModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
-       nsIComponentRegistrar);
+                           nsIComponentRegistrar);
     aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
-       aFileSpec, aLocation, aType);
+                aFileSpec, aLocation, aType);
   },
 
   unregisterSelf: function(aCompMgr, aLocation, aType) {
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
-       nsIComponentRegistrar);
+                           nsIComponentRegistrar);
     aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
   },
   
