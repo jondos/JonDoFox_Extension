@@ -10,6 +10,14 @@ function log(message) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Constants
+///////////////////////////////////////////////////////////////////////////////
+
+const CLASS_ID = Components.ID('{67d79e27-f32d-4e7f-97d7-68de76795611}');
+const CLASS_NAME = 'User Agent Spoofer'; 
+const CONTRACT_ID = '@jondos.de/user-agent-spoofer;1';
+
+///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -110,7 +118,7 @@ var uaObserver = {
     }
   },
 
-  // Return the current number of browser windows (Currently not needed)
+  // Return the current number of browser windows (not used at the moment)
   getWindowCount: function() {
     var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
                 getService(Components.interfaces.nsIWindowWatcher);  
@@ -126,12 +134,19 @@ var uaObserver = {
   // Implement nsIObserver
   observe: function(subject, topic, data) {
     try {
-      switch (topic) {
-        
+      switch (topic) {        
         case 'app-startup':
           log("Got topic --> " + topic);
           // Register observers
           this.registerObservers();
+          break;
+        
+        case 'quit-application-granted':
+          log("Got topic --> " + topic);
+          // Clear preferences on shutdown after uninstall
+          if (this.clearPrefs) { this.clearUserAgent(); }
+          // Unregister observers
+          this.unregisterObservers();
           break;
         
         case 'final-ui-startup':
@@ -141,7 +156,7 @@ var uaObserver = {
           break;
 
         case 'em-action-requested':
-          // Filter on the item ID here
+          // Filter on the item ID here to detect deinstallation etc.
           subject.QueryInterface(Components.interfaces.nsIUpdateItem);
           if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
             log("Got topic --> " + topic + ", data --> " + data);
@@ -153,14 +168,6 @@ var uaObserver = {
               this.clearPrefs = false;
             }
           }
-          break;
-
-        case 'quit-application-granted':
-          log("Got topic --> " + topic);
-          // Clear preferences on shutdown after uninstall
-          if (this.clearPrefs) { this.clearUserAgent(); }
-          // Unregister observers
-          this.unregisterObservers();
           break;
 
         case 'xul-window-destroyed':
@@ -190,7 +197,7 @@ var uaObserver = {
     if (!iid.equals(Components.interfaces.nsISupports) &&
         !iid.equals(Components.interfaces.nsIObserver) &&
         !iid.equals(Components.interfaces.nsISupportsWeakReference))
-                        throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
 }
@@ -199,44 +206,40 @@ var uaObserver = {
 // The actual component
 ///////////////////////////////////////////////////////////////////////////////
 
-var uaSpoof = {
-  
-  CLASS_ID: Components.ID("{67d79e27-f32d-4e7f-97d7-68de76795611}"),
-  CONTRACT_ID: "@jondos.de/user-agent-spoofer;1",
-  CLASS_NAME: "User Agent Spoofer",
+var UserAgentModule = {
 
   firstTime: true,
 
-  // Implement nsIModule
+  // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
-    log("Registering ** " + this.CLASS_NAME + " **");
+    log("Registering '" + CLASS_NAME + "' ..");
     if (this.firstTime) {
       this.firstTime = false;
       throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
     }
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    compMgr.registerFactoryLocation(this.CLASS_ID, this.CLASS_NAME, 
-       this.CONTRACT_ID, fileSpec, location, type);
+    compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
+               fileSpec, location, type);
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
-    catMan.addCategoryEntry("app-startup", "UAgentSpoof", this.CONTRACT_ID, 
-       true, true);
+    catMan.addCategoryEntry("app-startup", "UAgentSpoof", CONTRACT_ID, true, 
+              true);
   },
 
   unregisterSelf: function(compMgr, fileSpec, location) {
-    log("Unregistering ** " + this.CLASS_NAME + " **");
+    log("Unregistering '" + CLASS_NAME + "' ..");
     // Remove the auto-startup
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    compMgr.unregisterFactoryLocation(this.CLASS_ID, fileSpec);
+    compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
-    catMan.deleteCategoryEntry("app-startup", this.CONTRACT_ID, true);
+    catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);
   },
 
   getClassObject: function(compMgr, cid, iid) {
-    if (!cid.equals(this.CLASS_ID))
+    if (!cid.equals(CLASS_ID))
       throw Components.results.NS_ERROR_FACTORY_NOT_REGISTERED;
     if (!iid.equals(Components.interfaces.nsIFactory))
       throw Components.results.NS_ERROR_NO_INTERFACE;
@@ -246,7 +249,7 @@ var uaSpoof = {
   canUnload: function(compMgr) { 
     return true; 
   },
-  // end Implement nsIModule
+  // END nsIModule
 
   // Implement nsIFactory
   classFactory: {
@@ -265,5 +268,5 @@ var uaSpoof = {
 ///////////////////////////////////////////////////////////////////////////////
 
 function NSGetModule(comMgr, fileSpec) {
-  return uaSpoof; 
+  return UserAgentModule; 
 }
