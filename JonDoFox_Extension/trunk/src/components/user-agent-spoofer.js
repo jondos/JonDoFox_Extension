@@ -28,7 +28,6 @@ const CONTRACT_ID = '@jondos.de/user-agent-spoofer;1';
 
 var uaObserver = {
 
-  //prefsHandler: 
   clearPrefs: false,
 
   // Return the preferences handler
@@ -44,21 +43,34 @@ var uaObserver = {
       // Get the preferences handler
       var ph = this.getPrefsHandler();
       // Set the preferences
-      ph.setStringPreference("general.appname.override", ph.getStringPreference("extensions.jondofox.appname_override"));
-      ph.setStringPreference("general.appversion.override", ph.getStringPreference("extensions.jondofox.appversion_override"));
-      ph.setStringPreference("general.buildID.override", ph.getStringPreference("extensions.jondofox.buildID_override"));
-      ph.setStringPreference("general.oscpu.override", ph.getStringPreference("extensions.jondofox.oscpu_override"));   
-      ph.setStringPreference("general.platform.override", ph.getStringPreference("extensions.jondofox.platform_override")); 
-      ph.setStringPreference("general.productsub.override", ph.getStringPreference("extensions.jondofox.productsub_override"));
-      ph.setStringPreference("general.useragent.override", ph.getStringPreference("extensions.jondofox.useragent_override"));
+      ph.setStringPreference("general.appname.override", 
+            ph.getStringPreference("extensions.jondofox.appname_override"));
+      ph.setStringPreference("general.appversion.override", 
+            ph.getStringPreference("extensions.jondofox.appversion_override"));
+      ph.setStringPreference("general.buildID.override", 
+            ph.getStringPreference("extensions.jondofox.buildID_override"));
+      ph.setStringPreference("general.oscpu.override", 
+            ph.getStringPreference("extensions.jondofox.oscpu_override"));   
+      ph.setStringPreference("general.platform.override", 
+            ph.getStringPreference("extensions.jondofox.platform_override")); 
+      ph.setStringPreference("general.productsub.override", 
+            ph.getStringPreference("extensions.jondofox.productsub_override"));
+      ph.setStringPreference("general.useragent.override", 
+            ph.getStringPreference("extensions.jondofox.useragent_override"));
       // Vendor
-      ph.setStringPreference("general.useragent.vendor", ph.getStringPreference("extensions.jondofox.useragent_vendor"));
-      ph.setStringPreference("general.useragent.vendorSub", ph.getStringPreference("extensions.jondofox.useragent_vendorSub"));      
+      ph.setStringPreference("general.useragent.vendor", 
+            ph.getStringPreference("extensions.jondofox.useragent_vendor"));
+      ph.setStringPreference("general.useragent.vendorSub", 
+            ph.getStringPreference("extensions.jondofox.useragent_vendorSub"));      
       // Spoof locales as well
-      ph.setStringPreference("intl.accept_languages", ph.getStringPreference("extensions.jondofox.accept_languages"));
-      ph.setStringPreference("intl.charset.default", ph.getStringPreference("extensions.jondofox.default_charset"));
-      ph.setStringPreference("intl.accept_charsets", ph.getStringPreference("extensions.jondofox.accept_charsets"));
-      ph.setStringPreference("network.http.accept.default", ph.getStringPreference("extensions.jondofox.accept_default"));
+      ph.setStringPreference("intl.accept_languages", 
+            ph.getStringPreference("extensions.jondofox.accept_languages"));
+      ph.setStringPreference("intl.charset.default", 
+            ph.getStringPreference("extensions.jondofox.default_charset"));
+      ph.setStringPreference("intl.accept_charsets", 
+            ph.getStringPreference("extensions.jondofox.accept_charsets"));
+      ph.setStringPreference("network.http.accept.default", 
+            ph.getStringPreference("extensions.jondofox.accept_default"));
     } catch (ex) {
       log("setUserAgent: " + ex);
     }

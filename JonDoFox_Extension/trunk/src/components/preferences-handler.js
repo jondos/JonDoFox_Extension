@@ -114,13 +114,13 @@ var PreferencesHandlerInstance = null;
 
 var PreferencesHandlerFactory = {
   createInstance: function (aOuter, aIID) {
-    log("Creating instance");
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
     // Singleton
     if (PreferencesHandlerInstance == null)
+      log("Creating instance");
       PreferencesHandlerInstance = new PreferencesHandler();
     return PreferencesHandlerInstance;
   }
