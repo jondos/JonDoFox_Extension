@@ -10,6 +10,14 @@ function log(message) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Constants
+///////////////////////////////////////////////////////////////////////////////
+
+const CLASS_ID = Components.ID('{cd05fe5d-8815-4397-bcfd-ca3ae4029193}');
+const CLASS_NAME = 'Referrer Forgery'; 
+const CONTRACT_ID = '@jondos.de/referrer-forgery;1';
+
+///////////////////////////////////////////////////////////////////////////////
 // Observer for "http-on-modify-request"
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -61,6 +69,14 @@ var refObserver = {
       // If present, uninstall
       if (loc != null) {
         log("RefControl found, uninstalling ..");
+        // Prompt a message window
+        var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
+                         getService(Components.interfaces.nsIPromptService);
+        prompts.alert(null, "Attention", "The RefControl extension is now " +
+                   "going to be uninstalled since the new version of the " +
+                   "JonDoFox extension will replace RefControl's " +
+                   "functionality!");
+        // Uninstall
         em.uninstallItem(id);
       } else {
         log("RefControl not found");
@@ -77,8 +93,8 @@ var refObserver = {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
                        
-      // XXX: true or false?
-      observers.addObserver(this, "profile-do-change", true);                 
+      // XXX: Insert true or false?
+      observers.addObserver(this, "final-ui-startup", true);                 
       observers.addObserver(this, "http-on-modify-request", true);
       observers.addObserver(this, "quit-application-granted", true);
     } catch (ex) {
@@ -93,7 +109,7 @@ var refObserver = {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
       
-      observers.removeObserver(this, "profile-do-change");
+      observers.removeObserver(this, "final-ui-startup");
       observers.removeObserver(this, "http-on-modify-request");
       observers.removeObserver(this, "quit-application-granted");
     } catch (ex) {
@@ -105,24 +121,24 @@ var refObserver = {
   observe: function(subject, topic, data) {
     try {
       switch (topic) {
-        case 'http-on-modify-request':
-          subject.QueryInterface(Components.interfaces.nsIHttpChannel);
-          this.onModifyRequest(subject);
-          break;
-
         case 'app-startup':
           log("Got topic --> " + topic);
           this.registerObservers();
-          break;
-
-        case 'profile-do-change':
-          log("Got topic --> " + topic);
-          this.checkForRefControl();
           break;
         
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           this.unregisterObservers();
+          break;
+
+        case 'final-ui-startup':
+          log("Got topic --> " + topic);
+          this.checkForRefControl();
+          break;
+        
+        case 'http-on-modify-request':
+          subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+          this.onModifyRequest(subject);
           break;
 
         default:
@@ -148,44 +164,40 @@ var refObserver = {
 // The actual component
 ///////////////////////////////////////////////////////////////////////////////
 
-var refForgery = {
+var ReferrerForgeryModule = {
   
-  CLASS_ID: Components.ID("{cd05fe5d-8815-4397-bcfd-ca3ae4029193}"),
-  CONTRACT_ID: "@jondos.de/referrer-forgery;1",
-  CLASS_NAME: "Referrer Forgery",
-
   firstTime: true,
 
-  // Implement nsIModule
+  // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
-    log("Registering ** " + this.CLASS_NAME + " **");
+    log("Registering '" + CLASS_NAME + "' ..");
     if (this.firstTime) {
       this.firstTime = false;
       throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
     }
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    compMgr.registerFactoryLocation(this.CLASS_ID, this.CLASS_NAME, 
-       this.CONTRACT_ID, fileSpec, location, type);
+    compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
+               fileSpec, location, type);
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
-    catMan.addCategoryEntry("app-startup", "RefForgery", this.CONTRACT_ID, 
-       true, true);
+    catMan.addCategoryEntry("app-startup", "RefForgery", CONTRACT_ID, true, 
+              true);
   },
 
   unregisterSelf: function(compMgr, fileSpec, location) {
-    log("Unregistering ** " + this.CLASS_NAME + " **");
+    log("Unregistering '" + CLASS_NAME + "' ..");
     // Remove the auto-startup
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    compMgr.unregisterFactoryLocation(this.CLASS_ID, fileSpec);
+    compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
-    catMan.deleteCategoryEntry("app-startup", this.CONTRACT_ID, true);
+    catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);
   },
 
   getClassObject: function(compMgr, cid, iid) {
-    if (!cid.equals(this.CLASS_ID))
+    if (!cid.equals(CLASS_ID))
       throw Components.results.NS_ERROR_FACTORY_NOT_REGISTERED;
     if (!iid.equals(Components.interfaces.nsIFactory))
       throw Components.results.NS_ERROR_NO_INTERFACE;
@@ -195,7 +207,7 @@ var refForgery = {
   canUnload: function(compMgr) { 
     return true; 
   },
-  // end Implement nsIModule
+  // END nsIModule
 
   // Implement nsIFactory
   classFactory: {
@@ -214,5 +226,5 @@ var refForgery = {
 ///////////////////////////////////////////////////////////////////////////////
 
 function NSGetModule(comMgr, fileSpec) { 
-  return refForgery; 
+  return ReferrerForgeryModule;
 }

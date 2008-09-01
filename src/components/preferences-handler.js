@@ -114,6 +114,7 @@ var PreferencesHandlerInstance = null;
 
 var PreferencesHandlerFactory = {
   createInstance: function (aOuter, aIID) {
+    log("Creating instance");
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
@@ -146,10 +147,8 @@ var PreferencesHandlerModule = {
   getClassObject: function(aCompMgr, aCID, aIID) {
     if (!aIID.equals(Components.interfaces.nsIFactory))
       throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-
     if (aCID.equals(CLASS_ID))
       return PreferencesHandlerFactory;
-
     throw Components.results.NS_ERROR_NO_INTERFACE;
   },
 
