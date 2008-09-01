@@ -1,14 +1,24 @@
 #!/bin/bash
 
-# Check for existence
+# Use this script to generate a distributable .xpi 
+# including the chrome-folder as a .jar-archive
+
+# Check for existence of the .xpi
 if [ -e "xpi/jondofox.xpi" ]; then
   echo \*\* Removing existing *.xpi ..
   rm xpi/jondofox.xpi
 fi
 
-# Say something
+# Create a jarfile in src/chrome containing chrome contents
+echo \*\* Creating jarfile containing chrome contents:
+cd src/chrome
+zip -Xvr9 jondofox.jar ./ -x "*.svn/*" "*.swp"
+cd ../..
+
+# Create xpi
 echo \*\* Creating \'jondofox.xpi\':
-# Change directory
 cd src
-# Zip files excluding all .*
-zip -Xvr ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp"
+zip -Xvr9 ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp" "chrome/*"
+# Move jondofox.jar into the .xpi
+zip -Xvm9 ../xpi/jondofox.xpi ./chrome/jondofox.jar
+cd ..
