@@ -1,6 +1,6 @@
 // Useragent prefs
 pref("extensions.jondofox.appname_override", "Netscape");
-pref("extensions.jondofox.appversion_override", "5.0 (Windows; en)");
+pref("extensions.jondofox.appversion_override", "5.1 (Windows; en)");
 pref("extensions.jondofox.buildID_override", "0");
 pref("extensions.jondofox.oscpu_override", "Windows NT 5.1");
 pref("extensions.jondofox.platform_override", "Win32");
