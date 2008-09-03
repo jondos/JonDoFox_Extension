@@ -76,14 +76,13 @@ var uaObserver = {
     }
   },
 
-  // Clear all preferences that were set by us
-  // TODO: Rather restore previous values
+  // Clear all preferences that were set by us: delete/restore defaults
   clearUserAgent: function() {
-    log("Clearing user agent overrides");
+    log("Clearing preferences");
     try {
       // Get the preferences handler
       var ph = this.getPrefsHandler();
-      // Delete preferences if set
+      // Delete preferences overrides
       ph.deletePreference("general.appname.override");
       ph.deletePreference("general.appversion.override");
       ph.deletePreference("general.buildID.override");
@@ -91,8 +90,14 @@ var uaObserver = {
       ph.deletePreference("general.platform.override");
       ph.deletePreference("general.productsub.override");
       ph.deletePreference("general.useragent.override");
+      // Vendor
       ph.deletePreference("general.useragent.vendor");
       ph.deletePreference("general.useragent.vendorSub");
+      // Locale
+      ph.deletePreference("intl.accept_languages");
+      ph.deletePreference("intl.charset.default");
+      ph.deletePreference("intl.accept_charsets");
+      ph.deletePreference("network.http.accept.default");
     } catch (ex) {
       log("clearUserAgent: " + ex);
     }
