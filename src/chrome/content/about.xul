@@ -12,7 +12,7 @@
 <groupbox align="center" orient="horizontal">
 <vbox>
   <text value="JonDoFox-Extension" style="font-weight: bold; font-size: x-large;"/>
-  <text value="Version 0.1a4-dev"/>
+  <text value="Version 0.2b-dev"/>
   <separator class="thin"/>
   <text value="Created By:" style="font-weight: bold;"/>
   <text value="JonDos GmbH"/>

@@ -5,14 +5,16 @@
 /**
  * Dump information to the console?
  */
-var m_JDF_debug = true;
+var m_debug = true;
 
 /**
  * Send data to the console if we're in debug mode
  * @param msg The string containing the log message
+ *
+ * Do not forget to create 'browser.dom.window.dump.enabled' first!
  */
-function JDF_dump(msg) {
-  if (m_JDF_debug) dump("JDF :: " + msg + "\n");
+function log(msg) {
+  if (m_debug) dump("JSHook :: " + msg + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,10 +32,10 @@ var m_progress = Components.classes["@mozilla.org/docloaderservice;1"].
  */
 function JDF_hook_document(win, doc) {
   if(typeof(win.wrappedJSObject) == 'undefined') {
-    JDF_dump("No JSObject for '" + win.location + "', returning ..")
+    log("No JSObject for '" + win.location + "', returning ..")
     return;
   }
-  JDF_dump("Hooking document: " + win.location);
+  log("Hooking document: " + win.location);
 
   // m_JDF_jshooks contains sources of jshooks.js
   jshooks_code = m_JDF_jshooks;
@@ -64,12 +66,12 @@ function JDF_init_jshooks() {
   istream.init(channel.open());
   m_JDF_jshooks = istream.read(istream.available());
   istream.close();
-  JDF_dump("JDF_init_jshooks(): " + (m_JDF_jshooks != null));
+  log("JDF_init_jshooks(): " + (m_JDF_jshooks != null));
 }
 
 // Website request
 function JDF_check_progress(aProgress, aRequest) {
-  JDF_dump("JDF_check_progress(): " + aProgress + ", " + aRequest) 
+  log("JDF_check_progress(): " + aProgress + ", " + aRequest) 
   // If this is the first call: init
   if (!m_JDF_jshooks) {
     JDF_init_jshooks();
@@ -143,7 +145,7 @@ var myExt_urlBarListener = {
  * Initialize the extension
  */
 function JDF_initialize(event) {
-  JDF_dump("JDF_initialize(): " + event);
+  log("JDF_initialize(): " + event);
   var windowContent = window.document.getElementById("content");
   // If the window content is set
   if(windowContent)
@@ -164,7 +166,7 @@ function JDF_initialize(event) {
  * Uninitialize the extension
  */
 function JDF_uninitialize(event) {
-  JDF_dump("JDF_uninitialize(): " + event);
+  log("JDF_uninitialize(): " + event);
   var windowContent = window.document.getElementById("content");
   // If the window content is set
   if(windowContent) {
@@ -179,6 +181,7 @@ function JDF_uninitialize(event) {
   m_progress.removeProgressListener(myExt_urlBarListener);
 }
 
+log("JS hooks are currently not yet activated :-(");
 // Add listeners
-// window.addEventListener("load", JDF_initialize, false);
-// window.addEventListener("unload", JDF_uninitialize, false);
+//window.addEventListener("load", JDF_initialize, false);
+//window.addEventListener("unload", JDF_uninitialize, false);

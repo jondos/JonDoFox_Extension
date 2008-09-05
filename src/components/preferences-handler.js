@@ -48,19 +48,19 @@ PreferencesHandler.prototype = {
   // Check whether preference has been changed from the default value
   // When no default value exists, indicate whether preference exists
   isPreferenceSet: function(preference) {
-    log("Is preference set? " + preference);
+    log("Pref set?? " + preference);
     if(preference) {
       return this._getPreferencesService().prefHasUserValue(preference);
     }
     return false;
   },
 
-  // Delete a given preference
+  // Delete a given preference respectively reset to default
   deletePreference: function(preference) {    
     if (preference) {
       // If a user preference is set
       if (this.isPreferenceSet(preference)) {
-        log("Deleting '" + preference + "'");
+        log("Reset '" + preference + "'");
         this._getPreferencesService().clearUserPref(preference);
       }
     }
