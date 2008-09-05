@@ -10,14 +10,15 @@ if [ -e "xpi/jondofox.xpi" ]; then
 fi
 
 # Create a jarfile in src/chrome containing chrome contents
-echo \*\* Creating jarfile containing chrome contents:
+echo \*\* Creating jarfile containing \'chrome\':
 cd src/chrome
 zip -Xvr9 jondofox.jar ./ -x "*.svn/*" "*.swp"
 cd ../..
 
-# Create xpi
+# Create the .xpi
 echo \*\* Creating \'jondofox.xpi\':
 cd src
+# Exclude chrome from the zip
 zip -Xvr9 ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp" "chrome/*"
 # Move jondofox.jar into the .xpi
 zip -Xvm9 ../xpi/jondofox.xpi ./chrome/jondofox.jar
