@@ -1,3 +1,9 @@
+/******************************************************************************
+ * This is a general purpose XPCOM component that can be accessed from within
+ * any other component. It transparently encapsulates handling of user prefs in
+ * Firefox using the nsIPrefService.
+ *****************************************************************************/
+
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,8 +43,9 @@ PreferencesHandler.prototype = {
   // Get the internal preferences service
   _getPreferencesService: function() {
     if (!this._preferencesService) {
-      this._preferencesService = Components.classes["@mozilla.org/preferences-service;1"].
-         getService(Components.interfaces.nsIPrefService).getBranch("");
+      this._preferencesService = Components.
+              classes["@mozilla.org/preferences-service;1"].
+              getService(Components.interfaces.nsIPrefService).getBranch("");
     }
     return this._preferencesService
   },
@@ -48,7 +55,7 @@ PreferencesHandler.prototype = {
   // Check whether preference has been changed from the default value
   // When no default value exists, indicate whether preference exists
   isPreferenceSet: function(preference) {
-    log("Pref set?? " + preference);
+    log("Pref set? '" + preference + "'");
     if(preference) {
       return this._getPreferencesService().prefHasUserValue(preference);
     }
@@ -60,7 +67,7 @@ PreferencesHandler.prototype = {
     if (preference) {
       // If a user preference is set
       if (this.isPreferenceSet(preference)) {
-        log("Reset '" + preference + "'");
+        log("Resetting '" + preference + "'");
         this._getPreferencesService().clearUserPref(preference);
       }
     }
@@ -80,9 +87,9 @@ PreferencesHandler.prototype = {
     }
   },
 
-  // Return the value of a string preference
+  // Return the current value of a string preference
   getStringPreference: function(preference) {
-    // If preference is given
+    // If preference is not null
     if (preference) {
       // TODO: Look at this
       // If not a user preference or a user preference is set

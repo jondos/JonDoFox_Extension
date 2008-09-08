@@ -1,3 +1,12 @@
+/******************************************************************************
+ * This component is instanciated once on application startup to do the 
+ * following:
+ *
+ * - Set configuration options regarding the browser's user agent string, as 
+ *   well as locale and language configuration
+ * - Listen for uninstallation of the extension to reset these options
+ *****************************************************************************/
+ 
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,7 +45,7 @@ var uaObserver = {
               wrappedJSObject;
   },
 
-  // Set several overrides
+  // Set several overrides and config options
   setUserAgent: function() {
     log("Setting user agent overrides");
     try {
@@ -191,13 +200,14 @@ var uaObserver = {
           // Get the index of the closed window
           var i = this.getWindowCount();
           log("Window " + i + " --> " + topic);
-          // XXX Currently do nothing .. let the code stay here though
-          // Last browser window standing:
-          // http://forums.mozillazine.org/viewtopic.php?t=308369
-          //if (i == 0 && this.clearPrefs) { 
-            //this.clearUserAgent(); 
-            // XXX: Also unregister observers?
-          //}
+          // XXX: Not really necessary since closing the last window will also
+          // cause 'quit-application-granted' .. let the code stay here though
+          // Last browser window standing: 
+          //   http://forums.mozillazine.org/viewtopic.php?t=308369
+          /*if (i == 0 && this.clearPrefs) { 
+            this.clearUserAgent(); 
+            this.unregisterObservers()
+          }*/
           break;
 
         default:

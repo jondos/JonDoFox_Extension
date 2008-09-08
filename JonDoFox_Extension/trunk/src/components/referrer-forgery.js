@@ -1,3 +1,11 @@
+/******************************************************************************
+ * This component is instanciated once on application startup to do the 
+ * following:
+ *
+ * - Replace RefControl functionality by simply forging every referrer
+ * - Check for the existence of RefControl to uninstall it in case it is there
+ *****************************************************************************/
+ 
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +39,8 @@ var refObserver = {
       // Set the 'Referer' here
       channel.setRequestHeader("Referer", ref, false);
       if (channel.referrer) {
-        // Set spec only if necessary, XXX: performance issue?
+        // Set referrer.spec only if necessary
+        // XXX: performance issue?
         if (channel.referrer.spec != ref) {
           channel.referrer.spec = ref;
         } else {
@@ -42,7 +51,6 @@ var refObserver = {
     } catch (ex) {
       log("Got exception: " + ex);
     }
-    // FIXME Never reached?
     return false;
   },
 
@@ -72,7 +80,7 @@ var refObserver = {
         // Prompt a message window
         var prompts = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
                          getService(Components.interfaces.nsIPromptService);
-        prompts.alert(null, "Attention", "The RefControl extension is now " +
+        prompts.alert(null, "Attention", "The extension 'RefControl' is now " +
                    "going to be uninstalled since the new version of the " +
                    "JonDoFox extension will replace RefControl's " +
                    "functionality!");
@@ -92,11 +100,10 @@ var refObserver = {
     try {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
-                       
-      // XXX: Insert true or false?
-      observers.addObserver(this, "final-ui-startup", true);                 
-      observers.addObserver(this, "http-on-modify-request", true);
-      observers.addObserver(this, "quit-application-granted", true);
+
+      observers.addObserver(this, "final-ui-startup", false);                 
+      observers.addObserver(this, "http-on-modify-request", false);
+      observers.addObserver(this, "quit-application-granted", false);
     } catch (ex) {
       log("Got exception: " + ex);
     }
