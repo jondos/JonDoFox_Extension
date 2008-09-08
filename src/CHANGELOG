@@ -1,15 +1,16 @@
-Changes in version 0.2b - xx.09.2008
-
-  New License:
-    o TODO
+Changes in version 0.2b1 - 08.09.2008
 
   Added three XPCOM components:
-    o preferences-handler.js handle all kind of actions on preferences
-    o user-agent-spoofer.js setting prefs to unify user agent for all users
-    o referrer-forgery.js always sets the 'Referer' header to the current page
+    o user-agent-spoofer.js: unify certain browser prefs for all users
+    o referrer-forgery.js: always set the 'Referer' header to the current page
+    o preferences-handler.js: offer a transparent API for preference handling
 
   Minor modifications:
-    o Distributing the chrome folder as a jar-archive now
+    o Distributing the chrome folder as a .jar-archive now
+    o Integrated compatibility for Firefox up to version 3.1a2
+
+  New license:
+    o The modified BSD license
 
 Changes in version 0.1a3 - 05.08.2008
 
