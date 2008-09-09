@@ -30,14 +30,29 @@ const CONTRACT_ID = '@jondos.de/user-agent-spoofer;1';
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: Replace LANG in useragent + appversion by the content of lang
-// Example: appversion.replace(reLang, lang)
-//const reLang = new RegExp("LANG", "gm");
-//const lang = "en";
-
 var uaObserver = {
-
+  
+  // Clear preferences on application shutdown, e.g. uninstall?
   clearPrefs: false,
+
+  // Set to true if the user was warned that an important pref was modified
+  userWarned: false,
+
+  // TODO: Set this from the outside somehow
+  stringPrefsMap: 
+     { 'general.appname.override':'extensions.jondofox.appname_override',
+       'general.appversion.override':'extensions.jondofox.appversion_override',
+       'general.buildID.override':'extensions.jondofox.buildID_override',
+       'general.oscpu.override':'extensions.jondofox.oscpu_override',
+       'general.platform.override':'extensions.jondofox.platform_override',
+       'general.productsub.override':'extensions.jondofox.productsub_override',
+       'general.useragent.override':'extensions.jondofox.useragent_override',
+       'general.useragent.vendor':'extensions.jondofox.useragent_vendor',
+       'general.useragent.vendorSub':'extensions.jondofox.useragent_vendorSub',
+       'intl.accept_languages':'extensions.jondofox.accept_languages',
+       'intl.charset.default':'extensions.jondofox.default_charset',
+       'intl.accept_charsets':'extensions.jondofox.accept_charsets',
+       'network.http.accept.default':'extensions.jondofox.accept_default' },
 
   // Return the preferences handler
   getPrefsHandler: function() {
@@ -45,80 +60,50 @@ var uaObserver = {
               wrappedJSObject;
   },
 
-  // Set several overrides and config options
-  setUserAgent: function() {
-    log("Setting user agent overrides");
+  // Set several string preferences: user agent overrides, etc.
+  setStringPrefs: function() {
     try {
-      // Get the preferences handler
+      // Set all string preferences
       var ph = this.getPrefsHandler();
-      // Set the preferences
-      ph.setStringPreference("general.appname.override", 
-            ph.getStringPreference("extensions.jondofox.appname_override"));
-      ph.setStringPreference("general.appversion.override", 
-            ph.getStringPreference("extensions.jondofox.appversion_override"));
-      ph.setStringPreference("general.buildID.override", 
-            ph.getStringPreference("extensions.jondofox.buildID_override"));
-      ph.setStringPreference("general.oscpu.override", 
-            ph.getStringPreference("extensions.jondofox.oscpu_override"));   
-      ph.setStringPreference("general.platform.override", 
-            ph.getStringPreference("extensions.jondofox.platform_override")); 
-      ph.setStringPreference("general.productsub.override", 
-            ph.getStringPreference("extensions.jondofox.productsub_override"));
-      ph.setStringPreference("general.useragent.override", 
-            ph.getStringPreference("extensions.jondofox.useragent_override"));
-      // Vendor
-      ph.setStringPreference("general.useragent.vendor", 
-            ph.getStringPreference("extensions.jondofox.useragent_vendor"));
-      ph.setStringPreference("general.useragent.vendorSub", 
-            ph.getStringPreference("extensions.jondofox.useragent_vendorSub"));      
-      // Spoof locales as well
-      ph.setStringPreference("intl.accept_languages", 
-            ph.getStringPreference("extensions.jondofox.accept_languages"));
-      ph.setStringPreference("intl.charset.default", 
-            ph.getStringPreference("extensions.jondofox.default_charset"));
-      ph.setStringPreference("intl.accept_charsets", 
-            ph.getStringPreference("extensions.jondofox.accept_charsets"));
-      ph.setStringPreference("network.http.accept.default", 
-            ph.getStringPreference("extensions.jondofox.accept_default"));
-    } catch (ex) {
-      log("setUserAgent: " + ex);
+      for (p in this.stringPrefsMap) {
+        ph.setStringPreference(p, 
+              ph.getStringPreference(this.stringPrefsMap[p]));
+      }      
+      // Add an observer to the main pref branch after setting the prefs
+      var prefs = ph.getPrefs();
+      prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
+      prefs.addObserver("", this, false);
+      log("Observing preferences ..");
+    } catch (e) {
+      log("setStringPrefs: " + e);
     }
   },
 
-  // Clear all preferences that were set by us: delete/restore defaults
-  clearUserAgent: function() {
-    log("Clearing preferences");
+  // Reset string preferences
+  clearStringPrefs: function() {
     try {
-      // Get the preferences handler
+      // Get the preferences handler first
       var ph = this.getPrefsHandler();
-      // Delete preferences overrides
-      ph.deletePreference("general.appname.override");
-      ph.deletePreference("general.appversion.override");
-      ph.deletePreference("general.buildID.override");
-      ph.deletePreference("general.oscpu.override");
-      ph.deletePreference("general.platform.override");
-      ph.deletePreference("general.productsub.override");
-      ph.deletePreference("general.useragent.override");
-      // Vendor
-      ph.deletePreference("general.useragent.vendor");
-      ph.deletePreference("general.useragent.vendorSub");
-      // Locale
-      ph.deletePreference("intl.accept_languages");
-      ph.deletePreference("intl.charset.default");
-      ph.deletePreference("intl.accept_charsets");
-      ph.deletePreference("network.http.accept.default");
-    } catch (ex) {
-      log("clearUserAgent: " + ex);
+      // Remove the preferences observer      
+      log("Stop observing preferences ..");
+      var prefs = ph.getPrefs();
+      prefs.removeObserver("", this);
+      // Reset all prefs
+      for (p in this.stringPrefsMap) {
+        ph.deletePreference(p);
+      }
+    } catch (e) {
+      log("clearStringPrefs: " + e);
     }
   },
- 
+   
   // This is called once on application startup
   registerObservers: function() {
     log("Register observers");
     try {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                         getService(Components.interfaces.nsIObserverService);
-                 
+      // Add general observers
       observers.addObserver(this, "final-ui-startup", false);
       observers.addObserver(this, "em-action-requested", false);
       observers.addObserver(this, "quit-application-granted", false);
@@ -128,13 +113,13 @@ var uaObserver = {
     }
   },
 
-  // Called once on shutdown
+  // Called once on application shutdown
   unregisterObservers: function() {
     log("Unregister observers");
     try {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
-      
+      // Remove general observers
       observers.removeObserver(this, "final-ui-startup");
       observers.removeObserver(this, "em-action-requested");
       observers.removeObserver(this, "quit-application-granted");    
@@ -170,7 +155,7 @@ var uaObserver = {
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           // Clear preferences on shutdown after uninstall
-          if (this.clearPrefs) { this.clearUserAgent(); }
+          if (this.clearPrefs) { this.clearStringPrefs(); }
           // Unregister observers
           this.unregisterObservers();
           break;
@@ -178,7 +163,7 @@ var uaObserver = {
         case 'final-ui-startup':
           log("Got topic --> " + topic);
           // Set the user agent here
-          this.setUserAgent();          
+          this.setStringPrefs();
           break;
 
         case 'em-action-requested':
@@ -210,6 +195,31 @@ var uaObserver = {
           }*/
           break;
 
+        case 'nsPref:changed':
+          // Check if the changed pref is one of 'ours'
+          if (!this.userWarned && data in this.stringPrefsMap) {
+            //log("Pref '" + data + "' is on the map!");
+            // Get the prefs handler
+            var ph = this.getPrefsHandler();            
+            //log("Comparing " + ph.getStringPreference(data) + 
+            //   " to " + ph.getStringPreference(this.stringPrefsMap[data]));
+            // If the new value is not the recommended ..
+            if (ph.getStringPreference(data) != 
+                   ph.getStringPreference(this.stringPrefsMap[data])) {
+              // ... warn the user
+              var ps = Components.
+                          classes["@mozilla.org/embedcomp/prompt-service;1"].
+                          getService(Components.interfaces.nsIPromptService);
+              ps.alert(null, "Attention", "A browser preference that is " +
+                    "important for your anonymity has just changed! You are " +
+                    "not safe anymore until you restart your browser!!");
+              this.userWarned = true;
+            } else {
+              log("All good!");
+            }
+          }
+          break;
+          
         default:
           log("!! Topic not handled --> " + topic);
           break;
