@@ -40,8 +40,10 @@ PreferencesHandler.prototype = {
   // The internal preferences service
   _preferencesService: null,
   
-  // Get the internal preferences service
-  _getPreferencesService: function() {
+  // Implemented methods include only those that are actually used
+  
+  // Get the main preferences branch
+  getPrefs: function() {
     if (!this._preferencesService) {
       this._preferencesService = Components.
               classes["@mozilla.org/preferences-service;1"].
@@ -50,14 +52,12 @@ PreferencesHandler.prototype = {
     return this._preferencesService
   },
   
-  // Implemented methods include only those that are actually used
-
   // Check whether preference has been changed from the default value
   // When no default value exists, indicate whether preference exists
   isPreferenceSet: function(preference) {
     log("Pref set? '" + preference + "'");
     if(preference) {
-      return this._getPreferencesService().prefHasUserValue(preference);
+      return this.getPrefs().prefHasUserValue(preference);
     }
     return false;
   },
@@ -68,7 +68,7 @@ PreferencesHandler.prototype = {
       // If a user preference is set
       if (this.isPreferenceSet(preference)) {
         log("Resetting '" + preference + "'");
-        this._getPreferencesService().clearUserPref(preference);
+        this.getPrefs().clearUserPref(preference);
       }
     }
   },
@@ -82,8 +82,8 @@ PreferencesHandler.prototype = {
                       createInstance(supportsStringInterface);
       string.data = value;
       // Set value
-      this._getPreferencesService().setComplexValue(preference, 
-         supportsStringInterface, string);
+      this.getPrefs().setComplexValue(preference, supportsStringInterface, 
+                       string);
     }
   },
 
@@ -96,7 +96,7 @@ PreferencesHandler.prototype = {
       //if (this.isPreferenceSet(preference)) {
       try {
         log("Getting '" + preference + "'");
-        return this._getPreferencesService().getComplexValue(preference, 
+        return this.getPrefs().getComplexValue(preference, 
                        Components.interfaces.nsISupportsString).data;
       } catch(exception) {
         log("Exception: " + exception);
@@ -120,7 +120,7 @@ PreferencesHandler.prototype = {
 var PreferencesHandlerInstance = null;
 
 var PreferencesHandlerFactory = {
-  createInstance: function (aOuter, aIID) {
+  createInstance: function (aOuter, aIID) {    
     if (aOuter != null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
