@@ -8,11 +8,11 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-m_debug = true;
+mDebug = true;
 
 // Log method
 function log(message) {
-  if (m_debug) dump("PrefsHandler :: " + message + "\n");
+  if (mDebug) dump("PrefsHandler :: " + message + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ PreferencesHandler.prototype = {
         return this.getPrefs().getComplexValue(preference, 
                        Components.interfaces.nsISupportsString).data;
       } catch(exception) {
-        log("Exception: " + exception);
+        log("getStringPreference(): " + exception);
       }
       //}
     }

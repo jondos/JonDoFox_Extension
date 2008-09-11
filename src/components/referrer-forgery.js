@@ -44,7 +44,7 @@ var refObserver = {
         if (channel.referrer.spec != ref) {
           channel.referrer.spec = ref;
         } else {
-          log("!! channel.referrer.spec is already = " + ref);
+          //log("!! channel.referrer.spec is already = " + ref);
         }
       }
       return true;
