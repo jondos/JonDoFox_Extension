@@ -23,21 +23,22 @@ function log(message) {
 ///////////////////////////////////////////////////////////////////////////////
 
 const CLASS_ID = Components.ID('{67d79e27-f32d-4e7f-97d7-68de76795611}');
-const CLASS_NAME = 'User Agent Spoofer'; 
-const CONTRACT_ID = '@jondos.de/user-agent-spoofer;1';
+const CLASS_NAME = 'Preferences Observer'; 
+const CONTRACT_ID = '@jondos.de/preferences-observer;1';
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
-var uaObserver = {
+var PrefsObserver = {
   
   // Clear preferences on application shutdown, e.g. uninstall?
   clearPrefs: false,
 
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
-
+  
+  // A map of string preferences
   // TODO: Somehow set this from the outside
   stringPrefsMap: 
      { 'general.appname.override':'extensions.jondofox.appname_override',
@@ -196,7 +197,8 @@ var uaObserver = {
           break;
 
         case 'nsPref:changed':
-          // Check if the changed pref is one of 'ours'
+          // TODO: Check if somebody enables the history: browser.history_expire_days
+          // Check if the changed preference is one of 'ours'
           if (!this.userWarned && data in this.stringPrefsMap) {
             //log("Pref '" + data + "' is on the map!");
             // Get the prefs handler
@@ -295,7 +297,7 @@ var UserAgentModule = {
       if (outer != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
 
-      return uaObserver.QueryInterface(iid);
+      return PrefsObserver.QueryInterface(iid);
     }
   }
 };
