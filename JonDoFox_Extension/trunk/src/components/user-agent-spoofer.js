@@ -11,11 +11,11 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-var m_debug = true;
+var mDebug = true;
 
 // Log a message
 function log(message) {
-  if (m_debug) dump("UAgent :: " + message + "\n");
+  if (mDebug) dump("UAgent :: " + message + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ var uaObserver = {
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
 
-  // TODO: Set this from the outside somehow
+  // TODO: Somehow set this from the outside
   stringPrefsMap: 
      { 'general.appname.override':'extensions.jondofox.appname_override',
        'general.appversion.override':'extensions.jondofox.appversion_override',
@@ -73,9 +73,9 @@ var uaObserver = {
       var prefs = ph.getPrefs();
       prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
       prefs.addObserver("", this, false);
-      log("Observing preferences ..");
+      log("Observing privacy-related preferences ..");
     } catch (e) {
-      log("setStringPrefs: " + e);
+      log("setStringPrefs(): " + e);
     }
   },
 
@@ -93,7 +93,7 @@ var uaObserver = {
         ph.deletePreference(p);
       }
     } catch (e) {
-      log("clearStringPrefs: " + e);
+      log("clearStringPrefs(): " + e);
     }
   },
    
@@ -109,7 +109,7 @@ var uaObserver = {
       observers.addObserver(this, "quit-application-granted", false);
       observers.addObserver(this, "xul-window-destroyed", false);
     } catch (ex) {
-      log("registerObservers: " + ex);
+      log("registerObservers(): " + ex);
     }
   },
 
@@ -125,7 +125,7 @@ var uaObserver = {
       observers.removeObserver(this, "quit-application-granted");    
       observers.removeObserver(this, "xul-window-destroyed");
     } catch (ex) {
-      log("unregisterObservers: " + ex);
+      log("unregisterObservers(): " + ex);
     }
   },
 

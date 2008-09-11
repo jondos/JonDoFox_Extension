@@ -2,62 +2,72 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * Dump information to the console?
- */
-var m_debug = true;
+// Dump information to the console?
+var mDebug = true;
 
-/**
- * Send data to the console if we're in debug mode
- * @param msg The string containing the log message
- *
- * Do not forget to create 'browser.dom.window.dump.enabled' first!
- */
+// Send data to the console if we're in debug mode
+// Don't forget to create 'browser.dom.window.dump.enabled' first!
 function log(msg) {
-  if (m_debug) dump("JonDoFox :: " + msg + "\n");
+  if (mDebug) dump("JonDoFox :: " + msg + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Code
+// Append a JonDoFox customized string to the window's title
 ///////////////////////////////////////////////////////////////////////////////
 
 // Get the Firefox version
-var appinfo = Components.classes['@mozilla.org/xre/app-info;1'].
+var appInfo = Components.classes['@mozilla.org/xre/app-info;1'].
                             getService(Components.interfaces.nsIXULAppInfo);
-// Create the appendix for the title string
-// TODO: Get the JonDoFox version from somewhere
-const titleString = "JonDoFox 2.0.1 (Firefox " + appinfo.version + ")";
+// Preferences handler
+var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+                       getService().wrappedJSObject;
+
+// Get both of the version strings and the application's name
+var versionPref = "extensions.jondofox.profile_version";
+var profileVersion = prefsHandler.getStringPreference(versionPref);
+var appVersion = appInfo.version;
+var appName = appInfo.name;
+
+// Create an appendix for the title string
+const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
+// Log something initially
 log("This is " + titleString);
 
-// Reset the window's title
-function setTitle() {
-  log("Setting the title");
+// Set the modifier only
+function setTitleModifier() {
+  log("Setting title modifier");
   try {
-    var modifier = "titlemodifier";
-    var docElement = document.documentElement.getAttribute(modifier);
-    if (docElement) {
-      // Get current version numbers from somewhere
-      document.documentElement.setAttribute(modifier, titleString);
+    // Set the 'titlemodifier' attribute in the current document
+    var modAtt = document.documentElement.getAttribute("titlemodifier");
+    if (modAtt) {
+      document.documentElement.setAttribute("titlemodifier", titleString);
     }
-    // Update Titlebar
-    document.getElementById("content").updateTitlebar();
+    // XXX: This seems to be not needed
+    //document.getElementById("content").updateTitlebar();
   } catch (e) {
-    log("setTitle(): " + e);
+    log("setModifier(): " + e);
   }
 }
 
-// Init listeners that call setTitle()
+// Init a listener that calls setTitleModifier()
 function initTitleListener() {
-  log("Init title listeners");
+  log("Init TitleListener");
   try {
+    // This seems to be enough?
     document.getElementById("content").addEventListener("DOMTitleChanged", 
-                                          setTitle, false);
-    gBrowser.mTabContainer.addEventListener("DOMNodeInserted", setTitle, true);
-    gBrowser.mTabContainer.addEventListener("DOMNodeRemoved", setTitle, true);
+                                          setTitleModifier, false);
+    
+    // XXX: Also not needed? .. mTabContainer ..
+    //gBrowser.addEventListener("DOMNodeInserted", setTitleModifier, true);
+    //gBrowser.addEventListener("DOMNodeRemoved", setTitleModifier, true);
   } catch (e) {
     log("initTitleListener(): " + e);
   }
 }
 
+// We have a new window
 log("New window ..");
+// Set the title once when initializing a new window
+setTitleModifier();
+// Rather use an anonymous function?
 window.addEventListener("load", initTitleListener, false);

@@ -1,3 +1,6 @@
+// General prefs
+pref("extensions.jondofox.profile_version", "2.0.1");
+
 // Useragent prefs
 pref("extensions.jondofox.appname_override", "Netscape");
 pref("extensions.jondofox.appversion_override", "5.0 (Windows; en)");
