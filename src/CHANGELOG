@@ -4,13 +4,14 @@ Changes in version 0.2b1 - 08.09.2008
     o user-agent-spoofer.js: unify certain browser prefs for all users
     o referrer-forgery.js: always set the 'Referer' header to the current page
     o preferences-handler.js: offer a transparent API for preference handling
+  
+  Minor new features:
+    o Setting a customized JonDoFox title string to each window
 
   Minor modifications:
     o Distributing the chrome folder as a .jar-archive now
     o Integrated compatibility for Firefox up to version 3.1a2
-
-  New license:
-    o The modified BSD license
+    o New license: modified BSD license
 
 Changes in version 0.1a3 - 05.08.2008
 
