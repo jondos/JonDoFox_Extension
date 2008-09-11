@@ -1,6 +1,10 @@
 // General prefs
 pref("extensions.jondofox.profile_version", "2.0.1");
 
+// Proxy prefs
+//pref("extensions.jondofox.proxy_host", "127.0.0.1");
+//pref("extensions.jondofox.proxy_port", 4001);
+
 // Useragent prefs
 pref("extensions.jondofox.appname_override", "Netscape");
 pref("extensions.jondofox.appversion_override", "5.0 (Windows; en)");
@@ -17,3 +21,7 @@ pref("extensions.jondofox.accept_languages", "en");
 pref("extensions.jondofox.accept_charsets", "utf-8,*");
 pref("extensions.jondofox.default_charset", "utf-8");
 pref("extensions.jondofox.accept_default", "*/*");
+
+// FIXME: This pref is not set if the user already has modified it?
+pref("browser.history_expire_days", 0);
+//pref("extensions.jondofox.disable_history", true);
