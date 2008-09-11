@@ -109,7 +109,6 @@ PreferencesHandler.prototype = {
   // TODO: setIntegerPreference()
 
   // Get an integer preference, return 0 if preference is not set
-  // TODO: Test this
   getIntegerPreference: function(preference) {
     // If preference is not null
     if(preference) {
