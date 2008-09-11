@@ -106,6 +106,24 @@ PreferencesHandler.prototype = {
     return null;
   },
 
+  // TODO: setIntegerPreference()
+
+  // Get an integer preference, return 0 if preference is not set
+  // TODO: Test this
+  getIntegerPreference: function(preference) {
+    // If preference is not null
+    if(preference) {
+      // If not a user preference or a user preference is set
+      //if(this.isPreferenceSet(preference)) {
+      try {
+        return this.getPrefs().getIntPref(preference);
+      } catch(exception) {
+        log("getIntegerPreference(): " + exception);
+      }
+    }
+    return 0;
+  },
+
   QueryInterface: function(aIID) {
     if (!aIID.equals(nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
