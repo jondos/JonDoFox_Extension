@@ -98,15 +98,23 @@ PreferencesHandler.prototype = {
         log("Getting '" + preference + "'");
         return this.getPrefs().getComplexValue(preference, 
                        Components.interfaces.nsISupportsString).data;
-      } catch(exception) {
-        log("getStringPreference(): " + exception);
+      } catch(e) {
+        log("getStringPreference(): " + e);
       }
       //}
     }
     return null;
   },
 
-  // TODO: setIntegerPreference()
+  // Set an integer preference
+  setIntegerPreference: function(preference, value) {
+    log("Setting '" + preference + "' --> '" + value + "'");
+    try {
+      this.getPrefs().setIntPref(preference, value);
+    } catch (e) {
+      log("setIntegerPreference(): " + e);
+    }
+  },
 
   // Get an integer preference, return 0 if preference is not set
   getIntegerPreference: function(preference) {
