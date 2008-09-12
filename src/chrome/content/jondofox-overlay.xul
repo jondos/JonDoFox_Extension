@@ -6,8 +6,13 @@
 
   <!-- Include jondofox.js to the scope of the browser -->
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox.js" />
-
-  <!-- Include methods for handling preferences first -->
-  <!-- script src="chrome://jondofox/content/preferences.js" / -->
+  <!-- Include methods for handling proxy switching -->
+  <script type="application/x-javascript" src="chrome://jondofox/content/proxy.js" />
+	
+  <!-- Statusbar -->
+  <statusbar id="status-bar">
+    <statusbarpanel label="JonDo"
+                    ondblclick="switchProxy()" />
+  </statusbar>
 
 </overlay>

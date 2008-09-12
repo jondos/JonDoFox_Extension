@@ -1,7 +1,11 @@
 /******************************************************************************
- * This is going to be a Proxy Manager
+ * Copyright 2008, JonDos GmbH
+ * Author: Johannes Renner
+ *
+ * This component implements a Proxy Manager interface offering methods to set 
+ * proxies for certain protocols, as well as general enabling or disabling.
  *****************************************************************************/
- 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +24,8 @@ function log(message) {
 const CLASS_ID = Components.ID('{44b042a6-5e0b-4d62-b8ce-df7fc36eb8b6}');
 const CLASS_NAME = 'Proxy Manager'; 
 const CONTRACT_ID = '@jondos.de/proxy-manager;1';
+
+const nsISupports = Components.interfaces.nsISupports;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -48,7 +54,8 @@ ProxyManager.prototype = {
   },
 
   // Set the HTTP proxy host and port
-  setProxyHTTP: function(host, port) {    
+  setProxyHTTP: function(host, port) {
+    log("Setting HTTP proxy to " + host + ":" + port);
     try {
       this.ph().setStringPreference("network.proxy.http", host);
       this.ph().setIntegerPreference("network.proxy.http_port", port);
@@ -59,6 +66,7 @@ ProxyManager.prototype = {
   
   // Set the SSL proxy host and port 
   setProxyHTTPS: function(host, port) {
+    log("Setting HTTPS proxy to " + host + ":" + port);
     try {
       this.ph().setStringPreference("network.proxy.ssl", host);
       this.ph().setIntegerPreference("network.proxy.ssl_port", port);
@@ -69,6 +77,7 @@ ProxyManager.prototype = {
   
   // Set the FTP proxy host and port 
   setProxyFTP: function(host, port) {
+    log("Setting FTP proxy to " + host + ":" + port);
     try {
       this.ph().setStringPreference("network.proxy.ftp", host);
       this.ph().setIntegerPreference("network.proxy.ftp_port", port);
@@ -84,13 +93,26 @@ ProxyManager.prototype = {
     this.setProxyFTP(host, port);
   },
 
+  // Return the current state
+  getProxyState: function() {
+    try {
+      var state = this.ph().getIntegerPreference("network.proxy.type");
+      log("Proxy state is " + state);
+      return state;
+    } catch (e) {
+      log("getProxyStatus(): " + e);
+    }
+  },
+
   enableProxy: function() {
     // Set 'network.proxy.type' --> 1
+    log("Enabling proxy")
     this.ph().setIntegerPreference("network.proxy.type", 1);
   },
 
   disableProxy: function() {
     // Reset ... to 0
+    log("Disabling proxy");
     this.ph().setIntegerPreference("network.proxy.type", 0);
   },
 
