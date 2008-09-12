@@ -15,7 +15,7 @@ var mDebug = true;
 
 // Log a message
 function log(message) {
-  if (mDebug) dump("UAgent :: " + message + "\n");
+  if (mDebug) dump("PrefsObserver :: " + message + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,8 +38,11 @@ var PrefsObserver = {
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
   
+  // The preferences handler
+  prefsHandler: null,
+  
   // A map of string preferences
-  // TODO: Somehow set this from the outside
+  // TODO: Somehow set this from chrome
   stringPrefsMap: 
      { 'general.appname.override':'extensions.jondofox.appname_override',
        'general.appversion.override':'extensions.jondofox.appversion_override',
@@ -54,24 +57,29 @@ var PrefsObserver = {
        'intl.charset.default':'extensions.jondofox.default_charset',
        'intl.accept_charsets':'extensions.jondofox.accept_charsets',
        'network.http.accept.default':'extensions.jondofox.accept_default' },
-
-  // Return the preferences handler
-  getPrefsHandler: function() {
-    return Components.classes['@jondos.de/preferences-handler;1'].getService().
-              wrappedJSObject;
+  
+  // Return the prefsHandler
+  ph: function() {
+    if (!this.prefsHandler) {
+      log("Setting preferences handler");
+      // Set prefsHandler
+      this.prefsHandler = 
+              Components.classes['@jondos.de/preferences-handler;1'].
+                            getService().wrappedJSObject;
+    }
+    return this.prefsHandler;
   },
 
   // Set several string preferences: user agent overrides, etc.
   setStringPrefs: function() {
     try {
-      // Set all string preferences
-      var ph = this.getPrefsHandler();
+      // Set all preferences in the map
       for (p in this.stringPrefsMap) {
-        ph.setStringPreference(p, 
-              ph.getStringPreference(this.stringPrefsMap[p]));
+        this.ph().setStringPreference(p, 
+                     this.ph().getStringPreference(this.stringPrefsMap[p]));
       }      
       // Add an observer to the main pref branch after setting the prefs
-      var prefs = ph.getPrefs();
+      var prefs = this.ph().getPrefs();
       prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
@@ -83,15 +91,13 @@ var PrefsObserver = {
   // Reset string preferences
   clearStringPrefs: function() {
     try {
-      // Get the preferences handler first
-      var ph = this.getPrefsHandler();
       // Remove the preferences observer      
       log("Stop observing preferences ..");
-      var prefs = ph.getPrefs();
+      var prefs = this.ph().getPrefs();
       prefs.removeObserver("", this);
       // Reset all prefs
       for (p in this.stringPrefsMap) {
-        ph.deletePreference(p);
+        this.ph().deletePreference(p);
       }
     } catch (e) {
       log("clearStringPrefs(): " + e);
@@ -197,17 +203,15 @@ var PrefsObserver = {
           break;
 
         case 'nsPref:changed':
-          // TODO: Check if somebody enables the history: browser.history_expire_days
+          // TODO: Check if somebody enables the history: 
+          //   browser.history_expire_days
+          
           // Check if the changed preference is one of 'ours'
           if (!this.userWarned && data in this.stringPrefsMap) {
             //log("Pref '" + data + "' is on the map!");
-            // Get the prefs handler
-            var ph = this.getPrefsHandler();            
-            //log("Comparing " + ph.getStringPreference(data) + 
-            //   " to " + ph.getStringPreference(this.stringPrefsMap[data]));
             // If the new value is not the recommended ..
-            if (ph.getStringPreference(data) != 
-                   ph.getStringPreference(this.stringPrefsMap[data])) {
+            if (this.ph().getStringPreference(data) != 
+                   this.ph().getStringPreference(this.stringPrefsMap[data])) {
               // ... warn the user
               var ps = Components.
                           classes["@mozilla.org/embedcomp/prompt-service;1"].
