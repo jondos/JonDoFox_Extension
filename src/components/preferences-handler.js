@@ -85,7 +85,7 @@ PreferencesHandler.prototype = {
   },
   
   // Set a string preference
-  setStringPreference: function(preference, value) {
+  setStringPref: function(preference, value) {
     log("Setting '" + preference + "' --> '" + value + "'");
     if(preference) {   
       var supportsStringInterface = Components.interfaces.nsISupportsString;
@@ -99,7 +99,7 @@ PreferencesHandler.prototype = {
   },
 
   // Return the current value of a string preference
-  getStringPreference: function(preference) {
+  getStringPref: function(preference) {
     // If preference is not null
     if (preference) {
       // TODO: Look at this
@@ -110,7 +110,7 @@ PreferencesHandler.prototype = {
         return this.getPrefs().getComplexValue(preference, 
                        Components.interfaces.nsISupportsString).data;
       } catch(e) {
-        log("getStringPreference(): " + e);
+        log("getStringPref(): " + e);
       }
       //}
     }
@@ -118,17 +118,17 @@ PreferencesHandler.prototype = {
   },
 
   // Set an integer preference
-  setIntegerPreference: function(preference, value) {
+  setIntPref: function(preference, value) {
     log("Setting '" + preference + "' --> '" + value + "'");
     try {
       this.getPrefs().setIntPref(preference, value);
     } catch (e) {
-      log("setIntegerPreference(): " + e);
+      log("setIntPref(): " + e);
     }
   },
 
   // Get an integer preference, return 0 if preference is not set
-  getIntegerPreference: function(preference) {
+  getIntPref: function(preference) {
     // If preference is not null
     if(preference) {
       // If not a user preference or a user preference is set
@@ -136,7 +136,7 @@ PreferencesHandler.prototype = {
       try {
         return this.getPrefs().getIntPref(preference);
       } catch(exception) {
-        log("getIntegerPreference(): " + exception);
+        log("getIntPref(): " + exception);
       }
     }
     return 0;

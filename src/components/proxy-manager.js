@@ -55,10 +55,10 @@ ProxyManager.prototype = {
 
   // Set the HTTP proxy host and port
   setProxyHTTP: function(host, port) {
-    log("Setting HTTP proxy to " + host + ":" + port);
+    log("Setting HTTP proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPreference("network.proxy.http", host);
-      this.ph().setIntegerPreference("network.proxy.http_port", port);
+      this.ph().setStringPref("network.proxy.http", host);
+      this.ph().setIntPref("network.proxy.http_port", port);
     } catch (e) {
       log("setProxyHTTP(): " + e);
     }
@@ -66,10 +66,10 @@ ProxyManager.prototype = {
   
   // Set the SSL proxy host and port 
   setProxyHTTPS: function(host, port) {
-    log("Setting HTTPS proxy to " + host + ":" + port);
+    log("Setting HTTPS proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPreference("network.proxy.ssl", host);
-      this.ph().setIntegerPreference("network.proxy.ssl_port", port);
+      this.ph().setStringPref("network.proxy.ssl", host);
+      this.ph().setIntPref("network.proxy.ssl_port", port);
     } catch (e) {
       log("setProxyHTTPS(): " + e);
     }
@@ -77,10 +77,10 @@ ProxyManager.prototype = {
   
   // Set the FTP proxy host and port 
   setProxyFTP: function(host, port) {
-    log("Setting FTP proxy to " + host + ":" + port);
+    log("Setting FTP proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPreference("network.proxy.ftp", host);
-      this.ph().setIntegerPreference("network.proxy.ftp_port", port);
+      this.ph().setStringPref("network.proxy.ftp", host);
+      this.ph().setIntPref("network.proxy.ftp_port", port);
     } catch (e) {
       log("setProxyFTP(): " + e);
     } 
@@ -96,8 +96,8 @@ ProxyManager.prototype = {
   // Return the current state
   getProxyState: function() {
     try {
-      var state = this.ph().getIntegerPreference("network.proxy.type");
-      log("Return the proxy state: " + state);
+      var state = this.ph().getIntPref("network.proxy.type");
+      log("Return proxy state: " + state);
       return state;
     } catch (e) {
       log("getProxyStatus(): " + e);
@@ -108,7 +108,7 @@ ProxyManager.prototype = {
     // Set 'network.proxy.type' --> 1
     log("Enabling proxy")
     try {
-      this.ph().setIntegerPreference("network.proxy.type", 1);
+      this.ph().setIntPref("network.proxy.type", 1);
     } catch (e) {
       log("enableProxy(): " + e);
     }
@@ -118,7 +118,7 @@ ProxyManager.prototype = {
     // Reset ... to 0
     log("Disabling proxy");
     try {
-      this.ph().setIntegerPreference("network.proxy.type", 0);
+      this.ph().setIntPref("network.proxy.type", 0);
     } catch(e) {
       log("disableProxy(): " + e);
     }
