@@ -6,13 +6,17 @@
 
   <!-- Include jondofox.js to the scope of the browser -->
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox.js" />
-  <!-- Include methods for handling proxy switching -->
-  <script type="application/x-javascript" src="chrome://jondofox/content/proxy.js" />
-	
+  
+  <!-- Add listener to set the label initially -->
+  <script language="JavaScript">
+    try { window.addEventListener("load", init, true); } catch(e) {}
+  </script>
+
   <!-- Statusbar -->
   <statusbar id="status-bar">
-    <statusbarpanel label="JonDo"
-                    ondblclick="switchProxy()" />
+    <statusbarpanel id="proxy-status"
+       label=""
+       ondblclick="switchProxy()" />
   </statusbar>
 
 </overlay>
