@@ -11,6 +11,10 @@ function log(msg) {
   if (mDebug) dump("JonDoFox :: " + msg + "\n");
 }
 
+function hello() {
+  log("Hello World!");
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Proxy switching methods
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,14 +37,29 @@ function switchProxy() {
       // Disable
       proxyManager.disableProxy();
     } else {
+      // Get host and port
+      var host = prefsHandler.getStringPref("extensions.jondofox.jondo.proxy_host");
+      var port = prefsHandler.getIntPref("extensions.jondofox.jondo.proxy_port");
+      // Set proxies for all protocols
+      proxyManager.setProxyAll(host, port);
       // Enable
-      proxyManager.setProxyAll("127.0.0.1", 4001);
       proxyManager.enableProxy();
     }
   } catch (e) {
     log("switchProxy(): " + e);
   }
 }
+
+/*
+function switchProxy(proxy) {
+  log("Switching proxy to " + proxy);
+  try {
+
+  } catch (e) {
+
+  }
+}
+*/
 
 // Return a proxy-status label string
 function getLabel() {
@@ -56,12 +75,12 @@ function getLabel() {
       case 1:
         // TODO: Check which proxy is used
         return "Proxy:JonDo";
-        break;
+        //break;
 
       default:
+        log("Unknown status " + state + "!");        
         return "Proxy:Unknown";
-        log("Unknown status " + state + "!");
-        break;
+        //break;
     }
   } catch (e) {
     log("getLabel(): " + e);
@@ -72,9 +91,30 @@ function getLabel() {
 function setLabel() {
   log("Set label");
   try {
-    document.getElementById('proxy-status').setAttribute('label', getLabel());
+    // Set the label
+    var label = getLabel();
+    document.getElementById('jondofox-proxy-status').setAttribute('label', label);
+    
+    // Get the proxy list
+    var proxyList = document.getElementById('jondofox-proxy-list');
+    log("Got proxy list: " + (proxyList != null));
+    // Checkbox elements 
+    var items = proxyList.getElementsByAttribute('type', 'checkbox');
+    log("Got checkbox elements: " + items.length);
+
+    // Uncheck all but the selected one
+    //for (var i = 0, i < items.length, i++) {
+     
+      //log("Label is " + items[i].hasAttribute("label"));
+      
+      //if (items[i].getAttribute('label') == label) {
+      //  items[i].setAttribute('checked', true);
+      //} else {
+      //  items[i].setAttribute('checked', false);
+      //}
+    //}
   } catch (e) {
-    log("setLabel(): " + e)
+    log("setLabel(): " + e);
   }
 }
 
