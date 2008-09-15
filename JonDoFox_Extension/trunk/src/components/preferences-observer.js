@@ -75,8 +75,8 @@ var PrefsObserver = {
     try {
       // Set all preferences in the map
       for (p in this.stringPrefsMap) {
-        this.ph().setStringPreference(p, 
-                     this.ph().getStringPreference(this.stringPrefsMap[p]));
+        this.ph().setStringPref(p, 
+                     this.ph().getStringPref(this.stringPrefsMap[p]));
       }      
       // Add an observer to the main pref branch after setting the prefs
       var prefs = this.ph().getPrefs();
@@ -210,8 +210,8 @@ var PrefsObserver = {
           if (!this.userWarned && data in this.stringPrefsMap) {
             //log("Pref '" + data + "' is on the map!");
             // If the new value is not the recommended ..
-            if (this.ph().getStringPreference(data) != 
-                   this.ph().getStringPreference(this.stringPrefsMap[data])) {
+            if (this.ph().getStringPref(data) != 
+                   this.ph().getStringPref(this.stringPrefsMap[data])) {
               // ... warn the user
               var ps = Components.
                           classes["@mozilla.org/embedcomp/prompt-service;1"].

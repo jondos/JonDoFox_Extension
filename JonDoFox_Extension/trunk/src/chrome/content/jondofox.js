@@ -123,7 +123,7 @@ var appInfo = Components.classes['@mozilla.org/xre/app-info;1'].
 
 // Get both of the version strings and the application's name
 var versionPref = "extensions.jondofox.profile_version";
-var profileVersion = prefsHandler.getStringPreference(versionPref);
+var profileVersion = prefsHandler.getStringPref(versionPref);
 var appVersion = appInfo.version;
 var appName = appInfo.name;
 
