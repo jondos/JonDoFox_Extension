@@ -3,7 +3,7 @@
  * Author: Johannes Renner
  *
  * This component implements a Proxy Manager interface offering methods to set 
- * proxies for certain protocols, as well as general enabling or disabling.
+ * proxies for certain protocols, as well as general enabling and disabling.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ ProxyManager.prototype = {
   getProxyState: function() {
     try {
       var state = this.ph().getIntegerPreference("network.proxy.type");
-      log("Proxy state is " + state);
+      log("Return the proxy state: " + state);
       return state;
     } catch (e) {
       log("getProxyStatus(): " + e);
@@ -107,13 +107,21 @@ ProxyManager.prototype = {
   enableProxy: function() {
     // Set 'network.proxy.type' --> 1
     log("Enabling proxy")
-    this.ph().setIntegerPreference("network.proxy.type", 1);
+    try {
+      this.ph().setIntegerPreference("network.proxy.type", 1);
+    } catch (e) {
+      log("enableProxy(): " + e);
+    }
   },
 
   disableProxy: function() {
     // Reset ... to 0
     log("Disabling proxy");
-    this.ph().setIntegerPreference("network.proxy.type", 0);
+    try {
+      this.ph().setIntegerPreference("network.proxy.type", 0);
+    } catch(e) {
+      log("disableProxy(): " + e);
+    }
   },
 
   // Implement nsISupports

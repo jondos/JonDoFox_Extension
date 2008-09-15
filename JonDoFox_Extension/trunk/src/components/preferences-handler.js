@@ -38,20 +38,31 @@ function PreferencesHandler() {
 PreferencesHandler.prototype = {
   
   // The internal preferences service
-  _preferencesService: null,
+  _mainBranch: null,
   
-  // Implemented methods include only those that are actually used
-  
-  // Get the main preferences branch
+  // Return the main preferences branch
   getPrefs: function() {
     if (!this._preferencesService) {
-      this._preferencesService = Components.
+      this._mainBranch = Components.
               classes["@mozilla.org/preferences-service;1"].
               getService(Components.interfaces.nsIPrefService).getBranch("");
     }
-    return this._preferencesService
+    return this._mainBranch;
   },
-  
+ 
+  // Return a certain preferences branch
+  // XXX: Not yet tested
+  getPrefsBranch: function(branch) {
+    log("Getting prefs branch " + branch);
+    try {
+      return Components.classes["@mozilla.org/preferences-service;1"].
+                getService(Components.interfaces.nsIPrefService).
+                getBranch(branch);
+    } catch (e) {
+      log("getPrefsBranch(): " + e);
+    }
+  },
+
   // Check whether preference has been changed from the default value
   // When no default value exists, indicate whether preference exists
   isPreferenceSet: function(preference) {
