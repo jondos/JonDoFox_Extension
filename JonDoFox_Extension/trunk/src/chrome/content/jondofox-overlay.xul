@@ -14,9 +14,19 @@
 
   <!-- Statusbar -->
   <statusbar id="status-bar">
-    <statusbarpanel id="proxy-status"
-       label=""
-       ondblclick="switchProxy()" />
+    
+    <!-- Indicate status -->
+    <statusbarpanel id="jondofox-proxy-status" label="" 
+       context="jondofox-proxy-list" ondblclick="switchProxy()" />
+    
+    <!-- Include a popup menu -->
+    <menupopup id="jondofox-proxy-list"> 
+      <menuitem label="Proxy:None" type="checkbox" checked="false" oncommand="hello()" />
+      <!-- menuitem label="Custom" type="checkbox" checked="false" oncommand="switchProxyCustom()" /-->
+      <menuitem label="Proxy:Tor" type="checkbox" checked="false" oncommand="hello()" />
+      <menuitem label="Proxy:JonDo" type="checkbox" checked="false" oncommand="hello()" />
+    </menupopup>
+
   </statusbar>
 
 </overlay>
