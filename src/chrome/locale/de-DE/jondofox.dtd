@@ -20,3 +20,5 @@
 <!ENTITY jondofox.instructions.testDesc "Falls eines der Felder im Anonymitätstest 
    <b><font color='red'>rot</font></b> ist, kann man Sie im Internet identifizieren oder wiedererkennen. 
    In diesem Fall sollten Sie ihre Einstellungen überprüfen und die zugehörige Hilfe lesen.">
+
+<!ENTITY jondofox.statusbar.noProxy "Kein Proxy">
