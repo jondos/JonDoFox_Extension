@@ -1,12 +1,13 @@
 Changes in version 0.2a1 - 16.09.2008
-
+  
   Major features:
     o Integrated a simple self-implemented proxy switcher
 
   New XPCOM components:
-    o user-agent-spoofer.js: unify certain browser prefs for all users
+    o preferences-observer.js: unify certain browser prefs for all users
     o referrer-forgery.js: always set the 'Referer' header to the current page
-    o preferences-handler.js: offer a transparent API for preference handling
+    o proxy-manager.js: transparent API for handling proxy settings    
+    o preferences-handler.js: transparent API for handling preferences
   
   Minor new features:
     o Setting a customized JonDoFox title string to each window
