@@ -1,6 +1,8 @@
 /******************************************************************************
- * This component is instanciated once on application startup to do the 
- * following:
+ * Copyright (c) 2008, JonDos GmbH
+ * Author: Johannes Renner
+ *
+ * This component is instanciated once on application startup to:
  *
  * - Set configuration options regarding the browser's user agent string, as 
  *   well as locale and language configuration
@@ -61,7 +63,7 @@ var PrefsObserver = {
   // Return the prefsHandler
   ph: function() {
     if (!this.prefsHandler) {
-      log("Setting preferences handler");
+      //log("Setting preferences handler");
       // Set prefsHandler
       this.prefsHandler = 
               Components.classes['@jondos.de/preferences-handler;1'].
@@ -103,7 +105,31 @@ var PrefsObserver = {
       log("clearStringPrefs(): " + e);
     }
   },
-   
+  
+  // Call this on app-startup to check certain (extra) prefs
+  // TODO: Create an extra component for this?
+  checkExtraPrefs: function() {
+    log("Checking various preferences ..");
+    try {
+      // Disable the history
+      this.ph().setIntPref('browser.history_expire_days', 0);
+      
+      // If cookies are accepted from *all* sites --> reject all 
+      // or reject third-party cookies only (1)?
+      var cookiePref = this.ph().getIntPref('network.cookie.cookieBehavior');
+      if (cookiePref == 0) {
+        this.ph().setIntPref('network.cookie.cookieBehavior', 2)
+      }
+
+      // If this is set somehow, set it to false
+      if (this.ph().isPreferenceSet('local_install.showBuildinWindowTitle')) {
+        this.ph().setBoolPref('local_install.showBuildinWindowTitle', false);
+      }
+    } catch (e) {
+      log("checkPrefs(): " + e);
+    }
+  },
+
   // This is called once on application startup
   registerObservers: function() {
     log("Register observers");
@@ -171,6 +197,8 @@ var PrefsObserver = {
           log("Got topic --> " + topic);
           // Set the user agent here
           this.setStringPrefs();
+          // Perform the preferences check
+          this.checkExtraPrefs();
           break;
 
         case 'em-action-requested':
@@ -203,11 +231,26 @@ var PrefsObserver = {
           break;
 
         case 'nsPref:changed':
-          // TODO: Check if somebody enables the history: 
-          //   browser.history_expire_days
+          // Check if somebody enables the history?
+          //   'browser.history_expire_days'
           
+          // Do not allow to accept all cookies
+          if (data == 'network.cookie.cookieBehavior') {
+            log("subject is " + subject);
+            if (this.ph().getIntPref('network.cookie.cookieBehavior') == 0) {
+              this.ph().setIntPref('network.cookie.cookieBehavior', 1)
+              // Warn the user
+              var ps = Components.
+                          classes["@mozilla.org/embedcomp/prompt-service;1"].
+                          getService(Components.interfaces.nsIPromptService);
+              ps.alert(null, "Attention", "Cookies cannot be accepted for all " +
+                    "sites! This will seriously affect your privacy! You need " +
+                    "to disallow third-party cookies at least. ");
+            }
+          }
+
           // Check if the changed preference is one of 'ours'
-          if (!this.userWarned && data in this.stringPrefsMap) {
+          else if (!this.userWarned && data in this.stringPrefsMap) {
             //log("Pref '" + data + "' is on the map!");
             // If the new value is not the recommended ..
             if (this.ph().getStringPref(data) != 

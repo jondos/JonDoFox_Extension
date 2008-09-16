@@ -1,8 +1,8 @@
 /******************************************************************************
- * Copyright 2008, JonDos GmbH
+ * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This component implements a Proxy Manager interface offering methods to set 
+ * This component implements a proxy manager interface offering methods to set 
  * proxies for certain protocols, as well as general enabling and disabling.
  *****************************************************************************/
 
@@ -46,7 +46,7 @@ ProxyManager.prototype = {
   ph: function() {
     // Get the wrappedJSObject if it is not already set
     if (!this.prefsHandler) {
-      log("Setting preferences handler");
+      //log("Setting preferences handler");
       this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                                     getService().wrappedJSObject;
     }
@@ -85,12 +85,47 @@ ProxyManager.prototype = {
       log("setProxyFTP(): " + e);
     } 
   },
+  
+  // Set the GOPHER proxy host and port 
+  setProxyGopher: function(host, port) {
+    log("Setting GOPHER proxy --> " + host + ":" + port);
+    try {
+      this.ph().setStringPref("network.proxy.gopher", host);
+      this.ph().setIntPref("network.proxy.gopher_port", port);
+    } catch (e) {
+      log("setProxyGOPHER(): " + e);
+    } 
+  },
 
   // Set all proxies
   setProxyAll: function(host, port) {
     this.setProxyHTTP(host, port);
     this.setProxyHTTPS(host, port);
     this.setProxyFTP(host, port);
+    this.setProxyGopher(host, port);
+  },
+  
+  // Handle Socks independently from the other protocols
+  setProxySOCKS: function(host, port, version) {
+    log("Setting SOCKS proxy (version "+version+") --> " + host + ":" + port);
+    try {
+      this.ph().setStringPref("network.proxy.socks", host);
+      this.ph().setIntPref("network.proxy.socks_port", port);
+      this.ph().setIntPref("network.proxy.socks_version", version);
+    } catch (e) {
+      log("setProxySOCKS(): " + e);
+    } 
+  },
+   
+  // Set 'network.proxy.socks_remote_dns'
+  setSocksRemoteDNS: function(value) {
+    // Set 'network.proxy.socks_remote_dns' --> value
+    log("Setting SOCKS remote DNS --> " + value);
+    try {
+      this.ph().setBoolPref("network.proxy.socks_remote_dns", value);
+    } catch (e) {
+      log("setSocksRemoteDNS(): " + e);
+    }
   },
 
   // Return the current state
@@ -106,7 +141,7 @@ ProxyManager.prototype = {
 
   enableProxy: function() {
     // Set 'network.proxy.type' --> 1
-    log("Enabling proxy")
+    log("Enabling proxy");
     try {
       this.ph().setIntPref("network.proxy.type", 1);
     } catch (e) {

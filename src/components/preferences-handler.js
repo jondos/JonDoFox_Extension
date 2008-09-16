@@ -1,4 +1,7 @@
 /******************************************************************************
+ * Copyright (c) 2008, JonDos GmbH
+ * Author: Johannes Renner
+ *
  * This is a general purpose XPCOM component that can be accessed from within
  * any other component. It transparently encapsulates handling of user prefs in
  * Firefox using the nsIPrefService.
@@ -119,7 +122,7 @@ PreferencesHandler.prototype = {
 
   // Set an integer preference
   setIntPref: function(preference, value) {
-    log("Setting '" + preference + "' --> '" + value + "'");
+    log("Setting '" + preference + "' --> " + value);
     try {
       this.getPrefs().setIntPref(preference, value);
     } catch (e) {
@@ -140,6 +143,29 @@ PreferencesHandler.prototype = {
       }
     }
     return 0;
+  },
+
+  // Set a boolean preference
+  setBoolPref: function(preference, value) {
+    log("Setting '" + preference + "' --> " + value);
+    try {
+      this.getPrefs().setBoolPref(preference, value);
+    } catch (e) {
+      log("setBoolPref(): " + e);
+    }
+  },
+
+  // Get a boolean preference, return 0 if preference is not set
+  getBoolPref: function(preference) {
+    // If preference is not null
+    if(preference) {
+      try {
+        return this.getPrefs().getBoolPref(preference);
+      } catch(exception) {
+        log("getBoolPref(): " + exception);
+      }
+    }
+    return false;
   },
 
   QueryInterface: function(aIID) {

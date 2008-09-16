@@ -1,11 +1,11 @@
 // General prefs
-pref("extensions.jondofox.profile_version", "2.0.1");
+pref("extensions.jondofox.profile_version", "2.0.2");
 
 // Proxy prefs
-pref("extensions.jondofox.jondo.proxy_host", "127.0.0.1");
-pref("extensions.jondofox.jondo.proxy_port", 4001);
-//pref("extensions.jondofox.tor.proxy_host", "127.0.0.1");
-//pref("extensions.jondofox.tor.proxy_port", 9005);
+pref("extensions.jondofox.proxy.state", "none");
+
+//pref("extensions.jondofox.custom.proxy_host", "127.0.0.1");
+//pref("extensions.jondofox.custom.proxy_port", 8118);
 
 // Useragent prefs
 pref("extensions.jondofox.appname_override", "Netscape");
@@ -23,7 +23,3 @@ pref("extensions.jondofox.accept_languages", "en");
 pref("extensions.jondofox.accept_charsets", "utf-8,*");
 pref("extensions.jondofox.default_charset", "utf-8");
 pref("extensions.jondofox.accept_default", "*/*");
-
-// FIXME: This pref is not set if the user already has modified it?
-lockPref("browser.history_expire_days", 0);
-//pref("extensions.jondofox.disable_history", true);
