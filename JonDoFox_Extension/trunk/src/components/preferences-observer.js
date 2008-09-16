@@ -220,23 +220,21 @@ var PrefsObserver = {
           // Get the index of the closed window
           var i = this.getWindowCount();
           log("Window " + i + " --> " + topic);
-          // XXX: Not really necessary since closing the last window will also
-          // cause 'quit-application-granted' .. let the code stay here though
-          // Last browser window standing: 
+          // Not really necessary since closing the last window will also cause
+          // 'quit-application-granted' .. let the code stay here though:
           //   http://forums.mozillazine.org/viewtopic.php?t=308369
-          /*if (i == 0 && this.clearPrefs) { 
+          /* if (i == 0 && this.clearPrefs) { 
             this.clearUserAgent(); 
             this.unregisterObservers()
-          }*/
+          } */
           break;
 
         case 'nsPref:changed':
           // Check if somebody enables the history?
           //   'browser.history_expire_days'
           
-          // Do not allow to accept all cookies
+          // Do not allow to accept ALL cookies
           if (data == 'network.cookie.cookieBehavior') {
-            log("subject is " + subject);
             if (this.ph().getIntPref('network.cookie.cookieBehavior') == 0) {
               this.ph().setIntPref('network.cookie.cookieBehavior', 1)
               // Warn the user

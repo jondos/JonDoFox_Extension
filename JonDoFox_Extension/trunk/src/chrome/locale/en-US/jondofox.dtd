@@ -20,3 +20,5 @@
 <!ENTITY jondofox.instructions.testDesc "If one of the fields turns <b><font color='red'>red</font></b> you 
    might be identifyable or recognizable. You should re-check your configuration and read the help files in
    this case.">
+
+<!ENTITY jondofox.statusbar.noProxy "No Proxy">

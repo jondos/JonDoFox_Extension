@@ -126,7 +126,9 @@ function getLabel() {
     var state = prefsHandler.getStringPref(statePref);
     switch (state) {
       case 'none':
-        return "No Proxy";
+        // FIXME: This is a Hack: Return the label of the right menuitem
+        var elements = document.getElementsByAttribute('oncommand', "setProxy('none')");
+        return elements[0].getAttribute('label');
       
       case 'jondo':
         return "JonDo";

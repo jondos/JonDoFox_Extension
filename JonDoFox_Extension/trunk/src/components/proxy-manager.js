@@ -55,7 +55,7 @@ ProxyManager.prototype = {
 
   // Set the HTTP proxy host and port
   setProxyHTTP: function(host, port) {
-    log("Setting HTTP proxy --> " + host + ":" + port);
+    log("Set HTTP proxy --> " + host + ":" + port);
     try {
       this.ph().setStringPref("network.proxy.http", host);
       this.ph().setIntPref("network.proxy.http_port", port);
@@ -66,7 +66,7 @@ ProxyManager.prototype = {
   
   // Set the SSL proxy host and port 
   setProxyHTTPS: function(host, port) {
-    log("Setting HTTPS proxy --> " + host + ":" + port);
+    log("Set HTTPS proxy --> " + host + ":" + port);
     try {
       this.ph().setStringPref("network.proxy.ssl", host);
       this.ph().setIntPref("network.proxy.ssl_port", port);
@@ -77,7 +77,7 @@ ProxyManager.prototype = {
   
   // Set the FTP proxy host and port 
   setProxyFTP: function(host, port) {
-    log("Setting FTP proxy --> " + host + ":" + port);
+    log("Set FTP proxy --> " + host + ":" + port);
     try {
       this.ph().setStringPref("network.proxy.ftp", host);
       this.ph().setIntPref("network.proxy.ftp_port", port);
@@ -88,7 +88,7 @@ ProxyManager.prototype = {
   
   // Set the GOPHER proxy host and port 
   setProxyGopher: function(host, port) {
-    log("Setting GOPHER proxy --> " + host + ":" + port);
+    log("Set GOPHER proxy --> " + host + ":" + port);
     try {
       this.ph().setStringPref("network.proxy.gopher", host);
       this.ph().setIntPref("network.proxy.gopher_port", port);
@@ -107,7 +107,7 @@ ProxyManager.prototype = {
   
   // Handle Socks independently from the other protocols
   setProxySOCKS: function(host, port, version) {
-    log("Setting SOCKS proxy (version "+version+") --> " + host + ":" + port);
+    log("Set SOCKS proxy (version " + version + ") --> " + host + ":" + port);
     try {
       this.ph().setStringPref("network.proxy.socks", host);
       this.ph().setIntPref("network.proxy.socks_port", port);
@@ -120,7 +120,7 @@ ProxyManager.prototype = {
   // Set 'network.proxy.socks_remote_dns'
   setSocksRemoteDNS: function(value) {
     // Set 'network.proxy.socks_remote_dns' --> value
-    log("Setting SOCKS remote DNS --> " + value);
+    log("Set SOCKS remote DNS --> " + value);
     try {
       this.ph().setBoolPref("network.proxy.socks_remote_dns", value);
     } catch (e) {
@@ -141,7 +141,7 @@ ProxyManager.prototype = {
 
   enableProxy: function() {
     // Set 'network.proxy.type' --> 1
-    log("Enabling proxy");
+    log("Enable proxy");
     try {
       this.ph().setIntPref("network.proxy.type", 1);
     } catch (e) {
@@ -151,7 +151,7 @@ ProxyManager.prototype = {
 
   disableProxy: function() {
     // Reset ... to 0
-    log("Disabling proxy");
+    log("Disable proxy");
     try {
       this.ph().setIntPref("network.proxy.type", 0);
     } catch(e) {
