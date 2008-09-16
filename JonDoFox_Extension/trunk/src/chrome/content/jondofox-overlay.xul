@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
+
 <overlay id="jondofox-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -17,14 +19,15 @@
     
     <!-- Indicate status -->
     <statusbarpanel id="jondofox-proxy-status" label="" 
-       context="jondofox-proxy-list" ondblclick="switchProxy()" />
+       context="jondofox-proxy-list" ondblclick="toggleProxy()" />
     
     <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list"> 
-      <menuitem label="Proxy:None" type="checkbox" checked="false" oncommand="hello()" />
-      <!-- menuitem label="Custom" type="checkbox" checked="false" oncommand="switchProxyCustom()" /-->
-      <menuitem label="Proxy:Tor" type="checkbox" checked="false" oncommand="hello()" />
-      <menuitem label="Proxy:JonDo" type="checkbox" checked="false" oncommand="hello()" />
+      <menuitem label="No Proxy" type="checkbox" checked="false" oncommand="setProxy('none')" />
+      <menuseparator />
+      <!-- menuitem label="Custom" type="checkbox" checked="false" oncommand="setProxy('custom')" /-->
+      <menuitem label="Tor" type="checkbox" checked="false" oncommand="setProxy('tor')" />
+      <menuitem label="JonDo" type="checkbox" checked="false" oncommand="setProxy('jondo')" />
     </menupopup>
 
   </statusbar>

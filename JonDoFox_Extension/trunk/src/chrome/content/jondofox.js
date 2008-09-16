@@ -1,3 +1,10 @@
+/******************************************************************************
+ * Copyright (c) 2008, JonDos GmbH
+ * Author: Johannes Renner
+ *
+ * TODO: Document this
+ *****************************************************************************/
+
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,13 +18,12 @@ function log(msg) {
   if (mDebug) dump("JonDoFox :: " + msg + "\n");
 }
 
-function hello() {
-  log("Hello World!");
-}
+///////////////////////////////////////////////////////////////////////////////
+// Proxy stuff
+///////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-// Proxy switching methods
-///////////////////////////////////////////////////////////////////////////////
+// Proxy state preference
+const statePref = 'extensions.jondofox.proxy.state';
 
 // Get the preferences handler
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
@@ -27,60 +33,113 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
                                  getService().wrappedJSObject;
 
-// Switch the proxy according to its current state
-function switchProxy() {
-  log("Switching Proxy ..");
+// Disable the proxy and set the state pref
+function disableProxy() {
+  try {
+    // Call disable on the proxy manager
+    proxyManager.disableProxy();
+    prefsHandler.setStringPref(statePref, 'none');
+  } catch (e) {
+    log("disableProxy(): " + e);
+  }
+}
+
+// This happens on a double-click:
+// Toggle the proxy according to its current state
+function toggleProxy() {
+  log("Toggling Proxy ..");
   try {
     // Get the current status
     var state = proxyManager.getProxyState();
     if (state > 0) {
       // Disable
-      proxyManager.disableProxy();
+      disableProxy();
     } else {
-      // Get host and port
-      var host = prefsHandler.getStringPref("extensions.jondofox.jondo.proxy_host");
-      var port = prefsHandler.getIntPref("extensions.jondofox.jondo.proxy_port");
-      // Set proxies for all protocols
-      proxyManager.setProxyAll(host, port);
-      // Enable
-      proxyManager.enableProxy();
+      // Set the proxy to JonDo
+      setProxy('jondo');
     }
   } catch (e) {
-    log("switchProxy(): " + e);
+    log("toggleProxy(): " + e);
   }
 }
 
-/*
-function switchProxy(proxy) {
-  log("Switching proxy to " + proxy);
+// This is called when choosing a proxy from the list 
+// ['state' --> jondo, tor, custom, none, unknown?]
+function setProxy(state) {
+  log("Setting proxy to " + state);
   try {
+    // Store the previous state to detect if the state didn't change
+    var previousState = prefsHandler.getStringPref(statePref);
+    if (state == 'none') {
+      // Disable the proxy
+      disableProxy();
+    } else {
+      // Check the id
+      switch (state) {
+        case 'jondo':
+          // Set proxies for all protocols but SOCKS
+          proxyManager.setProxyAll('127.0.0.1', 4001);
+          proxyManager.setProxySOCKS('', 0, 5);
+          break; 
+ 
+        case 'tor':
+          // Set SOCKS proxy only
+          proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
+          proxyManager.setSocksRemoteDNS(true);
+          proxyManager.setProxyAll('', 0);
+          break;
 
+        case 'custom':
+          // TODO: Get custom preferences
+          //var prefix = "extensions.jondofox.";
+          //var host = prefsHandler.getStringPref(prefix + id + ".proxy_host");
+          //var port = prefsHandler.getIntPref(prefix + id + ".proxy_port");
+          //proxyManager.setProxyAll(host, port);
+          
+          // Set it to JonDo for now
+          proxyManager.setProxyAll('127.0.0.1', 4001);
+          break;
+
+        default:
+          log("!! Unknown proxy state: " + state);
+          return;
+      }
+      // Enable and set the state
+      proxyManager.enableProxy();
+      prefsHandler.setStringPref(statePref, state);          
+    }
+    // If the state didn't change, call refreshStatus() by hand
+    if (previousState == state) {
+      log("NOT a state change, calling refreshStatus() ..");
+      refreshStatus();
+    }
   } catch (e) {
-
+    log("setProxy(): " + e);
   }
 }
-*/
 
-// Return a proxy-status label string
+// Map the current proxy status to a string label
 function getLabel() {
   log("Determine proxy-status label");
   try {
-    // Get the state
-    var state = proxyManager.getProxyState();
+    // Get the state first
+    var state = prefsHandler.getStringPref(statePref);
     switch (state) {
-      case 0:
-        return "Proxy:None";
-        break;
+      case 'none':
+        return "No Proxy";
       
-      case 1:
-        // TODO: Check which proxy is used
-        return "Proxy:JonDo";
-        //break;
+      case 'jondo':
+        return "JonDo";
+
+      case 'tor':
+        return "Tor";
+
+      case 'custom':
+        return "Custom";
 
       default:
-        log("Unknown status " + state + "!");        
-        return "Proxy:Unknown";
-        //break;
+        log("!! Unknown proxy state: " + state);        
+        return "Unknown";
     }
   } catch (e) {
     log("getLabel(): " + e);
@@ -88,47 +147,42 @@ function getLabel() {
 }
 
 // Set the current label to the proxy-status
-function setLabel() {
-  log("Set label");
+function refreshStatus() {
+  log("Refreshing the statusbar");
   try {
     // Set the label
     var label = getLabel();
-    document.getElementById('jondofox-proxy-status').setAttribute('label', label);
+    document.getElementById('jondofox-proxy-status').
+                setAttribute('label', label);
     
     // Get the proxy list
     var proxyList = document.getElementById('jondofox-proxy-list');
-    log("Got proxy list: " + (proxyList != null));
-    // Checkbox elements 
+    // Get the single checkbox elements 
     var items = proxyList.getElementsByAttribute('type', 'checkbox');
-    log("Got checkbox elements: " + items.length);
 
     // Uncheck all but the selected one
-    //for (var i = 0, i < items.length, i++) {
-     
-      //log("Label is " + items[i].hasAttribute("label"));
-      
-      //if (items[i].getAttribute('label') == label) {
-      //  items[i].setAttribute('checked', true);
-      //} else {
-      //  items[i].setAttribute('checked', false);
-      //}
-    //}
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].getAttribute('label') == label) {
+        items[i].setAttribute('checked', true);
+      } else {
+        items[i].setAttribute('checked', false);
+      }
+    }
   } catch (e) {
-    log("setLabel(): " + e);
+    log("refreshStatus(): " + e);
   }
 }
 
-// Observer for proxy preferences
-var proxyObserver = {
+// Observe 'extensions.jondofox.proxy.state'
+var proxyStateObserver = {
   // Implement nsIObserver
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'nsPref:changed':
+        // The state has changed        
         log(topic + " --> " + data);
-        if (data == 'network.proxy.type') {
-          // Reset the label on type change
-          setLabel();
-        }
+        // Refresh the status
+        refreshStatus();
         break;
 
       default:
@@ -145,9 +199,10 @@ function init() {
     // Remove this listener again
     window.removeEventListener("load", init, true);
     // Initially set the label
-    setLabel();
+    refreshStatus();
     // Add a proxy preferences observer
-    prefsHandler.getPrefs().addObserver("network.proxy", proxyObserver, false);
+    prefsHandler.getPrefs().addObserver("extensions.jondofox.proxy.state", 
+                               proxyStateObserver, false);
   } catch (e) {
     log("init(): " + e);
   }
