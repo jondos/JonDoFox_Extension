@@ -182,7 +182,7 @@ function refreshStatus() {
     var label = getLabel();
     document.getElementById('jondofox-proxy-status').
                 setAttribute('label', label);
-    
+
     // Get the proxy list
     var proxyList = document.getElementById('jondofox-proxy-list');
     // Get the single checkbox elements 
