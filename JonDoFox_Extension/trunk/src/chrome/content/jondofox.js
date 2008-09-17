@@ -37,8 +37,8 @@ var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
 function disableProxy() {
   try {
     // Call disable on the proxy manager
-    proxyManager.disableProxy();
     prefsHandler.setStringPref(statePref, 'none');
+    proxyManager.disableProxy();
   } catch (e) {
     log("disableProxy(): " + e);
   }
@@ -52,14 +52,29 @@ function toggleProxy() {
     // Get the current status
     var state = proxyManager.getProxyState();
     if (state > 0) {
-      // Disable
-      disableProxy();
+      // Let the user confirm
+      if (confirmProxyOff()) {
+        disableProxy();
+      }
     } else {
       // Set the proxy to JonDo
       setProxy('jondo');
     }
   } catch (e) {
     log("toggleProxy(): " + e);
+  }
+}
+
+// Return 'true' if the user clicked Ok, else return 'false'
+function confirmProxyOff() {
+  try {
+    // 'ret' is an array
+    var ret = {value: false};
+    window.openDialog("chrome://jondofox/content/dialogs/proxy-warning.xul",
+              "Proxy Alert", "modal, centerscreen, close=no", ret);
+    return ret.value;
+  } catch (e) {
+    log("confirmProxyOff(): " + e);
   }
 }
 
@@ -71,8 +86,16 @@ function setProxy(state) {
     // Store the previous state to detect if the state didn't change
     var previousState = prefsHandler.getStringPref(statePref);
     if (state == 'none') {
-      // Disable the proxy
-      disableProxy();
+      // Show a warning
+      var value = confirmProxyOff();
+      if (value) {
+        // Disable the proxy
+        disableProxy();
+      } else {
+        // Reset the state
+        log("Resetting state to " + previousState);
+        state = previousState;
+      }
     } else {
       // Check the id
       switch (state) {
@@ -104,9 +127,9 @@ function setProxy(state) {
           log("!! Unknown proxy state: " + state);
           return;
       }
-      // Enable and set the state
-      proxyManager.enableProxy();
+      // Set the state and enable
       prefsHandler.setStringPref(statePref, state);          
+      proxyManager.enableProxy();
     }
     // If the state didn't change, call refreshStatus() by hand
     if (previousState == state) {
@@ -126,10 +149,13 @@ function getLabel() {
     var state = prefsHandler.getStringPref(statePref);
     switch (state) {
       case 'none':
-        // FIXME: This is a Hack: Return the label of the right menuitem
-        var elements = document.getElementsByAttribute('oncommand', "setProxy('none')");
-        return elements[0].getAttribute('label');
-      
+        // FIXME Hack: Find the menuitem and return its label
+        var elements = document.getElementsByAttribute('oncommand', 
+                                   "setProxy('none');");
+        // There should be only one!
+        var label = elements[0].getAttribute('label');
+        return label;
+
       case 'jondo':
         return "JonDo";
 
@@ -181,10 +207,20 @@ var proxyStateObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'nsPref:changed':
-        // The state has changed        
-        log(topic + " --> " + data);
-        // Refresh the status
-        refreshStatus();
+        // The proxy state has changed
+        log(topic + " --> " + data);        
+        // If someone disables the proxy in FF ..
+        if (data == 'network.proxy.type') {
+          if (proxyManager.getProxyState() == 0 && 
+                 prefsHandler.getStringPref(statePref) != 'none') {
+            log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
+            // .. set the state to 'none'
+            prefsHandler.setStringPref(statePref, 'none')
+          }
+        } else {
+          // 'statePref' has changed, refresh the status
+          refreshStatus();
+        }
         break;
 
       default:
@@ -200,13 +236,26 @@ function init() {
   try {
     // Remove this listener again
     window.removeEventListener("load", init, true);
-    // Initially set the label
-    refreshStatus();
+    // Initially set the state
+    setProxy(prefsHandler.getStringPref(statePref));
     // Add a proxy preferences observer
-    prefsHandler.getPrefs().addObserver("extensions.jondofox.proxy.state", 
+    prefsHandler.getPrefs().addObserver(statePref, proxyStateObserver, false);
+    prefsHandler.getPrefs().addObserver("network.proxy.type", 
                                proxyStateObserver, false);
   } catch (e) {
     log("init(): " + e);
+  }
+}
+
+// Open up the anontest in a new tab of the current window
+function openTabAnontest() {
+  try {
+    var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
+                         getService(Components.interfaces.nsIWindowMediator).
+                         getMostRecentWindow('navigator:browser');
+    win.openUILinkIn('https://www.jondos.de/anontest', 'tab');
+  } catch (e) {
+    log("openTabAnontest(): " + e);
   }
 }
 
@@ -231,17 +280,20 @@ log("This is " + titleString);
 
 // Set the modifier only
 function setTitleModifier() {
-  //log("Setting title modifier");
+  log("Setting title modifier");
   try {
     // Set the 'titlemodifier' attribute in the current document
     var modAtt = document.documentElement.getAttribute("titlemodifier");
     if (modAtt) {
       document.documentElement.setAttribute("titlemodifier", titleString);
     }
-    // XXX: This seems to be not needed
-    //document.getElementById("content").updateTitlebar();
+    // XXX: This seems to be not needed on Linux and Windows
+    if (this.docShell) {
+      //log("'this.docShell' is not null");
+      document.getElementById("content").updateTitlebar();
+    }
   } catch (e) {
-    log("setModifier(): " + e);
+    log("setTitleModifier(): " + e);
   }
 }
 

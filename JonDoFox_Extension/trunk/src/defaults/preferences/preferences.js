@@ -2,7 +2,7 @@
 pref("extensions.jondofox.profile_version", "2.0.2");
 
 // Proxy prefs
-pref("extensions.jondofox.proxy.state", "none");
+pref("extensions.jondofox.proxy.state", "jondo");
 
 //pref("extensions.jondofox.custom.proxy_host", "127.0.0.1");
 //pref("extensions.jondofox.custom.proxy_port", 8118);
