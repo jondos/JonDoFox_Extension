@@ -130,6 +130,17 @@ var PrefsObserver = {
     }
   },
 
+  // Call this on uninstall
+  clearExtraPrefs: function() {
+    log("Clearing extra preferences ..");
+    try {
+      // Delete the jondofox proxy state
+      this.ph().deletePreference('extensions.jondofox.proxy.state');
+    } catch (e) {
+      log("clearExtraPrefs(): " + e);
+    }
+  },
+
   // This is called once on application startup
   registerObservers: function() {
     log("Register observers");
@@ -188,7 +199,10 @@ var PrefsObserver = {
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           // Clear preferences on shutdown after uninstall
-          if (this.clearPrefs) { this.clearStringPrefs(); }
+          if (this.clearPrefs) { 
+            this.clearStringPrefs(); 
+            this.clearExtraPrefs();
+          }
           // Unregister observers
           this.unregisterObservers();
           break;
