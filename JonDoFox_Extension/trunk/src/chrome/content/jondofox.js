@@ -22,7 +22,7 @@ function log(msg) {
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-// Proxy state preference
+// The proxy state preference
 const statePref = 'extensions.jondofox.proxy.state';
 
 // Get the preferences handler
@@ -44,8 +44,9 @@ function disableProxy() {
   }
 }
 
-// This happens on a double-click:
+// This could happen on a double-click in the statusbar:
 // Toggle the proxy according to its current state
+// XXX: (Currently never called)
 function toggleProxy() {
   log("Toggling Proxy ..");
   try {
@@ -86,7 +87,7 @@ function setProxy(state) {
     // Store the previous state to detect if the state didn't change
     var previousState = prefsHandler.getStringPref(statePref);
     if (state == 'none') {
-      // Show a warning
+      // Let the user confirm this
       var value = confirmProxyOff();
       if (value) {
         // Disable the proxy
@@ -127,14 +128,14 @@ function setProxy(state) {
           log("!! Unknown proxy state: " + state);
           return;
       }
-      // Set the state and enable
+      // Set the state first and then enable
       prefsHandler.setStringPref(statePref, state);          
       proxyManager.enableProxy();
     }
-    // If the state didn't change, call refreshStatus() by hand
+    // If the state didn't change, call refreshStatusbar() by hand
     if (previousState == state) {
-      log("NOT a state change, calling refreshStatus() ..");
-      refreshStatus();
+      log("NOT a state change, calling refreshStatusbar() ..");
+      refreshStatusbar();
     }
   } catch (e) {
     log("setProxy(): " + e);
@@ -149,7 +150,7 @@ function getLabel() {
     var state = prefsHandler.getStringPref(statePref);
     switch (state) {
       case 'none':
-        // FIXME Hack: Find the menuitem and return its label
+        // XXX Hack: Find the menuitem and return its internationalized label
         var elements = document.getElementsByAttribute('oncommand', 
                                    "setProxy('none');");
         // There should be only one!
@@ -175,7 +176,7 @@ function getLabel() {
 }
 
 // Set the current label to the proxy-status
-function refreshStatus() {
+function refreshStatusbar() {
   log("Refreshing the statusbar");
   try {
     // Set the label
@@ -197,7 +198,7 @@ function refreshStatus() {
       }
     }
   } catch (e) {
-    log("refreshStatus(): " + e);
+    log("refreshStatusbar(): " + e);
   }
 }
 
@@ -219,12 +220,12 @@ var proxyStateObserver = {
           }
         } else {
           // 'statePref' has changed, refresh the status
-          refreshStatus();
+          refreshStatusbar();
         }
         break;
 
       default:
-        log("Wrong topic " + topic);
+        log("!! Unknown topic " + topic);
         break;
     }
   }
@@ -236,12 +237,14 @@ function init() {
   try {
     // Remove this listener again
     window.removeEventListener("load", init, true);
-    // Initially set the state
-    setProxy(prefsHandler.getStringPref(statePref));
     // Add a proxy preferences observer
+    log("Adding proxy state observers");
     prefsHandler.getPrefs().addObserver(statePref, proxyStateObserver, false);
     prefsHandler.getPrefs().addObserver("network.proxy.type", 
                                proxyStateObserver, false);
+    // Initially set the state
+    log("Setting initial proxy state");
+    setProxy(prefsHandler.getStringPref(statePref));
   } catch (e) {
     log("init(): " + e);
   }
@@ -278,16 +281,17 @@ const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
 // Log something initially
 log("This is " + titleString);
 
-// Set the modifier only
+// Set the title modifier
+// FIXME: This does not work on Macs
 function setTitleModifier() {
-  log("Setting title modifier");
+  //log("Setting title modifier");
   try {
     // Set the 'titlemodifier' attribute in the current document
     var modAtt = document.documentElement.getAttribute("titlemodifier");
     if (modAtt) {
       document.documentElement.setAttribute("titlemodifier", titleString);
     }
-    // XXX: This seems to be not needed on Linux and Windows
+    // This throws an exception if this.docShell is not set
     if (this.docShell) {
       //log("'this.docShell' is not null");
       document.getElementById("content").updateTitlebar();
@@ -305,7 +309,7 @@ function initTitleListener() {
     document.getElementById("content").addEventListener("DOMTitleChanged", 
                                           setTitleModifier, false);
     
-    // XXX: Also not needed? .. mTabContainer ..
+    // XXX: Not needed? .. mTabContainer ..
     //gBrowser.addEventListener("DOMNodeInserted", setTitleModifier, true);
     //gBrowser.addEventListener("DOMNodeRemoved", setTitleModifier, true);
   } catch (e) {

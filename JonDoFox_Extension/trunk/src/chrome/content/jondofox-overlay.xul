@@ -19,8 +19,12 @@
     
     <!-- Indicate status --> 
     <!-- FIXME: Positioning problem (insertbefore="statusbar-updates") -->
-    <statusbarpanel id="jondofox-proxy-status" position="6" hidden="false" 
-        class="statusbarpanel-iconic-text" label="" context="jondofox-proxy-list" ondblclick="toggleProxy()" />
+    <statusbarpanel id="jondofox-proxy-status" label=""
+        position="6"
+        class="statusbarpanel-iconic-text"        
+        popup="jondofox-proxy-list"
+        context="jondofox-proxy-list" />
+        <!-- ondblclick="toggleProxy()" / -->
     
     <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list"> 
