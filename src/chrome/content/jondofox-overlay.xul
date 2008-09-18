@@ -30,11 +30,11 @@
     <menupopup id="jondofox-proxy-list"> 
       <menuitem label="Anontest" oncommand="openTabAnontest();" />
       <menuseparator />
-      <menuitem label="&jondofox.statusbar.noProxy;" type="checkbox" checked="false" oncommand="setProxy('none');" />
+      <menuitem label="&jondofox.statusbar.noProxy;" type="checkbox" checked="false" oncommand="setProxy('none', true);" />
       <menuseparator />
       <!-- menuitem label="Custom" type="checkbox" checked="false" oncommand="setProxy('custom')" /-->
-      <menuitem label="Tor" type="checkbox" checked="false" oncommand="setProxy('tor');" />
-      <menuitem label="JonDo" type="checkbox" checked="false" oncommand="setProxy('jondo');" />
+      <menuitem label="Tor" type="checkbox" checked="false" oncommand="setProxy('tor', false);" />
+      <menuitem label="JonDo" type="checkbox" checked="false" oncommand="setProxy('jondo', false);" />
     </menupopup>
 
   </statusbar>
