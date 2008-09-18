@@ -2,7 +2,8 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * TODO: Document this
+ * This code is available on a per window basis. These are in fact methods for
+ * controlling proxy behavior and setting the customized window title.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,24 @@ var mDebug = true;
 // Don't forget to create 'browser.dom.window.dump.enabled' first!
 function log(msg) {
   if (mDebug) dump("JonDoFox :: " + msg + "\n");
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Utils
+///////////////////////////////////////////////////////////////////////////////
+
+// Load localization strings
+function getStringBundle() {
+  try {
+    var bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
+                           getService(Components.interfaces.
+                              nsIStringBundleService);
+    var stringBundle = bundleService.createBundle(
+                          "chrome://jondofox/locale/jondofox.properties");
+    return stringBundle;
+  } catch (e) {
+    log("getStringBundle(): " + e);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,7 +78,7 @@ function toggleProxy() {
       }
     } else {
       // Set the proxy to JonDo
-      setProxy('jondo');
+      setProxy('jondo', false);
     }
   } catch (e) {
     log("toggleProxy(): " + e);
@@ -79,23 +98,29 @@ function confirmProxyOff() {
   }
 }
 
-// This is called when choosing a proxy from the list 
+// This is called when a proxy is chosen from the popup menu
 // ['state' --> jondo, tor, custom, none, unknown?]
-function setProxy(state) {
+// Set 'conf' to true if the user should need to confirm disabling the proxy
+function setProxy(state, conf) {
   log("Setting proxy to " + state);
   try {
     // Store the previous state to detect if the state didn't change
     var previousState = prefsHandler.getStringPref(statePref);
     if (state == 'none') {
-      // Let the user confirm this
-      var value = confirmProxyOff();
-      if (value) {
-        // Disable the proxy
-        disableProxy();
+      if (conf) {
+        // Let the user confirm this
+        var value = confirmProxyOff();
+        if (value) {
+          // Disable the proxy
+          disableProxy();
+        } else {
+          // Reset the state
+          log("Resetting state to " + previousState);
+          state = previousState;
+        }
       } else {
-        // Reset the state
-        log("Resetting state to " + previousState);
-        state = previousState;
+        // 'ask' is false, straight disable
+        disableProxy();
       }
     } else {
       // Check the id
@@ -148,38 +173,35 @@ function getLabel() {
   try {
     // Get the state first
     var state = prefsHandler.getStringPref(statePref);
+    // Get the stringbundle
+    var strings = getStringBundle();
     switch (state) {
       case 'none':
-        // XXX Hack: Find the menuitem and return its internationalized label
-        var elements = document.getElementsByAttribute('oncommand', 
-                                   "setProxy('none');");
-        // There should be only one!
-        var label = elements[0].getAttribute('label');
-        return label;
+        return strings.GetStringFromName('jondofox.statusbar.label.noproxy');
 
       case 'jondo':
-        return "JonDo";
+        return strings.GetStringFromName('jondofox.statusbar.label.jondo');
 
       case 'tor':
-        return "Tor";
+        return strings.GetStringFromName('jondofox.statusbar.label.tor');
 
       case 'custom':
-        return "Custom";
+        return strings.GetStringFromName('jondofox.statusbar.label.custom');
 
       default:
         log("!! Unknown proxy state: " + state);        
-        return "Unknown";
+        return strings.GetStringFromName('jondofox.statusbar.label.unknown');
     }
   } catch (e) {
     log("getLabel(): " + e);
   }
 }
 
-// Set the current label to the proxy-status
+// Refresh the statusbar label and checkboxes
 function refreshStatusbar() {
   log("Refreshing the statusbar");
   try {
-    // Set the label
+    // Get and set the label
     var label = getLabel();
     document.getElementById('jondofox-proxy-status').
                 setAttribute('label', label);
@@ -244,7 +266,7 @@ function init() {
                                proxyStateObserver, false);
     // Initially set the state
     log("Setting initial proxy state");
-    setProxy(prefsHandler.getStringPref(statePref));
+    setProxy(prefsHandler.getStringPref(statePref), false);
   } catch (e) {
     log("init(): " + e);
   }
