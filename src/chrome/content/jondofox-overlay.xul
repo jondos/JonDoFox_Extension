@@ -11,7 +11,7 @@
   
   <!-- Add listener to set the label initially -->
   <script language="JavaScript">
-    try { window.addEventListener("load", init, true); } catch(e) {}
+    try { window.addEventListener("load", initWindow, true); } catch(e) {}
   </script>
 
   <!-- Statusbar -->

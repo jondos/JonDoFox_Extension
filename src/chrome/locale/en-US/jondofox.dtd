@@ -22,8 +22,3 @@
    this case.">
 
 <!ENTITY jondofox.statusbar.noProxy "No Proxy">
-
-<!ENTITY jondofox.dialogs.warning "Warning!">
-<!ENTITY jondofox.dialogs.accept "Ok">
-<!ENTITY jondofox.dialogs.cancel "Cancel">
-<!ENTITY jondofox.dialogs.proxyWarning "When the proxy is turned off your connection is insecure!">
