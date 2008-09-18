@@ -2,11 +2,7 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This component is instanciated once on application startup to:
- *
- * - Set configuration options regarding the browser's user agent string, as 
- *   well as locale and language configuration
- * - Listen for uninstallation of the extension to reset these options
+ * JonDoFox extension management and compatibility tasks + utilities
  *****************************************************************************/
  
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,34 +13,30 @@ var mDebug = true;
 
 // Log a message
 function log(message) {
-  if (mDebug) dump("PrefsObserver :: " + message + "\n");
+  if (mDebug) dump("JDFManager :: " + message + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
 
-const CLASS_ID = Components.ID('{67d79e27-f32d-4e7f-97d7-68de76795611}');
-const CLASS_NAME = 'Preferences Observer'; 
-const CONTRACT_ID = '@jondos.de/preferences-observer;1';
+const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
+const CLASS_NAME = 'JonDoFox-Manager'; 
+const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
-var PrefsObserver = {
+var JDFManager = {
   
   // Clear preferences on application shutdown, e.g. uninstall?
-  clearPrefs: false,
+  cleanUp: false,
 
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
-  
-  // The preferences handler
-  prefsHandler: null,
-  
-  // A map of string preferences
-  // TODO: Somehow set this from chrome?
+
+  // This map of string preferences is given to the prefsMapper
   stringPrefsMap: 
      { 'general.appname.override':'extensions.jondofox.appname_override',
        'general.appversion.override':'extensions.jondofox.appversion_override',
@@ -59,85 +51,76 @@ var PrefsObserver = {
        'intl.charset.default':'extensions.jondofox.default_charset',
        'intl.accept_charsets':'extensions.jondofox.accept_charsets',
        'network.http.accept.default':'extensions.jondofox.accept_default' },
-  
-  // Return the prefsHandler
-  ph: function() {
-    if (!this.prefsHandler) {
-      //log("Setting preferences handler");
-      // Set prefsHandler
-      this.prefsHandler = 
-              Components.classes['@jondos.de/preferences-handler;1'].
-                            getService().wrappedJSObject;
+
+  // The preferences handler
+  prefsHandler: null,
+  prefsMapper: null,
+
+  // Inititalize prefsHandler and prefsMapper
+  init: function() {
+    log("Init preferences handler and mapper");
+    try {
+      this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+                             getService().wrappedJSObject;
+      this.prefsMapper = Components.classes['@jondos.de/preferences-mapper;1'].
+                            getService().wrappedJSObject; 
+    } catch (e) {
+      log("init(): " + e);
     }
-    return this.prefsHandler;
   },
 
-  // Set all of the string preferences in stringPrefsMap
-  setStringPrefs: function() {
+  // Call this on app-startup to check certain preferences
+  onAppStartup: function() {
+    log("Checking conditions on startup ..");
     try {
-      // Iterate through the map
-      for (p in this.stringPrefsMap) {
-        this.ph().setStringPref(p, 
-                     this.ph().getStringPref(this.stringPrefsMap[p]));
-      }      
+      // Call init() first
+      this.init();
+
+      // Map all preferences
+      this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
+      this.prefsMapper.map();
+
       // Add an observer to the main pref branch after setting the prefs
-      var prefs = this.ph().getPrefs();
+      var prefs = this.prefsHandler.getPrefs();
       prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
-    } catch (e) {
-      log("setStringPrefs(): " + e);
-    }
-  },
 
-  // Reset the string preferences
-  clearStringPrefs: function() {
-    try {
-      // Remove the preferences observer      
-      log("Stop observing preferences ..");
-      var prefs = this.ph().getPrefs();
-      prefs.removeObserver("", this);
-      // Reset all prefs
-      for (p in this.stringPrefsMap) {
-        this.ph().deletePreference(p);
-      }
-    } catch (e) {
-      log("clearStringPrefs(): " + e);
-    }
-  },
-  
-  // Call this on app-startup to check certain (extra) prefs
-  // TODO: Do this in jondofox-utils?
-  checkExtraPrefs: function() {
-    log("Checking various preferences ..");
-    try {
       // Disable the history
-      this.ph().setIntPref('browser.history_expire_days', 0);
+      this.prefsHandler.setIntPref('browser.history_expire_days', 0);
       
       // If cookies are accepted from *all* sites --> reject all 
       // or reject third-party cookies only (cookiePref == 1)?
-      var cookiePref = this.ph().getIntPref('network.cookie.cookieBehavior');
+      var cookiePref = this.prefsHandler.getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
-        this.ph().setIntPref('network.cookie.cookieBehavior', 2)
+        this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 2)
       }
 
       // If this is set, set it to false
-      if (this.ph().isPreferenceSet('local_install.showBuildinWindowTitle')) {
-        this.ph().setBoolPref('local_install.showBuildinWindowTitle', false);
+      if (this.prefsHandler.isPreferenceSet('local_install.showBuildinWindowTitle')) {
+        this.prefsHandler.setBoolPref('local_install.showBuildinWindowTitle', false);
       }
     } catch (e) {
-      log("checkPrefs(): " + e);
+      log("onAppStartup(): " + e);
     }
   },
 
   // Call this on uninstall
-  clearExtraPrefs: function() {
-    log("Clearing extra preferences ..");
+  onUninstall: function() {
+    log("Cleaning up ..");
     try {
+      // Remove the preferences observer      
+      log("Stop observing preferences ..");
+      var prefs = this.prefsHandler.getPrefs();
+      prefs.removeObserver("", this);
+
+      // Unmap all preferences
+      this.prefsMapper.unmap();
+      
       // Delete the jondofox proxy state
       this.ph().deletePreference('extensions.jondofox.proxy.state');
     } catch (e) {
-      log("clearExtraPrefs(): " + e);
+      log("onUninstall(): " + e);
     }
   },
 
@@ -199,9 +182,8 @@ var PrefsObserver = {
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           // Clear preferences on shutdown after uninstall
-          if (this.clearPrefs) { 
-            this.clearStringPrefs(); 
-            this.clearExtraPrefs();
+          if (this.cleanUp) {
+            this.onUninstall();
           }
           // Unregister observers
           this.unregisterObservers();
@@ -209,10 +191,8 @@ var PrefsObserver = {
         
         case 'final-ui-startup':
           log("Got topic --> " + topic);
-          // Set the user agent here
-          this.setStringPrefs();
-          // Perform the preferences check
-          this.checkExtraPrefs();
+          // Check conditions on startup
+          this.onAppStartup();
           break;
 
         case 'em-action-requested':
@@ -222,10 +202,10 @@ var PrefsObserver = {
             log("Got topic --> " + topic + ", data --> " + data);
             if (data == "item-uninstalled" || data == "item-disabled") {
               // Uninstall or disable
-              this.clearPrefs = true;
+              this.cleanUp = true;
             } else if (data == "item-cancel-action") {
               // Cancellation ..
-              this.clearPrefs = false;
+              this.cleanUp = false;
             }
           }
           break;
@@ -237,7 +217,7 @@ var PrefsObserver = {
           // Not really necessary since closing the last window will also cause
           // 'quit-application-granted' .. let the code stay here though:
           //   http://forums.mozillazine.org/viewtopic.php?t=308369
-          /* if (i == 0 && this.clearPrefs) { 
+          /* if (i == 0 && this.cleanUp) { 
             this.clearUserAgent(); 
             this.unregisterObservers()
           } */
@@ -261,7 +241,7 @@ var PrefsObserver = {
             }
           }
 
-          // Check if the changed preference is one of 'ours'
+          // Check if the changed preference is on the map
           else if (!this.userWarned && data in this.stringPrefsMap) {
             //log("Pref '" + data + "' is on the map!");
             // If the new value is not the recommended ..
@@ -304,7 +284,7 @@ var PrefsObserver = {
 // The actual component
 ///////////////////////////////////////////////////////////////////////////////
 
-var UserAgentModule = {
+var JDFManagerModule = {
 
   firstTime: true,
 
@@ -321,7 +301,7 @@ var UserAgentModule = {
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
-    catMan.addCategoryEntry("app-startup", "UAgentSpoof", CONTRACT_ID, true, 
+    catMan.addCategoryEntry("app-startup", "JDFManager", CONTRACT_ID, true, 
               true);
   },
 
@@ -356,7 +336,7 @@ var UserAgentModule = {
       if (outer != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
 
-      return PrefsObserver.QueryInterface(iid);
+      return JDFManager.QueryInterface(iid);
     }
   }
 };
@@ -366,5 +346,5 @@ var UserAgentModule = {
 ///////////////////////////////////////////////////////////////////////////////
 
 function NSGetModule(comMgr, fileSpec) {
-  return UserAgentModule; 
+  return JDFManagerModule; 
 }
