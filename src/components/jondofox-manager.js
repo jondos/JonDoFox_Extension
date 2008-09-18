@@ -52,9 +52,13 @@ var JDFManager = {
        'intl.accept_charsets':'extensions.jondofox.accept_charsets',
        'network.http.accept.default':'extensions.jondofox.accept_default' },
 
-  // The preferences handler
+  // Different services
   prefsHandler: null,
   prefsMapper: null,
+  promptService: null,
+
+  // Localization strings
+  stringBundle: null,
 
   // Inititalize prefsHandler and prefsMapper
   init: function() {
@@ -63,15 +67,21 @@ var JDFManager = {
       this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                              getService().wrappedJSObject;
       this.prefsMapper = Components.classes['@jondos.de/preferences-mapper;1'].
-                            getService().wrappedJSObject; 
+                            getService().wrappedJSObject;
+      this.promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
+                              getService(Components.interfaces.nsIPromptService);
+      var bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
+                             getService(Components.interfaces.nsIStringBundleService);
+      this.stringBundle = bundleService.createBundle("chrome://jondofox/locale/jondofox.properties");
+      log("stringBundle is " + this.stringBundle);
     } catch (e) {
       log("init(): " + e);
     }
   },
-
+  
   // Call this on app-startup to check certain preferences
   onAppStartup: function() {
-    log("Checking conditions on startup ..");
+    log("Starting up, checking conditions ..");
     try {
       // Call init() first
       this.init();
@@ -118,7 +128,7 @@ var JDFManager = {
       this.prefsMapper.unmap();
       
       // Delete the jondofox proxy state
-      this.ph().deletePreference('extensions.jondofox.proxy.state');
+      this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
     } catch (e) {
       log("onUninstall(): " + e);
     }
@@ -153,6 +163,26 @@ var JDFManager = {
       observers.removeObserver(this, "xul-window-destroyed");
     } catch (ex) {
       log("unregisterObservers(): " + ex);
+    }
+  },
+  
+  // Utils functions from here
+  // Show an alert using the prompt service
+  showAlert: function(title, text) {
+    try {
+      this.promptService.alert(null, title, text);
+    } catch (e) {
+      log("showAlert(): " + e);
+    }
+  },
+
+  // Return a properties string
+  getString: function(name) {
+    log("Getting localized string " + name);
+    try {
+      return this.stringBundle.GetStringFromName(name);
+    } catch (e) {
+      log("getString(): " + e);
     }
   },
 
@@ -229,31 +259,23 @@ var JDFManager = {
           
           // Do not allow to accept ALL cookies
           if (data == 'network.cookie.cookieBehavior') {
-            if (this.ph().getIntPref('network.cookie.cookieBehavior') == 0) {
-              this.ph().setIntPref('network.cookie.cookieBehavior', 1)
+            if (this.prefsHandler.getIntPref('network.cookie.cookieBehavior') == 0) {
+              this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1)
               // Warn the user
-              var ps = Components.
-                          classes["@mozilla.org/embedcomp/prompt-service;1"].
-                          getService(Components.interfaces.nsIPromptService);
-              ps.alert(null, "Attention", "Cookies cannot be accepted for all " +
-                    "sites! This will seriously affect your privacy! You need " +
-                    "to disallow third-party cookies at least. ");
+              this.showAlert(this.getString('jondofox.dialog.attention'), 
+                             this.getString('jondofox.dialog.message.cookies'));
             }
           }
 
           // Check if the changed preference is on the map
-          else if (!this.userWarned && data in this.stringPrefsMap) {
-            //log("Pref '" + data + "' is on the map!");
+          else if (data in this.stringPrefsMap && !this.userWarned) {
+            log("Pref '" + data + "' is on the map!");
             // If the new value is not the recommended ..
-            if (this.ph().getStringPref(data) != 
-                   this.ph().getStringPref(this.stringPrefsMap[data])) {
+            if (this.prefsHandler.getStringPref(data) != 
+                   this.prefsHandler.getStringPref(this.stringPrefsMap[data])) {
               // ... warn the user
-              var ps = Components.
-                          classes["@mozilla.org/embedcomp/prompt-service;1"].
-                          getService(Components.interfaces.nsIPromptService);
-              ps.alert(null, "Attention", "A browser preference that is " +
-                    "important for your anonymity has just changed! You are " +
-                    "not safe anymore until you restart your browser!!");
+              this.showAlert(this.getString('jondofox.dialog.attention'), 
+                             this.getString('jondofox.dialog.message.prefchange'));
               this.userWarned = true;
             } else {
               log("All good!");
