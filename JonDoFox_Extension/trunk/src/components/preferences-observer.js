@@ -44,7 +44,7 @@ var PrefsObserver = {
   prefsHandler: null,
   
   // A map of string preferences
-  // TODO: Somehow set this from chrome
+  // TODO: Somehow set this from chrome?
   stringPrefsMap: 
      { 'general.appname.override':'extensions.jondofox.appname_override',
        'general.appversion.override':'extensions.jondofox.appversion_override',
@@ -72,10 +72,10 @@ var PrefsObserver = {
     return this.prefsHandler;
   },
 
-  // Set several string preferences: user agent overrides, etc.
+  // Set all of the string preferences in stringPrefsMap
   setStringPrefs: function() {
     try {
-      // Set all preferences in the map
+      // Iterate through the map
       for (p in this.stringPrefsMap) {
         this.ph().setStringPref(p, 
                      this.ph().getStringPref(this.stringPrefsMap[p]));
@@ -90,7 +90,7 @@ var PrefsObserver = {
     }
   },
 
-  // Reset string preferences
+  // Reset the string preferences
   clearStringPrefs: function() {
     try {
       // Remove the preferences observer      
@@ -107,7 +107,7 @@ var PrefsObserver = {
   },
   
   // Call this on app-startup to check certain (extra) prefs
-  // TODO: Create an extra component for this?
+  // TODO: Do this in jondofox-utils?
   checkExtraPrefs: function() {
     log("Checking various preferences ..");
     try {
@@ -115,13 +115,13 @@ var PrefsObserver = {
       this.ph().setIntPref('browser.history_expire_days', 0);
       
       // If cookies are accepted from *all* sites --> reject all 
-      // or reject third-party cookies only (1)?
+      // or reject third-party cookies only (cookiePref == 1)?
       var cookiePref = this.ph().getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
         this.ph().setIntPref('network.cookie.cookieBehavior', 2)
       }
 
-      // If this is set somehow, set it to false
+      // If this is set, set it to false
       if (this.ph().isPreferenceSet('local_install.showBuildinWindowTitle')) {
         this.ph().setBoolPref('local_install.showBuildinWindowTitle', false);
       }
@@ -244,7 +244,7 @@ var PrefsObserver = {
           break;
 
         case 'nsPref:changed':
-          // Check if somebody enables the history?
+          // Check if someone enables the history?
           //   'browser.history_expire_days'
           
           // Do not allow to accept ALL cookies

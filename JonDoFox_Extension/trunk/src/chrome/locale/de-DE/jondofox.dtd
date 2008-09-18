@@ -22,8 +22,3 @@
    In diesem Fall sollten Sie ihre Einstellungen überprüfen und die zugehörige Hilfe lesen.">
 
 <!ENTITY jondofox.statusbar.noProxy "Kein Proxy">
-
-<!ENTITY jondofox.dialogs.warning "Achtung!">
-<!ENTITY jondofox.dialogs.accept "Ok">
-<!ENTITY jondofox.dialogs.cancel "Abbrechen">
-<!ENTITY jondofox.dialogs.proxyWarning "Wenn kein Proxy eingestellt ist kommunizieren Sie über eine unsichere Verbindung!">
