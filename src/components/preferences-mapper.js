@@ -2,7 +2,7 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * TODO: Document this!
+ * Map pairs of preferences that are given as arrays
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,6 +131,7 @@ var PrefsMapperFactory = {
 
 var PrefsMapperModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
+    log("Registering '" + CLASS_NAME + "' ..");
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
                            nsIComponentRegistrar);
     aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
@@ -138,6 +139,7 @@ var PrefsMapperModule = {
   },
 
   unregisterSelf: function(aCompMgr, aLocation, aType) {
+    log("Unregistering '" + CLASS_NAME + "' ..");
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
                            nsIComponentRegistrar);
     aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        

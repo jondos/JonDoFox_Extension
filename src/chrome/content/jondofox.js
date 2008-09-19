@@ -20,24 +20,6 @@ function log(msg) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Utils, move to extra component
-///////////////////////////////////////////////////////////////////////////////
-
-// Load localization strings
-function getStringBundle() {
-  try {
-    var bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
-                           getService(Components.interfaces.
-                              nsIStringBundleService);
-    var stringBundle = bundleService.createBundle(
-                          "chrome://jondofox/locale/jondofox.properties");
-    return stringBundle;
-  } catch (e) {
-    log("getStringBundle(): " + e);
-  }
-}
-
-///////////////////////////////////////////////////////////////////////////////
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,59 +35,25 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
                                  getService().wrappedJSObject;
 
-// The stringbundle
-var strings = getStringBundle();
-
-// Disable the proxy and set the state pref
-function disableProxy() {
-  try {
-    // Call disable on the proxy manager
-    prefsHandler.setStringPref(statePref, 'none');
-    proxyManager.disableProxy();
-  } catch (e) {
-    log("disableProxy(): " + e);
-  }
-}
-
-// This could happen on a double-click in the statusbar:
-// Toggle the proxy according to its current state
-// XXX: (Currently never called)
-function toggleProxy() {
-  log("Toggling Proxy ..");
-  try {
-    // Get the current status
-    var state = proxyManager.getProxyState();
-    if (state > 0) {
-      // Let the user confirm
-      if (confirmProxyOff()) {
-        disableProxy();
-      }
-    } else {
-      // Set the proxy to JonDo
-      setProxy('jondo', false);
-    }
-  } catch (e) {
-    log("toggleProxy(): " + e);
-  }
-}
+// Get the JDFManager
+var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+                                 getService().wrappedJSObject;
 
 // This is called when a proxy is chosen from the popup menu, where
 // 'state' is one of --> jondo, tor, custom, none, unknown?
 // Set 'conf' to true if the user should need to confirm disabling 
 // the proxy, makes only sense in combination with state = 'none'
 function setProxy(state, conf) {
-  log("Setting proxy to " + state);
+  log("Setting proxy to '" + state + "'");
   try {
-    // Store the previous state to detect if the state didn't change
+    // Store the previous state to detect state changes
     var previousState = prefsHandler.getStringPref(statePref);
     if (state == 'none') {
       if (conf) {
         // Request confirmation
-        var ps = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-                            getService(Components.interfaces.nsIPromptService);
-        var value = ps.confirm(null, 
-                          strings.GetStringFromName('jondofox.dialog.attention'),
-                          strings.GetStringFromName('jondofox.dialog.message.proxyoff'));
+        var value = jdfManager.showConfirm(
+                    jdfManager.getString('jondofox.dialog.attention'),
+                    jdfManager.getString('jondofox.dialog.message.proxyoff'));
         if (value) {
           // Disable the proxy
           disableProxy();
@@ -163,30 +111,61 @@ function setProxy(state, conf) {
   }
 }
 
-// Map the current proxy status to a string label
+// Disable the proxy and set the state preference
+function disableProxy() {
+  try {
+    // Call disable on the proxy manager
+    prefsHandler.setStringPref(statePref, 'none');
+    proxyManager.disableProxy();
+  } catch (e) {
+    log("disableProxy(): " + e);
+  }
+}
+
+// This could happen on a double-click in the statusbar:
+// Toggle the proxy according to its current state
+// XXX: (Currently never called)
+function toggleProxy() {
+  log("Toggling Proxy ..");
+  try {
+    // Get the current status
+    var state = proxyManager.getProxyState();
+    if (state > 0) {
+      // Let the user confirm
+      if (confirmProxyOff()) {
+        disableProxy();
+      }
+    } else {
+      // Set the proxy to JonDo
+      setProxy('jondo', false);
+    }
+  } catch (e) {
+    log("toggleProxy(): " + e);
+  }
+}
+
+// Map the current proxy status to a (localized) string label
 function getLabel() {
   log("Determine proxy-status label");
   try {
     // Get the state first
     var state = prefsHandler.getStringPref(statePref);
-    // Get the stringbundle
-    //var strings = getStringBundle();
     switch (state) {
       case 'none':
-        return strings.GetStringFromName('jondofox.statusbar.label.noproxy');
+        return jdfManager.getString('jondofox.statusbar.label.noproxy');
 
       case 'jondo':
-        return strings.GetStringFromName('jondofox.statusbar.label.jondo');
+        return jdfManager.getString('jondofox.statusbar.label.jondo');
 
       case 'tor':
-        return strings.GetStringFromName('jondofox.statusbar.label.tor');
+        return jdfManager.getString('jondofox.statusbar.label.tor');
 
       case 'custom':
-        return strings.GetStringFromName('jondofox.statusbar.label.custom');
+        return jdfManager.getString('jondofox.statusbar.label.custom');
 
       default:
         log("!! Unknown proxy state: " + state);        
-        return strings.GetStringFromName('jondofox.statusbar.label.unknown');
+        return jdfManager.getString('jondofox.statusbar.label.unknown');
     }
   } catch (e) {
     log("getLabel(): " + e);
