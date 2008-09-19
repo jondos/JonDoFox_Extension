@@ -24,10 +24,13 @@ const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
 const CLASS_NAME = 'JonDoFox-Manager'; 
 const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
+//const nsISupports = Components.interfaces.nsISupports;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
+// Singleton instance definition
 var JDFManager = {
   
   // Clear preferences on application shutdown, e.g. uninstall?
@@ -60,20 +63,25 @@ var JDFManager = {
   // Localization strings
   stringBundle: null,
 
-  // Inititalize prefsHandler and prefsMapper
+  // Inititalize services and stringBundle
   init: function() {
-    log("Init preferences handler and mapper");
+    log("Init services");
     try {
-      this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
-                             getService().wrappedJSObject;
-      this.prefsMapper = Components.classes['@jondos.de/preferences-mapper;1'].
+      this.prefsHandler = 
+              Components.classes['@jondos.de/preferences-handler;1'].
                             getService().wrappedJSObject;
-      this.promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-                              getService(Components.interfaces.nsIPromptService);
-      var bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].
-                             getService(Components.interfaces.nsIStringBundleService);
-      this.stringBundle = bundleService.createBundle("chrome://jondofox/locale/jondofox.properties");
-      log("stringBundle is " + this.stringBundle);
+      this.prefsMapper = 
+              Components.classes['@jondos.de/preferences-mapper;1'].
+                            getService().wrappedJSObject;
+      this.promptService = 
+              Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
+                            getService(Components.interfaces.nsIPromptService);
+      var bundleService = 
+             Components.classes["@mozilla.org/intl/stringbundle;1"].
+                getService(Components.interfaces.nsIStringBundleService);
+
+      this.stringBundle = bundleService.createBundle(
+                             "chrome://jondofox/locale/jondofox.properties");
     } catch (e) {
       log("init(): " + e);
     }
@@ -170,15 +178,25 @@ var JDFManager = {
   // Show an alert using the prompt service
   showAlert: function(title, text) {
     try {
+      // XXX Missing return?
       this.promptService.alert(null, title, text);
     } catch (e) {
       log("showAlert(): " + e);
     }
   },
+  
+  // Show a confirm dialog using the prompt service
+  showConfirm: function(title, text) {
+    try {
+      return this.promptService.confirm(null, title, text);
+    } catch (e) {
+      log("showConfirm(): " + e);
+    }
+  },
 
   // Return a properties string
   getString: function(name) {
-    log("Getting localized string " + name);
+    log("Getting localized string: '" + name + "'");
     try {
       return this.stringBundle.GetStringFromName(name);
     } catch (e) {
@@ -291,13 +309,13 @@ var JDFManager = {
       log("observe: " + ex);
     }
   },
-
+  
   // Implement nsISupports
   QueryInterface: function(iid) {
     if (!iid.equals(Components.interfaces.nsISupports) &&
         !iid.equals(Components.interfaces.nsIObserver) &&
         !iid.equals(Components.interfaces.nsISupportsWeakReference))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
+                        throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
 }
@@ -307,16 +325,16 @@ var JDFManager = {
 ///////////////////////////////////////////////////////////////////////////////
 
 var JDFManagerModule = {
-
-  firstTime: true,
+  
+  //firstTime: true,
 
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
-    if (this.firstTime) {
-      this.firstTime = false;
-      throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    }
+    //if (this.firstTime) {
+    //  this.firstTime = false;
+    //  throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
+    //}
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                fileSpec, location, type);
@@ -353,12 +371,16 @@ var JDFManagerModule = {
 
   // Implement nsIFactory
   classFactory: {
-    createInstance: function(outer, iid) {
-      log("Creating instance");
-      if (outer != null)
+    createInstance: function(aOuter, aIID) {
+      log("createInstance()");
+      if (aOuter != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
-
-      return JDFManager.QueryInterface(iid);
+      // Set wrappedJSObject
+      if (!JDFManager.wrappedJSObject) {
+        log("Setting wrappedJSObject");
+        JDFManager.wrappedJSObject = JDFManager;
+      }
+      return JDFManager.QueryInterface(aIID);
     }
   }
 };

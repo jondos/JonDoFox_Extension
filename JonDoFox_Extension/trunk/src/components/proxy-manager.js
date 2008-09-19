@@ -22,7 +22,7 @@ function log(message) {
 ///////////////////////////////////////////////////////////////////////////////
 
 const CLASS_ID = Components.ID('{44b042a6-5e0b-4d62-b8ce-df7fc36eb8b6}');
-const CLASS_NAME = 'Proxy Manager'; 
+const CLASS_NAME = 'Proxy-Manager'; 
 const CONTRACT_ID = '@jondos.de/proxy-manager;1';
 
 const nsISupports = Components.interfaces.nsISupports;
@@ -193,6 +193,7 @@ var ProxyManagerFactory = {
 
 var ProxyManagerModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
+    log("Registering '" + CLASS_NAME + "' ..");
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
                            nsIComponentRegistrar);
     aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
@@ -200,6 +201,7 @@ var ProxyManagerModule = {
   },
 
   unregisterSelf: function(aCompMgr, aLocation, aType) {
+    log("Unregistering '" + CLASS_NAME + "' ..");
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
                            nsIComponentRegistrar);
     aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
