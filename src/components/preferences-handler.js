@@ -11,7 +11,7 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-mDebug = false;
+mDebug = true;
 
 // Log method
 function log(message) {
@@ -23,7 +23,7 @@ function log(message) {
 ///////////////////////////////////////////////////////////////////////////////
 
 const CLASS_ID = Components.ID('{0fa6df5b-815d-413b-ad76-edd44ab30b74}');
-const CLASS_NAME = 'Preferences-Handler'; 
+const CLASS_NAME = 'Preferences Handler'; 
 const CONTRACT_ID = '@jondos.de/preferences-handler;1';
 
 const nsISupports = Components.interfaces.nsISupports;
@@ -201,7 +201,6 @@ var PreferencesHandlerFactory = {
 
 var PreferencesHandlerModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
-    log("Registering '" + CLASS_NAME + "' ..");
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
                            nsIComponentRegistrar);
     aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
@@ -209,7 +208,6 @@ var PreferencesHandlerModule = {
   },
 
   unregisterSelf: function(aCompMgr, aLocation, aType) {
-    log("Unregistering '" + CLASS_NAME + "' ..");
     aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
                            nsIComponentRegistrar);
     aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        

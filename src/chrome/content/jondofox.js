@@ -2,8 +2,7 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This code is available on a per window basis. These are in fact methods for
- * controlling proxy behavior and setting the customized window title.
+ * TODO: Document this
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,9 +22,8 @@ function log(msg) {
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-// The proxy state preferences
+// The proxy state preference
 const statePref = 'extensions.jondofox.proxy.state';
-const proxyType = 'network.proxy.type';
 
 // Get the preferences handler
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
@@ -35,36 +33,69 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
                                  getService().wrappedJSObject;
 
-// Get the JDFManager
-var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
-                                 getService().wrappedJSObject;
-
-// This is called when a proxy is chosen from the popup menu, where
-// 'state' is one of --> jondo, tor, custom, none, unknown?
-// Set 'conf' to true if the user should need to confirm disabling 
-// the proxy, makes only sense in combination with state = 'none'
-function setProxy(state, conf) {
-  log("Setting proxy to '" + state + "'");
+// Disable the proxy and set the state pref
+function disableProxy() {
   try {
-    // Store the previous state to detect state changes
+    // Call disable on the proxy manager
+    prefsHandler.setStringPref(statePref, 'none');
+    proxyManager.disableProxy();
+  } catch (e) {
+    log("disableProxy(): " + e);
+  }
+}
+
+// This could happen on a double-click in the statusbar:
+// Toggle the proxy according to its current state
+// XXX: (Currently never called)
+function toggleProxy() {
+  log("Toggling Proxy ..");
+  try {
+    // Get the current status
+    var state = proxyManager.getProxyState();
+    if (state > 0) {
+      // Let the user confirm
+      if (confirmProxyOff()) {
+        disableProxy();
+      }
+    } else {
+      // Set the proxy to JonDo
+      setProxy('jondo');
+    }
+  } catch (e) {
+    log("toggleProxy(): " + e);
+  }
+}
+
+// Return 'true' if the user clicked Ok, else return 'false'
+function confirmProxyOff() {
+  try {
+    // 'ret' is an array
+    var ret = {value: false};
+    window.openDialog("chrome://jondofox/content/dialogs/proxy-warning.xul",
+              "Proxy Alert", "modal, centerscreen, close=no", ret);
+    return ret.value;
+  } catch (e) {
+    log("confirmProxyOff(): " + e);
+  }
+}
+
+// This is called when choosing a proxy from the list 
+// ['state' --> jondo, tor, custom, none, unknown?]
+function setProxy(state) {
+  log("Setting proxy to " + state);
+  try {
+    // Store the previous state to detect if the state didn't change
     var previousState = prefsHandler.getStringPref(statePref);
     if (state == 'none') {
-      if (conf) {
-        // Request confirmation
-        var value = jdfManager.showConfirm(
-                    jdfManager.getString('jondofox.dialog.attention'),
-                    jdfManager.getString('jondofox.dialog.message.proxyoff'));
-        if (value) {
-          // Disable the proxy
-          disableProxy();
-        } else {
-          // Reset the state
-          log("Resetting state to " + previousState);
-          state = previousState;
-        }
-      } else {
-        // 'conf' is false, straight disable
+      // Let the user confirm this
+      var value = confirmProxyOff();
+      if (value) {
+        // Disable the proxy
         disableProxy();
+      } else {
+        // Reset the state
+        log("Resetting state to " + previousState);
+        state = previousState;
       }
     } else {
       // Check the id
@@ -111,40 +142,7 @@ function setProxy(state, conf) {
   }
 }
 
-// Disable the proxy and set the state preference
-function disableProxy() {
-  try {
-    // Call disable on the proxy manager
-    prefsHandler.setStringPref(statePref, 'none');
-    proxyManager.disableProxy();
-  } catch (e) {
-    log("disableProxy(): " + e);
-  }
-}
-
-// This could happen on a double-click in the statusbar:
-// Toggle the proxy according to its current state
-// XXX: (Currently never called)
-function toggleProxy() {
-  log("Toggling Proxy ..");
-  try {
-    // Get the current status
-    var state = proxyManager.getProxyState();
-    if (state > 0) {
-      // Let the user confirm
-      if (confirmProxyOff()) {
-        disableProxy();
-      }
-    } else {
-      // Set the proxy to JonDo
-      setProxy('jondo', false);
-    }
-  } catch (e) {
-    log("toggleProxy(): " + e);
-  }
-}
-
-// Map the current proxy status to a (localized) string label
+// Map the current proxy status to a string label
 function getLabel() {
   log("Determine proxy-status label");
   try {
@@ -152,31 +150,36 @@ function getLabel() {
     var state = prefsHandler.getStringPref(statePref);
     switch (state) {
       case 'none':
-        return jdfManager.getString('jondofox.statusbar.label.noproxy');
+        // XXX Hack: Find the menuitem and return its internationalized label
+        var elements = document.getElementsByAttribute('oncommand', 
+                                   "setProxy('none');");
+        // There should be only one!
+        var label = elements[0].getAttribute('label');
+        return label;
 
       case 'jondo':
-        return jdfManager.getString('jondofox.statusbar.label.jondo');
+        return "JonDo";
 
       case 'tor':
-        return jdfManager.getString('jondofox.statusbar.label.tor');
+        return "Tor";
 
       case 'custom':
-        return jdfManager.getString('jondofox.statusbar.label.custom');
+        return "Custom";
 
       default:
         log("!! Unknown proxy state: " + state);        
-        return jdfManager.getString('jondofox.statusbar.label.unknown');
+        return "Unknown";
     }
   } catch (e) {
     log("getLabel(): " + e);
   }
 }
 
-// Refresh the statusbar label and checkboxes
+// Set the current label to the proxy-status
 function refreshStatusbar() {
   log("Refreshing the statusbar");
   try {
-    // Get and set the label
+    // Set the label
     var label = getLabel();
     document.getElementById('jondofox-proxy-status').
                 setAttribute('label', label);
@@ -208,7 +211,7 @@ var proxyStateObserver = {
         // The proxy state has changed
         log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
-        if (data == proxyType) {
+        if (data == 'network.proxy.type') {
           if (proxyManager.getProxyState() == 0 && 
                  prefsHandler.getStringPref(statePref) != 'none') {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
@@ -229,20 +232,21 @@ var proxyStateObserver = {
 }
 
 // Initialize the proxy status label
-function initWindow() {
-  log("Init new browser window");
+function init() {
+  log("Init proxy status");
   try {
     // Remove this listener again
-    window.removeEventListener("load", initWindow, true);
-    // Add observers for proxy preferences
+    window.removeEventListener("load", init, true);
+    // Add a proxy preferences observer
     log("Adding proxy state observers");
     prefsHandler.getPrefs().addObserver(statePref, proxyStateObserver, false);
-    prefsHandler.getPrefs().addObserver(proxyType, proxyStateObserver, false);
+    prefsHandler.getPrefs().addObserver("network.proxy.type", 
+                               proxyStateObserver, false);
     // Initially set the state
-    log("Setting initial proxy state ..");
-    setProxy(prefsHandler.getStringPref(statePref), false);
+    log("Setting initial proxy state");
+    setProxy(prefsHandler.getStringPref(statePref));
   } catch (e) {
-    log("initWindow(): " + e);
+    log("init(): " + e);
   }
 }
 
@@ -277,8 +281,8 @@ const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
 // Log something initially
 log("This is " + titleString);
 
-// FIXME: This does not work on Macs
 // Set the title modifier
+// FIXME: This does not work on Macs
 function setTitleModifier() {
   //log("Setting title modifier");
   try {

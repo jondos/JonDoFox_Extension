@@ -11,7 +11,7 @@
   
   <!-- Add listener to set the label initially -->
   <script language="JavaScript">
-    try { window.addEventListener("load", initWindow, true); } catch(e) {}
+    try { window.addEventListener("load", init, true); } catch(e) {}
   </script>
 
   <!-- Statusbar -->
@@ -30,11 +30,11 @@
     <menupopup id="jondofox-proxy-list"> 
       <menuitem label="Anontest" oncommand="openTabAnontest();" />
       <menuseparator />
-      <menuitem label="&jondofox.statusbar.noProxy;" type="checkbox" checked="false" oncommand="setProxy('none', true);" />
+      <menuitem label="&jondofox.statusbar.noProxy;" type="checkbox" checked="false" oncommand="setProxy('none');" />
       <menuseparator />
       <!-- menuitem label="Custom" type="checkbox" checked="false" oncommand="setProxy('custom')" /-->
-      <menuitem label="Tor" type="checkbox" checked="false" oncommand="setProxy('tor', false);" />
-      <menuitem label="JonDo" type="checkbox" checked="false" oncommand="setProxy('jondo', false);" />
+      <menuitem label="Tor" type="checkbox" checked="false" oncommand="setProxy('tor');" />
+      <menuitem label="JonDo" type="checkbox" checked="false" oncommand="setProxy('jondo');" />
     </menupopup>
 
   </statusbar>

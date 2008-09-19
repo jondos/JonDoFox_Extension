@@ -22,7 +22,7 @@ function log(message) {
 ///////////////////////////////////////////////////////////////////////////////
 
 const CLASS_ID = Components.ID('{cd05fe5d-8815-4397-bcfd-ca3ae4029193}');
-const CLASS_NAME = 'Referrer-Forgery'; 
+const CLASS_NAME = 'Referrer Forgery'; 
 const CONTRACT_ID = '@jondos.de/referrer-forgery;1';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,15 +173,15 @@ var refObserver = {
 
 var ReferrerForgeryModule = {
   
-  //firstTime: true,
+  firstTime: true,
 
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
-    //if (this.firstTime) {
-    //  this.firstTime = false;
-    //  throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    //}
+    if (this.firstTime) {
+      this.firstTime = false;
+      throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
+    }
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                fileSpec, location, type);

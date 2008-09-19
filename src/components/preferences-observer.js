@@ -2,7 +2,11 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * JonDoFox extension management and compatibility tasks + utilities
+ * This component is instanciated once on application startup to:
+ *
+ * - Set configuration options regarding the browser's user agent string, as 
+ *   well as locale and language configuration
+ * - Listen for uninstallation of the extension to reset these options
  *****************************************************************************/
  
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,33 +17,34 @@ var mDebug = true;
 
 // Log a message
 function log(message) {
-  if (mDebug) dump("JDFManager :: " + message + "\n");
+  if (mDebug) dump("PrefsObserver :: " + message + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
 
-const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
-const CLASS_NAME = 'JonDoFox-Manager'; 
-const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
-
-//const nsISupports = Components.interfaces.nsISupports;
+const CLASS_ID = Components.ID('{67d79e27-f32d-4e7f-97d7-68de76795611}');
+const CLASS_NAME = 'Preferences Observer'; 
+const CONTRACT_ID = '@jondos.de/preferences-observer;1';
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
 
-// Singleton instance definition
-var JDFManager = {
+var PrefsObserver = {
   
   // Clear preferences on application shutdown, e.g. uninstall?
-  cleanUp: false,
+  clearPrefs: false,
 
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
-
-  // This map of string preferences is given to the prefsMapper
+  
+  // The preferences handler
+  prefsHandler: null,
+  
+  // A map of string preferences
+  // TODO: Somehow set this from chrome
   stringPrefsMap: 
      { 'general.appname.override':'extensions.jondofox.appname_override',
        'general.appversion.override':'extensions.jondofox.appversion_override',
@@ -54,91 +59,85 @@ var JDFManager = {
        'intl.charset.default':'extensions.jondofox.default_charset',
        'intl.accept_charsets':'extensions.jondofox.accept_charsets',
        'network.http.accept.default':'extensions.jondofox.accept_default' },
-
-  // Different services
-  prefsHandler: null,
-  prefsMapper: null,
-  promptService: null,
-
-  // Localization strings
-  stringBundle: null,
-
-  // Inititalize services and stringBundle
-  init: function() {
-    log("Init services");
-    try {
+  
+  // Return the prefsHandler
+  ph: function() {
+    if (!this.prefsHandler) {
+      //log("Setting preferences handler");
+      // Set prefsHandler
       this.prefsHandler = 
               Components.classes['@jondos.de/preferences-handler;1'].
                             getService().wrappedJSObject;
-      this.prefsMapper = 
-              Components.classes['@jondos.de/preferences-mapper;1'].
-                            getService().wrappedJSObject;
-      this.promptService = 
-              Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
-                            getService(Components.interfaces.nsIPromptService);
-      var bundleService = 
-             Components.classes["@mozilla.org/intl/stringbundle;1"].
-                getService(Components.interfaces.nsIStringBundleService);
-
-      this.stringBundle = bundleService.createBundle(
-                             "chrome://jondofox/locale/jondofox.properties");
-    } catch (e) {
-      log("init(): " + e);
     }
+    return this.prefsHandler;
   },
-  
-  // Call this on app-startup to check certain preferences
-  onAppStartup: function() {
-    log("Starting up, checking conditions ..");
+
+  // Set several string preferences: user agent overrides, etc.
+  setStringPrefs: function() {
     try {
-      // Call init() first
-      this.init();
-
-      // Map all preferences
-      this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
-      this.prefsMapper.map();
-
+      // Set all preferences in the map
+      for (p in this.stringPrefsMap) {
+        this.ph().setStringPref(p, 
+                     this.ph().getStringPref(this.stringPrefsMap[p]));
+      }      
       // Add an observer to the main pref branch after setting the prefs
-      var prefs = this.prefsHandler.getPrefs();
+      var prefs = this.ph().getPrefs();
       prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
+    } catch (e) {
+      log("setStringPrefs(): " + e);
+    }
+  },
 
-      // Disable the history
-      this.prefsHandler.setIntPref('browser.history_expire_days', 0);
-      
-      // If cookies are accepted from *all* sites --> reject all 
-      // or reject third-party cookies only (cookiePref == 1)?
-      var cookiePref = this.prefsHandler.getIntPref('network.cookie.cookieBehavior');
-      if (cookiePref == 0) {
-        this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 2)
-      }
-
-      // If this is set, set it to false
-      if (this.prefsHandler.isPreferenceSet('local_install.showBuildinWindowTitle')) {
-        this.prefsHandler.setBoolPref('local_install.showBuildinWindowTitle', false);
+  // Reset string preferences
+  clearStringPrefs: function() {
+    try {
+      // Remove the preferences observer      
+      log("Stop observing preferences ..");
+      var prefs = this.ph().getPrefs();
+      prefs.removeObserver("", this);
+      // Reset all prefs
+      for (p in this.stringPrefsMap) {
+        this.ph().deletePreference(p);
       }
     } catch (e) {
-      log("onAppStartup(): " + e);
+      log("clearStringPrefs(): " + e);
+    }
+  },
+  
+  // Call this on app-startup to check certain (extra) prefs
+  // TODO: Create an extra component for this?
+  checkExtraPrefs: function() {
+    log("Checking various preferences ..");
+    try {
+      // Disable the history
+      this.ph().setIntPref('browser.history_expire_days', 0);
+      
+      // If cookies are accepted from *all* sites --> reject all 
+      // or reject third-party cookies only (1)?
+      var cookiePref = this.ph().getIntPref('network.cookie.cookieBehavior');
+      if (cookiePref == 0) {
+        this.ph().setIntPref('network.cookie.cookieBehavior', 2)
+      }
+
+      // If this is set somehow, set it to false
+      if (this.ph().isPreferenceSet('local_install.showBuildinWindowTitle')) {
+        this.ph().setBoolPref('local_install.showBuildinWindowTitle', false);
+      }
+    } catch (e) {
+      log("checkPrefs(): " + e);
     }
   },
 
   // Call this on uninstall
-  onUninstall: function() {
-    log("Cleaning up ..");
+  clearExtraPrefs: function() {
+    log("Clearing extra preferences ..");
     try {
-      // Remove the preferences observer      
-      log("Stop observing preferences ..");
-      var prefs = this.prefsHandler.getPrefs();
-      prefs.removeObserver("", this);
-
-      // Unmap all preferences
-      this.prefsMapper.unmap();
-      
       // Delete the jondofox proxy state
-      this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
+      this.ph().deletePreference('extensions.jondofox.proxy.state');
     } catch (e) {
-      log("onUninstall(): " + e);
+      log("clearExtraPrefs(): " + e);
     }
   },
 
@@ -173,36 +172,6 @@ var JDFManager = {
       log("unregisterObservers(): " + ex);
     }
   },
-  
-  // Utils functions from here
-  // Show an alert using the prompt service
-  showAlert: function(title, text) {
-    try {
-      // XXX Missing return?
-      this.promptService.alert(null, title, text);
-    } catch (e) {
-      log("showAlert(): " + e);
-    }
-  },
-  
-  // Show a confirm dialog using the prompt service
-  showConfirm: function(title, text) {
-    try {
-      return this.promptService.confirm(null, title, text);
-    } catch (e) {
-      log("showConfirm(): " + e);
-    }
-  },
-
-  // Return a properties string
-  getString: function(name) {
-    log("Getting localized string: '" + name + "'");
-    try {
-      return this.stringBundle.GetStringFromName(name);
-    } catch (e) {
-      log("getString(): " + e);
-    }
-  },
 
   // Return the current number of browser windows (not used at the moment)
   getWindowCount: function() {
@@ -230,8 +199,9 @@ var JDFManager = {
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           // Clear preferences on shutdown after uninstall
-          if (this.cleanUp) {
-            this.onUninstall();
+          if (this.clearPrefs) { 
+            this.clearStringPrefs(); 
+            this.clearExtraPrefs();
           }
           // Unregister observers
           this.unregisterObservers();
@@ -239,8 +209,10 @@ var JDFManager = {
         
         case 'final-ui-startup':
           log("Got topic --> " + topic);
-          // Check conditions on startup
-          this.onAppStartup();
+          // Set the user agent here
+          this.setStringPrefs();
+          // Perform the preferences check
+          this.checkExtraPrefs();
           break;
 
         case 'em-action-requested':
@@ -250,10 +222,10 @@ var JDFManager = {
             log("Got topic --> " + topic + ", data --> " + data);
             if (data == "item-uninstalled" || data == "item-disabled") {
               // Uninstall or disable
-              this.cleanUp = true;
+              this.clearPrefs = true;
             } else if (data == "item-cancel-action") {
               // Cancellation ..
-              this.cleanUp = false;
+              this.clearPrefs = false;
             }
           }
           break;
@@ -265,35 +237,43 @@ var JDFManager = {
           // Not really necessary since closing the last window will also cause
           // 'quit-application-granted' .. let the code stay here though:
           //   http://forums.mozillazine.org/viewtopic.php?t=308369
-          /* if (i == 0 && this.cleanUp) { 
+          /* if (i == 0 && this.clearPrefs) { 
             this.clearUserAgent(); 
             this.unregisterObservers()
           } */
           break;
 
         case 'nsPref:changed':
-          // Check if someone enables the history?
+          // Check if somebody enables the history?
           //   'browser.history_expire_days'
           
           // Do not allow to accept ALL cookies
           if (data == 'network.cookie.cookieBehavior') {
-            if (this.prefsHandler.getIntPref('network.cookie.cookieBehavior') == 0) {
-              this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1)
+            if (this.ph().getIntPref('network.cookie.cookieBehavior') == 0) {
+              this.ph().setIntPref('network.cookie.cookieBehavior', 1)
               // Warn the user
-              this.showAlert(this.getString('jondofox.dialog.attention'), 
-                             this.getString('jondofox.dialog.message.cookies'));
+              var ps = Components.
+                          classes["@mozilla.org/embedcomp/prompt-service;1"].
+                          getService(Components.interfaces.nsIPromptService);
+              ps.alert(null, "Attention", "Cookies cannot be accepted for all " +
+                    "sites! This will seriously affect your privacy! You need " +
+                    "to disallow third-party cookies at least. ");
             }
           }
 
-          // Check if the changed preference is on the map
-          else if (data in this.stringPrefsMap && !this.userWarned) {
-            log("Pref '" + data + "' is on the map!");
+          // Check if the changed preference is one of 'ours'
+          else if (!this.userWarned && data in this.stringPrefsMap) {
+            //log("Pref '" + data + "' is on the map!");
             // If the new value is not the recommended ..
-            if (this.prefsHandler.getStringPref(data) != 
-                   this.prefsHandler.getStringPref(this.stringPrefsMap[data])) {
+            if (this.ph().getStringPref(data) != 
+                   this.ph().getStringPref(this.stringPrefsMap[data])) {
               // ... warn the user
-              this.showAlert(this.getString('jondofox.dialog.attention'), 
-                             this.getString('jondofox.dialog.message.prefchange'));
+              var ps = Components.
+                          classes["@mozilla.org/embedcomp/prompt-service;1"].
+                          getService(Components.interfaces.nsIPromptService);
+              ps.alert(null, "Attention", "A browser preference that is " +
+                    "important for your anonymity has just changed! You are " +
+                    "not safe anymore until you restart your browser!!");
               this.userWarned = true;
             } else {
               log("All good!");
@@ -309,13 +289,13 @@ var JDFManager = {
       log("observe: " + ex);
     }
   },
-  
+
   // Implement nsISupports
   QueryInterface: function(iid) {
     if (!iid.equals(Components.interfaces.nsISupports) &&
         !iid.equals(Components.interfaces.nsIObserver) &&
         !iid.equals(Components.interfaces.nsISupportsWeakReference))
-                        throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
 }
@@ -324,24 +304,24 @@ var JDFManager = {
 // The actual component
 ///////////////////////////////////////////////////////////////////////////////
 
-var JDFManagerModule = {
-  
-  //firstTime: true,
+var UserAgentModule = {
+
+  firstTime: true,
 
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
-    //if (this.firstTime) {
-    //  this.firstTime = false;
-    //  throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    //}
+    if (this.firstTime) {
+      this.firstTime = false;
+      throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
+    }
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                fileSpec, location, type);
 
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
-    catMan.addCategoryEntry("app-startup", "JDFManager", CONTRACT_ID, true, 
+    catMan.addCategoryEntry("app-startup", "UAgentSpoof", CONTRACT_ID, true, 
               true);
   },
 
@@ -371,16 +351,12 @@ var JDFManagerModule = {
 
   // Implement nsIFactory
   classFactory: {
-    createInstance: function(aOuter, aIID) {
-      log("createInstance()");
-      if (aOuter != null)
+    createInstance: function(outer, iid) {
+      log("Creating instance");
+      if (outer != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
-      // Set wrappedJSObject
-      if (!JDFManager.wrappedJSObject) {
-        log("Setting wrappedJSObject");
-        JDFManager.wrappedJSObject = JDFManager;
-      }
-      return JDFManager.QueryInterface(aIID);
+
+      return PrefsObserver.QueryInterface(iid);
     }
   }
 };
@@ -390,5 +366,5 @@ var JDFManagerModule = {
 ///////////////////////////////////////////////////////////////////////////////
 
 function NSGetModule(comMgr, fileSpec) {
-  return JDFManagerModule; 
+  return UserAgentModule; 
 }
