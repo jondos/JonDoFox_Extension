@@ -24,8 +24,6 @@ const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
 const CLASS_NAME = 'JonDoFox-Manager'; 
 const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
-//const nsISupports = Components.interfaces.nsISupports;
-
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,7 +85,7 @@ var JDFManager = {
     }
   },
   
-  // Call this on app-startup to check certain preferences
+  // Call this on final-ui-startup to check certain preferences
   onAppStartup: function() {
     log("Starting up, checking conditions ..");
     try {
@@ -123,7 +121,7 @@ var JDFManager = {
     }
   },
 
-  // Call this on uninstall
+  // Call this on deinstallation
   onUninstall: function() {
     log("Cleaning up ..");
     try {
@@ -174,12 +172,11 @@ var JDFManager = {
     }
   },
   
-  // Utils functions from here
+  // Utility functions ////////////////////////////////////////////////////////
   // Show an alert using the prompt service
   showAlert: function(title, text) {
     try {
-      // XXX Missing return?
-      this.promptService.alert(null, title, text);
+      return this.promptService.alert(null, title, text);
     } catch (e) {
       log("showAlert(): " + e);
     }
@@ -261,7 +258,8 @@ var JDFManager = {
         case 'xul-window-destroyed':
           // Get the index of the closed window
           var i = this.getWindowCount();
-          log("Window " + i + " --> " + topic);
+          //log("Window " + i + " --> " + topic);
+          
           // Not really necessary since closing the last window will also cause
           // 'quit-application-granted' .. let the code stay here though:
           //   http://forums.mozillazine.org/viewtopic.php?t=308369
@@ -313,15 +311,14 @@ var JDFManager = {
   // Implement nsISupports
   QueryInterface: function(iid) {
     if (!iid.equals(Components.interfaces.nsISupports) &&
-        !iid.equals(Components.interfaces.nsIObserver) &&
-        !iid.equals(Components.interfaces.nsISupportsWeakReference))
-                        throw Components.results.NS_ERROR_NO_INTERFACE;
+        !iid.equals(Components.interfaces.nsIObserver))
+      throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// The actual component
+// Implementations of nsIModule and nsIFactory
 ///////////////////////////////////////////////////////////////////////////////
 
 var JDFManagerModule = {
@@ -331,6 +328,7 @@ var JDFManagerModule = {
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
+    // XXX: This seems to be not needed
     //if (this.firstTime) {
     //  this.firstTime = false;
     //  throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
@@ -347,7 +345,6 @@ var JDFManagerModule = {
 
   unregisterSelf: function(compMgr, fileSpec, location) {
     log("Unregistering '" + CLASS_NAME + "' ..");
-    // Remove the auto-startup
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
 
@@ -372,12 +369,12 @@ var JDFManagerModule = {
   // Implement nsIFactory
   classFactory: {
     createInstance: function(aOuter, aIID) {
-      log("createInstance()");
+      //log("createInstance()");
       if (aOuter != null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
       // Set wrappedJSObject
       if (!JDFManager.wrappedJSObject) {
-        log("Setting wrappedJSObject");
+        log("Creating instance, setting wrappedJSObject ..");
         JDFManager.wrappedJSObject = JDFManager;
       }
       return JDFManager.QueryInterface(aIID);

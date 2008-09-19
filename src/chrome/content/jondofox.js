@@ -2,7 +2,7 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This code is available on a per window basis. These are in fact methods for
+ * This code is available on a per window basis. Below are in fact methods for
  * controlling proxy behavior and setting the customized window title.
  *****************************************************************************/
 
@@ -206,7 +206,7 @@ var proxyStateObserver = {
     switch (topic) {
       case 'nsPref:changed':
         // The proxy state has changed
-        log(topic + " --> " + data);        
+        //log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
         if (data == proxyType) {
           if (proxyManager.getProxyState() == 0 && 
