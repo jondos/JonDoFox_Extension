@@ -5,7 +5,7 @@
  * - Replace RefControl functionality by simply forging every referrer
  * - Check for the existence of RefControl to uninstall it in case it is there
  *****************************************************************************/
- 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,6 +65,7 @@ var refObserver = {
   },
 
   // In case RefControl is installed, uninstall
+  // TODO: Remove, this is now handled in jondofox-manager.js
   checkForRefControl: function() {
     // RefControl uuid
     var id = "{455D905A-D37C-4643-A9E2-F6FEFAA0424A}";
@@ -101,7 +102,7 @@ var refObserver = {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
 
-      observers.addObserver(this, "final-ui-startup", false);                 
+      //observers.addObserver(this, "final-ui-startup", false);                 
       observers.addObserver(this, "http-on-modify-request", false);
       observers.addObserver(this, "quit-application-granted", false);
     } catch (ex) {
@@ -116,7 +117,7 @@ var refObserver = {
       var observers = Components.classes["@mozilla.org/observer-service;1"].
                          getService(Components.interfaces.nsIObserverService);
       
-      observers.removeObserver(this, "final-ui-startup");
+      //observers.removeObserver(this, "final-ui-startup");
       observers.removeObserver(this, "http-on-modify-request");
       observers.removeObserver(this, "quit-application-granted");
     } catch (ex) {
@@ -138,10 +139,10 @@ var refObserver = {
           this.unregisterObservers();
           break;
 
-        case 'final-ui-startup':
-          log("Got topic --> " + topic);
-          this.checkForRefControl();
-          break;
+        //case 'final-ui-startup':
+          //log("Got topic --> " + topic);
+          //this.checkForRefControl();
+          //break;
         
         case 'http-on-modify-request':
           subject.QueryInterface(Components.interfaces.nsIHttpChannel);

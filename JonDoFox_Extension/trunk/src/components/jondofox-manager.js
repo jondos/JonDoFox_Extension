@@ -31,11 +31,16 @@ const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 // Singleton instance definition
 var JDFManager = {
   
-  // Clear preferences on application shutdown, e.g. uninstall?
+  // Clear preferences on application shutdown, e.g. uninstall
   cleanUp: false,
 
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
+
+  // Incompatible extensions with their IDs
+  extensions:
+     { 'RefControl':'{455D905A-D37C-4643-A9E2-F6FEFAA0424A}',
+       'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}' },
 
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: 
@@ -72,25 +77,58 @@ var JDFManager = {
               Components.classes['@jondos.de/preferences-mapper;1'].
                             getService().wrappedJSObject;
       this.promptService = 
-              Components.classes["@mozilla.org/embedcomp/prompt-service;1"].
+              Components.classes['@mozilla.org/embedcomp/prompt-service;1'].
                             getService(Components.interfaces.nsIPromptService);
       var bundleService = 
-             Components.classes["@mozilla.org/intl/stringbundle;1"].
+             Components.classes['@mozilla.org/intl/stringbundle;1'].
                 getService(Components.interfaces.nsIStringBundleService);
 
       this.stringBundle = bundleService.createBundle(
-                             "chrome://jondofox/locale/jondofox.properties");
+                             'chrome://jondofox/locale/jondofox.properties');
     } catch (e) {
-      log("init(): " + e);
+      log('init(): ' + e);
     }
   },
   
-  // Call this on final-ui-startup to check certain preferences
-  onAppStartup: function() {
+  // Try to uninstall other extensions
+  checkExtensions: function() {
+    try {
+      // Get the extensions manager
+      var em = Components.classes['@mozilla.org/extensions/manager;1'].
+                  getService(Components.interfaces.nsIExtensionManager);
+      // Iterate
+      for (e in this.extensions) {
+        log('Checking for ' + e);
+        // Try to get the install location
+        var loc = em.getInstallLocation(this.extensions[e]);
+        // If present, uninstall
+        if (loc != null) {
+          log('Found ' + e + ', uninstalling ..');
+          // Prompt a message window for every extension
+          this.showAlert(this.getString('jondofox.dialog.attention'), 
+                         this.formatString('jondofox.dialog.message.extension', [e]));
+          // Uninstall
+          em.uninstallItem(this.extensions[e]);
+        } else {
+          log(e + ' not found');
+        }
+      }
+    } catch (err) {
+      log('checkExtensions(): ' + err);
+    }
+  },
+ 
+  // Call this on final-ui-startup
+  onUIStartup: function() {
     log("Starting up, checking conditions ..");
     try {
       // Call init() first
       this.init();
+
+      // Check for incompatible extensions
+      this.checkExtensions();
+
+      // TODO: Init referrer-forgery from here
 
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
@@ -109,7 +147,7 @@ var JDFManager = {
       // or reject third-party cookies only (cookiePref == 1)?
       var cookiePref = this.prefsHandler.getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
-        this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 2)
+        this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
       }
 
       // If this is set, set it to false
@@ -117,7 +155,7 @@ var JDFManager = {
         this.prefsHandler.setBoolPref('local_install.showBuildinWindowTitle', false);
       }
     } catch (e) {
-      log("onAppStartup(): " + e);
+      log("onUIStartup(): " + e);
     }
   },
 
@@ -172,7 +210,7 @@ var JDFManager = {
     }
   },
   
-  // Utility functions ////////////////////////////////////////////////////////
+  // Utility functions ////////////////////////////////////////////////////////  
   // Show an alert using the prompt service
   showAlert: function(title, text) {
     try {
@@ -201,6 +239,16 @@ var JDFManager = {
     }
   },
 
+  // Return a formatted string
+  formatString: function(name, strArray) {
+    log("Getting formatted string: '" + name + "'");
+    try {
+      return this.stringBundle.formatStringFromName(name, strArray, strArray.length);
+    } catch (e) {
+      log("formatString(): " + e);
+    }  
+  },
+
   // Return the current number of browser windows (not used at the moment)
   getWindowCount: function() {
     var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
@@ -214,7 +262,7 @@ var JDFManager = {
     return count;
   },
 
-  // Implement nsIObserver
+  // Implement nsIObserver ////////////////////////////////////////////////////
   observe: function(subject, topic, data) {
     try {
       switch (topic) {        
@@ -237,7 +285,7 @@ var JDFManager = {
         case 'final-ui-startup':
           log("Got topic --> " + topic);
           // Check conditions on startup
-          this.onAppStartup();
+          this.onUIStartup();
           break;
 
         case 'em-action-requested':
@@ -257,7 +305,7 @@ var JDFManager = {
 
         case 'xul-window-destroyed':
           // Get the index of the closed window
-          var i = this.getWindowCount();
+          //var i = this.getWindowCount();
           //log("Window " + i + " --> " + topic);
           
           // Not really necessary since closing the last window will also cause
