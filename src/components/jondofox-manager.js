@@ -128,7 +128,7 @@ var JDFManager = {
       // Check for incompatible extensions
       this.checkExtensions();
 
-      // TODO: Init referrer-forgery from here
+      // TODO: Init referrer-forgery from here?
 
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
@@ -170,7 +170,8 @@ var JDFManager = {
 
       // Unmap all preferences
       this.prefsMapper.unmap();
-      
+     
+      // TODO: Delete the jondofox prefs branch
       // Delete the jondofox proxy state
       this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
     } catch (e) {
@@ -286,6 +287,7 @@ var JDFManager = {
           log("Got topic --> " + topic);
           // Check conditions on startup
           this.onUIStartup();
+          log("Finished UI startup");
           break;
 
         case 'em-action-requested':

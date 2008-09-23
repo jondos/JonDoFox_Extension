@@ -1,11 +1,23 @@
 // General prefs
 pref("extensions.jondofox.profile_version", "2.0.3");
 
-// Proxy prefs
+// Proxy state
 pref("extensions.jondofox.proxy.state", "jondo");
 
-//pref("extensions.jondofox.custom.proxy_host", "127.0.0.1");
-//pref("extensions.jondofox.custom.proxy_port", 8118);
+// Custom proxy
+pref("extensions.jondofox.custom.http_host", "");
+pref("extensions.jondofox.custom.http_port", 0);
+pref("extensions.jondofox.custom.ssl_host", "");
+pref("extensions.jondofox.custom.ssl_port", 0);
+pref("extensions.jondofox.custom.ftp_host", "");
+pref("extensions.jondofox.custom.ftp_port", 0);
+pref("extensions.jondofox.custom.gopher_host", "");
+pref("extensions.jondofox.custom.gopher_port", 0);
+pref("extensions.jondofox.custom.socks_host", "");
+pref("extensions.jondofox.custom.socks_port", 0);
+pref("extensions.jondofox.custom.socks_version", 5);
+pref("extensions.jondofox.custom.no_proxies_on", "localhost, 127.0.0.1");
+//pref("extensions.jondofox.custom.autoconfig_url", "");
 
 // Useragent prefs
 pref("extensions.jondofox.appname_override", "Netscape");

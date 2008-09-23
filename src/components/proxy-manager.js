@@ -34,6 +34,8 @@ const nsISupports = Components.interfaces.nsISupports;
 // Class constructor
 function ProxyManager() {
   this.wrappedJSObject = this;
+
+  // TODO: Init the prefsHandler here
 };
 
 // Class definition
@@ -65,13 +67,13 @@ ProxyManager.prototype = {
   },
   
   // Set the SSL proxy host and port 
-  setProxyHTTPS: function(host, port) {
-    log("Set HTTPS proxy --> " + host + ":" + port);
+  setProxySSL: function(host, port) {
+    log("Set SSL proxy --> " + host + ":" + port);
     try {
       this.ph().setStringPref("network.proxy.ssl", host);
       this.ph().setIntPref("network.proxy.ssl_port", port);
     } catch (e) {
-      log("setProxyHTTPS(): " + e);
+      log("setProxySSL(): " + e);
     }
   },
   
@@ -97,15 +99,15 @@ ProxyManager.prototype = {
     } 
   },
 
-  // Set all proxies
+  // Set all proxies but SOCKS
   setProxyAll: function(host, port) {
     this.setProxyHTTP(host, port);
-    this.setProxyHTTPS(host, port);
+    this.setProxySSL(host, port);
     this.setProxyFTP(host, port);
     this.setProxyGopher(host, port);
   },
   
-  // Handle Socks independently from the other protocols
+  // Handle SOCKS independently from the other protocols
   setProxySOCKS: function(host, port, version) {
     log("Set SOCKS proxy (version " + version + ") --> " + host + ":" + port);
     try {
@@ -128,7 +130,17 @@ ProxyManager.prototype = {
     }
   },
 
-  // Return the current state
+  // Set 'network.proxy.no_proxies_on'
+  setExceptions: function(value) {
+    log("Set exceptions --> " + value);
+    try {
+      this.ph().setStringPref("network.proxy.no_proxies_on", value);
+    } catch (e) {
+      log("setExceptions(): " + e);
+    }
+  },
+
+  // Return the current proxy state
   getProxyState: function() {
     try {
       var state = this.ph().getIntPref("network.proxy.type");
@@ -138,9 +150,9 @@ ProxyManager.prototype = {
       log("getProxyStatus(): " + e);
     }
   },
-
+    
+  // Set 'network.proxy.type' --> 1
   enableProxy: function() {
-    // Set 'network.proxy.type' --> 1
     log("Enable proxy");
     try {
       this.ph().setIntPref("network.proxy.type", 1);
@@ -148,9 +160,9 @@ ProxyManager.prototype = {
       log("enableProxy(): " + e);
     }
   },
-
+    
+  // Reset ... to 0
   disableProxy: function() {
-    // Reset ... to 0
     log("Disable proxy");
     try {
       this.ph().setIntPref("network.proxy.type", 0);
