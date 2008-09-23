@@ -33,17 +33,20 @@ const nsISupports = Components.interfaces.nsISupports;
 
 // Class constructor
 function ProxyManager() {
+  // Init the prefsHandler  
+  this.ph = Components.classes['@jondos.de/preferences-handler;1'].
+                          getService().wrappedJSObject; 
+  // Set wrappedJSObject
   this.wrappedJSObject = this;
-
-  // TODO: Init the prefsHandler here
 };
 
 // Class definition
 ProxyManager.prototype = {
   
+  /*
+   * TODO: Remove this code, not needed anymore
   // Reference to the handler object
   prefsHandler: null,
-
   // Return the preferences handler
   ph: function() {
     // Get the wrappedJSObject if it is not already set
@@ -54,13 +57,17 @@ ProxyManager.prototype = {
     }
     return this.prefsHandler;
   },
+  */
+  
+  // The prefs handler object
+  ph: null,
 
   // Set the HTTP proxy host and port
   setProxyHTTP: function(host, port) {
     log("Set HTTP proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPref("network.proxy.http", host);
-      this.ph().setIntPref("network.proxy.http_port", port);
+      this.ph.setStringPref("network.proxy.http", host);
+      this.ph.setIntPref("network.proxy.http_port", port);
     } catch (e) {
       log("setProxyHTTP(): " + e);
     }
@@ -70,8 +77,8 @@ ProxyManager.prototype = {
   setProxySSL: function(host, port) {
     log("Set SSL proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPref("network.proxy.ssl", host);
-      this.ph().setIntPref("network.proxy.ssl_port", port);
+      this.ph.setStringPref("network.proxy.ssl", host);
+      this.ph.setIntPref("network.proxy.ssl_port", port);
     } catch (e) {
       log("setProxySSL(): " + e);
     }
@@ -81,8 +88,8 @@ ProxyManager.prototype = {
   setProxyFTP: function(host, port) {
     log("Set FTP proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPref("network.proxy.ftp", host);
-      this.ph().setIntPref("network.proxy.ftp_port", port);
+      this.ph.setStringPref("network.proxy.ftp", host);
+      this.ph.setIntPref("network.proxy.ftp_port", port);
     } catch (e) {
       log("setProxyFTP(): " + e);
     } 
@@ -92,8 +99,8 @@ ProxyManager.prototype = {
   setProxyGopher: function(host, port) {
     log("Set GOPHER proxy --> " + host + ":" + port);
     try {
-      this.ph().setStringPref("network.proxy.gopher", host);
-      this.ph().setIntPref("network.proxy.gopher_port", port);
+      this.ph.setStringPref("network.proxy.gopher", host);
+      this.ph.setIntPref("network.proxy.gopher_port", port);
     } catch (e) {
       log("setProxyGOPHER(): " + e);
     } 
@@ -111,9 +118,9 @@ ProxyManager.prototype = {
   setProxySOCKS: function(host, port, version) {
     log("Set SOCKS proxy (version " + version + ") --> " + host + ":" + port);
     try {
-      this.ph().setStringPref("network.proxy.socks", host);
-      this.ph().setIntPref("network.proxy.socks_port", port);
-      this.ph().setIntPref("network.proxy.socks_version", version);
+      this.ph.setStringPref("network.proxy.socks", host);
+      this.ph.setIntPref("network.proxy.socks_port", port);
+      this.ph.setIntPref("network.proxy.socks_version", version);
     } catch (e) {
       log("setProxySOCKS(): " + e);
     } 
@@ -124,7 +131,7 @@ ProxyManager.prototype = {
     // Set 'network.proxy.socks_remote_dns' --> value
     log("Set SOCKS remote DNS --> " + value);
     try {
-      this.ph().setBoolPref("network.proxy.socks_remote_dns", value);
+      this.ph.setBoolPref("network.proxy.socks_remote_dns", value);
     } catch (e) {
       log("setSocksRemoteDNS(): " + e);
     }
@@ -134,7 +141,7 @@ ProxyManager.prototype = {
   setExceptions: function(value) {
     log("Set exceptions --> " + value);
     try {
-      this.ph().setStringPref("network.proxy.no_proxies_on", value);
+      this.ph.setStringPref("network.proxy.no_proxies_on", value);
     } catch (e) {
       log("setExceptions(): " + e);
     }
@@ -143,7 +150,7 @@ ProxyManager.prototype = {
   // Return the current proxy state
   getProxyState: function() {
     try {
-      var state = this.ph().getIntPref("network.proxy.type");
+      var state = this.ph.getIntPref("network.proxy.type");
       log("Return proxy state: " + state);
       return state;
     } catch (e) {
@@ -155,7 +162,7 @@ ProxyManager.prototype = {
   enableProxy: function() {
     log("Enable proxy");
     try {
-      this.ph().setIntPref("network.proxy.type", 1);
+      this.ph.setIntPref("network.proxy.type", 1);
     } catch (e) {
       log("enableProxy(): " + e);
     }
@@ -165,7 +172,7 @@ ProxyManager.prototype = {
   disableProxy: function() {
     log("Disable proxy");
     try {
-      this.ph().setIntPref("network.proxy.type", 0);
+      this.ph.setIntPref("network.proxy.type", 0);
     } catch(e) {
       log("disableProxy(): " + e);
     }
