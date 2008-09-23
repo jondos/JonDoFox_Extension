@@ -106,7 +106,7 @@ function setProxy(state, conf) {
                           prefsHandler.getIntPref(prefix + "socks_port"),
                           prefsHandler.getIntPref(prefix + "socks_version"));
           proxyManager.setExceptions(
-                          prefsHandler.getStringPref(prefix+"no_proxies_on"));
+                         prefsHandler.getStringPref(prefix + "no_proxies_on"));
           break;
 
         default:
