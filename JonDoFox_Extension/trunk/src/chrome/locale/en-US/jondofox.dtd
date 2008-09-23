@@ -21,4 +21,9 @@
    might be identifyable or recognizable. You should re-check your configuration and read the help files in
    this case.">
 
-<!ENTITY jondofox.statusbar.noProxy "No Proxy">
+<!ENTITY jondofox.statusbar.noProxy "No proxy">
+<!ENTITY jondofox.statusbar.custom "Custom proxy">
+<!ENTITY jondofox.statusbar.editCustom "Edit custom proxy">
+
+<!ENTITY jondofox.dialog.accept "Ok">
+<!ENTITY jondofox.dialog.cancel "Cancel">

@@ -73,6 +73,8 @@ function setProxy(state, conf) {
           // Set proxies for all protocols but SOCKS
           proxyManager.setProxyAll('127.0.0.1', 4001);
           proxyManager.setProxySOCKS('', 0, 5);
+          // Set default exceptions
+          proxyManager.setExceptions('127.0.0.1, localhost');
           break; 
  
         case 'tor':
@@ -80,17 +82,31 @@ function setProxy(state, conf) {
           proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
           proxyManager.setSocksRemoteDNS(true);
           proxyManager.setProxyAll('', 0);
+          // Set default exceptions
+          proxyManager.setExceptions('127.0.0.1, localhost');
           break;
 
         case 'custom':
-          // TODO: Get custom preferences
-          //var prefix = "extensions.jondofox.";
-          //var host = prefsHandler.getStringPref(prefix + id + ".proxy_host");
-          //var port = prefsHandler.getIntPref(prefix + id + ".proxy_port");
-          //proxyManager.setProxyAll(host, port);
-          
-          // Set it to JonDo for now
-          proxyManager.setProxyAll('127.0.0.1', 4001);
+          // Set the custom proxy
+          var prefix = "extensions.jondofox.custom.";
+          proxyManager.setProxyHTTP(
+                          prefsHandler.getStringPref(prefix + "http_host"),
+                          prefsHandler.getIntPref(prefix + "http_port"));
+          proxyManager.setProxySSL(
+                          prefsHandler.getStringPref(prefix + "ssl_host"),
+                          prefsHandler.getIntPref(prefix + "ssl_port"));
+          proxyManager.setProxyFTP(
+                          prefsHandler.getStringPref(prefix + "ftp_host"),
+                          prefsHandler.getIntPref(prefix + "ftp_port"));
+          proxyManager.setProxyGopher(
+                          prefsHandler.getStringPref(prefix + "gopher_host"),
+                          prefsHandler.getIntPref(prefix + "gopher_port"));
+          proxyManager.setProxySOCKS(
+                          prefsHandler.getStringPref(prefix + "socks_host"),
+                          prefsHandler.getIntPref(prefix + "socks_port"),
+                          prefsHandler.getIntPref(prefix + "socks_version"));
+          proxyManager.setExceptions(
+                          prefsHandler.getStringPref(prefix+"no_proxies_on"));
           break;
 
         default:
@@ -228,7 +244,7 @@ var proxyStateObserver = {
   }
 }
 
-// Initialize the proxy status label
+// Initialize a new browser window
 function initWindow() {
   log("Init new browser window");
   try {
@@ -255,6 +271,20 @@ function openTabAnontest() {
     win.openUILinkIn('https://www.jondos.de/anontest', 'tab');
   } catch (e) {
     log("openTabAnontest(): " + e);
+  }
+}
+
+// Open dialog to edit custom proxy settings
+function editCustomProxy() {
+  log("Open dialog to edit custom proxy");
+  try {
+    // Give the prefsHandler as argument to the dialog
+    window.openDialog("chrome://jondofox/content/dialogs/editcustom.xul",
+              "editcustom", "", prefsHandler);
+    // TODO: Enable the custom proxy here?
+    //setProxy("custom", false);
+  } catch (e) {
+    log("editCustomProxy(): " + e);
   }
 }
 
