@@ -171,9 +171,11 @@ var JDFManager = {
       // Unmap all preferences
       this.prefsMapper.unmap();
      
-      // TODO: Delete the jondofox prefs branch
+      // XXX: Delete the jondofox prefs branch?
+      this.prefsHandler.deleteBranch('extensions.jondofox');
+      
       // Delete the jondofox proxy state
-      this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
+      //this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
     } catch (e) {
       log("onUninstall(): " + e);
     }
