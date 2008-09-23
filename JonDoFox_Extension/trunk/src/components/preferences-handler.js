@@ -54,7 +54,6 @@ PreferencesHandler.prototype = {
   },
  
   // Return a certain preferences branch
-  // XXX: Not yet tested
   getPrefsBranch: function(branch) {
     log("Getting prefs branch " + branch);
     try {
@@ -63,6 +62,16 @@ PreferencesHandler.prototype = {
                 getBranch(branch);
     } catch (e) {
       log("getPrefsBranch(): " + e);
+    }
+  },
+
+  // Delete a prefs branch
+  deleteBranch: function(branch) {
+    log("Deleting branch '" + branch + "'");
+    try {
+      this.getPrefsBranch(branch).deleteBranch("");
+    } catch (e) {
+      log("deleteBranch(): " + e);
     }
   },
 
