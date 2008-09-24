@@ -252,8 +252,8 @@ function initWindow() {
     window.removeEventListener("load", initWindow, true);
     // Add observers for proxy preferences
     log("Adding proxy state observers");
-    prefsHandler.getPrefs().addObserver(statePref, proxyStateObserver, false);
-    prefsHandler.getPrefs().addObserver(proxyType, proxyStateObserver, false);
+    prefsHandler.prefs.addObserver(statePref, proxyStateObserver, false);
+    prefsHandler.prefs.addObserver(proxyType, proxyStateObserver, false);
     // Initially set the state
     log("Setting initial proxy state ..");
     setProxy(prefsHandler.getStringPref(statePref), false);

@@ -31,8 +31,11 @@ const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 // Singleton instance definition
 var JDFManager = {
   
-  // Clear preferences on application shutdown, e.g. uninstall
-  cleanUp: false,
+  // Clean up on uninstall or disable
+  clean: false,
+
+  // Remove jondofox preferences branch only on uninstall
+  uninstall: false,
 
   // Set to true if the user was warned that an important pref was modified
   userWarned: false,
@@ -135,7 +138,7 @@ var JDFManager = {
       this.prefsMapper.map();
 
       // Add an observer to the main pref branch after setting the prefs
-      var prefs = this.prefsHandler.getPrefs();
+      var prefs = this.prefsHandler.prefs;
       prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
@@ -145,37 +148,41 @@ var JDFManager = {
       
       // If cookies are accepted from *all* sites --> reject all 
       // or reject third-party cookies only (cookiePref == 1)?
-      var cookiePref = this.prefsHandler.getIntPref('network.cookie.cookieBehavior');
+      var cookiePref = this.prefsHandler.
+                               getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
         this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
       }
 
       // If this is set, set it to false
-      if (this.prefsHandler.isPreferenceSet('local_install.showBuildinWindowTitle')) {
-        this.prefsHandler.setBoolPref('local_install.showBuildinWindowTitle', false);
+      if (this.prefsHandler.
+                  isPreferenceSet('local_install.showBuildinWindowTitle')) {
+        this.prefsHandler.
+                setBoolPref('local_install.showBuildinWindowTitle', false);
       }
     } catch (e) {
       log("onUIStartup(): " + e);
     }
   },
 
-  // Call this on deinstallation
-  onUninstall: function() {
+  // This is called on uninstall and disable
+  cleanup: function() {
     log("Cleaning up ..");
     try {
       // Remove the preferences observer      
       log("Stop observing preferences ..");
-      var prefs = this.prefsHandler.getPrefs();
-      prefs.removeObserver("", this);
+      this.prefsHandler.prefs.removeObserver("", this);
 
-      // Unmap all preferences
+      // Unmap preferences
       this.prefsMapper.unmap();
      
-      // XXX: Delete the jondofox prefs branch?
-      this.prefsHandler.deleteBranch('extensions.jondofox');
-      
-      // Delete the jondofox proxy state
-      //this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
+      // Delete the jondofox prefs branch only on uninstall
+      if (this.uninstall) {
+        log("Deinstallation, deleting jondofox branch ..");
+        this.prefsHandler.deleteBranch('extensions.jondofox');
+      } else {
+        this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
+      }
     } catch (e) {
       log("onUninstall(): " + e);
     }
@@ -278,8 +285,8 @@ var JDFManager = {
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           // Clear preferences on shutdown after uninstall
-          if (this.cleanUp) {
-            this.onUninstall();
+          if (this.clean) {
+            this.cleanup();
           }
           // Unregister observers
           this.unregisterObservers();
@@ -299,10 +306,15 @@ var JDFManager = {
             log("Got topic --> " + topic + ", data --> " + data);
             if (data == "item-uninstalled" || data == "item-disabled") {
               // Uninstall or disable
-              this.cleanUp = true;
+              this.clean = true;
+              // If we are going to uninstall .. remove jondofox pref branch
+              if (data == "item-uninstalled") {
+                this.uninstall = true;
+              }
             } else if (data == "item-cancel-action") {
               // Cancellation ..
-              this.cleanUp = false;
+              this.clean = false;
+              this.uninstall = false;
             }
           }
           break;
@@ -315,8 +327,8 @@ var JDFManager = {
           // Not really necessary since closing the last window will also cause
           // 'quit-application-granted' .. let the code stay here though:
           //   http://forums.mozillazine.org/viewtopic.php?t=308369
-          /* if (i == 0 && this.cleanUp) { 
-            this.clearUserAgent(); 
+          /* if (i == 0 && this.clean) { 
+            this.cleanup(); 
             this.unregisterObservers()
           } */
           break;
