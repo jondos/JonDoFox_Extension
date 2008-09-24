@@ -1,6 +1,6 @@
 // Set the prefs handler from window arguments
-var prefsHandler = window.arguments[0];
-    
+var prefsHandler = window.arguments[0].ph;
+
 // Prefix for custom proxy settings
 var prefix = "extensions.jondofox.custom.";
 
@@ -83,6 +83,8 @@ function storeValues() {
     // Set exceptions
     prefsHandler.setStringPref(prefix + 'no_proxies_on', 
                     document.getElementById('no_proxies_on').value);
+    // Set flag to activate
+    //window.arguments[0].activate = true;
   } catch (e) {
     log("storeValues(): " + e);
   }

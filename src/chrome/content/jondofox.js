@@ -262,10 +262,17 @@ function editCustomProxy() {
   log("Open dialog to edit custom proxy");
   try {
     // Give the prefsHandler as argument to the dialog
+    var params = {ph:prefsHandler}; // activate:false};
+    // Do we need to make it modal, 'modal=yes'?
     window.openDialog("chrome://jondofox/content/dialogs/editcustom.xul",
-              "editcustom", "", prefsHandler);
-    // TODO: Enable the custom proxy here?
-    //setProxy("custom", false);
+              "editcustom", "", params);
+    
+    // XXX: Enable the custom proxy here?
+    //log("Activate is " + params.activate);
+    //if (params.activate) {
+    //  setProxy("custom", false);
+    //}
+
   } catch (e) {
     log("editCustomProxy(): " + e);
   }
