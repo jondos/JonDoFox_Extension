@@ -138,34 +138,10 @@ function disableProxy() {
   }
 }
 
-// This could happen on a double-click in the statusbar:
-// Toggle the proxy according to its current state
-// XXX: (Currently never called)
-function toggleProxy() {
-  log("Toggling Proxy ..");
-  try {
-    // Get the current status
-    var state = proxyManager.getProxyState();
-    if (state > 0) {
-      // Let the user confirm
-      if (confirmProxyOff()) {
-        disableProxy();
-      }
-    } else {
-      // Set the proxy to JonDo
-      setProxy('jondo', false);
-    }
-  } catch (e) {
-    log("toggleProxy(): " + e);
-  }
-}
-
 // Map the current proxy status to a (localized) string label
-function getLabel() {
+function getLabel(state) {
   log("Determine proxy-status label");
   try {
-    // Get the state first
-    var state = prefsHandler.getStringPref(statePref);
     switch (state) {
       case 'none':
         return jdfManager.getString('jondofox.statusbar.label.noproxy');
@@ -192,16 +168,23 @@ function getLabel() {
 function refreshStatusbar() {
   log("Refreshing the statusbar");
   try {
-    // Get and set the label
-    var label = getLabel();
-    document.getElementById('jondofox-proxy-status').
-                setAttribute('label', label);
+    // Get statusbar, state and label
+    var statusbar = document.getElementById('jondofox-proxy-status');
+    var state = prefsHandler.getStringPref(statePref);
+    var label = getLabel(state);
+    // Set the color
+    if (state == 'none') {
+      statusbar.style.color = "#F00";
+    } else {
+      statusbar.style.color = "#390";
+    }
+    // Set the label to the statusbar
+    statusbar.setAttribute('label', label);
 
-    // Get the proxy list
+    // Handle the popup list
     var proxyList = document.getElementById('jondofox-proxy-list');
     // Get the single checkbox elements 
     var items = proxyList.getElementsByAttribute('type', 'checkbox');
-
     // Uncheck all but the selected one
     for (var i = 0; i < items.length; i++) {
       if (items[i].getAttribute('label') == label) {
