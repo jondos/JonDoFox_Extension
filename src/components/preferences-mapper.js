@@ -32,6 +32,10 @@ const nsISupports = Components.interfaces.nsISupports;
 
 // Class constructor
 function PrefsMapper() {
+  // Init the prefs handler
+  this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+                                    getService().wrappedJSObject; 
+  // Init the JSObject
   this.wrappedJSObject = this;
 };
 
@@ -41,25 +45,14 @@ PrefsMapper.prototype = {
   // Reference to the prefs handler object
   prefsHandler: null,
 
-  // Return the preferences handler
-  ph: function() {
-    // Get the wrappedJSObject if it is not already set
-    if (!this.prefsHandler) {
-      this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
-                                    getService().wrappedJSObject;
-    }
-    return this.prefsHandler;
-  },
-
   // Arrays containing preferences mappings for each data type
-  stringPrefs: null,
-  
+  stringPrefs: null,  
   //intPrefs: null,
   //boolPrefs: null,
  
   // Set string pref mappings
   setStringPrefs: function(stringPrefsMap) {
-    log("Set the string preferences map");
+    log("Set string preferences map");
     try {
       this.stringPrefsMap = stringPrefsMap;
     } catch (e) {
@@ -74,12 +67,12 @@ PrefsMapper.prototype = {
 
   // Perform the mapping
   map: function() {
-    log("Mapping preferences");
+    log("Mapping " + this.stringPrefsMap.length + " preferences");
     try {
       // Iterate through the map
       for (p in this.stringPrefsMap) {
-        this.ph().setStringPref(p, 
-                     this.ph().getStringPref(this.stringPrefsMap[p]));
+        this.prefsHandler.setStringPref(p,
+                this.prefsHandler.getStringPref(this.stringPrefsMap[p]));
       }
     } catch (e) {
       log("map(): " + e);
@@ -92,7 +85,7 @@ PrefsMapper.prototype = {
     try {
       // Reset all prefs
       for (p in this.stringPrefsMap) {
-        this.ph().deletePreference(p);
+        this.prefsHandler.deletePreference(p);
       }
     } catch (e) {
       log("unmap(): " + e);

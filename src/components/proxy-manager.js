@@ -3,7 +3,7 @@
  * Author: Johannes Renner
  *
  * This component implements a proxy manager interface offering methods to set 
- * proxies for certain protocols, as well as general enabling and disabling.
+ * proxies for certain protocols, as well as enabling and disabling a proxy.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,29 +42,13 @@ function ProxyManager() {
 
 // Class definition
 ProxyManager.prototype = {
-  
-  /*
-   * TODO: Remove this code, not needed anymore
-  // Reference to the handler object
-  prefsHandler: null,
-  // Return the preferences handler
-  ph: function() {
-    // Get the wrappedJSObject if it is not already set
-    if (!this.prefsHandler) {
-      //log("Setting preferences handler");
-      this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
-                                    getService().wrappedJSObject;
-    }
-    return this.prefsHandler;
-  },
-  */
-  
+    
   // The prefs handler object
   ph: null,
 
   // Set the HTTP proxy host and port
   setProxyHTTP: function(host, port) {
-    log("Set HTTP proxy --> " + host + ":" + port);
+    log("HTTP proxy --> " + host + ":" + port);
     try {
       this.ph.setStringPref("network.proxy.http", host);
       this.ph.setIntPref("network.proxy.http_port", port);
@@ -75,7 +59,7 @@ ProxyManager.prototype = {
   
   // Set the SSL proxy host and port 
   setProxySSL: function(host, port) {
-    log("Set SSL proxy --> " + host + ":" + port);
+    log("SSL proxy --> " + host + ":" + port);
     try {
       this.ph.setStringPref("network.proxy.ssl", host);
       this.ph.setIntPref("network.proxy.ssl_port", port);
@@ -86,7 +70,7 @@ ProxyManager.prototype = {
   
   // Set the FTP proxy host and port 
   setProxyFTP: function(host, port) {
-    log("Set FTP proxy --> " + host + ":" + port);
+    log("FTP proxy --> " + host + ":" + port);
     try {
       this.ph.setStringPref("network.proxy.ftp", host);
       this.ph.setIntPref("network.proxy.ftp_port", port);
@@ -95,14 +79,14 @@ ProxyManager.prototype = {
     } 
   },
   
-  // Set the GOPHER proxy host and port 
+  // Set the Gopher proxy host and port 
   setProxyGopher: function(host, port) {
-    log("Set GOPHER proxy --> " + host + ":" + port);
+    log("Gopher proxy --> " + host + ":" + port);
     try {
       this.ph.setStringPref("network.proxy.gopher", host);
       this.ph.setIntPref("network.proxy.gopher_port", port);
     } catch (e) {
-      log("setProxyGOPHER(): " + e);
+      log("setProxyGopher(): " + e);
     } 
   },
 
@@ -116,7 +100,7 @@ ProxyManager.prototype = {
   
   // Handle SOCKS independently from the other protocols
   setProxySOCKS: function(host, port, version) {
-    log("Set SOCKS proxy (version " + version + ") --> " + host + ":" + port);
+    log("SOCKS proxy (version " + version + ") --> " + host + ":" + port);
     try {
       this.ph.setStringPref("network.proxy.socks", host);
       this.ph.setIntPref("network.proxy.socks_port", port);
@@ -129,7 +113,7 @@ ProxyManager.prototype = {
   // Set 'network.proxy.socks_remote_dns'
   setSocksRemoteDNS: function(value) {
     // Set 'network.proxy.socks_remote_dns' --> value
-    log("Set SOCKS remote DNS --> " + value);
+    log("SOCKS remote DNS --> " + value);
     try {
       this.ph.setBoolPref("network.proxy.socks_remote_dns", value);
     } catch (e) {
@@ -139,7 +123,7 @@ ProxyManager.prototype = {
 
   // Set 'network.proxy.no_proxies_on'
   setExceptions: function(value) {
-    log("Set exceptions --> " + value);
+    log("No proxy for --> " + value);
     try {
       this.ph.setStringPref("network.proxy.no_proxies_on", value);
     } catch (e) {
@@ -151,7 +135,7 @@ ProxyManager.prototype = {
   getProxyState: function() {
     try {
       var state = this.ph.getIntPref("network.proxy.type");
-      log("Return proxy state: " + state);
+      log("Current proxy state is " + state);
       return state;
     } catch (e) {
       log("getProxyStatus(): " + e);

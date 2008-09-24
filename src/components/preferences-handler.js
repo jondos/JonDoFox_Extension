@@ -2,16 +2,15 @@
  * Copyright (c) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This is a general purpose XPCOM component that can be accessed from within
- * any other component. It transparently encapsulates handling of user prefs in
- * Firefox using the nsIPrefService.
+ * This is a general purpose XPCOM component that transparently encapsulates 
+ * handling of user preferences in Firefox using the nsIPrefService.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-mDebug = false;
+mDebug = true;
 
 // Log method
 function log(message) {
@@ -34,26 +33,19 @@ const nsISupports = Components.interfaces.nsISupports;
 
 // Class constructor
 function PreferencesHandler() {
+  // Set the main pref branch
+  this.prefs = this.getPrefsBranch("");  
+  // Set the wrappedJSObject 
   this.wrappedJSObject = this;
 };
 
 // Class definition
 PreferencesHandler.prototype = {
   
-  // The internal preferences service
-  _mainBranch: null,
-  
-  // Return the main preferences branch
-  getPrefs: function() {
-    if (!this._preferencesService) {
-      this._mainBranch = Components.
-              classes["@mozilla.org/preferences-service;1"].
-              getService(Components.interfaces.nsIPrefService).getBranch("");
-    }
-    return this._mainBranch;
-  },
- 
-  // Return a certain preferences branch
+  // The main preferences branch
+  prefs: null,
+
+  // Return a specific preferences branch
   getPrefsBranch: function(branch) {
     log("Getting prefs branch " + branch);
     try {
@@ -80,7 +72,7 @@ PreferencesHandler.prototype = {
   isPreferenceSet: function(preference) {
     log("Pref set? '" + preference + "'");
     if(preference) {
-      return this.getPrefs().prefHasUserValue(preference);
+      return this.prefs.prefHasUserValue(preference);
     }
     return false;
   },
@@ -88,10 +80,14 @@ PreferencesHandler.prototype = {
   // Delete a given preference respectively reset to default
   deletePreference: function(preference) {    
     if (preference) {
-      // If a user preference is set
-      if (this.isPreferenceSet(preference)) {
-        log("Resetting '" + preference + "'");
-        this.getPrefs().clearUserPref(preference);
+      try {
+        // If a user preference is set
+        if (this.isPreferenceSet(preference)) {
+          log("Resetting '" + preference + "'");
+          this.prefs.clearUserPref(preference);
+        }
+      } catch (e) {
+        log("deletePreference(): " + e);
       }
     }
   },
@@ -105,7 +101,7 @@ PreferencesHandler.prototype = {
                       createInstance(supportsStringInterface);
       string.data = value;
       // Set value
-      this.getPrefs().setComplexValue(preference, supportsStringInterface, 
+      this.prefs.setComplexValue(preference, supportsStringInterface, 
                        string);
     }
   },
@@ -119,7 +115,7 @@ PreferencesHandler.prototype = {
       //if (this.isPreferenceSet(preference)) {
       try {
         log("Getting '" + preference + "'");
-        return this.getPrefs().getComplexValue(preference, 
+        return this.prefs.getComplexValue(preference, 
                        Components.interfaces.nsISupportsString).data;
       } catch(e) {
         log("getStringPref(): " + e);
@@ -133,7 +129,7 @@ PreferencesHandler.prototype = {
   setIntPref: function(preference, value) {
     log("Setting '" + preference + "' --> " + value);
     try {
-      this.getPrefs().setIntPref(preference, value);
+      this.prefs.setIntPref(preference, value);
     } catch (e) {
       log("setIntPref(): " + e);
     }
@@ -146,7 +142,7 @@ PreferencesHandler.prototype = {
       // If not a user preference or a user preference is set
       //if(this.isPreferenceSet(preference)) {
       try {
-        return this.getPrefs().getIntPref(preference);
+        return this.prefs.getIntPref(preference);
       } catch(exception) {
         log("getIntPref(): " + exception);
       }
@@ -158,7 +154,7 @@ PreferencesHandler.prototype = {
   setBoolPref: function(preference, value) {
     log("Setting '" + preference + "' --> " + value);
     try {
-      this.getPrefs().setBoolPref(preference, value);
+      this.prefs.setBoolPref(preference, value);
     } catch (e) {
       log("setBoolPref(): " + e);
     }
@@ -169,7 +165,7 @@ PreferencesHandler.prototype = {
     // If preference is not null
     if(preference) {
       try {
-        return this.getPrefs().getBoolPref(preference);
+        return this.prefs.getBoolPref(preference);
       } catch(exception) {
         log("getBoolPref(): " + exception);
       }
@@ -177,6 +173,7 @@ PreferencesHandler.prototype = {
     return false;
   },
 
+  // Implement nsISupports
   QueryInterface: function(aIID) {
     if (!aIID.equals(nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
