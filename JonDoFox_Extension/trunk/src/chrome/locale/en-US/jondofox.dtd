@@ -21,9 +21,18 @@
    might be identifyable or recognizable. You should re-check your configuration and read the help files in
    this case.">
 
+<!-- Statusbar strings -->
 <!ENTITY jondofox.statusbar.noProxy "No proxy">
 <!ENTITY jondofox.statusbar.custom "Custom proxy">
 <!ENTITY jondofox.statusbar.editCustom "Edit custom proxy">
 
+<!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
 <!ENTITY jondofox.dialog.cancel "Cancel">
+
+<!-- Edit custom proxy dialog -->
+<!ENTITY jondofox.dialog.editcustom.title "Custom proxy configuration">
+<!ENTITY jondofox.dialog.editcustom.manual "Manual custom proxy configuration">
+<!ENTITY jondofox.dialog.editcustom.auto "Automatic proxy configuration URL">
+<!ENTITY jondofox.dialog.editcustom.example "Example">
+<!ENTITY jondofox.dialog.editcustom.noproxy "No proxy for">
