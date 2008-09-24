@@ -21,12 +21,18 @@
    <b><font color='red'>rot</font></b> ist, kann man Sie im Internet identifizieren oder wiedererkennen. 
    In diesem Fall sollten Sie ihre Einstellungen überprüfen und die zugehörige Hilfe lesen.">
 
+<!-- Statusbar strings -->
 <!ENTITY jondofox.statusbar.noProxy "Kein Proxy">
-<!ENTITY jondofox.statusbar.custom "Eigener Proxy">
-<!ENTITY jondofox.statusbar.editCustom "Eigenen Proxy konfigurieren">
+<!ENTITY jondofox.statusbar.custom "Benutzerdefiniert">
+<!ENTITY jondofox.statusbar.editCustom "Konfigurieren">
 
+<!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
 <!ENTITY jondofox.dialog.cancel "Abbrechen">
 
-
-
+<!-- Edit custom proxy dialog -->
+<!ENTITY jondofox.dialog.editcustom.title "Benutzerdefinierte Proxy-Konfiguration">
+<!ENTITY jondofox.dialog.editcustom.manual "Benutzerdefinierten Proxy von Hand konfigurieren">
+<!ENTITY jondofox.dialog.editcustom.auto "URL für automatische Proxy-Konfiguration">
+<!ENTITY jondofox.dialog.editcustom.example "Beispiel">
+<!ENTITY jondofox.dialog.editcustom.noproxy "Kein Proxy für">

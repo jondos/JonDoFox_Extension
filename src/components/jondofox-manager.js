@@ -181,6 +181,7 @@ var JDFManager = {
         log("Deinstallation, deleting jondofox branch ..");
         this.prefsHandler.deleteBranch('extensions.jondofox');
       } else {
+        // On disable, only reset the state
         this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
       }
     } catch (e) {
