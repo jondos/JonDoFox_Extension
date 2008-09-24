@@ -21,7 +21,7 @@
   <!-- Statusbar -->
   <statusbar id="status-bar">
     
-    <!-- Indicate status --> 
+    <!-- Indicate status in the corner --> 
     <!-- FIXME: Positioning problem (insertbefore="statusbar-updates") -->
     <statusbarpanel id="jondofox-proxy-status" position="6"
         label=""
@@ -36,7 +36,7 @@
       <menuitem label="&jondofox.statusbar.editCustom;" oncommand="editCustomProxy();" />
       <menuseparator />
       <menuitem label="&jondofox.statusbar.noProxy;" type="checkbox" checked="false" oncommand="setProxy('none', true);" />
-      <menuseparator />
+      <menuseparator />      
       <menuitem label="&jondofox.statusbar.custom;" type="checkbox" checked="false" oncommand="setProxy('custom')" />
       <menuitem label="Tor" type="checkbox" checked="false" oncommand="setProxy('tor', false);" />
       <menuitem label="JonDo" type="checkbox" checked="false" oncommand="setProxy('jondo', false);" />
