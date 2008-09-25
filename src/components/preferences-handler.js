@@ -142,6 +142,7 @@ PreferencesHandler.prototype = {
       // If not a user preference or a user preference is set
       //if(this.isPreferenceSet(preference)) {
       try {
+        log("Getting '" + preference + "'");
         return this.prefs.getIntPref(preference);
       } catch(exception) {
         log("getIntPref(): " + exception);

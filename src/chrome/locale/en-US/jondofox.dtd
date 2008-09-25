@@ -1,3 +1,4 @@
+<!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
 <!ENTITY jondofox.instructions.titleText "JonDoFox <b>additionally</b> needs the JonDo client program to 
    be able to connect to the JonDonym service.">
@@ -29,6 +30,8 @@
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
 <!ENTITY jondofox.dialog.cancel "Cancel">
+<!ENTITY jondofox.dialog.save "Save">
+<!ENTITY jondofox.dialog.apply "Apply">
 
 <!-- Edit custom proxy dialog -->
 <!ENTITY jondofox.dialog.editcustom.title "Custom proxy configuration">
