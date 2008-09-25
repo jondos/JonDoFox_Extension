@@ -24,117 +24,30 @@ function log(msg) {
 ///////////////////////////////////////////////////////////////////////////////
 
 // The proxy state preferences
-const statePref = 'extensions.jondofox.proxy.state';
-const proxyType = 'network.proxy.type';
+const STATE_PREF = 'extensions.jondofox.proxy.state';
+const PROXY_PREF = 'network.proxy.type';
 
 // Get the preferences handler
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                                  getService().wrappedJSObject;
     
-// Get the proxy manager
-var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
-                                 getService().wrappedJSObject;
-
 // Get the JDFManager
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
-// This is called when a proxy is chosen from the popup menu, where
-// 'state' is one of --> jondo, tor, custom, none, unknown?
-// Set 'conf' to true if the user should need to confirm disabling 
-// the proxy, makes only sense in combination with state = 'none'
+// Only set 'conf' to true if the user should need to confirm when 
+// disabling the proxy (in combination with state = 'none')
 function setProxy(state, conf) {
-  log("Setting proxy to '" + state + "'");
+  log("Setting proxy state to '" + state + "'");
   try {
-    // Store the previous state to detect state changes
-    var previousState = prefsHandler.getStringPref(statePref);
-    if (state == 'none') {
-      if (conf) {
-        // Request confirmation
-        var value = jdfManager.showConfirm(
-                    jdfManager.getString('jondofox.dialog.attention'),
-                    jdfManager.getString('jondofox.dialog.message.proxyoff'));
-        if (value) {
-          // Disable the proxy
-          disableProxy();
-        } else {
-          // Reset the state
-          log("Resetting state to " + previousState);
-          state = previousState;
-        }
-      } else {
-        // 'conf' is false, straight disable
-        disableProxy();
-      }
-    } else {
-      // Check the id
-      switch (state) {
-        case 'jondo':
-          // Set proxies for all protocols but SOCKS
-          proxyManager.setProxyAll('127.0.0.1', 4001);
-          proxyManager.setProxySOCKS('', 0, 5);
-          // Set default exceptions
-          proxyManager.setExceptions('127.0.0.1, localhost');
-          break; 
- 
-        case 'tor':
-          // Set SOCKS proxy only
-          proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
-          proxyManager.setSocksRemoteDNS(true);
-          proxyManager.setProxyAll('', 0);
-          // Set default exceptions
-          proxyManager.setExceptions('127.0.0.1, localhost');
-          break;
-
-        case 'custom':
-          // Set the custom proxy
-          var prefix = "extensions.jondofox.custom.";
-          proxyManager.setProxyHTTP(
-                          prefsHandler.getStringPref(prefix + "http_host"),
-                          prefsHandler.getIntPref(prefix + "http_port"));
-          proxyManager.setProxySSL(
-                          prefsHandler.getStringPref(prefix + "ssl_host"),
-                          prefsHandler.getIntPref(prefix + "ssl_port"));
-          proxyManager.setProxyFTP(
-                          prefsHandler.getStringPref(prefix + "ftp_host"),
-                          prefsHandler.getIntPref(prefix + "ftp_port"));
-          proxyManager.setProxyGopher(
-                          prefsHandler.getStringPref(prefix + "gopher_host"),
-                          prefsHandler.getIntPref(prefix + "gopher_port"));
-          proxyManager.setProxySOCKS(
-                          prefsHandler.getStringPref(prefix + "socks_host"),
-                          prefsHandler.getIntPref(prefix + "socks_port"),
-                          prefsHandler.getIntPref(prefix + "socks_version"));
-          proxyManager.setExceptions(
-                         prefsHandler.getStringPref(prefix + "no_proxies_on"));
-          break;
-
-        default:
-          log("!! Unknown proxy state: " + state);
-          return;
-      }
-      // Set the state first and then enable
-      prefsHandler.setStringPref(statePref, state);          
-      proxyManager.enableProxy();
-    }
-    // If the state didn't change, call refreshStatusbar() by hand
-    if (previousState == state) {
+    // Call the underlying method in JDFManager
+    if (!jdfManager.setProxy(state, conf)) {
+      // If the state didn't change, call refreshStatusbar() by hand
       log("NOT a state change, calling refreshStatusbar() ..");
       refreshStatusbar();
     }
   } catch (e) {
     log("setProxy(): " + e);
-  }
-}
-
-// Disable the proxy and set the state preference
-function disableProxy() {
-  try {
-    // Call disable on the proxy manager
-    prefsHandler.setStringPref(statePref, 'none');
-    proxyManager.disableProxy();
-  } catch (e) {
-    log("disableProxy(): " + e);
   }
 }
 
@@ -170,7 +83,7 @@ function refreshStatusbar() {
   try {
     // Get statusbar, state and label
     var statusbar = document.getElementById('jondofox-proxy-status');
-    var state = prefsHandler.getStringPref(statePref);
+    var state = prefsHandler.getStringPref(STATE_PREF);
     var label = getLabel(state);
     // Set the color
     if (state == 'none') {
@@ -207,15 +120,15 @@ var proxyStateObserver = {
         // The proxy state has changed
         //log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
-        if (data == proxyType) {
-          if (proxyManager.getProxyState() == 0 && 
-                 prefsHandler.getStringPref(statePref) != 'none') {
+        if (data == PROXY_PREF) {
+          if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
+                 prefsHandler.getStringPref(STATE_PREF) != 'none') {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
             // .. set the state to 'none'
-            prefsHandler.setStringPref(statePref, 'none')
+            prefsHandler.setStringPref(STATE_PREF, 'none')
           }
         } else {
-          // 'statePref' has changed, refresh the status
+          // STATE_PREF has changed, refresh the status
           refreshStatusbar();
         }
         break;
@@ -235,11 +148,14 @@ function initWindow() {
     window.removeEventListener("load", initWindow, true);
     // Add observers for proxy preferences
     log("Adding proxy state observers");
-    prefsHandler.prefs.addObserver(statePref, proxyStateObserver, false);
-    prefsHandler.prefs.addObserver(proxyType, proxyStateObserver, false);
-    // Initially set the state
+    prefsHandler.prefs.addObserver(STATE_PREF, proxyStateObserver, false);
+    prefsHandler.prefs.addObserver(PROXY_PREF, proxyStateObserver, false);
+    
+    // Initially set the proxy state
+    // TODO: Do this from within jondofox-manager.js?
     log("Setting initial proxy state ..");
-    setProxy(prefsHandler.getStringPref(statePref), false);
+    setProxy(prefsHandler.getStringPref(STATE_PREF), false);
+
   } catch (e) {
     log("initWindow(): " + e);
   }
@@ -259,20 +175,11 @@ function openTabAnontest() {
 
 // Open dialog to edit custom proxy settings
 function editCustomProxy() {
-  log("Open dialog to edit custom proxy");
+  log("Open dialog 'edit custom proxy'");
   try {
-    // Give the prefsHandler as argument to the dialog
-    var params = {ph:prefsHandler}; // activate:false};
-    // Do we need to make it modal, 'modal=yes'?
-    window.openDialog("chrome://jondofox/content/dialogs/editcustom.xul",
-              "editcustom", "", params);
-    
-    // XXX: Enable the custom proxy here?
-    //log("Activate is " + params.activate);
-    //if (params.activate) {
-    //  setProxy("custom", false);
-    //}
-
+    // No parameters needed
+    window.openDialog("chrome://jondofox/content/dialogs/editcustom.xul", 
+              "editcustom", "");
   } catch (e) {
     log("editCustomProxy(): " + e);
   }

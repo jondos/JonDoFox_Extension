@@ -1,5 +1,6 @@
-// Set the prefs handler from window arguments
-var prefsHandler = window.arguments[0].ph;
+// Set the prefs handler, it will be needed
+var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+                                 getService().wrappedJSObject;
 
 // Prefix for custom proxy settings
 var prefix = "extensions.jondofox.custom.";
@@ -9,9 +10,9 @@ function log(msg) {
   dump("Dialog :: " + msg + "\n");
 }
     
-// Load values for textfields
-function initDialog() {
-  log("Init dialog");
+// Load values into the dialog's elements
+function onLoad() {
+  log("Init dialog, loading values ..");
   try {        
     // Get host and port settings for different protocols
     document.getElementById('http_host').value = 
@@ -51,7 +52,7 @@ function initDialog() {
   }     
 }
    
-// Store values
+// Store the values
 function storeValues() {
   log("Store values"); 
   try {
@@ -83,16 +84,54 @@ function storeValues() {
     // Set exceptions
     prefsHandler.setStringPref(prefix + 'no_proxies_on', 
                     document.getElementById('no_proxies_on').value);
-    // Set flag to activate
-    //window.arguments[0].activate = true;
   } catch (e) {
     log("storeValues(): " + e);
+  }
+}
+
+// This is called on clicking the 'accept'-button
+function onAccept() {
+  try {
+    // Store values
+    storeValues();
+    // If the current state is 'custom', reset the state
+    if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 
+           'custom') {
+      enable();
+    }
+  } catch (e) {
+    log("onAccept(): " + e);
   }
   // Return true in any case to close the window
   return true;
 }
 
+// Apply configuration
+function onApply() {
+  try {
+    // Store the configuration
+    storeValues();
+    enable();
+  } catch (e) {
+    log("onApply(): " + e);
+  }
+}
+
+// Set the proxy state to 'custom'
+function enable() {
+  try {
+    // Get the JDFManager ..
+    var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+                                   getService().wrappedJSObject;
+    // .. and enable custom proxy from there
+    jdfManager.setProxy('custom');
+  } catch (e) {
+    log("enable(): " + e);
+  }
+}
+
 // Enable/disable certain dialog elements
+// XXX: Currently not needed
 function enableOptions() {
   log("Enable/disable elements");
   // Get the type of configuration

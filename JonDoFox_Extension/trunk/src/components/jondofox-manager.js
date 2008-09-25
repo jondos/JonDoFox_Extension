@@ -20,9 +20,13 @@ function log(message) {
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
 
+// XPCOM constants
 const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
 const CLASS_NAME = 'JonDoFox-Manager'; 
 const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
+
+// The proxy state preference
+const STATE_PREF = 'extensions.jondofox.proxy.state';
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
@@ -64,6 +68,7 @@ var JDFManager = {
   // Different services
   prefsHandler: null,
   prefsMapper: null,
+  proxyManager: null,
   promptService: null,
 
   // Localization strings
@@ -78,6 +83,9 @@ var JDFManager = {
                             getService().wrappedJSObject;
       this.prefsMapper = 
               Components.classes['@jondos.de/preferences-mapper;1'].
+                            getService().wrappedJSObject;
+      this.proxyManager = 
+              Components.classes['@jondos.de/proxy-manager;1'].
                             getService().wrappedJSObject;
       this.promptService = 
               Components.classes['@mozilla.org/embedcomp/prompt-service;1'].
@@ -221,7 +229,8 @@ var JDFManager = {
     }
   },
   
-  // Utility functions ////////////////////////////////////////////////////////  
+  // Utility functions ////////////////////////////////////////////////////////
+  
   // Show an alert using the prompt service
   showAlert: function(title, text) {
     try {
@@ -254,7 +263,8 @@ var JDFManager = {
   formatString: function(name, strArray) {
     log("Getting formatted string: '" + name + "'");
     try {
-      return this.stringBundle.formatStringFromName(name, strArray, strArray.length);
+      return this.stringBundle.formatStringFromName(name, strArray, 
+                                  strArray.length);
     } catch (e) {
       log("formatString(): " + e);
     }  
@@ -272,8 +282,109 @@ var JDFManager = {
     }
     return count;
   },
+  
+  // Proxy management /////////////////////////////////////////////////////////
+
+  // Set state to 'none' and disable proxy
+  disableProxy: function() {
+    try {
+      // Call disable on the proxy manager
+      this.prefsHandler.setStringPref(STATE_PREF, 'none');
+      this.proxyManager.disableProxy();
+    } catch (e) {
+      log("disableProxy(): " + e);
+    }
+  },
+
+  // Set the JonDoFox-extension into a certain proxy state
+  // Return true if the state has changed, false otherwise
+  setProxy: function(state, conf) {
+    log("Setting proxy state to '" + state + "'");
+    try {
+      // Store the previous state to detect state changes
+      var previousState = this.prefsHandler.getStringPref(STATE_PREF);
+      if (state == 'none') {
+        if (conf) {
+          // Request user confirmation
+          var value = this.showConfirm(
+                           this.getString('jondofox.dialog.attention'),
+                           this.getString('jondofox.dialog.message.proxyoff'));
+          if (value) {
+            // Disable the proxy
+            this.disableProxy();
+          } else {
+            // New state is previous state?
+            log("Resetting state to " + previousState);
+            state = previousState;
+          }
+        } else {
+          // 'conf' is false, straight disable
+          this.disableProxy();
+        }
+      } else {
+        // State is not 'none'
+        switch (state) {
+          case 'jondo':
+            // Set proxies for all protocols but SOCKS
+            this.proxyManager.setProxyAll('127.0.0.1', 4001);
+            this.proxyManager.setProxySOCKS('', 0, 5);
+            // Set default exceptions
+            this.proxyManager.setExceptions('127.0.0.1, localhost');
+            break; 
+ 
+          case 'tor':
+            // Set SOCKS proxy only
+            this.proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
+            this.proxyManager.setSocksRemoteDNS(true);
+            this.proxyManager.setProxyAll('', 0);
+            // Set default exceptions
+            this.proxyManager.setExceptions('127.0.0.1, localhost');
+            break;
+
+          case 'custom':
+            // Get custom prefs ..
+            var prefix = "extensions.jondofox.custom.";
+            this.proxyManager.setProxyHTTP(
+                    this.prefsHandler.getStringPref(prefix + "http_host"),
+                    this.prefsHandler.getIntPref(prefix + "http_port"));
+            this.proxyManager.setProxySSL(
+                    this.prefsHandler.getStringPref(prefix + "ssl_host"),
+                    this.prefsHandler.getIntPref(prefix + "ssl_port"));
+            this.proxyManager.setProxyFTP(
+                    this.prefsHandler.getStringPref(prefix + "ftp_host"),
+                    this.prefsHandler.getIntPref(prefix + "ftp_port"));
+            this.proxyManager.setProxyGopher(
+                    this.prefsHandler.getStringPref(prefix + "gopher_host"),
+                    this.prefsHandler.getIntPref(prefix + "gopher_port"));
+            this.proxyManager.setProxySOCKS(
+                    this.prefsHandler.getStringPref(prefix + "socks_host"),
+                    this.prefsHandler.getIntPref(prefix + "socks_port"),
+                    this.prefsHandler.getIntPref(prefix + "socks_version"));
+            this.proxyManager.setExceptions(
+                    this.prefsHandler.getStringPref(prefix + "no_proxies_on"));
+            break;
+
+          default:
+            log("!! Unknown proxy state: " + state);
+            return;
+        }
+        // Set the state first and then enable
+        this.prefsHandler.setStringPref(STATE_PREF, state);
+        this.proxyManager.enableProxy();
+      }
+      // Return true if the state changed, false otherwise
+      if (previousState == state) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (e) {
+      log("setProxy(): " + e);
+    }
+  },
 
   // Implement nsIObserver ////////////////////////////////////////////////////
+  
   observe: function(subject, topic, data) {
     try {
       switch (topic) {        

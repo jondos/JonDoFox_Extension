@@ -5,11 +5,13 @@
 
 <dialog id="edit-proxy" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
    title="&jondofox.dialog.editcustom.title;"
-   buttons="accept, cancel"
-   buttonlabelaccept="&jondofox.dialog.accept;"
+   buttons="accept, cancel, extra1"
+   buttonlabelaccept="&jondofox.dialog.save;"
    buttonlabelcancel="&jondofox.dialog.cancel;"
-   onload="initDialog();"
-   ondialogaccept="return storeValues();">
+   buttonlabelextra1="&jondofox.dialog.apply;"
+   onload="onLoad();"
+   ondialogaccept="onAccept();"
+   ondialogextra1="onApply();">
   
   <!-- Include javascript code -->
   <script type="application/x-javascript" src="chrome://jondofox/content/dialogs/editcustom.js"></script>
