@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008, JonDos GmbH
+ * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
  * This code is available on a per window basis. Below are in fact methods for
@@ -24,8 +24,8 @@ function log(msg) {
 ///////////////////////////////////////////////////////////////////////////////
 
 // The proxy state preferences
-const STATE_PREF = 'extensions.jondofox.proxy.state';
-const PROXY_PREF = 'network.proxy.type';
+var STATE_PREF = 'extensions.jondofox.proxy.state';
+var PROXY_PREF = 'network.proxy.type';
 
 // Get the preferences handler
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
@@ -140,27 +140,6 @@ var proxyStateObserver = {
   }
 }
 
-// Initialize a new browser window
-function initWindow() {
-  log("Init new browser window");
-  try {
-    // Remove this listener again
-    window.removeEventListener("load", initWindow, true);
-    // Add observers for proxy preferences
-    log("Adding proxy state observers");
-    prefsHandler.prefs.addObserver(STATE_PREF, proxyStateObserver, false);
-    prefsHandler.prefs.addObserver(PROXY_PREF, proxyStateObserver, false);
-    
-    // Initially set the proxy state
-    // TODO: Do this from within jondofox-manager.js?
-    log("Setting initial proxy state ..");
-    setProxy(prefsHandler.getStringPref(STATE_PREF), false);
-
-  } catch (e) {
-    log("initWindow(): " + e);
-  }
-}
-
 // Open up the anontest in a new tab of the current window
 function openTabAnontest() {
   try {
@@ -185,7 +164,7 @@ function editCustomProxy() {
   }
 }
   
-// XXX: Experimental method to bypass the proxy when performing a download
+// FIXME: Unfinished method to bypass the proxy when performing a download
 function bypassProxy() {
   log("Bypassing proxy");
   try {
@@ -207,63 +186,48 @@ function bypassProxy() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// Append a JonDoFox customized string to the window's title
+// This method is called on the 'load' event
 ///////////////////////////////////////////////////////////////////////////////
 
-// Get the Firefox version
-var appInfo = Components.classes['@mozilla.org/xre/app-info;1'].
-                            getService(Components.interfaces.nsIXULAppInfo);
+// The overlay observer belongs to the init process
+var overlayObserver = {
+  // Implement nsIObserver
+  observe: function(subject, topic, data) {
+    switch (topic) {
+      case 'xul-overlay-merged':
+        var uri = subject.QueryInterface(Components.interfaces.nsIURI);
+        log("uri.spec is " + uri.spec);
+        if (uri.spec == "chrome://jondofox/content/jondofox-overlay.xul") {
+          // Overlay is ready, add observers for proxy preferences
+          log("Overlay ready --> adding proxy state observers");
+          prefsHandler.prefs.addObserver(STATE_PREF, proxyStateObserver, false);
+          prefsHandler.prefs.addObserver(PROXY_PREF, proxyStateObserver, false); 
+          // Set the initial proxy state
+          // TODO: Do this from within jondofox-manager.js?
+          log("Setting initial proxy state ..");
+          setProxy(prefsHandler.getStringPref(STATE_PREF), false);
+        } else {
+          log("Wrong subject!");
+        }
+        break;
 
-// Get both of the version strings and the application's name
-var versionPref = "extensions.jondofox.profile_version";
-var profileVersion = prefsHandler.getStringPref(versionPref);
-var appVersion = appInfo.version;
-var appName = appInfo.name;
-
-// Create an appendix for the title string
-const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
-// Log something initially
-log("This is " + titleString);
-
-// FIXME: This does not work on Macs
-// Set the title modifier
-function setTitleModifier() {
-  //log("Setting title modifier");
-  try {
-    // Set the 'titlemodifier' attribute in the current document
-    var modAtt = document.documentElement.getAttribute("titlemodifier");
-    if (modAtt) {
-      document.documentElement.setAttribute("titlemodifier", titleString);
+      default:
+        log("!! Unknown topic " + topic);
+        break;
     }
-    // This throws an exception if this.docShell is not set
-    if (this.docShell) {
-      //log("'this.docShell' is not null");
-      document.getElementById("content").updateTitlebar();
-    }
-  } catch (e) {
-    log("setTitleModifier(): " + e);
   }
 }
 
-// Init a listener that calls setTitleModifier()
-function initTitleListener() {
-  log("Init title listener");
+// Initialize a new browser window
+function initWindow() {
+  log("New browser window ..");
   try {
-    // This seems to be enough?
-    document.getElementById("content").addEventListener("DOMTitleChanged", 
-                                          setTitleModifier, false);
-    
-    // XXX: Not needed? .. mTabContainer ..
-    //gBrowser.addEventListener("DOMNodeInserted", setTitleModifier, true);
-    //gBrowser.addEventListener("DOMNodeRemoved", setTitleModifier, true);
+    // At first remove this listener again
+    window.removeEventListener("load", initWindow, true);
+    // Load the overlay
+    document.loadOverlay("chrome://jondofox/content/jondofox-overlay.xul", 
+                            overlayObserver);
   } catch (e) {
-    log("initTitleListener(): " + e);
+    log("initWindow(): " + e);
   }
 }
-
-// We have a new window
-log("New window ..");
-// Set the title once when initializing a new window
-setTitleModifier();
-// Rather use an anonymous function?
-window.addEventListener("load", initTitleListener, false);
