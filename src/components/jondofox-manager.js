@@ -173,7 +173,7 @@ var JDFManager = {
     }
   },
 
-  // This is called on uninstall and disable
+  // General cleanup function for deinstallation etc.
   cleanup: function() {
     log("Cleaning up ..");
     try {
@@ -436,7 +436,7 @@ var JDFManager = {
           //var i = this.getWindowCount();
           //log("Window " + i + " --> " + topic);
           
-          // Not really necessary since closing the last window will also cause
+          // Not necessary since closing the last window will also cause
           // 'quit-application-granted' .. let the code stay here though:
           //   http://forums.mozillazine.org/viewtopic.php?t=308369
           /* if (i == 0 && this.clean) { 
@@ -498,21 +498,13 @@ var JDFManager = {
 ///////////////////////////////////////////////////////////////////////////////
 
 var JDFManagerModule = {
-  
-  //firstTime: true,
 
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
-    // XXX: This seems to be not needed
-    //if (this.firstTime) {
-    //  this.firstTime = false;
-    //  throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    //}
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                fileSpec, location, type);
-
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
     catMan.addCategoryEntry("app-startup", "JDFManager", CONTRACT_ID, true, 
@@ -523,7 +515,6 @@ var JDFManagerModule = {
     log("Unregistering '" + CLASS_NAME + "' ..");
     compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
     compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
-
     var catMan = Components.classes["@mozilla.org/categorymanager;1"].
                     getService(Components.interfaces.nsICategoryManager);
     catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);

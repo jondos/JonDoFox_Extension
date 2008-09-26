@@ -38,9 +38,8 @@
       try {
         var bypass = document.getElementById("bypass-proxy");
         if (bypass) {
-          //log("bypass is " + bypass);
-          bypass.hidden = !(gContextMenu.onImage || gContextMenu.onLink);
-          //log("bypass.hidden is " + bypass.hidden);
+          bypass.hidden = !gContextMenu.onLink;
+          //bypass.disabled = true;
         }
       } catch (e) {
         log("showMenuItem(): " + e);
@@ -90,8 +89,9 @@
   <popup id="contentAreaContextMenu">
     <menuitem id="bypass-proxy" 
               label="&jondofox.context.bypass;"
-              oncommand="log('TODO: Implement this!');"
-              insertafter="context-savelink" />
+              oncommand="bypassProxy();"
+              insertafter="context-savelink"
+              disabled="true" />
   </popup>
 
 </overlay>
