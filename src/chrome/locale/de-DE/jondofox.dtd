@@ -22,6 +22,9 @@
    <b><font color='red'>rot</font></b> ist, kann man Sie im Internet identifizieren oder wiedererkennen. 
    In diesem Fall sollten Sie ihre Einstellungen überprüfen und die zugehörige Hilfe lesen.">
 
+<!-- Context menu strings -->
+<!ENTITY jondofox.context.bypass "Proxy umgehen und Ziel speichern unter...">
+
 <!-- Statusbar strings -->
 <!ENTITY jondofox.statusbar.noProxy "Kein Proxy">
 <!ENTITY jondofox.statusbar.custom "Benutzerdefiniert">
