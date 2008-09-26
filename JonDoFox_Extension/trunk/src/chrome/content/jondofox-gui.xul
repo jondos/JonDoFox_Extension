@@ -12,10 +12,9 @@
   <!-- Add listener to set the label initially -->
   <script language="JavaScript">
     try {
-      window.addEventListener("load", initWindow, true);
       window.addEventListener("load", init, true);
     } catch(e) { 
-      log("Error while adding event listeners!");
+      log("!! Error while adding event listener to context menu: " + e);
     }
 
     // Init an event listener for the context menu
@@ -51,11 +50,12 @@
   <statusbar id="status-bar"> 
     <!-- Indicate status in the corner --> 
     <!-- FIXME: Positioning problem (insertbefore="statusbar-updates") -->
-    <statusbarpanel id="jondofox-proxy-status" position="6"
-        label=""
-        class="statusbarpanel-iconic-text"        
-        popup="jondofox-proxy-list"
-        context="jondofox-proxy-list" />
+    <statusbarpanel id="jondofox-proxy-status" 
+                    insertbefore="statusbar-updates"
+                    label=""
+                    class="statusbarpanel-iconic-text"        
+                    popup="jondofox-proxy-list"
+                    context="jondofox-proxy-list" />
     
     <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list"> 
