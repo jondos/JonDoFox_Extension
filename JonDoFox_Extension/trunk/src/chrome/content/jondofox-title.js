@@ -2,6 +2,7 @@
  * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
+ * This code adds a customized string to the title of every window
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,8 +17,6 @@ var mDebug = true;
 function log(msg) {
   if (mDebug) dump("JDFTitle :: " + msg + "\n");
 }
-
-log("TEST");
 
 ///////////////////////////////////////////////////////////////////////////////
 // Append a JonDoFox customized string to the window's title
@@ -40,8 +39,8 @@ var appName = appInfo.name;
 // Create an appendix for the title string
 const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
 
-// FIXME: This does not work on Macs
 // Set the title modifier
+// FIXME: This does not work on Macs
 function setTitleModifier() {
   log("Setting title modifier");
   try {

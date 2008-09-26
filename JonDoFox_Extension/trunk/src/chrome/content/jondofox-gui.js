@@ -2,8 +2,8 @@
  * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This code is available on a per window basis. Below are in fact methods for
- * controlling proxy behavior and setting the customized window title.
+ * This code is available on a per window basis. Below are in fact mainly 
+ * methods for controlling proxy behavior.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,35 +111,6 @@ function refreshStatusbar() {
   }
 }
 
-// Observe 'extensions.jondofox.proxy.state'
-var proxyStateObserver = {
-  // Implement nsIObserver
-  observe: function(subject, topic, data) {
-    switch (topic) {
-      case 'nsPref:changed':
-        // The proxy state has changed
-        //log(topic + " --> " + data);        
-        // If someone disables the proxy in FF ..
-        if (data == PROXY_PREF) {
-          if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
-                 prefsHandler.getStringPref(STATE_PREF) != 'none') {
-            log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
-            // .. set the state to 'none'
-            prefsHandler.setStringPref(STATE_PREF, 'none')
-          }
-        } else {
-          // STATE_PREF has changed, refresh the status
-          refreshStatusbar();
-        }
-        break;
-
-      default:
-        log("!! Unknown topic " + topic);
-        break;
-    }
-  }
-}
-
 // Open up the anontest in a new tab of the current window
 function openTabAnontest() {
   try {
@@ -185,34 +156,66 @@ function bypassProxy() {
   }
 }
 
+// Observe 'extensions.jondofox.proxy.state'
+var proxyStateObserver = {
+  // Implement nsIObserver
+  observe: function(subject, topic, data) {
+    switch (topic) {
+      case 'nsPref:changed':
+        // The proxy state has changed
+        //log(topic + " --> " + data);        
+        // If someone disables the proxy in FF ..
+        if (data == PROXY_PREF) {
+          if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
+                 prefsHandler.getStringPref(STATE_PREF) != 'none') {
+            log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
+            // .. set the state to 'none'
+            prefsHandler.setStringPref(STATE_PREF, 'none')
+          }
+        } else {
+          // STATE_PREF has changed, refresh the status
+          refreshStatusbar();
+        }
+        break;
+
+      default:
+        log("!! Unknown topic " + topic);
+        break;
+    }
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
-// This method is called on the 'load' event
+// The method initWindow() is called on the 'load' event
 ///////////////////////////////////////////////////////////////////////////////
 
-// The overlay observer belongs to the init process
+// This overlay observer belongs to the init process
 var overlayObserver = {
   // Implement nsIObserver
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'xul-overlay-merged':
         var uri = subject.QueryInterface(Components.interfaces.nsIURI);
-        log("uri.spec is " + uri.spec);
-        if (uri.spec == "chrome://jondofox/content/jondofox-overlay.xul") {
+        //log("uri.spec is " + uri.spec);
+        if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
+          
           // Overlay is ready, add observers for proxy preferences
           log("Overlay ready --> adding proxy state observers");
           prefsHandler.prefs.addObserver(STATE_PREF, proxyStateObserver, false);
           prefsHandler.prefs.addObserver(PROXY_PREF, proxyStateObserver, false); 
+          
           // Set the initial proxy state
           // TODO: Do this from within jondofox-manager.js?
           log("Setting initial proxy state ..");
           setProxy(prefsHandler.getStringPref(STATE_PREF), false);
+        
         } else {
-          log("Wrong subject!");
+          log("!! Wrong uri: " + uri.spec);
         }
         break;
 
       default:
-        log("!! Unknown topic " + topic);
+        log("!! Unknown topic: " + topic);
         break;
     }
   }
@@ -225,7 +228,7 @@ function initWindow() {
     // At first remove this listener again
     window.removeEventListener("load", initWindow, true);
     // Load the overlay
-    document.loadOverlay("chrome://jondofox/content/jondofox-overlay.xul", 
+    document.loadOverlay("chrome://jondofox/content/jondofox-gui.xul", 
                             overlayObserver);
   } catch (e) {
     log("initWindow(): " + e);

@@ -7,7 +7,7 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
   <!-- Include jondofox.js to the scope of the browser -->
-  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox.js" />
+  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
   
   <!-- Add listener to set the label initially -->
   <script language="JavaScript">
