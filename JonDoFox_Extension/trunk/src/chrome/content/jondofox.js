@@ -184,6 +184,27 @@ function editCustomProxy() {
     log("editCustomProxy(): " + e);
   }
 }
+  
+// XXX: Experimental method to bypass the proxy when performing a download
+function bypassProxy() {
+  log("Bypassing proxy");
+  try {
+    var nsIFilePicker = Components.interfaces.nsIFilePicker;
+    var fp = Components.classes['@mozilla.org/filepicker;1'].
+                           createInstance(nsIFilePicker);
+    fp.init(window, "Bypass Proxy and Save Target As...", 
+               nsIFilePicker.modeSave);
+    // Open the dialog and get the result
+    var result = fp.show();
+    if (result == nsIFilePicker.returnOK) {
+      var thefile = fp.file;
+      log("The file is " + thefile);
+      // TODO: Download the file while bypassing the proxy
+    }
+  } catch (e) {
+    log("bypassProxy(): " + e);
+  }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Append a JonDoFox customized string to the window's title
