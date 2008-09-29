@@ -145,7 +145,7 @@ function editCustomProxy() {
 }
   
 // FIXME: Unfinished method to bypass the proxy when performing a download
-function bypassProxy() {
+function bypassProxy(urlToFile) {
   log("Bypassing proxy");
   try {
     var nsIFilePicker = Components.interfaces.nsIFilePicker;
@@ -156,9 +156,16 @@ function bypassProxy() {
     // Open the dialog and get the result
     var result = fp.show();
     if (result == nsIFilePicker.returnOK) {
-      var thefile = fp.file;
-      log("The file is " + thefile);
+      var theFile = fp.file;
+      
+      log("The file is " + theFile);
+      log("popupNode is " + document.popupNode);
+
       // TODO: Download the file while bypassing the proxy
+      var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].
+                       createInstance(Components.interfaces.nsIWebBrowserPersist);
+      persist.saveURI(urlToFile, null, null, null, "", theFile);
+
     }
   } catch (e) {
     log("bypassProxy(): " + e);
