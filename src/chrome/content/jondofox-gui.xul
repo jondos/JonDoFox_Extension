@@ -53,7 +53,8 @@
     <menuitem id="bypass-proxy" 
               label="&jondofox.context.bypass;"
               oncommand="bypassProxy();"
-              insertafter="context-savelink" />
+              insertafter="context-savelink"
+              disabled="true" />
   </popup>
 
 </overlay>
