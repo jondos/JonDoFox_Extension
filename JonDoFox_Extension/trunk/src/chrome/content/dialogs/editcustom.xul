@@ -16,6 +16,12 @@
   <!-- Include javascript code -->
   <script type="application/x-javascript" src="chrome://jondofox/content/dialogs/editcustom.js"></script>
   
+  <!-- The label for this proxy -->
+  <hbox align="center" pack="left">
+    <label value="&jondofox.dialog.editcustom.label;:" />
+    <textbox id="custom-label" size="30" flex="0" />
+  </hbox>
+
   <groupbox>
     <radiogroup id="proxy-configuration-type" value="1" persist="value">
 

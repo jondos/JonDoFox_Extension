@@ -71,7 +71,8 @@
                 checked="false" 
                 oncommand="setProxy('none', true);" />
       <menuseparator />      
-      <menuitem label="&jondofox.statusbar.custom;" 
+      <menuitem id="custom-menuitem"
+                label="&jondofox.statusbar.custom;" 
                 type="checkbox" 
                 checked="false" 
                 oncommand="setProxy('custom')" />

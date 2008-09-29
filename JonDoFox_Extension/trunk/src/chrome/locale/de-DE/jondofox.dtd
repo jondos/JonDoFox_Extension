@@ -38,6 +38,7 @@
 
 <!-- Edit custom proxy dialog -->
 <!ENTITY jondofox.dialog.editcustom.title "Benutzerdefinierte Proxy-Konfiguration">
+<!ENTITY jondofox.dialog.editcustom.label "Bezeichner">
 <!ENTITY jondofox.dialog.editcustom.manual "Benutzerdefinierten Proxy von Hand konfigurieren">
 <!ENTITY jondofox.dialog.editcustom.auto "URL für automatische Proxy-Konfiguration">
 <!ENTITY jondofox.dialog.editcustom.example "Beispiel">

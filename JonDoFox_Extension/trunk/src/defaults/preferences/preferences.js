@@ -5,6 +5,7 @@ pref("extensions.jondofox.profile_version", "2.0.3");
 pref("extensions.jondofox.proxy.state", "jondo");
 
 // Custom proxy
+pref("extensions.jondofox.custom.label", "");
 pref("extensions.jondofox.custom.http_host", "");
 pref("extensions.jondofox.custom.http_port", 0);
 pref("extensions.jondofox.custom.ssl_host", "");

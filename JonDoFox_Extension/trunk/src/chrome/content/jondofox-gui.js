@@ -2,8 +2,8 @@
  * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This code is available on a per window basis. Below are in fact mainly 
- * methods for controlling proxy behavior.
+ * This code is available on a per window basis. Below are methods for 
+ * controlling the proxy behavior.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,9 +23,9 @@ function log(msg) {
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-// The proxy state preferences
-var STATE_PREF = 'extensions.jondofox.proxy.state';
+// Preferences that need to be observed
 var PROXY_PREF = 'network.proxy.type';
+var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
 
 // Get the preferences handler
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
@@ -56,17 +56,23 @@ function getLabel(state) {
   log("Determine proxy-status label");
   try {
     switch (state) {
-      case 'none':
+      case jdfManager.STATE_NONE:
         return jdfManager.getString('jondofox.statusbar.label.noproxy');
 
-      case 'jondo':
+      case jdfManager.STATE_JONDO:
         return jdfManager.getString('jondofox.statusbar.label.jondo');
 
-      case 'tor':
+      case jdfManager.STATE_TOR:
         return jdfManager.getString('jondofox.statusbar.label.tor');
 
-      case 'custom':
-        return jdfManager.getString('jondofox.statusbar.label.custom');
+      case jdfManager.STATE_CUSTOM:
+        // Return the custom set label if it's not empty
+        var l = prefsHandler.getStringPref('extensions.jondofox.custom.label');
+        if (l != "") {
+          return l;
+        } else {
+          return jdfManager.getString('jondofox.statusbar.label.custom');
+        }
 
       default:
         log("!! Unknown proxy state: " + state);        
@@ -83,10 +89,10 @@ function refreshStatusbar() {
   try {
     // Get statusbar, state and label
     var statusbar = document.getElementById('jondofox-proxy-status');
-    var state = prefsHandler.getStringPref(STATE_PREF);
+    var state = jdfManager.getState();
     var label = getLabel(state);
     // Set the color
-    if (state == 'none') {
+    if (state == jdfManager.STATE_NONE) {
       statusbar.style.color = "#F00";
     } else {
       statusbar.style.color = "#390";
@@ -94,9 +100,12 @@ function refreshStatusbar() {
     // Set the label to the statusbar
     statusbar.setAttribute('label', label);
 
-    // Handle the popup list
+    // Set the custom proxy label in the popup menu
+    document.getElementById('custom-menuitem').label = 
+                getLabel(jdfManager.STATE_CUSTOM);
+        
+    // Get the single checkbox elements  
     var proxyList = document.getElementById('jondofox-proxy-list');
-    // Get the single checkbox elements 
     var items = proxyList.getElementsByAttribute('type', 'checkbox');
     // Uncheck all but the selected one
     for (var i = 0; i < items.length; i++) {
@@ -167,13 +176,13 @@ var proxyStateObserver = {
         // If someone disables the proxy in FF ..
         if (data == PROXY_PREF) {
           if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
-                 prefsHandler.getStringPref(STATE_PREF) != 'none') {
+                 jdfManager.getState() != jdfManager.STATE_NONE) {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
             // .. set the state to 'none'
-            prefsHandler.setStringPref(STATE_PREF, 'none')
+            jdfManager.setState(jdfManager.STATE_NONE);
           }
         } else {
-          // STATE_PREF has changed, refresh the status
+          // STATE_PREF or CUSTOM_LABEL has changed, refresh the status
           refreshStatusbar();
         }
         break;
@@ -195,19 +204,23 @@ var overlayObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'xul-overlay-merged':
+        // subject implements nsIURI
         var uri = subject.QueryInterface(Components.interfaces.nsIURI);
         //log("uri.spec is " + uri.spec);
         if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
           
           // Overlay is ready, add observers for proxy preferences
           log("Overlay ready --> adding proxy state observers");
-          prefsHandler.prefs.addObserver(STATE_PREF, proxyStateObserver, false);
-          prefsHandler.prefs.addObserver(PROXY_PREF, proxyStateObserver, false); 
-          
+          prefsHandler.prefs.addObserver(jdfManager.STATE_PREF, 
+                                proxyStateObserver, false);
+          prefsHandler.prefs.addObserver(PROXY_PREF, 
+                                proxyStateObserver, false);
+          prefsHandler.prefs.addObserver(CUSTOM_LABEL,
+                                proxyStateObserver, false);
           // Set the initial proxy state
           // TODO: Do this from within jondofox-manager.js?
           log("Setting initial proxy state ..");
-          setProxy(prefsHandler.getStringPref(STATE_PREF), false);
+          setProxy(jdfManager.getState());
         
         } else {
           log("!! Wrong uri: " + uri.spec);
