@@ -9,47 +9,9 @@
   <!-- Include jondofox.js to the scope of the browser -->
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
   
-  <!-- Add listener to set the label initially -->
-  <script language="JavaScript">
-    try {
-      window.addEventListener("load", init, true);
-    } catch(e) { 
-      log("!! Error while adding event listener to context menu: " + e);
-    }
-
-    // Init an event listener for the context menu
-    function init() {
-      //log("Get the context menu");
-      try {
-        var contextMenu = document.getElementById("contentAreaContextMenu");
-        if (contextMenu) {
-          log("Adding event listener to context menu");
-          contextMenu.addEventListener("popupshowing", showMenuItem, false);
-        }
-      } catch(e) { 
-        log("init(): " + e);
-      }
-    }
-    
-    // Set the hidden attribute on bypass-proxy
-    function showMenuItem(event) {
-      //log("showMenuItem()");
-      try {
-        var bypass = document.getElementById("bypass-proxy");
-        if (bypass) {
-          bypass.hidden = !gContextMenu.onLink;
-          //bypass.disabled = true;
-        }
-      } catch (e) {
-        log("showMenuItem(): " + e);
-      }
-    }
-  </script>
-
   <!-- Statusbar -->
   <statusbar id="status-bar"> 
-    <!-- Indicate status in the corner --> 
-    <!-- FIXME: Positioning problem (insertbefore="statusbar-updates") -->
+    <!-- Indicate current status in the corner -->
     <statusbarpanel id="jondofox-proxy-status" 
                     insertbefore="statusbar-updates"
                     label=""
@@ -91,8 +53,7 @@
     <menuitem id="bypass-proxy" 
               label="&jondofox.context.bypass;"
               oncommand="bypassProxy();"
-              insertafter="context-savelink"
-              disabled="true" />
+              insertafter="context-savelink" />
   </popup>
 
 </overlay>

@@ -104,10 +104,10 @@ function refreshStatusbar() {
     document.getElementById('custom-menuitem').label = 
                 getLabel(jdfManager.STATE_CUSTOM);
         
-    // Get the single checkbox elements  
+    // Get the single checkbox elements and .. 
     var proxyList = document.getElementById('jondofox-proxy-list');
     var items = proxyList.getElementsByAttribute('type', 'checkbox');
-    // Uncheck all but the selected one
+    // .. uncheck all but the selected one
     for (var i = 0; i < items.length; i++) {
       if (items[i].getAttribute('label') == label) {
         items[i].setAttribute('checked', true);
