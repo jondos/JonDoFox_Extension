@@ -26,7 +26,7 @@ const CLASS_NAME = 'JonDoFox-Manager';
 const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
 // The proxy state preference
-const STATE_PREF = 'extensions.jondofox.proxy.state';
+//const STATE_PREF = 'extensions.jondofox.proxy.state';
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
@@ -35,6 +35,15 @@ const STATE_PREF = 'extensions.jondofox.proxy.state';
 // Singleton instance definition
 var JDFManager = {
   
+  // The proxy state preference
+  STATE_PREF: 'extensions.jondofox.proxy.state',
+
+  // Possible values of 'STATE_PREF'
+  STATE_NONE: 'none',  
+  STATE_JONDO: 'jondo',
+  STATE_TOR: 'tor',
+  STATE_CUSTOM: 'custom',
+
   // Clean up on uninstall or disable
   clean: false,
 
@@ -189,7 +198,7 @@ var JDFManager = {
         log("Deinstallation, deleting jondofox branch ..");
         this.prefsHandler.deleteBranch('extensions.jondofox');
       } else {
-        // On disable, only reset the state
+        // On disable, reset the state only
         this.prefsHandler.deletePreference('extensions.jondofox.proxy.state');
       }
     } catch (e) {
@@ -283,13 +292,31 @@ var JDFManager = {
     return count;
   },
   
-  // Proxy management /////////////////////////////////////////////////////////
+  // Proxy and state management ///////////////////////////////////////////////
 
-  // Set state to 'none' and disable proxy
+  // Set the value of 'this.STATE_PREF'  
+  setState: function(state) {
+    try {
+      this.prefsHandler.setStringPref(this.STATE_PREF, state);
+    } catch (e) {
+      log("setState(): " + e);
+    }  
+  },
+  
+  // Return the value of 'this.STATE_PREF'
+  getState: function() {
+    try {
+      return this.prefsHandler.getStringPref(this.STATE_PREF);
+    } catch (e) {
+      log("getState(): " + e);
+    }
+  },
+
+  // Set state to NONE and disable the proxy
   disableProxy: function() {
     try {
-      // Call disable on the proxy manager
-      this.prefsHandler.setStringPref(STATE_PREF, 'none');
+      // Set the state and call disable on the proxy manager
+      this.setState(this.STATE_NONE);
       this.proxyManager.disableProxy();
     } catch (e) {
       log("disableProxy(): " + e);
@@ -302,8 +329,8 @@ var JDFManager = {
     log("Setting proxy state to '" + state + "'");
     try {
       // Store the previous state to detect state changes
-      var previousState = this.prefsHandler.getStringPref(STATE_PREF);
-      if (state == 'none') {
+      var previousState = this.getState();
+      if (state == this.STATE_NONE) {
         if (conf) {
           // Request user confirmation
           var value = this.showConfirm(
@@ -324,7 +351,7 @@ var JDFManager = {
       } else {
         // State is not 'none'
         switch (state) {
-          case 'jondo':
+          case this.STATE_JONDO:
             // Set proxies for all protocols but SOCKS
             this.proxyManager.setProxyAll('127.0.0.1', 4001);
             this.proxyManager.setProxySOCKS('', 0, 5);
@@ -332,7 +359,7 @@ var JDFManager = {
             this.proxyManager.setExceptions('127.0.0.1, localhost');
             break; 
  
-          case 'tor':
+          case this.STATE_TOR:
             // Set SOCKS proxy only
             this.proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
             this.proxyManager.setSocksRemoteDNS(true);
@@ -341,7 +368,7 @@ var JDFManager = {
             this.proxyManager.setExceptions('127.0.0.1, localhost');
             break;
 
-          case 'custom':
+          case this.STATE_CUSTOM:
             // Get custom prefs ..
             var prefix = "extensions.jondofox.custom.";
             this.proxyManager.setProxyHTTP(
@@ -366,10 +393,10 @@ var JDFManager = {
 
           default:
             log("!! Unknown proxy state: " + state);
-            return;
+            return false;
         }
         // Set the state first and then enable
-        this.prefsHandler.setStringPref(STATE_PREF, state);
+        this.setState(state);
         this.proxyManager.enableProxy();
       }
       // Return true if the state changed, false otherwise

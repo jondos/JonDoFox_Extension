@@ -2,6 +2,10 @@
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                                  getService().wrappedJSObject;
 
+// Set the prefs handler, it will be needed
+var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+                                 getService().wrappedJSObject;
+
 // Prefix for custom proxy settings
 var prefix = "extensions.jondofox.custom.";
 
@@ -13,7 +17,15 @@ function log(msg) {
 // Load values into the dialog's elements
 function onLoad() {
   log("Init dialog, loading values ..");
-  try {        
+  try {       
+    // Get the label of the custom proxy
+    var label = prefsHandler.getStringPref(prefix + 'label');    
+    if (label == "") {
+      // If label is empty, get the default label ..
+      label = jdfManager.getString('jondofox.statusbar.label.custom');
+    }
+    // Set the label to the textfield
+    document.getElementById('custom-label').value = label;
     // Get host and port settings for different protocols
     document.getElementById('http_host').value = 
                 prefsHandler.getStringPref(prefix + 'http_host');
@@ -56,6 +68,9 @@ function onLoad() {
 function storeValues() {
   log("Store values"); 
   try {
+    // Set the label
+    prefsHandler.setStringPref(prefix + 'label',
+                    document.getElementById('custom-label').value);
     // Set single proxies
     prefsHandler.setStringPref(prefix + 'http_host', 
                     document.getElementById('http_host').value);
@@ -120,10 +135,7 @@ function onApply() {
 // Set the proxy state to 'custom'
 function enable() {
   try {
-    // Get the JDFManager ..
-    var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
-                                   getService().wrappedJSObject;
-    // .. and enable custom proxy from there
+    // Enable the custom proxy from jdfManager
     jdfManager.setProxy('custom');
   } catch (e) {
     log("enable(): " + e);

@@ -2,7 +2,7 @@
  * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This code adds a customized string to the title of every window
+ * This code adds a customized string to the window title
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,16 +40,16 @@ var appName = appInfo.name;
 const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
 
 // Set the title modifier
-// FIXME: This does not work on Macs
+// FIXME: This does not work on Macs?
 function setTitleModifier() {
-  log("Setting title modifier");
+  //log("Setting title modifier");
   try {
     // Set the 'titlemodifier' attribute in the current document
     var modAtt = document.documentElement.getAttribute("titlemodifier");
     if (modAtt) {
       document.documentElement.setAttribute("titlemodifier", titleString);
     }
-    // This throws an exception if this.docShell is not set
+    // This throws an exception if 'docShell' is not set
     if (this.docShell) {
       //log("'this.docShell' is not null");
       document.getElementById("content").updateTitlebar();
