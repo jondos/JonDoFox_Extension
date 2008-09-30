@@ -25,9 +25,6 @@ const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
 const CLASS_NAME = 'JonDoFox-Manager'; 
 const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
-// The proxy state preference
-//const STATE_PREF = 'extensions.jondofox.proxy.state';
-
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,6 +34,7 @@ var JDFManager = {
   
   // The proxy state preference
   STATE_PREF: 'extensions.jondofox.proxy.state',
+  NO_PROXIES: 'extensions.jondofox.proxy.no_proxies_on',
 
   // Possible values of the 'STATE_PREF'
   STATE_NONE: 'none',  
@@ -260,7 +258,7 @@ var JDFManager = {
 
   // Return a properties string
   getString: function(name) {
-    log("Getting localized string: '" + name + "'");
+    //log("Getting localized string: '" + name + "'");
     try {
       return this.stringBundle.GetStringFromName(name);
     } catch (e) {
@@ -341,7 +339,8 @@ var JDFManager = {
             this.proxyManager.setProxyAll('127.0.0.1', 4001);
             this.proxyManager.setProxySOCKS('', 0, 5);
             // Set default exceptions
-            this.proxyManager.setExceptions('127.0.0.1, localhost');
+            this.proxyManager.setExceptions(this.prefsHandler.
+                                 getStringPref(this.NO_PROXIES));
             break; 
  
           case this.STATE_TOR:
@@ -350,7 +349,8 @@ var JDFManager = {
             this.proxyManager.setSocksRemoteDNS(true);
             this.proxyManager.setProxyAll('', 0);
             // Set default exceptions
-            this.proxyManager.setExceptions('127.0.0.1, localhost');
+            this.proxyManager.setExceptions(this.prefsHandler.
+                                 getStringPref(this.NO_PROXIES));
             break;
 
           case this.STATE_CUSTOM:
