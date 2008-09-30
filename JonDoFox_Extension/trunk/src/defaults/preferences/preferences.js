@@ -1,8 +1,9 @@
 // General prefs
 pref("extensions.jondofox.profile_version", "2.0.3");
 
-// Proxy state
+// Proxy state and default no proxy list
 pref("extensions.jondofox.proxy.state", "jondo");
+pref("extensions.jondofox.proxy.no_proxies_on", "localhost, 127.0.0.1");
 
 // Custom proxy
 pref("extensions.jondofox.custom.label", "");

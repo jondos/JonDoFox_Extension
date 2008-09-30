@@ -14,7 +14,7 @@
 var mDebug = true;
 
 // Send data to the console if we're in debug mode
-// Don't forget to create 'browser.dom.window.dump.enabled' first!
+// Create 'browser.dom.window.dump.enabled' first!
 function log(msg) {
   if (mDebug) dump("JonDoFox :: " + msg + "\n");
 }
@@ -127,8 +127,8 @@ function refreshStatusbar() {
     statusbar.setAttribute('label', label);
 
     // Set the custom proxy label in the popup menu
-    document.getElementById('custom-radio').label = 
-                getLabel(jdfManager.STATE_CUSTOM);
+    document.getElementById('custom-radio').label = getLabel(jdfManager.
+                                                       STATE_CUSTOM);
         
     // Get the radiogroup element and set 'selectedItem'
     var radiogroupElement = document.getElementById("jondofox-radiogroup");
@@ -169,6 +169,16 @@ function editCustomProxy() {
 ///////////////////////////////////////////////////////////////////////////////
 // This code shall be used to enable bypassing the proxy for certain URIs
 ///////////////////////////////////////////////////////////////////////////////
+
+// Add the currently selected link to the no proxy list
+// FIXME: Not working for complete URLs
+function addException(link) {
+  try {
+    jdfManager.proxyManager.addException(link);
+  } catch (e) {
+    log("addException() :" + e);
+  }
+}
 
 // XXX: Create a filter for the URL of the selected file?
 function bypassProxyNew() {
