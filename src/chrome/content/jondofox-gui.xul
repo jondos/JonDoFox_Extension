@@ -56,8 +56,7 @@
     <menuitem id="bypass-proxy" 
               label="&jondofox.context.bypass;"
               oncommand="addException(document.popupNode);"
-              insertafter="context-savelink" 
-              disabled="true" />
+              insertafter="context-savelink" />
   </popup>
 
 </overlay>

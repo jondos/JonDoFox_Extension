@@ -171,24 +171,11 @@ function editCustomProxy() {
 ///////////////////////////////////////////////////////////////////////////////
 
 // Add the currently selected link to the no proxy list
-// FIXME: Not working for complete URLs
-function addException(link) {
+function addException(uri) {
   try {
-    jdfManager.proxyManager.addException(link);
+    jdfManager.noProxyListAdd(uri);
   } catch (e) {
     log("addException() :" + e);
-  }
-}
-
-// XXX: Create a filter for the URL of the selected file?
-function bypassProxyNew() {
-  try {
-    // Get the proxy service
-    proxyService = Components.classes['@mozilla.org//network/protocol-proxy-service;1'].
-                      getService(Components.interfaces.nsIProtocolProxyService);
-    proxyService.newProxyInfo("direct", "", -1, 0, 0, null);
-  } catch (e) {
-    log("bypassProxy(): " + e);
   }
 }
 
