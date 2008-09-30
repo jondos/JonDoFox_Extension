@@ -25,6 +25,9 @@ const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
 const CLASS_NAME = 'JonDoFox-Manager'; 
 const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
+const CC = Components.classes;
+const CI = Components.interfaces;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,35 +88,66 @@ var JDFManager = {
   init: function() {
     log("Init services");
     try {
-      this.prefsHandler = 
-              Components.classes['@jondos.de/preferences-handler;1'].
+      this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
+                             getService().wrappedJSObject;
+      this.prefsMapper = CC['@jondos.de/preferences-mapper;1'].
                             getService().wrappedJSObject;
-      this.prefsMapper = 
-              Components.classes['@jondos.de/preferences-mapper;1'].
-                            getService().wrappedJSObject;
-      this.proxyManager = 
-              Components.classes['@jondos.de/proxy-manager;1'].
-                            getService().wrappedJSObject;
-      this.promptService = 
-              Components.classes['@mozilla.org/embedcomp/prompt-service;1'].
-                            getService(Components.interfaces.nsIPromptService);
-      var bundleService = 
-             Components.classes['@mozilla.org/intl/stringbundle;1'].
-                getService(Components.interfaces.nsIStringBundleService);
+      this.proxyManager = CC['@jondos.de/proxy-manager;1'].
+                             getService().wrappedJSObject;
+      this.promptService = CC['@mozilla.org/embedcomp/prompt-service;1'].
+                              getService(CI.nsIPromptService);
+      var bundleService = CC['@mozilla.org/intl/stringbundle;1'].
+                             getService(CI.nsIStringBundleService);
 
       this.stringBundle = bundleService.createBundle(
                              'chrome://jondofox/locale/jondofox.properties');
+
+      // Register the proxy filter
+      this.registerProxyFilter();
     } catch (e) {
       log('init(): ' + e);
     }
   },
-  
+
+  // Implement nsIProtocolProxyFilter for being able to bypass 
+  // proxies for certain URIs
+  applyFilter: function(ps, uri, proxy) {
+    //log("Applying proxy filter for URI: " + uri.spec);
+    try {
+      //log("Proxy is " + proxy.host + ":" + proxy.port);
+      // Lookup the no proxy list
+      if (this.noProxyListContains(uri.spec)) {
+        log("URI is on the list --> No proxy for " + uri.spec);
+        // No proxy
+        return null;
+      } else {
+        return proxy;
+      }
+    } catch (e) {
+      log("applyFilter(): " );
+    }
+  },
+
+  // Register a proxy filter
+  registerProxyFilter: function() {
+    log("Registering proxy filter ..");
+    try {
+      // Get the proxy service
+      proxyService = CC['@mozilla.org/network/protocol-proxy-service;1'].
+                        getService(CI.nsIProtocolProxyService);
+      proxyService.registerFilter(this, 0);
+      //proxyService.newProxyInfo("direct", "", -1, 0, 0, null);
+    } catch (e) {
+      log("registerProxyFilter(): " + e);
+    }
+  },
+ 
   // Try to uninstall other extensions
   checkExtensions: function() {
     try {
       // Get the extensions manager
-      var em = Components.classes['@mozilla.org/extensions/manager;1'].
-                  getService(Components.interfaces.nsIExtensionManager);
+      var em = CC['@mozilla.org/extensions/manager;1'].
+                  getService(CI.nsIExtensionManager);
       // Iterate
       for (e in this.extensions) {
         log('Checking for ' + e);
@@ -154,7 +188,7 @@ var JDFManager = {
 
       // Add an observer to the main pref branch after setting the prefs
       var prefs = this.prefsHandler.prefs;
-      prefs.QueryInterface(Components.interfaces.nsIPrefBranch2);
+      prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
 
@@ -208,8 +242,8 @@ var JDFManager = {
   registerObservers: function() {
     log("Register observers");
     try {
-      var observers = Components.classes["@mozilla.org/observer-service;1"].
-                        getService(Components.interfaces.nsIObserverService);
+      var observers = CC["@mozilla.org/observer-service;1"].
+                         getService(CI.nsIObserverService);
       // Add general observers
       observers.addObserver(this, "final-ui-startup", false);
       observers.addObserver(this, "em-action-requested", false);
@@ -224,8 +258,8 @@ var JDFManager = {
   unregisterObservers: function() {
     log("Unregister observers");
     try {
-      var observers = Components.classes["@mozilla.org/observer-service;1"].
-                         getService(Components.interfaces.nsIObserverService);
+      var observers = CC["@mozilla.org/observer-service;1"].
+                         getService(CI.nsIObserverService);
       // Remove general observers
       observers.removeObserver(this, "final-ui-startup");
       observers.removeObserver(this, "em-action-requested");
@@ -279,8 +313,8 @@ var JDFManager = {
 
   // Return the current number of browser windows (not used at the moment)
   getWindowCount: function() {
-    var ww = Components.classes["@mozilla.org/embedcomp/window-watcher;1"].
-                getService(Components.interfaces.nsIWindowWatcher);  
+    var ww = CC["@mozilla.org/embedcomp/window-watcher;1"].
+                getService(CI.nsIWindowWatcher);  
     var window_enum = ww.getWindowEnumerator();
     var count = 0;
     while (window_enum.hasMoreElements()) {
@@ -290,6 +324,49 @@ var JDFManager = {
     return count;
   },
   
+  // No proxy list implementation /////////////////////////////////////////////
+
+  // A list of URIs
+  noProxyList: ["https://www.jondos.de/files/downloads/JAP.jar"],
+
+  // Check if 'uri' is on the list
+  noProxyListContains: function(uri) {
+    //log("Lookup URI: " + uri);
+    try {
+      if (uri in this.convert(this.noProxyList)) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      log("noProxyListContains(): " + e);
+    }
+  },
+ 
+  // XXX: Rather use RegExp?
+  // Enable value lookup by converting array to hashmap
+  convert: function(a) {
+    var o = {};
+    for(var i=0; i<a.length; i++) {
+      o[a[i]]='';
+    }
+    return o;
+  },
+
+  // Add an element to the list
+  noProxyListAdd: function(uri) {
+    log("No proxy list adding " + uri);
+    try {
+      this.noProxyList.push(uri);
+    } catch (e) {
+      log("noProxyListAdd(): " + e);
+    }
+  },
+
+  noProxyListRemove: function(uri) {
+    // TODO: Implement this
+  },
+
   // Proxy and state management ///////////////////////////////////////////////
 
   // Set the value of the 'STATE_PREF'  
@@ -425,7 +502,7 @@ var JDFManager = {
 
         case 'em-action-requested':
           // Filter on the item ID here to detect deinstallation etc.
-          subject.QueryInterface(Components.interfaces.nsIUpdateItem);
+          subject.QueryInterface(CI.nsIUpdateItem);
           if (subject.id == "{437be45a-4114-11dd-b9ab-71d256d89593}") {
             log("Got topic --> " + topic + ", data --> " + data);
             if (data == "item-uninstalled" || data == "item-disabled") {
@@ -498,8 +575,8 @@ var JDFManager = {
   
   // Implement nsISupports
   QueryInterface: function(iid) {
-    if (!iid.equals(Components.interfaces.nsISupports) &&
-        !iid.equals(Components.interfaces.nsIObserver))
+    if (!iid.equals(CI.nsISupports) &&
+        !iid.equals(CI.nsIObserver))
       throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
@@ -514,28 +591,28 @@ var JDFManagerModule = {
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
-    compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+    compMgr.QueryInterface(CI.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                fileSpec, location, type);
-    var catMan = Components.classes["@mozilla.org/categorymanager;1"].
-                    getService(Components.interfaces.nsICategoryManager);
+    var catMan = CC["@mozilla.org/categorymanager;1"].
+                    getService(CI.nsICategoryManager);
     catMan.addCategoryEntry("app-startup", "JDFManager", CONTRACT_ID, true, 
               true);
   },
 
   unregisterSelf: function(compMgr, fileSpec, location) {
     log("Unregistering '" + CLASS_NAME + "' ..");
-    compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+    compMgr.QueryInterface(CI.nsIComponentRegistrar);
     compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
-    var catMan = Components.classes["@mozilla.org/categorymanager;1"].
-                    getService(Components.interfaces.nsICategoryManager);
+    var catMan = CC["@mozilla.org/categorymanager;1"].
+                    getService(CI.nsICategoryManager);
     catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);
   },
 
   getClassObject: function(compMgr, cid, iid) {
     if (!cid.equals(CLASS_ID))
       throw Components.results.NS_ERROR_FACTORY_NOT_REGISTERED;
-    if (!iid.equals(Components.interfaces.nsIFactory))
+    if (!iid.equals(CI.nsIFactory))
       throw Components.results.NS_ERROR_NO_INTERFACE;
     return this.classFactory;
   },

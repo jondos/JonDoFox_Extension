@@ -132,7 +132,7 @@ ProxyManager.prototype = {
   },
 
   // Add a domain element to the no proxy list
-  // XXX: Not used
+  // XXX: Not needed?
   addException: function(domain) {
     log("Adding to no proxy list: " + domain);
     try {
