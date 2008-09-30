@@ -20,7 +20,9 @@
                     context="jondofox-proxy-list" />
     
     <!-- Include a popup menu -->
-    <menupopup id="jondofox-proxy-list"> 
+    <menupopup id="jondofox-proxy-list">
+
+      <!-- Anontest and configuration items -->
       <menuitem label="Anontest" 
                 image="chrome://jondofox/skin/anontest.png" 
                 oncommand="openTabAnontest();" />
@@ -28,33 +30,33 @@
                 image="chrome://jondofox/skin/editcustom.png" 
                 oncommand="editCustomProxy();" />
       <menuseparator />
-      <menuitem label="&jondofox.statusbar.noProxy;" 
-                type="checkbox" 
-                checked="false" 
-                oncommand="setProxy('none', true);" />
+
+      <!-- Use a radiogroup for the proxy list -->
+      <radiogroup id="jondofox-radiogroup">
+      <radio id="none-radio"
+             label="&jondofox.statusbar.noProxy;"
+             oncommand="setProxyNone();" />
       <menuseparator />      
-      <menuitem id="custom-menuitem"
-                label="&jondofox.statusbar.custom;" 
-                type="checkbox" 
-                checked="false" 
-                oncommand="setProxy('custom')" />
-      <menuitem label="Tor" 
-                type="checkbox" 
-                checked="false" 
-                oncommand="setProxy('tor');" />
-      <menuitem label="JonDo" 
-                type="checkbox" 
-                checked="false" 
-                oncommand="setProxy('jondo');" />
+      <radio id="custom-radio"
+             label="&jondofox.statusbar.custom;"
+             oncommand="setProxy('custom');" />
+      <radio id="tor-radio"
+             label="Tor"
+             oncommand="setProxy('tor');" />
+      <radio id="jondo-radio"
+             label="JonDo"
+             oncommand="setProxy('jondo');" />
+      </radiogroup>
+
     </menupopup>
   </statusbar>
 
+  <!-- Context menu entry to bypass proxy -->
   <popup id="contentAreaContextMenu">
     <menuitem id="bypass-proxy" 
               label="&jondofox.context.bypass;"
               oncommand="bypassProxy();"
-              insertafter="context-savelink"
-              disabled="true" />
+              insertafter="context-savelink" />
   </popup>
 
 </overlay>

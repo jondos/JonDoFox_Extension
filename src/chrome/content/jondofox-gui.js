@@ -23,10 +23,6 @@ function log(msg) {
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-// Preferences that need to be observed
-var PROXY_PREF = 'network.proxy.type';
-var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
-
 // Get the preferences handler
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                                  getService().wrappedJSObject;
@@ -35,25 +31,55 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
+// Preferences that need to be observed
+var STATE_PREF = jdfManager.STATE_PREF
+var PROXY_PREF = 'network.proxy.type';
+var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
+
 // Only set 'conf' to true if the user should need to confirm when 
 // disabling the proxy (in combination with state = 'none')
-function setProxy(state, conf) {
+function setProxy(state) {
   log("Setting proxy state to '" + state + "'");
   try {
     // Call the underlying method in JDFManager
-    if (!jdfManager.setProxy(state, conf)) {
+    if (!jdfManager.setProxy(state)) {
       // If the state didn't change, call refreshStatusbar() by hand
       log("NOT a state change, calling refreshStatusbar() ..");
       refreshStatusbar();
     }
   } catch (e) {
     log("setProxy(): " + e);
+  } finally {
+    // Hide the 'menupopup'
+    document.getElementById('jondofox-proxy-list').hidePopup();
+  }
+}
+
+// Disable the proxy, but ask the user for confirmation first
+function setProxyNone() {
+  log("Asking for confirmation ..");
+  try {
+    // Hide 'menupopup'
+    document.getElementById('jondofox-proxy-list').hidePopup();
+    // Request user confirmation
+    var disable = jdfManager.showConfirm(
+                     jdfManager.getString('jondofox.dialog.attention'),
+                     jdfManager.getString('jondofox.dialog.message.proxyoff'));
+    if (disable) {
+      // Call the method above
+      setProxy(jdfManager.STATE_NONE);
+    } else {
+      // Refresh the statusbar
+      refreshStatusbar();
+    }
+  } catch (e) {
+    log("setProxyNone(): " + e);
   }
 }
 
 // Map the current proxy status to a (localized) string label
 function getLabel(state) {
-  log("Determine proxy-status label");
+  log("Determine proxy status label for " + state);
   try {
     switch (state) {
       case jdfManager.STATE_NONE:
@@ -101,24 +127,20 @@ function refreshStatusbar() {
     statusbar.setAttribute('label', label);
 
     // Set the custom proxy label in the popup menu
-    document.getElementById('custom-menuitem').label = 
+    document.getElementById('custom-radio').label = 
                 getLabel(jdfManager.STATE_CUSTOM);
         
-    // Get the single checkbox elements and .. 
-    var proxyList = document.getElementById('jondofox-proxy-list');
-    var items = proxyList.getElementsByAttribute('type', 'checkbox');
-    // .. uncheck all but the selected one
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].getAttribute('label') == label) {
-        items[i].setAttribute('checked', true);
-      } else {
-        items[i].setAttribute('checked', false);
-      }
-    }
+    // Get the radiogroup element and set 'selectedItem'
+    var radiogroupElement = document.getElementById("jondofox-radiogroup");
+    radiogroupElement.selectedItem = document.getElementById(state + "-radio");
   } catch (e) {
     log("refreshStatusbar(): " + e);
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Utility functions
+///////////////////////////////////////////////////////////////////////////////
 
 // Open up the anontest in a new tab of the current window
 function openTabAnontest() {
@@ -143,11 +165,28 @@ function editCustomProxy() {
     log("editCustomProxy(): " + e);
   }
 }
-  
+
+///////////////////////////////////////////////////////////////////////////////
+// This code shall be used to enable bypassing the proxy for certain URIs
+///////////////////////////////////////////////////////////////////////////////
+
+// XXX: Create a filter for the URL of the selected file?
+function bypassProxyNew() {
+  try {
+    // Get the proxy service
+    proxyService = Components.classes['@mozilla.org//network/protocol-proxy-service;1'].
+                      getService(Components.interfaces.nsIProtocolProxyService);
+    proxyService.newProxyInfo("direct", "", -1, 0, 0, null);
+  } catch (e) {
+    log("bypassProxy(): " + e);
+  }
+}
+
 // FIXME: Unfinished method to bypass the proxy when performing a download
 function bypassProxy() {
   log("Bypassing proxy");
   try {
+    // Create a FilePicker
     var nsIFilePicker = Components.interfaces.nsIFilePicker;
     var fp = Components.classes['@mozilla.org/filepicker;1'].
                            createInstance(nsIFilePicker);
@@ -156,33 +195,79 @@ function bypassProxy() {
     // Open the dialog and get the result
     var result = fp.show();
     if (result == nsIFilePicker.returnOK) {
+      // Get the file object from the FilePicker
       var theFile = fp.file;
       
       log("The file is " + theFile);
       log("popupNode is " + document.popupNode);
-      var objURI = Components.classes["@mozilla.org/network/io-service;1"].
-                      getService(Components.interfaces.nsIIOService).newURI(
-                         document.popupNode, null, null);
+      
+      // Get the IOService
+      var ios = Components.classes["@mozilla.org/network/io-service;1"].
+                      getService(Components.interfaces.nsIIOService);      
+      
+      // Create URI object from popupNode
+      var objURI = ios.newURI(document.popupNode, null, null);
+      // Create file URI for destination
+      var fileURI = ios.newFileURI(theFile);
 
-      // TODO: Download the file while bypassing the proxy
+      // Setup MIME type
+      var msrv = Components.classes["@mozilla.org/mime;1"].
+                    getService(Components.interfaces.nsIMIMEService);
+      var type = msrv.getTypeFromURI(objURI);
+      var mime = msrv.getFromTypeAndExtension(type, "");
+
+      // Download the file while bypassing the proxy
       var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].
                        createInstance(Components.interfaces.nsIWebBrowserPersist);
-      // Call addDownload()
+      
+      //persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES |
+      //   nsIWBP.PERSIST_FLAGS_BYPASS_CACHE |
+      //   nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
+
+      // The download manager
+      var dm = Components.classes["@mozilla.org/download-manager;1"].
+                  createInstance(Components.interfaces.nsIDownloadManager);
+
+      // Get the current proxy state
+      //var state = jdfManager.prefsHandler.getIntPref(PROXY_PREF);
+      // Disable the proxy if necessary
+      //if (state != 0) {
+        //jdfManager.prefsHandler.setIntPref(PROXY_PREF, 0);
+      //}  
+      
+      var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, objURI, fileURI, objURI.spec, mime, Math.round(Date.now()*1000), null, persist);
+    
       // Set the progressListener to the returned download object
+      persist.progressListener = dl.QueryInterface(Components.interfaces.nsIWebProgressListener);
       persist.saveURI(objURI, null, null, null, "", theFile);
+
+      // Show the download manager
+      var dm_ui = Components.classes["@mozilla.org/download-manager-ui;1"].
+                     createInstance(Components.interfaces.nsIDownloadManagerUI);
+      dm_ui.show(window, dl.id, Components.interfaces.nsIDownloadManagerUI.REASON_NEW_DOWNLOAD);
+
+      log("File saved!?");
+      
+      // Restore previous state
+      //if (state != 0) {
+      //  jdfManager.prefsHandler.setIntPref(PROXY_PREF, state);
+      //}
     }
   } catch (e) {
     log("bypassProxy(): " + e);
   }
 }
 
-// Observe 'extensions.jondofox.proxy.state'
-var proxyStateObserver = {
+///////////////////////////////////////////////////////////////////////////////
+// The method 'initWindow()' is called on the 'load' event + observers
+///////////////////////////////////////////////////////////////////////////////
+
+// Observer for different preferences
+var prefsObserver = {
   // Implement nsIObserver
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'nsPref:changed':
-        // The proxy state has changed
         //log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
         if (data == PROXY_PREF) {
@@ -193,7 +278,7 @@ var proxyStateObserver = {
             jdfManager.setState(jdfManager.STATE_NONE);
           }
         } else {
-          // STATE_PREF or CUSTOM_LABEL has changed, refresh the status
+          // STATE_PREF or CUSTOM_LABEL has changed, just refresh the status
           refreshStatusbar();
         }
         break;
@@ -204,10 +289,6 @@ var proxyStateObserver = {
     }
   }
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// The method initWindow() is called on the 'load' event
-///////////////////////////////////////////////////////////////////////////////
 
 // This overlay observer belongs to the init process
 var overlayObserver = {
@@ -220,16 +301,14 @@ var overlayObserver = {
         //log("uri.spec is " + uri.spec);
         if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
           
-          // Overlay is ready, add observers for proxy preferences
-          log("Overlay ready --> adding proxy state observers");
-          prefsHandler.prefs.addObserver(jdfManager.STATE_PREF, 
-                                proxyStateObserver, false);
-          prefsHandler.prefs.addObserver(PROXY_PREF, 
-                                proxyStateObserver, false);
-          prefsHandler.prefs.addObserver(CUSTOM_LABEL,
-                                proxyStateObserver, false);
+          // Overlay is ready, add observers for preferences
+          log("Overlay ready --> adding preferences observers");
+          prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
+          prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
+          prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
+          
           // Set the initial proxy state
-          // TODO: Do this from within jondofox-manager.js?
+          // XXX: Rather do this from within jondofox-manager.js?
           log("Setting initial proxy state ..");
           setProxy(jdfManager.getState());
         
