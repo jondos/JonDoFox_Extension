@@ -38,7 +38,7 @@ var JDFManager = {
   // The proxy state preference
   STATE_PREF: 'extensions.jondofox.proxy.state',
 
-  // Possible values of 'STATE_PREF'
+  // Possible values of the 'STATE_PREF'
   STATE_NONE: 'none',  
   STATE_JONDO: 'jondo',
   STATE_TOR: 'tor',
@@ -74,7 +74,7 @@ var JDFManager = {
        'intl.accept_charsets':'extensions.jondofox.accept_charsets',
        'network.http.accept.default':'extensions.jondofox.accept_default' },
 
-  // Different services
+  // Different needed services
   prefsHandler: null,
   prefsMapper: null,
   proxyManager: null,
@@ -148,7 +148,7 @@ var JDFManager = {
       // Check for incompatible extensions
       this.checkExtensions();
 
-      // TODO: Init referrer-forgery from here?
+      // TODO: Init the 'HttpObserver' from here?
 
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
@@ -294,7 +294,7 @@ var JDFManager = {
   
   // Proxy and state management ///////////////////////////////////////////////
 
-  // Set the value of 'this.STATE_PREF'  
+  // Set the value of the 'STATE_PREF'  
   setState: function(state) {
     try {
       this.prefsHandler.setStringPref(this.STATE_PREF, state);
@@ -303,7 +303,7 @@ var JDFManager = {
     }  
   },
   
-  // Return the value of 'this.STATE_PREF'
+  // Return the value of the 'STATE_PREF'
   getState: function() {
     try {
       return this.prefsHandler.getStringPref(this.STATE_PREF);
@@ -325,31 +325,16 @@ var JDFManager = {
 
   // Set the JonDoFox-extension into a certain proxy state
   // Return true if the state has changed, false otherwise
-  setProxy: function(state, conf) {
+  setProxy: function(state) {
     log("Setting proxy state to '" + state + "'");
     try {
       // Store the previous state to detect state changes
       var previousState = this.getState();
+      // STATE_NONE --> straight disable
       if (state == this.STATE_NONE) {
-        if (conf) {
-          // Request user confirmation
-          var value = this.showConfirm(
-                           this.getString('jondofox.dialog.attention'),
-                           this.getString('jondofox.dialog.message.proxyoff'));
-          if (value) {
-            // Disable the proxy
-            this.disableProxy();
-          } else {
-            // New state is previous state?
-            log("Resetting state to " + previousState);
-            state = previousState;
-          }
-        } else {
-          // 'conf' is false, straight disable
-          this.disableProxy();
-        }
+        this.disableProxy();
       } else {
-        // State is not 'none'
+        // State is not 'STATE_NONE' --> enable
         switch (state) {
           case this.STATE_JONDO:
             // Set proxies for all protocols but SOCKS
@@ -399,7 +384,7 @@ var JDFManager = {
         this.setState(state);
         this.proxyManager.enableProxy();
       }
-      // Return true if the state changed, false otherwise
+      // Return true if the state has changed, false otherwise
       if (previousState == state) {
         return false;
       } else {
