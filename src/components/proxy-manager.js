@@ -25,7 +25,10 @@ const CLASS_ID = Components.ID('{44b042a6-5e0b-4d62-b8ce-df7fc36eb8b6}');
 const CLASS_NAME = 'Proxy-Manager'; 
 const CONTRACT_ID = '@jondos.de/proxy-manager;1';
 
-const nsISupports = Components.interfaces.nsISupports;
+const CC = Components.classes;
+const CI = Components.interfaces;
+const CR = Components.results;
+const nsISupports = CI.nsISupports;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -34,7 +37,7 @@ const nsISupports = Components.interfaces.nsISupports;
 // Class constructor
 function ProxyManager() {
   // Init the prefsHandler  
-  this.ph = Components.classes['@jondos.de/preferences-handler;1'].
+  this.ph = CC['@jondos.de/preferences-handler;1'].
                           getService().wrappedJSObject; 
   // Set wrappedJSObject
   this.wrappedJSObject = this;
@@ -179,7 +182,7 @@ ProxyManager.prototype = {
   // Implement nsISupports
   QueryInterface: function(aIID) {
     if (!aIID.equals(nsISupports))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw CR.NS_ERROR_NO_INTERFACE;
     return this;
   }
 };
@@ -193,9 +196,9 @@ var ProxyManagerInstance = null;
 var ProxyManagerFactory = {
   createInstance: function (aOuter, aIID) {    
     if (aOuter != null)
-      throw Components.results.NS_ERROR_NO_AGGREGATION;
+      throw CR.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw CR.NS_ERROR_NO_INTERFACE;
     // Singleton
     if (ProxyManagerInstance == null)
       log("Creating instance");
@@ -211,25 +214,23 @@ var ProxyManagerFactory = {
 var ProxyManagerModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
     log("Registering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
-                           nsIComponentRegistrar);
+    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
     aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                 aFileSpec, aLocation, aType);
   },
 
   unregisterSelf: function(aCompMgr, aLocation, aType) {
     log("Unregistering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
-                           nsIComponentRegistrar);
+    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
     aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
   },
   
   getClassObject: function(aCompMgr, aCID, aIID) {
-    if (!aIID.equals(Components.interfaces.nsIFactory))
-      throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    if (!aIID.equals(CI.nsIFactory))
+      throw CR.NS_ERROR_NOT_IMPLEMENTED;
     if (aCID.equals(CLASS_ID))
       return ProxyManagerFactory;
-    throw Components.results.NS_ERROR_NO_INTERFACE;
+    throw CR.NS_ERROR_NO_INTERFACE;
   },
 
   canUnload: function(aCompMgr) { 

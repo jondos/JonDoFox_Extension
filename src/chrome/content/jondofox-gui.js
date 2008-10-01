@@ -2,8 +2,7 @@
  * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This code is available on a per window basis. Below are methods for 
- * controlling the proxy behavior.
+ * This code is available on a per window basis.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +30,7 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
-// Preferences that need to be observed
+// Preferences that need to be observed for triggering GUI changes
 var STATE_PREF = jdfManager.STATE_PREF
 var PROXY_PREF = 'network.proxy.type';
 var CUSTOM_LABEL = 'extensions.jondofox.custom.label';

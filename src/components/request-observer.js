@@ -27,6 +27,9 @@ const CLASS_ID = Components.ID('{cd05fe5d-8815-4397-bcfd-ca3ae4029193}');
 const CLASS_NAME = 'Request-Observer'; 
 const CONTRACT_ID = '@jondos.de/request-observer;1';
 
+const CC = Components.classes;
+const CI = Components.interfaces;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Observer for "http-on-modify-request"
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,7 +67,7 @@ var requestObserver = {
   // Call the forgery on every request
   onModifyRequest: function(httpChannel) {
     try {                        
-      httpChannel.QueryInterface(Components.interfaces.nsIChannel);
+      httpChannel.QueryInterface(CI.nsIChannel);
       this.modifyRequest(httpChannel);
     } catch (ex) {
       log("Got exception: " + ex);
@@ -75,8 +78,8 @@ var requestObserver = {
   registerObservers: function() {
     log("Register observers");
     try {
-      var observers = Components.classes["@mozilla.org/observer-service;1"].
-                         getService(Components.interfaces.nsIObserverService);
+      var observers = CC["@mozilla.org/observer-service;1"].
+                         getService(CI.nsIObserverService);
       // Add observers
       observers.addObserver(this, "http-on-modify-request", false);
       observers.addObserver(this, "quit-application-granted", false);
@@ -89,8 +92,8 @@ var requestObserver = {
   unregisterObservers: function() {
     log("Unregister observers");
     try {
-      var observers = Components.classes["@mozilla.org/observer-service;1"].
-                         getService(Components.interfaces.nsIObserverService);
+      var observers = CC["@mozilla.org/observer-service;1"].
+                         getService(CI.nsIObserverService);
       // Remove observers
       observers.removeObserver(this, "http-on-modify-request");
       observers.removeObserver(this, "quit-application-granted");
@@ -114,7 +117,7 @@ var requestObserver = {
           break;
         
         case 'http-on-modify-request':
-          subject.QueryInterface(Components.interfaces.nsIHttpChannel);
+          subject.QueryInterface(CI.nsIHttpChannel);
           this.onModifyRequest(subject);
           break;
 
@@ -129,9 +132,9 @@ var requestObserver = {
 
   // Implement nsISupports
   QueryInterface: function(iid) {
-    if (!iid.equals(Components.interfaces.nsISupports) &&
-        !iid.equals(Components.interfaces.nsIObserver) &&
-        !iid.equals(Components.interfaces.nsISupportsWeakReference))
+    if (!iid.equals(CI.nsISupports) &&
+        !iid.equals(CI.nsIObserver) &&
+        !iid.equals(CI.nsISupportsWeakReference))
                         throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
@@ -146,12 +149,12 @@ var RequestObserverModule = {
   // BEGIN nsIModule
   registerSelf: function(compMgr, fileSpec, location, type) {
     log("Registering '" + CLASS_NAME + "' ..");
-    compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+    compMgr.QueryInterface(CI.nsIComponentRegistrar);
     compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                fileSpec, location, type);
 
-    var catMan = Components.classes["@mozilla.org/categorymanager;1"].
-                    getService(Components.interfaces.nsICategoryManager);
+    var catMan = CC["@mozilla.org/categorymanager;1"].
+                    getService(CI.nsICategoryManager);
     catMan.addCategoryEntry("app-startup", "RefForgery", CONTRACT_ID, true, 
               true);
   },
@@ -159,18 +162,18 @@ var RequestObserverModule = {
   unregisterSelf: function(compMgr, fileSpec, location) {
     log("Unregistering '" + CLASS_NAME + "' ..");
     // Remove the auto-startup
-    compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+    compMgr.QueryInterface(CI.nsIComponentRegistrar);
     compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
 
-    var catMan = Components.classes["@mozilla.org/categorymanager;1"].
-                    getService(Components.interfaces.nsICategoryManager);
+    var catMan = CC["@mozilla.org/categorymanager;1"].
+                    getService(CI.nsICategoryManager);
     catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);
   },
 
   getClassObject: function(compMgr, cid, iid) {
     if (!cid.equals(CLASS_ID))
       throw Components.results.NS_ERROR_FACTORY_NOT_REGISTERED;
-    if (!iid.equals(Components.interfaces.nsIFactory))
+    if (!iid.equals(CI.nsIFactory))
       throw Components.results.NS_ERROR_NO_INTERFACE;
     return this.classFactory;
   },

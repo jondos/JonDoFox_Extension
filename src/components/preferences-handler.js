@@ -25,7 +25,10 @@ const CLASS_ID = Components.ID('{0fa6df5b-815d-413b-ad76-edd44ab30b74}');
 const CLASS_NAME = 'Preferences-Handler'; 
 const CONTRACT_ID = '@jondos.de/preferences-handler;1';
 
-const nsISupports = Components.interfaces.nsISupports;
+const CC = Components.classes;
+const CI = Components.interfaces;
+const CR = Components.results;
+const nsISupports = CI.nsISupports;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -49,9 +52,8 @@ PreferencesHandler.prototype = {
   getPrefsBranch: function(branch) {
     log("Getting prefs branch " + branch);
     try {
-      return Components.classes["@mozilla.org/preferences-service;1"].
-                getService(Components.interfaces.nsIPrefService).
-                getBranch(branch);
+      return CC["@mozilla.org/preferences-service;1"].
+                getService(CI.nsIPrefService).getBranch(branch);
     } catch (e) {
       log("getPrefsBranch(): " + e);
     }
@@ -96,8 +98,8 @@ PreferencesHandler.prototype = {
   setStringPref: function(preference, value) {
     log("Setting '" + preference + "' --> '" + value + "'");
     if(preference) {   
-      var supportsStringInterface = Components.interfaces.nsISupportsString;
-      var string = Components.classes["@mozilla.org/supports-string;1"].
+      var supportsStringInterface = CI.nsISupportsString;
+      var string = CC["@mozilla.org/supports-string;1"].
                       createInstance(supportsStringInterface);
       string.data = value;
       // Set value
@@ -110,13 +112,10 @@ PreferencesHandler.prototype = {
   getStringPref: function(preference) {
     // If preference is not null
     if (preference) {
-      // TODO: Look at this
-      // If not a user preference or a user preference is set
-      //if (this.isPreferenceSet(preference)) {
       try {
         log("Getting '" + preference + "'");
         return this.prefs.getComplexValue(preference, 
-                       Components.interfaces.nsISupportsString).data;
+                             CI.nsISupportsString).data;
       } catch(e) {
         log("getStringPref(): " + e);
       }
@@ -139,8 +138,6 @@ PreferencesHandler.prototype = {
   getIntPref: function(preference) {
     // If preference is not null
     if(preference) {
-      // If not a user preference or a user preference is set
-      //if(this.isPreferenceSet(preference)) {
       try {
         log("Getting '" + preference + "'");
         return this.prefs.getIntPref(preference);
@@ -177,7 +174,7 @@ PreferencesHandler.prototype = {
   // Implement nsISupports
   QueryInterface: function(aIID) {
     if (!aIID.equals(nsISupports))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw CR.NS_ERROR_NO_INTERFACE;
     return this;
   }
 };
@@ -191,9 +188,9 @@ var PreferencesHandlerInstance = null;
 var PreferencesHandlerFactory = {
   createInstance: function (aOuter, aIID) {    
     if (aOuter != null)
-      throw Components.results.NS_ERROR_NO_AGGREGATION;
+      throw CR.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(nsISupports))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw CR.NS_ERROR_NO_INTERFACE;
     // Singleton
     if (PreferencesHandlerInstance == null)
       log("Creating instance");
@@ -209,25 +206,23 @@ var PreferencesHandlerFactory = {
 var PreferencesHandlerModule = {
   registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
     log("Registering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
-                           nsIComponentRegistrar);
+    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
     aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
                 aFileSpec, aLocation, aType);
   },
 
   unregisterSelf: function(aCompMgr, aLocation, aType) {
     log("Unregistering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.
-                           nsIComponentRegistrar);
+    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
     aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
   },
   
   getClassObject: function(aCompMgr, aCID, aIID) {
-    if (!aIID.equals(Components.interfaces.nsIFactory))
-      throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    if (!aIID.equals(CI.nsIFactory))
+      throw CR.NS_ERROR_NOT_IMPLEMENTED;
     if (aCID.equals(CLASS_ID))
       return PreferencesHandlerFactory;
-    throw Components.results.NS_ERROR_NO_INTERFACE;
+    throw CR.NS_ERROR_NO_INTERFACE;
   },
 
   canUnload: function(aCompMgr) { 

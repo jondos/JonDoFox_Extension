@@ -195,8 +195,7 @@ var JDFManager = {
       // Disable the history
       this.prefsHandler.setIntPref('browser.history_expire_days', 0);
       
-      // If cookies are accepted from *all* sites --> reject all 
-      // or reject third-party cookies only (cookiePref == 1)?
+      // If cookies are accepted from *all* sites --> reject 3rd-party cookies
       var cookiePref = this.prefsHandler.
                                getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
