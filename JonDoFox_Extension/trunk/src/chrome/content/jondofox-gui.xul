@@ -51,12 +51,22 @@
     </menupopup>
   </statusbar>
 
-  <!-- Context menu entry to bypass proxy -->
+  <!-- Context menu entry for bypassing the proxy -->
   <popup id="contentAreaContextMenu">
-    <menuitem id="bypass-proxy" 
+    <menuitem id="bypass-proxy"
               label="&jondofox.context.bypass;"
-              oncommand="addException(document.popupNode);"
+              oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
               insertafter="context-savelink" />
+    <menuitem id="noproxy-add" 
+              label="&jondofox.context.noproxylist.add;"
+              oncommand="noProxyListAdd(gContextMenu.linkURL);"
+              insertbefore="context-savelink" 
+              hidden="true" />
+    <menuitem id="noproxy-remove" 
+              label="&jondofox.context.noproxylist.remove;"
+              oncommand="noProxyListRemove(gContextMenu.linkURL);"
+              insertbefore="context-savelink"
+              hidden="true" />
   </popup>
 
 </overlay>

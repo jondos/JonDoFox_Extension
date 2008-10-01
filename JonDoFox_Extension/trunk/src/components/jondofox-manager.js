@@ -110,7 +110,7 @@ var JDFManager = {
   },
 
   // Implement nsIProtocolProxyFilter for being able to bypass 
-  // proxies for certain URIs
+  // proxies for certain URIs that are on the noProxyList below
   applyFilter: function(ps, uri, proxy) {
     //log("Applying proxy filter for URI: " + uri.spec);
     try {
@@ -128,7 +128,7 @@ var JDFManager = {
     }
   },
 
-  // Register a proxy filter
+  // Register the proxy filter
   registerProxyFilter: function() {
     log("Registering proxy filter ..");
     try {
@@ -324,10 +324,10 @@ var JDFManager = {
     return count;
   },
   
-  // No proxy list implementation /////////////////////////////////////////////
+  // 'No proxy list' implementation ///////////////////////////////////////////
 
   // A list of URIs
-  noProxyList: ["https://www.jondos.de/files/downloads/JAP.jar"],
+  noProxyList: [],
 
   // Check if 'uri' is on the list
   noProxyListContains: function(uri) {
@@ -343,7 +343,7 @@ var JDFManager = {
     }
   },
  
-  // XXX: Rather use RegExp?
+  // XXX: Rather use RegExp here?
   // Enable value lookup by converting array to hashmap
   convert: function(a) {
     var o = {};
@@ -355,16 +355,27 @@ var JDFManager = {
 
   // Add an element to the list
   noProxyListAdd: function(uri) {
-    log("No proxy list adding " + uri);
+    log("No proxy list add: " + uri); 
     try {
-      this.noProxyList.push(uri);
+      // Add URI if it is not already on the list
+      if (!this.noProxyListContains(uri)) {
+        this.noProxyList.push(uri);
+      } else {
+        log("NOT adding " + uri + " since it is already on the list");
+      }
     } catch (e) {
       log("noProxyListAdd(): " + e);
     }
   },
 
+  // Remove an URI from the list
   noProxyListRemove: function(uri) {
-    // TODO: Implement this
+    log("No proxy list remove: " + uri);
+    try {
+      this.noProxyList.splice(this.noProxyList.indexOf(uri), 1);
+    } catch (e) {
+      log("noProxyListRemove(): " + e);
+    } 
   },
 
   // Proxy and state management ///////////////////////////////////////////////

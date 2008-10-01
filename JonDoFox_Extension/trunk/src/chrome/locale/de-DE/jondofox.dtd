@@ -23,7 +23,8 @@
    In diesem Fall sollten Sie ihre Einstellungen überprüfen und die zugehörige Hilfe lesen.">
 
 <!-- Context menu strings -->
-<!ENTITY jondofox.context.noproxylist "Diesen Link zur 'No Proxy'-Liste hinzufügen">
+<!ENTITY jondofox.context.noproxylist.add "Diesen Link zur 'No Proxy'-Liste hinzufügen">
+<!ENTITY jondofox.context.noproxylist.remove "Diesen Link von 'No Proxy'-Liste entfernen">
 <!ENTITY jondofox.context.bypass "Proxy umgehen und Ziel speichern unter...">
 
 <!-- Statusbar strings -->

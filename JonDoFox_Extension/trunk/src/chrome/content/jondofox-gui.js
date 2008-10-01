@@ -167,11 +167,27 @@ function editCustomProxy() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// This code shall be used to enable bypassing the proxy for certain URIs
+// These methods are called to bypass the proxy for certain URIs
 ///////////////////////////////////////////////////////////////////////////////
 
-// Add the currently selected link to the no proxy list
-function addException(uri) {
+// Bypass the proxy and save target as
+function bypassProxyAndSave(uri) {
+  log("Bypassing the proxy for " + uri);
+  try {
+    noProxyListAdd(uri);
+    document.getElementById('context-savelink').doCommand();
+  } catch (e) {
+    log("bypassProxyAndSave(): " + e);
+  }
+}
+
+// Check if a given URI is on the no proxy list
+function noProxyListContains(uri) {
+  return jdfManager.noProxyListContains(uri);
+}
+
+// Add a given URI to the no proxy list
+function noProxyListAdd(uri) {
   try {
     jdfManager.noProxyListAdd(uri);
   } catch (e) {
@@ -179,79 +195,12 @@ function addException(uri) {
   }
 }
 
-// FIXME: Unfinished method to bypass the proxy when performing a download
-function bypassProxy() {
-  log("Bypassing proxy");
+// Remove a given URI from the list
+function noProxyListRemove(uri) {
   try {
-    // Create a FilePicker
-    var nsIFilePicker = Components.interfaces.nsIFilePicker;
-    var fp = Components.classes['@mozilla.org/filepicker;1'].
-                           createInstance(nsIFilePicker);
-    fp.init(window, "Bypass Proxy and Save Target As...", 
-               nsIFilePicker.modeSave);
-    // Open the dialog and get the result
-    var result = fp.show();
-    if (result == nsIFilePicker.returnOK) {
-      // Get the file object from the FilePicker
-      var theFile = fp.file;
-      
-      log("The file is " + theFile);
-      log("popupNode is " + document.popupNode);
-      
-      // Get the IOService
-      var ios = Components.classes["@mozilla.org/network/io-service;1"].
-                      getService(Components.interfaces.nsIIOService);      
-      
-      // Create URI object from popupNode
-      var objURI = ios.newURI(document.popupNode, null, null);
-      // Create file URI for destination
-      var fileURI = ios.newFileURI(theFile);
-
-      // Setup MIME type
-      var msrv = Components.classes["@mozilla.org/mime;1"].
-                    getService(Components.interfaces.nsIMIMEService);
-      var type = msrv.getTypeFromURI(objURI);
-      var mime = msrv.getFromTypeAndExtension(type, "");
-
-      // Download the file while bypassing the proxy
-      var persist = Components.classes["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].
-                       createInstance(Components.interfaces.nsIWebBrowserPersist);
-      
-      //persist.persistFlags = nsIWBP.PERSIST_FLAGS_REPLACE_EXISTING_FILES |
-      //   nsIWBP.PERSIST_FLAGS_BYPASS_CACHE |
-      //   nsIWBP.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-
-      // The download manager
-      var dm = Components.classes["@mozilla.org/download-manager;1"].
-                  createInstance(Components.interfaces.nsIDownloadManager);
-
-      // Get the current proxy state
-      //var state = jdfManager.prefsHandler.getIntPref(PROXY_PREF);
-      // Disable the proxy if necessary
-      //if (state != 0) {
-        //jdfManager.prefsHandler.setIntPref(PROXY_PREF, 0);
-      //}  
-      
-      var dl = dm.addDownload(dm.DOWNLOAD_TYPE_DOWNLOAD, objURI, fileURI, objURI.spec, mime, Math.round(Date.now()*1000), null, persist);
-    
-      // Set the progressListener to the returned download object
-      persist.progressListener = dl.QueryInterface(Components.interfaces.nsIWebProgressListener);
-      persist.saveURI(objURI, null, null, null, "", theFile);
-
-      // Show the download manager
-      var dm_ui = Components.classes["@mozilla.org/download-manager-ui;1"].
-                     createInstance(Components.interfaces.nsIDownloadManagerUI);
-      dm_ui.show(window, dl.id, Components.interfaces.nsIDownloadManagerUI.REASON_NEW_DOWNLOAD);
-
-      log("File saved!?");
-      
-      // Restore previous state
-      //if (state != 0) {
-      //  jdfManager.prefsHandler.setIntPref(PROXY_PREF, state);
-      //}
-    }
+    jdfManager.noProxyListRemove(uri);
   } catch (e) {
-    log("bypassProxy(): " + e);
+    log("removeException() :" + e);
   }
 }
 
