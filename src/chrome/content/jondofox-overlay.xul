@@ -35,9 +35,19 @@
     function showMenuItem(event) {
       //log("showMenuItem()");
       try {
-        var bypass = document.getElementById("bypass-proxy");
-        if (bypass) {
-          bypass.hidden = !gContextMenu.onLink;
+        if (gContextMenu.onLink) {
+          document.getElementById("bypass-proxy").hidden = false;
+          
+          // It is a link, see if it is on the list          
+          //var onList = noProxyListContains(gContextMenu.linkURL);
+          //document.getElementById("noproxy-add").hidden = onList;
+          //document.getElementById("noproxy-remove").hidden = !onList;
+        } else {
+          // Hide all
+          document.getElementById("bypass-proxy").hidden = true;
+          
+          //document.getElementById("noproxy-add").hidden = true;
+          //document.getElementById("noproxy-remove").hidden = true;
         }
       } catch (e) {
         log("showMenuItem(): " + e);
