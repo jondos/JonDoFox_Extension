@@ -24,10 +24,10 @@
 
       <!-- Anontest and configuration items -->
       <menuitem label="Anontest" 
-                image="chrome://jondofox/skin/anontest.png" 
+                image="chrome://jondofox/skin/anontest-16x16.png" 
                 oncommand="openTabAnontest();" />
       <menuitem label="&jondofox.statusbar.editCustom;" 
-                image="chrome://jondofox/skin/editcustom.png" 
+                image="chrome://jondofox/skin/editcustom-16x16.png"
                 oncommand="editCustomProxy();" />
       <menuseparator />
 
