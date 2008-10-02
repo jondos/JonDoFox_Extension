@@ -38,7 +38,7 @@
              oncommand="setProxyNone();" />
       <menuseparator />      
       <radio id="custom-radio"
-             label="&jondofox.statusbar.custom;"
+             label=""
              oncommand="setProxy('custom');" />
       <radio id="tor-radio"
              label="Tor"

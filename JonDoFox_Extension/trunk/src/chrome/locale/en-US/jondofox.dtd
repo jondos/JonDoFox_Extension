@@ -28,9 +28,9 @@
 <!ENTITY jondofox.context.bypass "Bypass Proxy and Save Target As...">
 
 <!-- Statusbar strings -->
-<!ENTITY jondofox.statusbar.noProxy "No proxy">
-<!ENTITY jondofox.statusbar.custom "Custom proxy">
-<!ENTITY jondofox.statusbar.editCustom "Edit custom proxy">
+<!ENTITY jondofox.statusbar.noProxy "No Proxy">
+<!ENTITY jondofox.statusbar.custom "Custom Proxy">
+<!ENTITY jondofox.statusbar.editCustom "Edit Custom Proxy">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
