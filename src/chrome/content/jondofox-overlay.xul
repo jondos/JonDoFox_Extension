@@ -10,6 +10,7 @@
   
   <!-- Add listener that loads jondofox-gui.xul on "load" -->
   <script language="JavaScript">
+    // TODO: Move all of this code into the other .xul ??
     try {
       window.addEventListener("load", initWindow, true);
       window.addEventListener("load", init, true);
@@ -35,19 +36,24 @@
     function showMenuItem(event) {
       //log("showMenuItem()");
       try {
-        if (gContextMenu.onLink) {
-          document.getElementById("bypass-proxy").hidden = false;
+        if (gContextMenu != null) {
+          if (gContextMenu.onLink) {
+            document.getElementById("bypass-proxy").hidden = false;
           
-          // It is a link, see if it is on the list          
-          //var onList = noProxyListContains(gContextMenu.linkURL);
-          //document.getElementById("noproxy-add").hidden = onList;
-          //document.getElementById("noproxy-remove").hidden = !onList;
+            // It is a link, see if it is on the list          
+            //var onList = noProxyListContains(gContextMenu.linkURL);
+            //document.getElementById("noproxy-add").hidden = onList;
+            //document.getElementById("noproxy-remove").hidden = !onList;
+          } else {
+            // Hide all
+            document.getElementById("bypass-proxy").hidden = true;
+          
+            //document.getElementById("noproxy-add").hidden = true;
+            //document.getElementById("noproxy-remove").hidden = true;
+          }
         } else {
-          // Hide all
-          document.getElementById("bypass-proxy").hidden = true;
-          
-          //document.getElementById("noproxy-add").hidden = true;
-          //document.getElementById("noproxy-remove").hidden = true;
+          // Do nothing
+          //log("gContextMenu is null");
         }
       } catch (e) {
         log("showMenuItem(): " + e);
