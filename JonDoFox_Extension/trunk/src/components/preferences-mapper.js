@@ -67,7 +67,7 @@ PrefsMapper.prototype = {
 
   // Perform the mapping
   map: function() {
-    log("Mapping " + this.stringPrefsMap.length + " preferences");
+    log("Mapping user agent preferences");
     try {
       // Iterate through the map
       for (p in this.stringPrefsMap) {
