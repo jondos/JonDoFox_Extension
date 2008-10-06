@@ -35,8 +35,7 @@ var STATE_PREF = jdfManager.STATE_PREF
 var PROXY_PREF = 'network.proxy.type';
 var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
 
-// Only set 'conf' to true if the user should need to confirm when 
-// disabling the proxy (in combination with state = 'none')
+// Set the extension into a certain state, pass one of jdfManager.STATE_XXX
 function setProxy(state) {
   log("Setting proxy state to '" + state + "'");
   try {
@@ -108,11 +107,11 @@ function getLabel(state) {
   }
 }
 
-// Refresh the statusbar label and checkboxes
+// Refresh the statusbar
 function refreshStatusbar() {
   log("Refreshing the statusbar");
   try {
-    // Get statusbar, state and label
+    // Get statusbar, state and label respectively
     var statusbar = document.getElementById('jondofox-proxy-status');
     var state = jdfManager.getState();
     var label = getLabel(state);
@@ -180,12 +179,12 @@ function bypassProxyAndSave(uri) {
   }
 }
 
-// Check if a given URI is on the no proxy list
+// Check if a given URI is on the 'no proxy list'
 function noProxyListContains(uri) {
   return jdfManager.noProxyListContains(uri);
 }
 
-// Add a given URI to the no proxy list
+// Add a given URI to the 'no proxy list'
 function noProxyListAdd(uri) {
   try {
     jdfManager.noProxyListAdd(uri);
@@ -223,7 +222,7 @@ var prefsObserver = {
             jdfManager.setState(jdfManager.STATE_NONE);
           }
         } else {
-          // STATE_PREF or CUSTOM_LABEL has changed, just refresh the status
+          // STATE_PREF or CUSTOM_LABEL has changed, just refresh the statusbar
           refreshStatusbar();
         }
         break;
@@ -241,7 +240,7 @@ var overlayObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'xul-overlay-merged':
-        // subject implements nsIURI
+        // 'subject' implements nsIURI
         var uri = subject.QueryInterface(Components.interfaces.nsIURI);
         //log("uri.spec is " + uri.spec);
         if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
@@ -275,9 +274,19 @@ function initWindow() {
   try {
     // At first remove this listener again
     window.removeEventListener("load", initWindow, true);
-    // Load the overlay
-    document.loadOverlay("chrome://jondofox/content/jondofox-gui.xul", 
-                            overlayObserver);
+
+    // FIXME: Due to Bug #330458 subsequent calls to loadOverlay do not work. 
+    // Few other extensions (CuteMenus) also load overlays dynamically and 
+    // therefore cause this call to fail. For further information, please see    
+    // http://developer.mozilla.org/en/DOM/document.loadOverlay and
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=330458
+    // Additionally, loading an overlay with the same URI twice is also not 
+    // supported. A polling approach is therefore not practicable.
+
+    // Workaround: Dynamically load the GUI overlay using a timeout of 1000 ms
+    var code = 'document.loadOverlay(\"chrome://jondofox/content/' + 
+                  'jondofox-gui.xul\", overlayObserver)';
+    setTimeout(code, 800);
   } catch (e) {
     log("initWindow(): " + e);
   }
