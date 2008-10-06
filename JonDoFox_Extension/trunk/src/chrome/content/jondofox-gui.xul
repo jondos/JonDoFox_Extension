@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://jondofox/skin/jondofox-gui.css" type="text/css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
 
@@ -26,10 +25,12 @@
       <!-- Anontest and configuration items -->
       <menuitem id="jondofox-anontest"
                 class="menuitem-iconic"
+                image="chrome://jondofox/skin/anontest-16x16.png"
                 label="Anontest"
                 oncommand="openTabAnontest();" />
       <menuitem id="jondofox-editcustom"
                 class="menuitem-iconic"
+                image="chrome://jondofox/skin/editcustom-16x16.png"
                 label="&jondofox.statusbar.editCustom;"
                 oncommand="editCustomProxy();" />
       <menuseparator />
@@ -39,7 +40,7 @@
       <radio id="none-radio"
              label="&jondofox.statusbar.noProxy;"
              oncommand="setProxyNone();" />
-      <menuseparator />      
+      <menuseparator />
       <radio id="custom-radio"
              label=""
              oncommand="setProxy('custom');" />
@@ -60,6 +61,7 @@
               label="&jondofox.context.bypass;"
               oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
               insertafter="context-savelink" />
+    <!-- These are entries to add or remove URIs, currently hidden -->
     <menuitem id="noproxy-add" 
               label="&jondofox.context.noproxylist.add;"
               oncommand="noProxyListAdd(gContextMenu.linkURL);"
