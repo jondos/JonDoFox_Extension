@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<?xml-stylesheet href="chrome://jondofox/skin/jondofox-gui.css" type="text/css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
 
@@ -23,11 +24,11 @@
     <menupopup id="jondofox-proxy-list">
 
       <!-- Anontest and configuration items -->
-      <menuitem label="Anontest" 
-                image="chrome://jondofox/skin/anontest-16x16.gif" 
+      <menuitem id="jondofox-anontest"
+                label="Anontest"
                 oncommand="openTabAnontest();" />
-      <menuitem label="&jondofox.statusbar.editCustom;" 
-                image="chrome://jondofox/skin/editcustom-16x16.gif"
+      <menuitem id="jondofox-editcustom"
+                label="&jondofox.statusbar.editCustom;"
                 oncommand="editCustomProxy();" />
       <menuseparator />
 
