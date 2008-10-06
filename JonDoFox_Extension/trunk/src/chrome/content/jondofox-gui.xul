@@ -25,9 +25,11 @@
 
       <!-- Anontest and configuration items -->
       <menuitem id="jondofox-anontest"
+                class="menuitem-iconic"
                 label="Anontest"
                 oncommand="openTabAnontest();" />
       <menuitem id="jondofox-editcustom"
+                class="menuitem-iconic"
                 label="&jondofox.statusbar.editCustom;"
                 oncommand="editCustomProxy();" />
       <menuseparator />
