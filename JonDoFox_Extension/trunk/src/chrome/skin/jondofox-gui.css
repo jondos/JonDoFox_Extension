@@ -1,0 +1,10 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+#jondofox-anontest {
+  list-style-image: url("chrome://jondofox/skin/anontest-16x16.png");
+}
+
+#jondofox-editcustom {
+  list-style-image: url("chrome://jondofox/skin/editcustom-16x16.png");
+}
+
