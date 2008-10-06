@@ -55,25 +55,28 @@ var JDFManager = {
   userWarned: false,
 
   // Incompatible extensions with their IDs
-  extensions:
-     { 'RefControl':'{455D905A-D37C-4643-A9E2-F6FEFAA0424A}',
-       'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}' },
+  extensions: { 
+    'CuteMenus':'{63df8e21-711c-4074-a257-b065cadc28d8}',
+    'RefControl':'{455D905A-D37C-4643-A9E2-F6FEFAA0424A}',
+    'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}' 
+  },
 
   // This map of string preferences is given to the prefsMapper
-  stringPrefsMap: 
-     { 'general.appname.override':'extensions.jondofox.appname_override',
-       'general.appversion.override':'extensions.jondofox.appversion_override',
-       'general.buildID.override':'extensions.jondofox.buildID_override',
-       'general.oscpu.override':'extensions.jondofox.oscpu_override',
-       'general.platform.override':'extensions.jondofox.platform_override',
-       'general.productsub.override':'extensions.jondofox.productsub_override',
-       'general.useragent.override':'extensions.jondofox.useragent_override',
-       'general.useragent.vendor':'extensions.jondofox.useragent_vendor',
-       'general.useragent.vendorSub':'extensions.jondofox.useragent_vendorSub',
-       'intl.accept_languages':'extensions.jondofox.accept_languages',
-       'intl.charset.default':'extensions.jondofox.default_charset',
-       'intl.accept_charsets':'extensions.jondofox.accept_charsets',
-       'network.http.accept.default':'extensions.jondofox.accept_default' },
+  stringPrefsMap: { 
+    'general.appname.override':'extensions.jondofox.appname_override',
+    'general.appversion.override':'extensions.jondofox.appversion_override',
+    'general.buildID.override':'extensions.jondofox.buildID_override',
+    'general.oscpu.override':'extensions.jondofox.oscpu_override',
+    'general.platform.override':'extensions.jondofox.platform_override',
+    'general.productsub.override':'extensions.jondofox.productsub_override',
+    'general.useragent.override':'extensions.jondofox.useragent_override',
+    'general.useragent.vendor':'extensions.jondofox.useragent_vendor',
+    'general.useragent.vendorSub':'extensions.jondofox.useragent_vendorSub',
+    'intl.accept_languages':'extensions.jondofox.accept_languages',
+    'intl.charset.default':'extensions.jondofox.default_charset',
+    'intl.accept_charsets':'extensions.jondofox.accept_charsets',
+    'network.http.accept.default':'extensions.jondofox.accept_default' 
+  },
 
   // Different needed services
   prefsHandler: null,
