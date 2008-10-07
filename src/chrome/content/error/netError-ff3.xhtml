@@ -213,6 +213,14 @@
           var errContainer = document.getElementById("errorPageContainer");
           errContainer.parentNode.removeChild(errContainer);
         }
+        else if (err == "netReset")
+        {
+          // Catch SOCKS error
+          dump("Detected SOCKS error (netReset)\n");
+          // Remove the instructions
+	  var errContainer = document.getElementById("instructions");
+          errContainer.parentNode.removeChild(errContainer);
+        }
         else
 	{
           // Remove the instructions
