@@ -10,7 +10,6 @@
   
   <!-- Add listener that loads jondofox-gui.xul on "load" -->
   <script language="JavaScript">
-    // TODO: Move all of this code into the other .xul ??
     try {
       window.addEventListener("load", initWindow, true);
       window.addEventListener("load", init, true);
@@ -20,7 +19,7 @@
 
     // Init an event listener for the context menu
     function init() {
-      log("Get the context menu");
+      log("Init context menu");
       try {
         var contextMenu = document.getElementById("contentAreaContextMenu");
         if (contextMenu) {
@@ -32,7 +31,7 @@
       }
     }
     
-    // Set the hidden attribute on bypass-proxy
+    // Set the hidden attribute on 'bypass-proxy'
     function showMenuItem(event) {
       //log("showMenuItem()");
       try {
