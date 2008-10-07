@@ -6,12 +6,12 @@
 <!ENTITY jondofox.instructions.instrTitle "Please install and start the JonDo client:">
 <!ENTITY jondofox.instructions.proxyOffText "For installation, temporarily disable the JonDo interface by 
    choosing &quot;No Proxy&quot; in the proxy menu:">
-<!ENTITY jondofox.instructions.proxyOffImage "<img src='chrome://jondofox/content/proxy-off-en.png'></img>">
+<!ENTITY jondofox.instructions.proxyOffImage "<img src='chrome://jondofox/content/error/proxy-off-en.png'></img>">
 <!ENTITY jondofox.instructions.downloadLink "<a href='https://www.jondos.de/en/download/' target='_blank'>
    Now click here to visit the JonDos download site and get the client program.</a>">
 <!ENTITY jondofox.instructions.proxyOnText "After starting the JonDo client, please reset the proxy settings
    to &quot;JonDo&quot;:">
-<!ENTITY jondofox.instructions.proxyOnImage "<img src='chrome://jondofox/content/proxy-on-en.png'></img>">
+<!ENTITY jondofox.instructions.proxyOnImage "<img src='chrome://jondofox/content/error/proxy-on-en.png'></img>">
 <!ENTITY jondofox.instructions.instrWarning "WARNING: If you do not reset the proxy settings to 
    &quot;JonDo&quot;, you will surf the web without anonymity!">
 
