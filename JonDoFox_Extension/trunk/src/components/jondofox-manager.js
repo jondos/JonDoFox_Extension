@@ -187,31 +187,26 @@ var JDFManager = {
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
       this.prefsMapper.map();
-
       // Add an observer to the main pref branch after setting the prefs
       var prefs = this.prefsHandler.prefs;
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
-
       // Disable the history
       this.prefsHandler.setIntPref('browser.history_expire_days', 0);
-      
       // If cookies are accepted from *all* sites --> reject 3rd-party cookies
       var cookiePref = this.prefsHandler.
                                getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
         this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
       }
-
       // If this is set, set it to false
       if (this.prefsHandler.
                   isPreferenceSet('local_install.showBuildinWindowTitle')) {
         this.prefsHandler.
                 setBoolPref('local_install.showBuildinWindowTitle', false);
       }
-
-      // XXX Set the initial state
+      // Set the initial proxy state
       log("Setting initial proxy state ..");
       this.setProxy(this.getState());
     } catch (e) {
@@ -226,10 +221,8 @@ var JDFManager = {
       // Remove the preferences observer      
       log("Stop observing preferences ..");
       this.prefsHandler.prefs.removeObserver("", this);
-
       // Unmap preferences
-      this.prefsMapper.unmap();
-     
+      this.prefsMapper.unmap();     
       // Delete the jondofox prefs branch only on uninstall
       if (this.uninstall) {
         log("Deinstallation, deleting jondofox branch ..");
