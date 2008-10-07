@@ -9,11 +9,11 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-// Dump information to the console?
+// Enable/disable debug messages here, do not forget 
+// to create 'browser.dom.window.dump.enabled' first!
 var mDebug = true;
 
 // Send data to the console if we're in debug mode
-// Create 'browser.dom.window.dump.enabled' first!
 function log(msg) {
   if (mDebug) dump("JonDoFox :: " + msg + "\n");
 }
@@ -35,7 +35,8 @@ var STATE_PREF = jdfManager.STATE_PREF
 var PROXY_PREF = 'network.proxy.type';
 var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
 
-// Set the extension into a certain state, pass one of jdfManager.STATE_XXX
+// Set the extension into a certain state, 
+// pass one of the jdfManager.STATE_XXXs
 function setProxy(state) {
   log("Setting proxy state to '" + state + "'");
   try {
@@ -48,12 +49,12 @@ function setProxy(state) {
   } catch (e) {
     log("setProxy(): " + e);
   } finally {
-    // Hide the 'menupopup'
+    // Actively hide the 'menupopup'
     document.getElementById('jondofox-proxy-list').hidePopup();
   }
 }
 
-// Disable the proxy, but ask the user for confirmation first
+// Disable the proxy and ask the user for confirmation first
 function setProxyNone() {
   log("Asking for confirmation ..");
   try {
@@ -61,7 +62,7 @@ function setProxyNone() {
     document.getElementById('jondofox-proxy-list').hidePopup();
     // Request user confirmation
     var disable = jdfManager.showConfirm(
-                     jdfManager.getString('jondofox.dialog.attention'),
+                     jdfManager.getString('jondofox.dialog.warning'),
                      jdfManager.getString('jondofox.dialog.message.proxyoff'));
     if (disable) {
       // Call the method above
@@ -75,9 +76,10 @@ function setProxyNone() {
   }
 }
 
-// Map the current proxy status to a (localized) string label
+// Map the current proxy status to a (localized) string label,
+// pass one of the jdfManager.STATE_XXXs here
 function getLabel(state) {
-  log("Determine proxy status label for " + state);
+  //log("Determine proxy status label for " + state);
   try {
     switch (state) {
       case jdfManager.STATE_NONE:
@@ -156,7 +158,7 @@ function openTabAnontest() {
 function editCustomProxy() {
   log("Open dialog 'edit custom proxy'");
   try {
-    // No parameters needed
+    // No additional parameters needed
     window.openDialog("chrome://jondofox/content/dialogs/editcustom.xul", 
               "editcustom", "");
   } catch (e) {
@@ -243,19 +245,14 @@ var overlayObserver = {
         // 'subject' implements nsIURI
         var uri = subject.QueryInterface(Components.interfaces.nsIURI);
         //log("uri.spec is " + uri.spec);
-        if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
-          
-          // Overlay is ready, add observers for preferences
-          log("Overlay ready --> adding preferences observers");
+        if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
+          // Overlay is ready --> refresh the GUI
+          refreshStatusbar();
+          // Add observer to different preferences
           prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
-          
-          // Set the initial proxy state
-          // XXX: Rather do this from within jondofox-manager.js?
-          log("Setting initial proxy state ..");
-          setProxy(jdfManager.getState());
-        
+          log("New window is ready");
         } else {
           log("!! Wrong uri: " + uri.spec);
         }
@@ -272,7 +269,7 @@ var overlayObserver = {
 function initWindow() {
   log("New browser window ..");
   try {
-    // At first remove this listener again
+    // Remove this listener
     window.removeEventListener("load", initWindow, true);
 
     // FIXME: Due to bug #330458 subsequent calls to loadOverlay() do not work. 

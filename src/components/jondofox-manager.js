@@ -45,13 +45,13 @@ var JDFManager = {
   STATE_TOR: 'tor',
   STATE_CUSTOM: 'custom',
 
-  // Clean up on uninstall or disable
+  // Set this to indicate that cleaning up is necessary
   clean: false,
 
-  // Remove jondofox preferences branch only on uninstall
+  // Remove jondofox preferences branch on uninstall only
   uninstall: false,
 
-  // Set to true if the user was warned that an important pref was modified
+  // Set this to true if the user was warned that an important pref was modified
   userWarned: false,
 
   // Incompatible extensions with their IDs
@@ -179,11 +179,10 @@ var JDFManager = {
     try {
       // Call init() first
       this.init();
-
       // Check for incompatible extensions
       this.checkExtensions();
 
-      // TODO: Init the 'HttpObserver' from here?
+      // TODO: Init the 'HttpObserver' from here as well?
 
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
@@ -211,6 +210,10 @@ var JDFManager = {
         this.prefsHandler.
                 setBoolPref('local_install.showBuildinWindowTitle', false);
       }
+
+      // XXX Set the initial state
+      log("Setting initial proxy state ..");
+      this.setProxy(this.getState());
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -345,7 +348,7 @@ var JDFManager = {
     }
   },
  
-  // XXX: Rather use RegExp here?
+  // XXX: Rather use RegExp here for performance reasons?
   // Enable value lookup by converting array to hashmap
   convert: function(a) {
     var o = {};

@@ -19,11 +19,11 @@
 
     // Init an event listener for the context menu
     function init() {
-      log("Init context menu");
+      log("Init the context menu");
       try {
         var contextMenu = document.getElementById("contentAreaContextMenu");
         if (contextMenu) {
-          log("Adding event listener to context menu");
+          //log("Adding event listener to context menu");
           contextMenu.addEventListener("popupshowing", showMenuItem, false);
         }
       } catch(e) { 
