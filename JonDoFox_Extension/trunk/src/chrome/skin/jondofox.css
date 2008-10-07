@@ -9,7 +9,7 @@
 
 html {
   /* background: -moz-Dialog; */
-  background: #fff url(chrome://jondofox/content/jondofox-colors.jpg) 0 0 no-repeat fixed;
+  background: #fff url(chrome://jondofox/skin/jondofox-colors.jpg) 0 0 no-repeat fixed;
 }
 
 body {
@@ -50,7 +50,7 @@ ul {
   -moz-border-radius: 10px;
   padding: 3em;
   -moz-padding-start: 30px;
-  background: #fff url(chrome://jondofox/content/jondofox-background.jpg) 0 0 no-repeat fixed;
+  background: #fff url(chrome://jondofox/skin/jondofox-background.jpg) 0 0 no-repeat fixed;
   -moz-background-origin: content;
   /* color: #000000;
   font: 13px Verdana, sans-serif; */
