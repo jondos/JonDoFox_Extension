@@ -5,7 +5,7 @@
 
 <!ENTITY jondofox.instructions.instrTitle "Please install and start the JonDo client:">
 <!ENTITY jondofox.instructions.proxyOffText "For installation, temporarily disable the JonDo interface by 
-   choosing &quot;None&quot; in the proxy menu:">
+   choosing &quot;No Proxy&quot; in the proxy menu:">
 <!ENTITY jondofox.instructions.proxyOffImage "<img src='chrome://jondofox/content/proxy-off-en.png'></img>">
 <!ENTITY jondofox.instructions.downloadLink "<a href='https://www.jondos.de/en/download/' target='_blank'>
    Now click here to visit the JonDos download site and get the client program.</a>">

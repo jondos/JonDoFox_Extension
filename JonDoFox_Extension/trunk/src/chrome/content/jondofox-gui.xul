@@ -8,10 +8,10 @@
 
   <!-- Include jondofox.js to the scope of the browser -->
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
-  
+   
   <!-- Statusbar -->
   <statusbar id="status-bar"> 
-    <!-- Indicate current status in the corner -->
+    <!-- Indicate current status in the statusbar -->
     <statusbarpanel id="jondofox-proxy-status" 
                     insertbefore="statusbar-updates"
                     label=""
