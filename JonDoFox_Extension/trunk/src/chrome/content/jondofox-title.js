@@ -75,6 +75,6 @@ function initTitleListener() {
 }
 
 // Log something initially
-log("New window, this is " + titleString);
+log("This is " + titleString);
 setTitleModifier();
 window.addEventListener("load", initTitleListener, false);
