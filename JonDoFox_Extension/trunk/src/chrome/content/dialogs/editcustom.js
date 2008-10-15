@@ -2,7 +2,7 @@
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                                  getService().wrappedJSObject;
 
-// Set the prefs handler, it will be needed
+// JonDoFox-Manager is used for setting the proxy to custom
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
