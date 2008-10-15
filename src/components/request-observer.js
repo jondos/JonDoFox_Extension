@@ -1,11 +1,11 @@
 /******************************************************************************
- * Copyright (c) 2008, JonDos GmbH
+ * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
- * This component is instanciated once on app-startup to do the following:
+ * This component is instanciated once on app-startup and does the following:
  *
  * - Replace RefControl functionality by simply forging every referrer
- * - Arbitrary HTTP request headers can be set from here
+ * - Arbitrary HTTP request headers can be set from here as well
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////

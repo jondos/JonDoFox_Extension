@@ -45,6 +45,9 @@ function setProxy(state) {
       // If the state didn't change, call refreshStatusbar() by hand
       log("NOT a state change, calling refreshStatusbar() ..");
       refreshStatusbar();
+    } else {
+      // The state has changed --> clear cookies
+      jdfManager.clearAllCookies();
     }
   } catch (e) {
     log("setProxy(): " + e);

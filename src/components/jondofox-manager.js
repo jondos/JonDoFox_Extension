@@ -481,6 +481,17 @@ var JDFManager = {
     }
   },
 
+  // Clear all cookies, e.g. when switching from one state to another
+  clearAllCookies: function() {
+    log("Clearing all cookies");
+    try {
+      CC["@mozilla.org/cookiemanager;1"].getService(CI.nsICookieManager).
+                                            removeAll();
+    } catch (e) {
+      log("clearAllCookies(): " + e);
+    }
+  },
+
   // Implement nsIObserver ////////////////////////////////////////////////////
   
   observe: function(subject, topic, data) {
