@@ -151,6 +151,8 @@ var JDFManager = {
       // Get the extensions manager
       var em = CC['@mozilla.org/extensions/manager;1'].
                   getService(CI.nsIExtensionManager);
+      // Indicate a necessary restart
+      var restart = false;
       // Iterate
       for (e in this.extensions) {
         log('Checking for ' + e);
@@ -161,15 +163,23 @@ var JDFManager = {
           log('Found ' + e + ', uninstalling ..');
           // Prompt a message window for every extension
           this.showAlert(this.getString('jondofox.dialog.attention'), 
-                         this.formatString('jondofox.dialog.message.extension', [e]));
-          // Uninstall
+                  this.formatString('jondofox.dialog.message.extension', [e]));
+          // Uninstall and set restart to true
           em.uninstallItem(this.extensions[e]);
+          restart = true;
         } else {
           log(e + ' not found');
         }
       }
+      if (restart) {
+        log("TODO: Force an application restart");
+        // Try to restart the browser
+        //var appStartup = CC['@mozilla.org/toolkit/app-startup;1'].
+        //                    getService(CI.nsIAppStartup);
+        //appStartup.quit(CI.nsIAppStartup.eRestart);
+      }
     } catch (err) {
-      log('checkExtensions(): ' + err);
+      log("checkExtensions(): " + err);
     }
   },
  
