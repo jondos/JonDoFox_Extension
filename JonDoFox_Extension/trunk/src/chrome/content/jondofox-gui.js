@@ -136,9 +136,20 @@ function refreshStatusbar() {
     // Get the radiogroup element and set 'selectedItem'
     var radiogroupElement = document.getElementById("jondofox-radiogroup");
     radiogroupElement.selectedItem = document.getElementById(state + "-radio");
+
+    // Refresh context menu: Set the label of 'bypass-proxy'
+    document.getElementById('bypass-proxy').label = jdfManager.
+       formatString("jondofox.contextmenu.bypass.label", [label]);
   } catch (e) {
     log("refreshStatusbar(): " + e);
   }
+}
+
+// Return false if state is NONE, else true (called from jondofox-overlay.xul)
+function isProxyActive() {
+  //log("Checking if proxy is active");
+  var ret = (jdfManager.getState() != jdfManager.STATE_NONE);
+  return ret;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

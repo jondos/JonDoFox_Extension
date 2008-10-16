@@ -1,6 +1,7 @@
 Changes in version 0.2b1 - xx.10.2008:
-
+  
   New features:
+    o Clearing all cookies on every state change
     o Added a customizable proxy configuration to the proxy switcher
     o Set the 'Accept'-header of every request to '*/*'
     o Using different colors for different proxy states (red/green)
@@ -28,13 +29,13 @@ Changes in version 0.2a1 - 16.09.2008:
     o New license: modified BSD license
 
 Changes in version 0.1a3 - 05.08.2008:
-
+  
   Minor modifications:
     o Modified instruction text
     o Optimized png's in file sizes
 
 Changes in version 0.1a2 - 01.08.2008:
-
+  
   Major improvements:    
     o Replaced jpg's used in instructions by png's with transparent background
     o Making use of locales (until now only de-DE and en-US is supported)
