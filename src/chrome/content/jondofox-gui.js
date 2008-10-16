@@ -148,8 +148,7 @@ function refreshStatusbar() {
 // Return false if state is NONE, else true (called from jondofox-overlay.xul)
 function isProxyActive() {
   //log("Checking if proxy is active");
-  var ret = (jdfManager.getState() != jdfManager.STATE_NONE);
-  return ret;
+  return (jdfManager.getState() != jdfManager.STATE_NONE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -160,8 +159,8 @@ function isProxyActive() {
 function openTabAnontest() {
   try {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
-                         getService(Components.interfaces.nsIWindowMediator).
-                         getMostRecentWindow('navigator:browser');
+                 getService(Components.interfaces.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser');
     win.openUILinkIn('https://www.jondos.de/anontest', 'tab');
   } catch (e) {
     log("openTabAnontest(): " + e);

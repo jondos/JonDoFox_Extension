@@ -6,11 +6,12 @@ Changes in version 0.2b1 - xx.10.2008:
     o Set the 'Accept'-header of every request to '*/*'
     o Using different colors for different proxy states (red/green)
     o Added icons to the statusbar popup
+    o Automatically restarting after uninstalling other extensions
 
 Changes in version 0.2a1 - 16.09.2008:
   
   Major features:
-    o Integrated a simple self-implemented proxy switcher
+    o Integrated a self-implemented proxy switcher
 
   New XPCOM components:
     o preferences-observer.js: unify certain browser prefs for all users

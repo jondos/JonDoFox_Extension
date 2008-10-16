@@ -21,7 +21,7 @@
     
     <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list">
-
+      
       <!-- Anontest and configuration items -->
       <menuitem id="jondofox-anontest"
                 class="menuitem-iconic"

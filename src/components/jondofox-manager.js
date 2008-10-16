@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008, JonDos GmbH
+ * Copyright (C) 2008, JonDos GmbH
  * Author: Johannes Renner
  *
  * JonDoFox extension management and compatibility tasks + utilities
@@ -78,7 +78,7 @@ var JDFManager = {
     'network.http.accept.default':'extensions.jondofox.accept_default' 
   },
 
-  // Different needed services
+  // Different services
   prefsHandler: null,
   prefsMapper: null,
   proxyManager: null,
@@ -139,6 +139,7 @@ var JDFManager = {
       proxyService = CC['@mozilla.org/network/protocol-proxy-service;1'].
                         getService(CI.nsIProtocolProxyService);
       proxyService.registerFilter(this, 0);
+      // Example for creating a ProxyInfo object:
       //proxyService.newProxyInfo("direct", "", -1, 0, 0, null);
     } catch (e) {
       log("registerProxyFilter(): " + e);
@@ -172,17 +173,27 @@ var JDFManager = {
         }
       }
       if (restart) {
-        log("TODO: Force application restart");
-        // Try to restart the browser
-        //var appStartup = CC['@mozilla.org/toolkit/app-startup;1'].
-        //                    getService(CI.nsIAppStartup);
-        //appStartup.quit(CI.nsIAppStartup.eRestart);
+        // Programmatically restart the browser
+        this.restartBrowser();
       }
     } catch (err) {
       log("checkExtensions(): " + err);
     }
   },
- 
+
+  // Restart the browser using nsIAppStartup
+  restartBrowser: function() {
+    log("Restarting the application ..");
+    try {
+      var appStartup = CC['@mozilla.org/toolkit/app-startup;1'].
+                          getService(CI.nsIAppStartup);
+      // If this does not work, use 'eForceQuit'
+      appStartup.quit(CI.nsIAppStartup.eAttemptQuit|CI.nsIAppStartup.eRestart);
+    } catch (e) {
+      log("restartBrowser(): " + e);
+    }
+  },
+
   // Call this on final-ui-startup
   onUIStartup: function() {
     log("Starting up, checking conditions ..");
