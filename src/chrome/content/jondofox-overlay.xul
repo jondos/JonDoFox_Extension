@@ -9,7 +9,8 @@
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
   
   <!-- Add listener that loads jondofox-gui.xul on "load" -->
-  <script language="JavaScript">
+  <script type="application/x-javascript"><![CDATA[
+
     try {
       window.addEventListener("load", initWindow, true);
       window.addEventListener("load", init, true);
@@ -36,15 +37,15 @@
       //log("showMenuItem()");
       try {
         if (gContextMenu != null) {
-          if (gContextMenu.onLink) {
+          if (gContextMenu.onLink && isProxyActive()) {
             document.getElementById("bypass-proxy").hidden = false;
-          
-            // It is a link, see if it is on the list          
+            
+            // Check if the linkURL is on the list
             //var onList = noProxyListContains(gContextMenu.linkURL);
             //document.getElementById("noproxy-add").hidden = onList;
             //document.getElementById("noproxy-remove").hidden = !onList;
           } else {
-            // Hide all
+            // Hide
             document.getElementById("bypass-proxy").hidden = true;
           
             //document.getElementById("noproxy-add").hidden = true;
@@ -58,6 +59,7 @@
         log("showMenuItem(): " + e);
       }
     }
-  </script>
+
+  ]]></script>
 
 </overlay>

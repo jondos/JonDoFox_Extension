@@ -172,7 +172,7 @@ var JDFManager = {
         }
       }
       if (restart) {
-        log("TODO: Force an application restart");
+        log("TODO: Force application restart");
         // Try to restart the browser
         //var appStartup = CC['@mozilla.org/toolkit/app-startup;1'].
         //                    getService(CI.nsIAppStartup);
@@ -310,7 +310,7 @@ var JDFManager = {
 
   // Return a formatted string
   formatString: function(name, strArray) {
-    log("Getting formatted string: '" + name + "'");
+    //log("Getting formatted string: '" + name + "'");
     try {
       return this.stringBundle.formatStringFromName(name, strArray, 
                                   strArray.length);
