@@ -23,8 +23,8 @@
    this case.">
 
 <!-- Context menu strings -->
-<!ENTITY jondofox.context.noproxylist.add "Add Link to 'No Proxy'-List">
-<!ENTITY jondofox.context.noproxylist.remove "Remove Link from 'No Proxy'-List">
+<!ENTITY jondofox.contextmenu.noproxylist.add "Add Link to 'No Proxy'-List">
+<!ENTITY jondofox.contextmenu.noproxylist.remove "Remove Link from 'No Proxy'-List">
 
 <!-- Statusbar strings -->
 <!ENTITY jondofox.statusbar.noProxy "No Proxy">
