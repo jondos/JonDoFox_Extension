@@ -42,9 +42,9 @@ function setProxy(state) {
   try {
     // Call the underlying method in JDFManager
     if (!jdfManager.setProxy(state)) {
-      // If the state didn't change, call refreshStatusbar() by hand
-      log("NOT a state change, calling refreshStatusbar() ..");
-      refreshStatusbar();
+      // If the state didn't change, call refresh() by hand
+      log("NOT a state change, calling refresh() ..");
+      refresh();
     } else {
       // The state has changed --> clear cookies
       jdfManager.clearAllCookies();
@@ -72,7 +72,7 @@ function setProxyNone() {
       setProxy(jdfManager.STATE_NONE);
     } else {
       // Refresh the statusbar
-      refreshStatusbar();
+      refresh();
     }
   } catch (e) {
     log("setProxyNone(): " + e);
@@ -113,7 +113,7 @@ function getLabel(state) {
 }
 
 // Refresh the statusbar
-function refreshStatusbar() {
+function refresh() {
   log("Refreshing the statusbar");
   try {
     // Get statusbar, state and label respectively
@@ -141,7 +141,7 @@ function refreshStatusbar() {
     document.getElementById('bypass-proxy').label = jdfManager.
        formatString("jondofox.contextmenu.bypass.label", [label]);
   } catch (e) {
-    log("refreshStatusbar(): " + e);
+    log("refresh(): " + e);
   }
 }
 
@@ -238,7 +238,7 @@ var prefsObserver = {
           }
         } else {
           // STATE_PREF or CUSTOM_LABEL has changed, just refresh the statusbar
-          refreshStatusbar();
+          refresh();
         }
         break;
 
@@ -260,7 +260,7 @@ var overlayObserver = {
         //log("uri.spec is " + uri.spec);
         if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
           // Overlay is ready --> refresh the GUI
-          refreshStatusbar();
+          refresh();
           // Add observer to different preferences
           prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
