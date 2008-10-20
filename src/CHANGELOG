@@ -1,12 +1,12 @@
-Changes in version 0.2b1 - xx.10.2008:
+Changes in version 0.2b1 - 20.10.2008:
   
   New features:
     o Clearing all cookies on every state change
     o Added a customizable proxy configuration to the proxy switcher
     o Set the 'Accept'-header of every request to '*/*'
-    o Using different colors for different proxy states (red/green)
+    o Using different colors for different proxy states (red/black)
     o Added icons to the statusbar popup
-    o Automatically restarting after uninstalling other extensions
+    o Automatically restarting the browser after uninstalling other extensions
 
 Changes in version 0.2a1 - 16.09.2008:
   
