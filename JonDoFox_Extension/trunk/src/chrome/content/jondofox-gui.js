@@ -116,15 +116,15 @@ function getLabel(state) {
 function refresh() {
   log("Refreshing the statusbar");
   try {
-    // Get statusbar, state and label respectively
-    var statusbar = document.getElementById('jondofox-proxy-status');
+    // Get state, label and statusbar respectively
     var state = jdfManager.getState();
     var label = getLabel(state);
-    // Set the color
+    var statusbar = document.getElementById('jondofox-proxy-status');
+    // Set the text color
     if (state == jdfManager.STATE_NONE) {
       statusbar.style.color = "#F00";
     } else {
-      statusbar.style.color = "#390";
+      statusbar.style.color = "#000";
     }
     // Set the label to the statusbar
     statusbar.setAttribute('label', label);
