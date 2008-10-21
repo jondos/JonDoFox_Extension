@@ -168,6 +168,18 @@ function openTabAnontest() {
   }
 }
 
+// Open up the jondofox homepage in a new tab of the current window
+function openTabJondofox() {
+  try {
+    var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Components.interfaces.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser');
+    win.openUILinkIn(jdfManager.getString('jondofox.homepage.url'), 'tab');
+  } catch (e) {
+    log("openTabAnontest(): " + e);
+  }
+}
+
 // Open dialog to edit custom proxy settings
 function editCustomProxy() {
   log("Open dialog 'edit custom proxy'");
