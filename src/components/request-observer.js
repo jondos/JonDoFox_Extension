@@ -36,27 +36,43 @@ const CI = Components.interfaces;
 
 var requestObserver = {
 
+  // Preferences handler object
+  prefsHandler: null,
+
+  // Init the preferences handler
+  init: function() {
+    try {
+      this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
+                             getService().wrappedJSObject;
+    } catch (e) {
+      log("init(): " + e);
+    }
+  },
+
   // This is called on every event occurrence
   modifyRequest: function(channel) {
     try {
-      // Determine the base uri
-      var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-      //log("Forging referrer to " + ref);
-
-      // Set request header(s) here
-      channel.setRequestHeader("Referer", ref, false);
-      channel.setRequestHeader("Accept", "*/*", false);
-       
-      // Set the referrer attribute to the channel object
-      if (channel.referrer) {
-        // Set referrer.spec only if necessary
-        // XXX: Is this test a performance issue?
-        if (channel.referrer.spec != ref) {
-          channel.referrer.spec = ref;
-        } else {
-          //log("!! channel.referrer.spec is already = " + ref);
+      // Check if 'set_referrer' is true
+      // XXX: Is this a performance issue?
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
+	// Determine the base uri
+        var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
+        //log("Forging referrer to " + ref);
+        // Set 'referer' header here
+        channel.setRequestHeader("Referer", ref, false);
+        // Set the referrer attribute to the channel object
+        if (channel.referrer) {
+          // Set referrer.spec only if necessary
+          // XXX: Is this test a performance issue?
+          if (channel.referrer.spec != ref) {
+            channel.referrer.spec = ref;
+          } else {
+            //log("!! channel.referrer.spec is already = " + ref);
+          }
         }
       }
+      // Set other headers here
+      channel.setRequestHeader("Accept", "*/*", false);
       return true;
     } catch (ex) {
       log("Got exception: " + ex);
@@ -109,6 +125,7 @@ var requestObserver = {
         case 'app-startup':
           log("Got topic --> " + topic);
           this.registerObservers();
+	  this.init();
           break;
         
         case 'quit-application-granted':

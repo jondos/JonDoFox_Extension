@@ -213,6 +213,12 @@ var JDFManager = {
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
+      // Reset 'set_referrer' to true
+      var refPref = 'extensions.jondofox.set_referrer';
+      if (!this.prefsHandler.getBoolPref(refPref)) {
+        log("Resetting 'set_referrer'");
+	this.prefsHandler.setBoolPref(refPref, true);
+      }
       // Disable the history
       this.prefsHandler.setIntPref('browser.history_expire_days', 0);
       // If cookies are accepted from *all* sites --> reject 3rd-party cookies

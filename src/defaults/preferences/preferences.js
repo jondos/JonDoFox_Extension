@@ -5,6 +5,9 @@ pref("extensions.jondofox.profile_version", "2.0.4");
 pref("extensions.jondofox.proxy.state", "jondo");
 pref("extensions.jondofox.proxy.no_proxies_on", "localhost, 127.0.0.1");
 
+// Set the 'Referer' header to the current domain
+pref("extensions.jondofox.set_referrer", true);
+
 // Custom proxy
 pref("extensions.jondofox.custom.label", "");
 pref("extensions.jondofox.custom.http_host", "");
