@@ -104,7 +104,8 @@ function getLabel(state) {
         }
 
       default:
-        log("!! Unknown proxy state: " + state);        
+        // This should actually never happen
+        log("!! Unknown proxy state: " + state);
         return jdfManager.getString('jondofox.statusbar.label.unknown');
     }
   } catch (e) {
@@ -161,7 +162,7 @@ function openTabAnontest() {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
-    win.openUILinkIn('https://www.jondos.de/anontest', 'tab');
+    win.openUILinkIn(jdfManager.getString('jondofox.anontest.url'), 'tab');
   } catch (e) {
     log("openTabAnontest(): " + e);
   }

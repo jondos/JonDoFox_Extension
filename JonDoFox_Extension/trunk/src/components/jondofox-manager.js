@@ -146,7 +146,7 @@ var JDFManager = {
     }
   },
  
-  // Try to uninstall other extensions
+  // Try to uninstall other extensions that are not compatible
   checkExtensions: function() {
     try {
       // Get the extensions manager
