@@ -3,6 +3,7 @@
  * Author: Johannes Renner
  *
  * JonDoFox extension management and compatibility tasks + utilities
+ * TODO: Create another component containing the utils only
  *****************************************************************************/
  
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,9 @@ const CI = Components.interfaces;
 // Singleton instance definition
 var JDFManager = {
   
+  // Extension version
+  VERSION: null,
+
   // The proxy state preference
   STATE_PREF: 'extensions.jondofox.proxy.state',
   NO_PROXIES: 'extensions.jondofox.proxy.no_proxies_on',
@@ -47,10 +51,8 @@ var JDFManager = {
 
   // Set this to indicate that cleaning up is necessary
   clean: false,
-
   // Remove jondofox preferences branch on uninstall only
   uninstall: false,
-
   // Set this to true if the user was warned that an important pref was modified
   userWarned: false,
 
@@ -89,8 +91,11 @@ var JDFManager = {
 
   // Inititalize services and stringBundle
   init: function() {
-    log("Init services");
+    log("Initialize JDFManager");
     try {
+      // Determine version
+      this.VERSION = this.getVersion();
+      // Init services
       this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
                              getService().wrappedJSObject;
       this.prefsMapper = CC['@jondos.de/preferences-mapper;1'].
@@ -101,10 +106,9 @@ var JDFManager = {
                               getService(CI.nsIPromptService);
       var bundleService = CC['@mozilla.org/intl/stringbundle;1'].
                              getService(CI.nsIStringBundleService);
-
+      // Create the string bundle
       this.stringBundle = bundleService.createBundle(
                              'chrome://jondofox/locale/jondofox.properties');
-
       // Register the proxy filter
       this.registerProxyFilter();
     } catch (e) {
@@ -202,9 +206,6 @@ var JDFManager = {
       this.init();
       // Check for incompatible extensions
       this.checkExtensions();
-
-      // TODO: Init the 'HttpObserver' from here as well?
-
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
       this.prefsMapper.map();
@@ -334,6 +335,33 @@ var JDFManager = {
     } catch (e) {
       log("formatString(): " + e);
     }  
+  },
+
+  // Return the version string of this extension
+  getVersion: function() {
+    try {
+      // Get the extension-manager and rdf-service
+      var extMgr = CC["@mozilla.org/extensions/manager;1"].
+                      getService(CI.nsIExtensionManager);
+      var rdfService = CC["@mozilla.org/rdf/rdf-service;1"].getService().
+                          QueryInterface(CI.nsIRDFService);
+      // This extensions ID
+      var extID="{437be45a-4114-11dd-b9ab-71d256d89593}";
+      var version = "";
+      // Init ingredients
+      var ds = extMgr.datasource;
+      var res = rdfService.GetResource("urn:mozilla:item:" + extID);
+      var prop = rdfService.GetResource("http://www.mozilla.org/2004/em-rdf#version");
+      // Get the target
+      var target = ds.GetTarget(res, prop, true);
+      if(target != null) {
+        version = target.QueryInterface(CI.nsIRDFLiteral).Value;
+      }
+      log("Current version is " + version);
+      return version;
+    } catch (e) {
+      log("getVersion(): " + e);
+    }
   },
 
   // Return the current number of browser windows (not used at the moment)

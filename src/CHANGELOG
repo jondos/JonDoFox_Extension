@@ -1,6 +1,8 @@
 Changes in version 0.2b2 - ab.cd.2008:
 
-  TODO: Write
+  New features:
+    o Add an internal property to toggle referrer headers
+    o Show JonDoFox homepage when the extension was upgraded
 
 Changes in version 0.2b1 - 20.10.2008:
   
