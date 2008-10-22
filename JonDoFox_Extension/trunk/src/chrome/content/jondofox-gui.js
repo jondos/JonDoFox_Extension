@@ -279,6 +279,15 @@ var overlayObserver = {
           prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
           log("New window is ready");
+          // Get the last version property
+          var last_version = prefsHandler.
+                 getStringPref('extensions.jondofox.last_version');
+          if (last_version != jdfManager.VERSION) {
+            log("New version detected, opening homepage ..");
+            openTabJondofox();
+            prefsHandler.setStringPref('extensions.jondofox.last_version',
+                 jdfManager.VERSION);
+          }
         } else {
           log("!! Wrong uri: " + uri.spec);
         }
