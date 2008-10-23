@@ -1,10 +1,10 @@
-Changes in version 0.2b2 - ab.cd.2008:
+Changes in version 0.2b2 - 2008-10-23:
 
   New features:
-    o Add an internal property to toggle referrer headers
-    o Show JonDoFox homepage when the extension was upgraded
+    o Add an internal property for toggling referrer headers
+    o Show JonDoFox homepage after extension upgrades
 
-Changes in version 0.2b1 - 20.10.2008:
+Changes in version 0.2b1 - 2008-10-20:
   
   New features:
     o Clearing all cookies on every state change
@@ -14,7 +14,7 @@ Changes in version 0.2b1 - 20.10.2008:
     o Added icons to the statusbar popup
     o Automatically restarting the browser after uninstalling other extensions
 
-Changes in version 0.2a1 - 16.09.2008:
+Changes in version 0.2a1 - 2008-09-16:
   
   Major features:
     o Integrated a self-implemented proxy switcher
@@ -35,13 +35,13 @@ Changes in version 0.2a1 - 16.09.2008:
     o Integrated compatibility for Firefox up to version 3.1a2
     o New license: modified BSD license
 
-Changes in version 0.1a3 - 05.08.2008:
+Changes in version 0.1a3 - 2008-08-05:
   
   Minor modifications:
     o Modified instruction text
     o Optimized png's in file sizes
 
-Changes in version 0.1a2 - 01.08.2008:
+Changes in version 0.1a2 - 2008-08-01:
   
   Major improvements:    
     o Replaced jpg's used in instructions by png's with transparent background
@@ -54,6 +54,6 @@ Changes in version 0.1a2 - 01.08.2008:
     o Removed 'contents.rdf' files since these are needed for backwards
       compatibility (to Firefox < 1.5) only
 
-Changes in version 0.1a1 - 29.07.2008:
+Changes in version 0.1a1 - 2008-07-29:
 
   This is the initial version of the JonDoFox-Extension
