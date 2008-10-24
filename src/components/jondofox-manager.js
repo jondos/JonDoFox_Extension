@@ -209,7 +209,7 @@ var JDFManager = {
       if (!this.prefsHandler.getBoolPref(this.REF_PREF) && 
              !this.isInstalled(this.extensions['RefControl']) ) {
         log("Resetting 'set_referrer'");
-	this.prefsHandler.setBoolPref(refPref, true);
+	this.prefsHandler.setBoolPref(this.REF_PREF, true);
       }
       // Disable the history
       this.prefsHandler.setIntPref('browser.history_expire_days', 0);
@@ -361,7 +361,6 @@ var JDFManager = {
 
   /**
    * Return true if a given extension is installed, else return false
-   * TODO: Implement a method that checks whether an Extension is enabled
    */
   isInstalled: function(eID) {
     //log('Checking for ' + eID);
