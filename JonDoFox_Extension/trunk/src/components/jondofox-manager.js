@@ -42,7 +42,8 @@ var JDFManager = {
   // The proxy state preference
   STATE_PREF: 'extensions.jondofox.proxy.state',
   NO_PROXIES: 'extensions.jondofox.proxy.no_proxies_on',
-
+  REF_PREF: 'extensions.jondofox.set_referrer',
+ 
   // Possible values of the 'STATE_PREF'
   STATE_NONE: 'none',  
   STATE_JONDO: 'jondo',
@@ -150,28 +151,31 @@ var JDFManager = {
     }
   },
  
-  // Try to uninstall other extensions that are not compatible
+  /**
+   * Try to uninstall other extensions that are not compatible
+   */ 
   checkExtensions: function() {
     try {
-      // Get the extensions manager
-      var em = CC['@mozilla.org/extensions/manager;1'].
-                  getService(CI.nsIExtensionManager);
       // Indicate a necessary restart
       var restart = false;
       // Iterate
       for (e in this.extensions) {
         log('Checking for ' + e);
-        // Try to get the install location
-        var loc = em.getInstallLocation(this.extensions[e]);
         // If present, uninstall
-        if (loc != null) {
-          log('Found ' + e + ', uninstalling ..');
-          // Prompt a message window for every extension
-          this.showAlert(this.getString('jondofox.dialog.attention'), 
-                  this.formatString('jondofox.dialog.message.extension', [e]));
-          // Uninstall and set restart to true
-          em.uninstallItem(this.extensions[e]);
-          restart = true;
+        if (this.isInstalled(this.extensions[e])) {
+          // XXX: Allow RefControl in some cases
+          if (e == 'RefControl' && 
+                 !this.prefsHandler.getBoolPref(this.REF_PREF)) {
+            log("Ignoring RefControl");
+          } else {
+            log('Found ' + e + ', uninstalling ..');
+            // Prompt a message window for every extension
+            this.showAlert(this.getString('jondofox.dialog.attention'), 
+                   this.formatString('jondofox.dialog.message.extension', [e]));
+            // Uninstall and set restart to true
+            this.uninstallExtension(this.extensions[e]);
+            restart = true;
+          }
         } else {
           log(e + ' not found');
         }
@@ -182,19 +186,6 @@ var JDFManager = {
       }
     } catch (err) {
       log("checkExtensions(): " + err);
-    }
-  },
-
-  // Restart the browser using nsIAppStartup
-  restartBrowser: function() {
-    log("Restarting the application ..");
-    try {
-      var appStartup = CC['@mozilla.org/toolkit/app-startup;1'].
-                          getService(CI.nsIAppStartup);
-      // If this does not work, use 'eForceQuit'
-      appStartup.quit(CI.nsIAppStartup.eAttemptQuit|CI.nsIAppStartup.eRestart);
-    } catch (e) {
-      log("restartBrowser(): " + e);
     }
   },
 
@@ -214,9 +205,9 @@ var JDFManager = {
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
-      // Reset 'set_referrer' to true
-      var refPref = 'extensions.jondofox.set_referrer';
-      if (!this.prefsHandler.getBoolPref(refPref)) {
+      // XXX: Reset 'set_referrer' to true
+      if (!this.prefsHandler.getBoolPref(this.REF_PREF) && 
+             !this.isInstalled(this.extensions['RefControl']) ) {
         log("Resetting 'set_referrer'");
 	this.prefsHandler.setBoolPref(refPref, true);
       }
@@ -337,7 +328,9 @@ var JDFManager = {
     }  
   },
 
-  // Return the version string of this extension
+  /**
+   * Return the version string of this extension
+   */
   getVersion: function() {
     try {
       // Get the extension-manager and rdf-service
@@ -345,13 +338,14 @@ var JDFManager = {
                       getService(CI.nsIExtensionManager);
       var rdfService = CC["@mozilla.org/rdf/rdf-service;1"].getService().
                           QueryInterface(CI.nsIRDFService);
-      // This extensions ID
+      // Our ID
       var extID="{437be45a-4114-11dd-b9ab-71d256d89593}";
       var version = "";
       // Init ingredients
       var ds = extMgr.datasource;
       var res = rdfService.GetResource("urn:mozilla:item:" + extID);
-      var prop = rdfService.GetResource("http://www.mozilla.org/2004/em-rdf#version");
+      var prop = rdfService.
+                    GetResource("http://www.mozilla.org/2004/em-rdf#version");
       // Get the target
       var target = ds.GetTarget(res, prop, true);
       if(target != null) {
@@ -364,7 +358,44 @@ var JDFManager = {
     }
   },
 
-  // Return the current number of browser windows (not used at the moment)
+
+  /**
+   * Return true if a given extension is installed, else return false
+   * TODO: Implement a method that checks whether an Extension is enabled
+   */
+  isInstalled: function(eID) {
+    //log('Checking for ' + eID);
+    try {
+      // Get the extensions manager
+      var em = CC['@mozilla.org/extensions/manager;1'].
+                  getService(CI.nsIExtensionManager);
+      // Try to get the install location
+      var loc = em.getInstallLocation(eID);
+      return loc != null;
+    } catch (err) {
+      log("isInstalled(): " + err);
+    }    
+  },
+
+  /**
+   * Uninstall a given extension
+   */
+  uninstallExtension: function(eID) {
+    log('Uninstalling ' + eID);
+    try {
+      // Get the extensions manager
+      var em = CC['@mozilla.org/extensions/manager;1'].
+                  getService(CI.nsIExtensionManager);
+      // Try to get the install location
+      em.uninstallItem(eID);
+    } catch (err) {
+      log("uninstallExtension(): " + err);
+    }
+  },
+
+  /**
+   * Return the current number of browser windows (not used at the moment)
+   */
   getWindowCount: function() {
     var ww = CC["@mozilla.org/embedcomp/window-watcher;1"].
                 getService(CI.nsIWindowWatcher);  
@@ -376,7 +407,22 @@ var JDFManager = {
     }
     return count;
   },
-  
+
+  /**
+   * Restart the browser using nsIAppStartup
+   */
+  restartBrowser: function() {
+    log("Restarting the application ..");
+    try {
+      var appStartup = CC['@mozilla.org/toolkit/app-startup;1'].
+                          getService(CI.nsIAppStartup);
+      // If this does not work, use 'eForceQuit'
+      appStartup.quit(CI.nsIAppStartup.eAttemptQuit|CI.nsIAppStartup.eRestart);
+    } catch (e) {
+      log("restartBrowser(): " + e);
+    }
+  },
+ 
   // 'No proxy list' implementation ///////////////////////////////////////////
 
   // A list of URIs
