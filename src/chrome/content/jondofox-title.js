@@ -37,7 +37,7 @@ var appVersion = appInfo.version;
 var appName = appInfo.name;
 
 // Create an appendix for the title string
-const titleString = "JonDoFox "+profileVersion+" (Running on "+appName+" "+appVersion+")";
+const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
 
 // Set the title modifier
 // FIXME: This does not work on Macs?
