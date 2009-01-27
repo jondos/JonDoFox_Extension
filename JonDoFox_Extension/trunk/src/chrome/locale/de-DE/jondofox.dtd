@@ -29,7 +29,7 @@
 <!-- Statusbar strings -->
 <!ENTITY jondofox.statusbar.noProxy "Kein Proxy">
 <!ENTITY jondofox.statusbar.custom "Benutzerdefiniert">
-<!ENTITY jondofox.statusbar.editCustom "Konfigurieren">
+<!ENTITY jondofox.statusbar.preferences "Einstellungen">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
@@ -37,10 +37,16 @@
 <!ENTITY jondofox.dialog.save "Speichern">
 <!ENTITY jondofox.dialog.apply "Anwenden">
 
-<!-- Edit custom proxy dialog -->
-<!ENTITY jondofox.dialog.editcustom.title "Benutzerdefinierte Proxy-Konfiguration">
-<!ENTITY jondofox.dialog.editcustom.label "Bezeichner">
-<!ENTITY jondofox.dialog.editcustom.manual "Benutzerdefinierten Proxy von Hand konfigurieren">
-<!ENTITY jondofox.dialog.editcustom.auto "URL für automatische Proxy-Konfiguration">
-<!ENTITY jondofox.dialog.editcustom.example "Beispiel">
-<!ENTITY jondofox.dialog.editcustom.noproxy "Kein Proxy für">
+<!-- Preferences dialog -->
+<!ENTITY jondofox.dialog.preferences.title "JonDoFox-Einstellungen">
+
+<!-- General configuration tab -->
+<!ENTITY jondofox.dialogtab.general.title "Allgemeine Einstellungen">
+
+<!-- Edit custom proxy tab -->
+<!ENTITY jondofox.dialogtab.editcustom.title "Benutzerdefinierte Proxy-Konfiguration">
+<!ENTITY jondofox.dialogtab.editcustom.label "Bezeichner">
+<!ENTITY jondofox.dialogtab.editcustom.manual "Benutzerdefinierten Proxy von Hand konfigurieren">
+<!ENTITY jondofox.dialogtab.editcustom.auto "URL für automatische Proxy-Konfiguration">
+<!ENTITY jondofox.dialogtab.editcustom.example "Beispiel">
+<!ENTITY jondofox.dialogtab.editcustom.noproxy "Kein Proxy für">

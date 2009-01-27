@@ -157,38 +157,38 @@ function isProxyActive() {
 ///////////////////////////////////////////////////////////////////////////////
 
 // Open up the anontest in a new tab of the current window
-function openTabAnontest() {
+function openBrowserTabAnontest() {
   try {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
     win.openUILinkIn(jdfManager.getString('jondofox.anontest.url'), 'tab');
   } catch (e) {
-    log("openTabAnontest(): " + e);
+    log("openBrowserTabAnontest(): " + e);
   }
 }
 
 // Open up the jondofox homepage in a new tab of the current window
-function openTabJondofox() {
+function openBrowserTabJondofox() {
   try {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
     win.openUILinkIn(jdfManager.getString('jondofox.homepage.url'), 'tab');
   } catch (e) {
-    log("openTabAnontest(): " + e);
+    log("openBrowserTabAnontest(): " + e);
   }
 }
 
-// Open dialog to edit custom proxy settings
-function editCustomProxy() {
-  log("Open dialog 'edit custom proxy'");
+// Open dialog to edit preferences
+function openDialogPreferences() {
+  log("Open dialog 'JonDoFox-Preferences'");
   try {
     // No additional parameters needed
-    window.openDialog("chrome://jondofox/content/dialogs/editcustom.xul", 
-              "editcustom", "");
+    window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
+              "prefs-dialog", "");
   } catch (e) {
-    log("editCustomProxy(): " + e);
+    log("openDialogPreferences(): " + e);
   }
 }
 
@@ -284,7 +284,7 @@ var overlayObserver = {
                  getStringPref('extensions.jondofox.last_version');
           if (last_version != jdfManager.VERSION) {
             log("New version detected, opening homepage ..");
-            openTabJondofox();
+            openBrowserTabJondofox();
             prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
           }

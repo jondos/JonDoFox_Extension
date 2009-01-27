@@ -358,7 +358,6 @@ var JDFManager = {
     }
   },
 
-
   /**
    * Return true if a given extension is installed, else return false
    */
@@ -375,6 +374,30 @@ var JDFManager = {
       log("isInstalled(): " + err);
     }    
   },
+
+  /**
+   * TODO: Check whether a given extension is enabled
+   */
+  isEnabled: function(eID) {
+    //log('Checking for ' + eID);
+    try { 
+      var RDFService = CC["@mozilla.org/rdf/rdf-service;1"].
+                          getService(CI.nsIRDFService);
+      var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
+                           getService(CI.nsIExtensionManager).datasource;
+      // Get the extension element
+      var element = RDFService.GetResource("" + eID);
+ 
+      var disabled = getRDFValue(element, "isDisabled");
+      if (disabled && disabled == 'true') {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      log("isEnabled(): " + err);
+    }
+  }, 
 
   /**
    * Uninstall a given extension

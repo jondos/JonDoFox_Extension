@@ -29,13 +29,19 @@
 <!-- Statusbar strings -->
 <!ENTITY jondofox.statusbar.noProxy "No Proxy">
 <!ENTITY jondofox.statusbar.custom "Custom Proxy">
-<!ENTITY jondofox.statusbar.editCustom "Edit Custom Proxy">
+<!ENTITY jondofox.statusbar.preferences "Preferences">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
 <!ENTITY jondofox.dialog.cancel "Cancel">
 <!ENTITY jondofox.dialog.save "Save">
 <!ENTITY jondofox.dialog.apply "Apply">
+
+<!-- Preferences dialog -->
+<!ENTITY jondofox.dialog.preferences.title "JonDoFox-Preferences">
+
+<!-- General configuration tab -->
+<!ENTITY jondofox.dialogtab.general.title "General Preferences">
 
 <!-- Edit custom proxy dialog -->
 <!ENTITY jondofox.dialog.editcustom.title "Custom proxy configuration">
