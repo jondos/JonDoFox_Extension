@@ -1,3 +1,10 @@
+Changes in version 0.2.0 - 2009-04-xx:
+
+  Location Neutrality Revisited:
+    o Override the default charset, but not to UTF-8
+    o Replaced 'en' by 'en-us'
+    o Equally accept all charsets by setting 'accept_charsets' to '*'
+
 Changes in version 0.2b3 - 2008-10-24:
 
   Compatibility:

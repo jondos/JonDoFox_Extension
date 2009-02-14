@@ -31,7 +31,9 @@
     <tabpanels>
 
       <!-- First tabpanel -->
-      <tabpanel id="general-tab"></tabpanel>
+      <tabpanel id="general-tab">
+      
+      </tabpanel>
 
       <!-- Second tabpanel -->
       <tabpanel id="editcustom-tab">
