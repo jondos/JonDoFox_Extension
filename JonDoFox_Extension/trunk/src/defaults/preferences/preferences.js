@@ -25,9 +25,9 @@ pref("extensions.jondofox.custom.socks_version", 5);
 pref("extensions.jondofox.custom.no_proxies_on", "localhost, 127.0.0.1");
 //pref("extensions.jondofox.custom.autoconfig_url", "");
 
-// Useragent prefs
+// Useragent
 pref("extensions.jondofox.appname_override", "Netscape");
-pref("extensions.jondofox.appversion_override", "5.0 (Windows; en)");
+pref("extensions.jondofox.appversion_override", "5.0 (Windows; en-us)");
 pref("extensions.jondofox.buildID_override", "0");
 pref("extensions.jondofox.oscpu_override", "Windows NT 5.1");
 pref("extensions.jondofox.platform_override", "Win32");
@@ -37,7 +37,7 @@ pref("extensions.jondofox.useragent_vendor", "");
 pref("extensions.jondofox.useragent_vendorSub", "");
 
 // Location neutrality
-pref("extensions.jondofox.accept_languages", "en");
-pref("extensions.jondofox.accept_charsets", "utf-8,*");
-pref("extensions.jondofox.default_charset", "utf-8");
+pref("extensions.jondofox.accept_languages", "en-us");
+pref("extensions.jondofox.accept_charsets", "*");
+pref("extensions.jondofox.default_charset", "");
 pref("extensions.jondofox.accept_default", "*/*");

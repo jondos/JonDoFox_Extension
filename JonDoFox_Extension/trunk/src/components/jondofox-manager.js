@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2008, JonDos GmbH
+ * Copyright (C) 2008 - 2009, JonDos GmbH
  * Author: Johannes Renner
  *
  * JonDoFox extension management and compatibility tasks + utilities
