@@ -42,15 +42,15 @@
 <!ENTITY jondofox.dialog.apply "Apply">
 
 <!-- Preferences dialog -->
-<!ENTITY jondofox.dialog.preferences.title "JonDoFox-Preferences">
+<!ENTITY jondofox.dialog.preferences.title "JonDoFox Settings">
 
 <!-- General configuration tab -->
 <!ENTITY jondofox.dialogtab.general.title "General Preferences">
 
 <!-- Edit custom proxy dialog -->
-<!ENTITY jondofox.dialog.editcustom.title "Custom proxy configuration">
-<!ENTITY jondofox.dialog.editcustom.label "Label">
-<!ENTITY jondofox.dialog.editcustom.manual "Manual custom proxy configuration">
-<!ENTITY jondofox.dialog.editcustom.auto "Automatic proxy configuration URL">
-<!ENTITY jondofox.dialog.editcustom.example "Example">
-<!ENTITY jondofox.dialog.editcustom.noproxy "No proxy for">
+<!ENTITY jondofox.dialogtab.editcustom.title "Custom Proxy Configuration">
+<!ENTITY jondofox.dialogtab.editcustom.label "Label">
+<!ENTITY jondofox.dialogtab.editcustom.manual "Manual custom proxy configuration">
+<!ENTITY jondofox.dialogtab.editcustom.auto "Automatic proxy configuration URL">
+<!ENTITY jondofox.dialogtab.editcustom.example "Example">
+<!ENTITY jondofox.dialogtab.editcustom.noproxy "No proxy for">
