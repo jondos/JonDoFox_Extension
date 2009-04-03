@@ -48,12 +48,16 @@
 <!ENTITY jondofox.dialog.preferences.title "JonDoFox-Einstellungen">
 
 <!-- General configuration tab -->
-<!ENTITY jondofox.dialogtab.general.title "Allgemeine Einstellungen">
+<!ENTITY jondofox.dialogtab.options.title "Einstellungen">
+<!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
+<!ENTITY jondofox.dialogtab.options.referrer "Ersetze 'Referrer'-Header durch aktuelle Stamm-URL">
+<!ENTITY jondofox.dialogtab.options.noproxy "Globale Proxy-Ausnahmen">
+<!ENTITY jondofox.dialogtab.options.example "Beispiel">
 
 <!-- Edit custom proxy tab -->
-<!ENTITY jondofox.dialogtab.editcustom.title "Benutzerdefinierte Proxy-Konfiguration">
-<!ENTITY jondofox.dialogtab.editcustom.label "Bezeichner">
-<!ENTITY jondofox.dialogtab.editcustom.manual "Benutzerdefinierten Proxy von Hand konfigurieren">
-<!ENTITY jondofox.dialogtab.editcustom.auto "URL für automatische Proxy-Konfiguration">
-<!ENTITY jondofox.dialogtab.editcustom.example "Beispiel">
-<!ENTITY jondofox.dialogtab.editcustom.noproxy "Kein Proxy für">
+<!ENTITY jondofox.dialogtab.custom.title "Benutzerdefinierte Proxy-Konfiguration">
+<!ENTITY jondofox.dialogtab.custom.label "Bezeichner">
+
+<!-- ENTITY jondofox.dialogtab.custom.manual "Konfiguration" -->
+<!-- ENTITY jondofox.dialogtab.custom.auto "URL für automatische Proxy-Konfiguration" -->
+
