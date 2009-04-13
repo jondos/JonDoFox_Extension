@@ -31,8 +31,8 @@ pref("extensions.jondofox.appversion_override", "5.0 (Windows; en-us)");
 pref("extensions.jondofox.buildID_override", "0");
 pref("extensions.jondofox.oscpu_override", "Windows NT 5.1");
 pref("extensions.jondofox.platform_override", "Win32");
-pref("extensions.jondofox.productsub_override", "20070713");
-pref("extensions.jondofox.useragent_override", "Mozilla/5.0 Gecko/20070713 Firefox/2.0.0.0");
+pref("extensions.jondofox.productsub_override", "2009021910");
+pref("extensions.jondofox.useragent_override", "Mozilla/5.0 (en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7");
 pref("extensions.jondofox.useragent_vendor", "");
 pref("extensions.jondofox.useragent_vendorSub", "");
 
