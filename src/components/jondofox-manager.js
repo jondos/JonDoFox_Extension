@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2008 - 2009, JonDos GmbH
+ * Copyright 2008-2009, JonDos GmbH
  * Author: Johannes Renner
  *
  * JonDoFox extension management and compatibility tasks + utilities
@@ -205,12 +205,6 @@ var JDFManager = {
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
-      // XXX: Reset 'set_referrer' to true
-      if (!this.prefsHandler.getBoolPref(this.REF_PREF) && 
-             !this.isInstalled(this.extensions['RefControl']) ) {
-        log("Resetting 'set_referrer'");
-	this.prefsHandler.setBoolPref(this.REF_PREF, true);
-      }
       // Disable the history
       this.prefsHandler.setIntPref('browser.history_expire_days', 0);
       // If cookies are accepted from *all* sites --> reject 3rd-party cookies
