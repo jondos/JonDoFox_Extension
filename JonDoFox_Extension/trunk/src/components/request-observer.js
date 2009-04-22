@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2008, JonDos GmbH
+ * Copyright 2008, 2009 JonDos GmbH
  * Author: Johannes Renner
  *
  * This component is instanciated once on app-startup and does the following:
@@ -55,20 +55,13 @@ var requestObserver = {
       // Check if 'set_referrer' is true
       // XXX: Is this a performance issue?
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
-	// Determine the base uri
-        var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-        //log("Forging referrer to " + ref);
-        // Set 'referer' header here
-        channel.setRequestHeader("Referer", ref, false);
-        // Set the referrer attribute to the channel object
+        // Set the referrer attribute to channel object + request header
         if (channel.referrer) {
-          // Set referrer.spec only if necessary
-          // XXX: Is this test a performance issue?
-          if (channel.referrer.spec != ref) {
-            channel.referrer.spec = ref;
-          } else {
-            //log("!! channel.referrer.spec is already = " + ref);
-          }
+          //log("BEFORE: " + channel.getRequestHeader("Referer"));
+          var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
+          channel.setRequestHeader("Referer", ref, false);
+          channel.referrer.spec = ref;
+          //log("AFTER: " + channel.getRequestHeader("Referer"));
         }
       }
       // Set other headers here
