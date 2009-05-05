@@ -195,6 +195,49 @@ function setProxyCustom() {
   }
 }
 
+// Use proxy server for all protocols 
+function allProtocols() { 
+  log("allProtocols()");
+  try {
+    if (document.getElementById('checkbox_all_protocols').checked) {
+      var host = document.getElementById("http_host").value;
+      var port = document.getElementById("http_port").value;
+
+      document.getElementById("ssl_host").value = host;
+      document.getElementById("ssl_port").value = port;
+      document.getElementById("ssl_host").disabled = true;
+      document.getElementById("ssl_port").disabled = true;
+
+      document.getElementById("ftp_host").value = host;
+      document.getElementById("ftp_port").value = port;
+      document.getElementById("ftp_host").disabled = true;
+      document.getElementById("ftp_port").disabled = true;
+
+      document.getElementById("gopher_host").value = host;
+      document.getElementById("gopher_port").value = port;
+      document.getElementById("gopher_host").disabled = true;
+      document.getElementById("gopher_port").disabled = true;
+
+      document.getElementById("socks_host").value = host;
+      document.getElementById("socks_port").value = port;
+      document.getElementById("socks_host").disabled = true;
+      document.getElementById("socks_port").disabled = true;
+    } else {
+      // Enable all components
+      document.getElementById("ssl_host").disabled = false;
+      document.getElementById("ssl_port").disabled = false;
+      document.getElementById("ftp_host").disabled = false;
+      document.getElementById("ftp_port").disabled = false;
+      document.getElementById("gopher_host").disabled = false;
+      document.getElementById("gopher_port").disabled = false;
+      document.getElementById("socks_host").disabled = false;
+      document.getElementById("socks_port").disabled = false;
+    } 
+  } catch (e) {
+    log("allProtocols(): " + e);
+  } 
+}
+
 // Enable/disable certain dialog elements
 // XXX: Currently not needed
 function enableOptions() {

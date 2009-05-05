@@ -14,9 +14,12 @@
         ondialogaccept="onAccept();"
         ondialogextra1="onApply();">
 
+
   <!-- Include javascript code -->
   <script type="application/x-javascript" 
           src="chrome://jondofox/content/dialogs/prefs-dialog.js"></script>
+
+<command id="all_protocols" oncommand="allProtocols();"/>
 
   <!-- Always pre-select the first tab -->
   <tabbox id="tab-box" selectedIndex="0">
@@ -100,9 +103,22 @@
                     <label value="HTTP Proxy:" />
                   </hbox>
                   <hbox align="center">
-                    <textbox id="http_host" flex="1"/>
+                    <textbox id="http_host" flex="1" oninput="allProtocols();"/>
                     <label value="Port:" />
-                    <textbox id="http_port" size="5"/>
+                    <textbox id="http_port" size="5" oninput="allProtocols();"/>
+                  </hbox>
+                </row>
+
+                <row align="center">
+                  <hbox align="center" pack="end">
+                    <command id="all_protocols" oncommand="allProtocols();"/>
+                  </hbox>
+                  <hbox align="center">
+                    <checkbox id="checkbox_all_protocols" 
+                              label="Use this proxy server for all protocols"
+                              accesskey="a"
+                              checked="false"
+                              command="all_protocols" />
                   </hbox>
                 </row>
 
