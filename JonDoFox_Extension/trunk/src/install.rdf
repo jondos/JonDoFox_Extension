@@ -19,8 +19,7 @@
     <em:updateURL>https://www.jondos.de/files/downloads/update.rdf</em:updateURL>
     <em:aboutURL>chrome://jondofox/content/dialogs/about-dialog.xul</em:aboutURL>
     <em:iconURL>chrome://jondofox/skin/icon-32x32.png</em:iconURL>
-    <!-- Currently NO settings -->
-    <!-- <em:optionsURL>chrome://jondofox/content/settings.xul</em:optionsURL> -->
+    <em:optionsURL>chrome://jondofox/content/dialogs/prefs-dialog.xul</em:optionsURL>
                 
     <!-- Firefox -->
     <em:targetApplication>
