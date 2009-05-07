@@ -22,8 +22,7 @@ pref("extensions.jondofox.custom.gopher_port", 0);
 pref("extensions.jondofox.custom.socks_host", "");
 pref("extensions.jondofox.custom.socks_port", 0);
 pref("extensions.jondofox.custom.socks_version", 5);
-pref("extensions.jondofox.custom.no_proxies_on", "localhost, 127.0.0.1");
-//pref("extensions.jondofox.custom.autoconfig_url", "");
+pref("extensions.jondofox.custom.all_protocols", false);
 
 // Useragent
 pref("extensions.jondofox.appname_override", "Netscape");

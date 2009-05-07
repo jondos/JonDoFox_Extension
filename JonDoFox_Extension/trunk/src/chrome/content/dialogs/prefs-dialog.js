@@ -42,6 +42,9 @@ function loadPrefsGeneral() {
     // 'set-referrer' is a checkbox
     document.getElementById('set-referrer').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.set_referrer');
+    // 'no_proxies_on'
+    document.getElementById('no_proxies_on').value = 
+        prefsHandler.getStringPref('extensions.jondofox.no_proxies_on');
   } catch (e) {
     log("loadPrefsGeneral(): " + e);    
   }
@@ -53,6 +56,8 @@ function writePrefsGeneral() {
   try {
     prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
         document.getElementById('set-referrer').checked);
+    prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
+        document.getElementById('no_proxies_on').value);
   } catch (e) {
     log("writePrefsGeneral(): " + e);
   }
@@ -98,11 +103,12 @@ function loadPrefsCustomProxy() {
           document.getElementById('version4');
     } else {
       document.getElementById('socks_version').selectedItem = 
-          document.getElementById('version5'); 
+          document.getElementById('version5');
     }
-    // Get 'no_proxies_on'
-    document.getElementById('no_proxies_on').value = 
-        prefsHandler.getStringPref(prefix + 'no_proxies_on');
+    // Get 'all_protocols' and enable/disable components
+    document.getElementById('checkbox_all_protocols').checked = 
+        prefsHandler.getBoolPref(prefix + 'all_protocols');
+    allProtocols();
   } catch (e) {
     log("loadPrefsCustomProxy(): " + e);
   }
@@ -139,9 +145,9 @@ function writePrefsCustomProxy() {
     // Set socks version
     prefsHandler.setIntPref(prefix + 'socks_version', 
         document.getElementById('socks_version').selectedItem.value);
-    // Set exceptions
-    prefsHandler.setStringPref(prefix + 'no_proxies_on', 
-        document.getElementById('no_proxies_on').value);
+    // Set all protocols
+    prefsHandler.setBoolPref(prefix + 'all_protocols', 
+        document.getElementById('checkbox_all_protocols').checked);
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);
   }
@@ -197,7 +203,6 @@ function setProxyCustom() {
 
 // Use proxy server for all protocols 
 function allProtocols() { 
-  log("allProtocols()");
   try {
     if (document.getElementById('checkbox_all_protocols').checked) {
       var host = document.getElementById("http_host").value;
