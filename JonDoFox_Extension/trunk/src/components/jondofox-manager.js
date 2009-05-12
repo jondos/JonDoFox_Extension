@@ -39,9 +39,9 @@ var JDFManager = {
   // Extension version
   VERSION: null,
 
-  // The proxy state preference
+  // Some preferences
   STATE_PREF: 'extensions.jondofox.proxy.state',
-  NO_PROXIES: 'extensions.jondofox.proxy.no_proxies_on',
+  NO_PROXIES: 'extensions.jondofox.no_proxies_on',
   REF_PREF: 'extensions.jondofox.set_referrer',
  
   // Possible values of the 'STATE_PREF'

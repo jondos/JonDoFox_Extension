@@ -14,10 +14,13 @@
         ondialogaccept="onAccept();"
         ondialogextra1="onApply();">
 
-
   <!-- Include javascript code -->
   <script type="application/x-javascript" 
           src="chrome://jondofox/content/dialogs/prefs-dialog.js"></script>
+
+  <!-- Create command elements -->
+  <command id="set_referrer" oncommand="setReferrer();"/>
+  <command id="all_protocols" oncommand="allProtocols();"/>
 
   <!-- Always pre-select the first tab -->
   <tabbox id="tab-box" selectedIndex="0">
@@ -48,8 +51,11 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.header;:"/>
-                <checkbox id="set-referrer"
-                          label="&jondofox.dialogtab.options.referrer;"/>
+                <!-- Checkbox to toggle 'set referrer' -->
+                <checkbox id="checkbox_set_referrer" 
+                          label="&jondofox.dialogtab.options.referrer;"
+                          command="set_referrer" 
+                          accesskey="r"/>
               </groupbox>
             </row>
 
@@ -92,7 +98,7 @@
                     <label value="&jondofox.dialogtab.custom.label;:"/>
                   </hbox>
                   <hbox>
-                    <textbox id="custom-label" flex="1"/>          
+                    <textbox id="textbox_custom_label" flex="1"/>          
                   </hbox>            
                 </row>
 
@@ -108,15 +114,13 @@
                 </row>
 
                 <row align="center">
-                  <hbox align="center" pack="end">
-                    <!-- The command item to set proxy for all protocols -->
-                    <command id="all_protocols" oncommand="allProtocols();"/>
-                  </hbox>
+                  <hbox align="center" pack="end"/>
                   <hbox align="center">
+                    <!-- Checkbox to toggle 'all protocols' -->
                     <checkbox id="checkbox_all_protocols" 
                               label="&jondofox.dialogtab.custom.allprotocols;"
-                              accesskey="a"
-                              command="all_protocols" />
+                              command="all_protocols" 
+                              accesskey="a"/>
                   </hbox>
                 </row>
 
