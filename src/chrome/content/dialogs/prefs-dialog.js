@@ -39,8 +39,8 @@ function onLoad() {
 function loadPrefsGeneral() {
   log("Loading general preferences");
   try {
-    // 'set-referrer' is a checkbox
-    document.getElementById('set-referrer').checked = 
+    // 'set_referrer' is a checkbox
+    document.getElementById('checkbox_set_referrer').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.set_referrer');
     // 'no_proxies_on'
     document.getElementById('no_proxies_on').value = 
@@ -54,10 +54,10 @@ function loadPrefsGeneral() {
 function writePrefsGeneral() {
   log("Write prefs general");
   try {
-    prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
-        document.getElementById('set-referrer').checked);
     prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
         document.getElementById('no_proxies_on').value);
+    // Should already be done
+    setReferrer();
   } catch (e) {
     log("writePrefsGeneral(): " + e);
   }
@@ -74,7 +74,7 @@ function loadPrefsCustomProxy() {
       label = jdfManager.getString('jondofox.statusbar.label.custom');
     }
     // Set the label to the textfield
-    document.getElementById('custom-label').value = label;
+    document.getElementById('textbox_custom_label').value = label;
     // Get host and port settings for different protocols
     document.getElementById('http_host').value = 
         prefsHandler.getStringPref(prefix + 'http_host');
@@ -120,12 +120,13 @@ function writePrefsCustomProxy() {
   try {
     // Set the label
     prefsHandler.setStringPref(prefix + 'label',
-        document.getElementById('custom-label').value);
+        document.getElementById('textbox_custom_label').value);
     // Set single proxies
     prefsHandler.setStringPref(prefix + 'http_host', 
         document.getElementById('http_host').value);
     prefsHandler.setIntPref(prefix + 'http_port', 
         document.getElementById('http_port').value);
+    allProtocols();
     prefsHandler.setStringPref(prefix + 'ssl_host', 
         document.getElementById('ssl_host').value);
     prefsHandler.setIntPref(prefix + 'ssl_port', 
@@ -145,12 +146,71 @@ function writePrefsCustomProxy() {
     // Set socks version
     prefsHandler.setIntPref(prefix + 'socks_version', 
         document.getElementById('socks_version').selectedItem.value);
-    // Set all protocols
-    prefsHandler.setBoolPref(prefix + 'all_protocols', 
-        document.getElementById('checkbox_all_protocols').checked);
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);
   }
+}
+
+// Set 'set_referrer' according to checkbox state
+function setReferrer() {
+  try {
+    prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
+        document.getElementById('checkbox_set_referrer').checked);
+  } catch (e) {
+    log("setReferrer(): " + e);
+  }
+}
+
+// Set 'all_protocols' according to given value
+function setAllProtocols(value) {
+  try {
+    // Set all protocols
+    prefsHandler.setBoolPref(prefix + 'all_protocols', value);
+  } catch (e) {
+    log("setAllProtocols(): " + e);
+  }
+}
+
+// Use proxy server for all protocols 
+function allProtocols() { 
+  try {
+    var checked = document.getElementById('checkbox_all_protocols').checked; 
+    if (checked) {
+      var host = document.getElementById("http_host").value;
+      var port = document.getElementById("http_port").value;
+      // Set host and port for all protocols
+      document.getElementById("ssl_host").value = host;
+      document.getElementById("ssl_port").value = port;
+      document.getElementById("ssl_host").disabled = true;
+      document.getElementById("ssl_port").disabled = true;
+      document.getElementById("ftp_host").value = host;
+      document.getElementById("ftp_port").value = port;
+      document.getElementById("ftp_host").disabled = true;
+      document.getElementById("ftp_port").disabled = true;
+      document.getElementById("gopher_host").value = host;
+      document.getElementById("gopher_port").value = port;
+      document.getElementById("gopher_host").disabled = true;
+      document.getElementById("gopher_port").disabled = true;
+      document.getElementById("socks_host").value = host;
+      document.getElementById("socks_port").value = port;
+      document.getElementById("socks_host").disabled = true;
+      document.getElementById("socks_port").disabled = true;
+    } else {
+      // Enable all components
+      document.getElementById("ssl_host").disabled = false;
+      document.getElementById("ssl_port").disabled = false;
+      document.getElementById("ftp_host").disabled = false;
+      document.getElementById("ftp_port").disabled = false;
+      document.getElementById("gopher_host").disabled = false;
+      document.getElementById("gopher_port").disabled = false;
+      document.getElementById("socks_host").disabled = false;
+      document.getElementById("socks_port").disabled = false;
+    }
+    // Set the preference
+    setAllProtocols(checked);
+  } catch (e) {
+    log("allProtocols(): " + e);
+  } 
 }
 
 // This is called on clicking the 'accept'-button
@@ -171,7 +231,7 @@ function onAccept() {
   return true;
 }
 
-// Apply preferences from the current tab
+// Apply the current tab's preferences
 function onApply() {
   try {
     // Get the index of the currently selected tab
@@ -199,48 +259,6 @@ function setProxyCustom() {
   } catch (e) {
     log("setProxyCustom(): " + e);
   }
-}
-
-// Use proxy server for all protocols 
-function allProtocols() { 
-  try {
-    if (document.getElementById('checkbox_all_protocols').checked) {
-      var host = document.getElementById("http_host").value;
-      var port = document.getElementById("http_port").value;
-
-      document.getElementById("ssl_host").value = host;
-      document.getElementById("ssl_port").value = port;
-      document.getElementById("ssl_host").disabled = true;
-      document.getElementById("ssl_port").disabled = true;
-
-      document.getElementById("ftp_host").value = host;
-      document.getElementById("ftp_port").value = port;
-      document.getElementById("ftp_host").disabled = true;
-      document.getElementById("ftp_port").disabled = true;
-
-      document.getElementById("gopher_host").value = host;
-      document.getElementById("gopher_port").value = port;
-      document.getElementById("gopher_host").disabled = true;
-      document.getElementById("gopher_port").disabled = true;
-
-      document.getElementById("socks_host").value = host;
-      document.getElementById("socks_port").value = port;
-      document.getElementById("socks_host").disabled = true;
-      document.getElementById("socks_port").disabled = true;
-    } else {
-      // Enable all components
-      document.getElementById("ssl_host").disabled = false;
-      document.getElementById("ssl_port").disabled = false;
-      document.getElementById("ftp_host").disabled = false;
-      document.getElementById("ftp_port").disabled = false;
-      document.getElementById("gopher_host").disabled = false;
-      document.getElementById("gopher_port").disabled = false;
-      document.getElementById("socks_host").disabled = false;
-      document.getElementById("socks_port").disabled = false;
-    } 
-  } catch (e) {
-    log("allProtocols(): " + e);
-  } 
 }
 
 // Enable/disable certain dialog elements
