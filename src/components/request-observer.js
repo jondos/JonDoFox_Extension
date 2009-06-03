@@ -43,7 +43,7 @@ var requestObserver = {
   init: function() {
     try {
       this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
-                             getService().wrappedJSObject;
+          getService().wrappedJSObject;
     } catch (e) {
       log("init(): " + e);
     }

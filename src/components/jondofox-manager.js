@@ -170,11 +170,12 @@ var JDFManager = {
           } else {
             log('Found ' + e + ', uninstalling ..');
             // Prompt a message window for every extension
-            this.showAlert(this.getString('jondofox.dialog.attention'), 
-                   this.formatString('jondofox.dialog.message.extension', [e]));
-            // Uninstall and set restart to true
-            this.uninstallExtension(this.extensions[e]);
-            restart = true;
+            if (this.showConfirm(this.getString('jondofox.dialog.attention'), 
+                   this.formatString('jondofox.dialog.message.extension', [e])))  {
+              // Uninstall and set restart to true
+              this.uninstallExtension(this.extensions[e]);
+              restart = true;
+            }
           }
         } else {
           log(e + ' not found');
