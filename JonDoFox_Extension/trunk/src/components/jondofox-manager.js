@@ -171,7 +171,7 @@ var JDFManager = {
             log('Found ' + e + ', uninstalling ..');
             // Prompt a message window for every extension
             if (this.showConfirm(this.getString('jondofox.dialog.attention'), 
-                   this.formatString('jondofox.dialog.message.extension', [e])))  {
+                   this.formatString('jondofox.dialog.message.extension', [e]))) {
               // Uninstall and set restart to true
               this.uninstallExtension(this.extensions[e]);
               restart = true;
@@ -190,7 +190,7 @@ var JDFManager = {
     }
   },
 
-  // Call this on final-ui-startup
+  // Call this on 'final-ui-startup'
   onUIStartup: function() {
     log("Starting up, checking conditions ..");
     try {
@@ -206,15 +206,20 @@ var JDFManager = {
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
-      // Disable the history
-      this.prefsHandler.setIntPref('browser.history_expire_days', 0);
+      // Optionally disable the history
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.disable_history')) {
+        this.prefsHandler.setIntPref('browser.history_expire_days', 0);
+      }
+      // Disable proxy keep-alive connections
+      // XXX What about 'network.http.keep_alive'?
+      this.prefsHandler.setBoolPref('network.http.proxy.keep_alive', false);
       // If cookies are accepted from *all* sites --> reject 3rd-party cookies
       var cookiePref = this.prefsHandler.
                                getIntPref('network.cookie.cookieBehavior');
       if (cookiePref == 0) {
         this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
       }
-      // If this is set, set it to false
+      // If this is set (MR Tech Toolkit), set it to false       
       if (this.prefsHandler.
                   isPreferenceSet('local_install.showBuildinWindowTitle')) {
         this.prefsHandler.
