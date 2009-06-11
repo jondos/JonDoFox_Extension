@@ -386,8 +386,7 @@ var JDFManager = {
       var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
                            getService(CI.nsIExtensionManager).datasource;
       // Get the extension element
-      var element = RDFService.GetResource("" + eID);
- 
+      var element = RDFService.GetResource("" + eID); 
       var disabled = getRDFValue(element, "isDisabled");
       if (disabled && disabled == 'true') {
         return true;
@@ -544,6 +543,8 @@ var JDFManager = {
         // State is not 'STATE_NONE' --> enable
         switch (state) {
           case this.STATE_JONDO:
+            // Ensure that share_proxy_settings is unset
+            this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
             // Set proxies for all protocols but SOCKS
             this.proxyManager.setProxyAll('127.0.0.1', 4001);
             this.proxyManager.setProxySOCKS('', 0, 5);
@@ -553,6 +554,8 @@ var JDFManager = {
             break; 
  
           case this.STATE_TOR:
+            // Ensure that share_proxy_settings is unset
+            this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
             // Set SOCKS proxy only
             this.proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
             this.proxyManager.setSocksRemoteDNS(true);
@@ -563,6 +566,8 @@ var JDFManager = {
             break;
 
           case this.STATE_CUSTOM:
+            // Ensure that share_proxy_settings is unset 
+            this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
             // Get custom prefs ..
             var prefix = "extensions.jondofox.custom.";
             this.proxyManager.setProxyHTTP(
