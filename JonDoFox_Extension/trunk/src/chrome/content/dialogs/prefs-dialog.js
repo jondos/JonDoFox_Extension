@@ -105,10 +105,10 @@ function loadPrefsCustomProxy() {
       document.getElementById('socks_version').selectedItem = 
           document.getElementById('version5');
     }
-    // Get 'all_protocols' and enable/disable components
+    // Get 'custom.share_proxy_settings' and enable/disable components
     document.getElementById('checkbox_all_protocols').checked = 
-        prefsHandler.getBoolPref(prefix + 'all_protocols');
-    allProtocols();
+        prefsHandler.getBoolPref(prefix + 'share_proxy_settings');
+    shareProxySettings();
   } catch (e) {
     log("loadPrefsCustomProxy(): " + e);
   }
@@ -126,7 +126,7 @@ function writePrefsCustomProxy() {
         document.getElementById('http_host').value);
     prefsHandler.setIntPref(prefix + 'http_port', 
         document.getElementById('http_port').value);
-    allProtocols();
+    shareProxySettings();
     prefsHandler.setStringPref(prefix + 'ssl_host', 
         document.getElementById('ssl_host').value);
     prefsHandler.setIntPref(prefix + 'ssl_port', 
@@ -161,18 +161,18 @@ function setReferrer() {
   }
 }
 
-// Set 'all_protocols' according to given value
-function setAllProtocols(value) {
+// Set 'share_proxy_settings' according to a given value
+function setShareProxySettings(value) {
   try {
-    // Set all protocols
-    prefsHandler.setBoolPref(prefix + 'all_protocols', value);
+    // Set 'share_proxy_settings'
+    prefsHandler.setBoolPref(prefix + 'share_proxy_settings', value);
   } catch (e) {
-    log("setAllProtocols(): " + e);
+    log("setShareProxySettings(): " + e);
   }
 }
 
 // Use proxy server for all protocols 
-function allProtocols() { 
+function shareProxySettings() { 
   try {
     var checked = document.getElementById('checkbox_all_protocols').checked; 
     if (checked) {
@@ -207,9 +207,9 @@ function allProtocols() {
       document.getElementById("socks_port").disabled = false;
     }
     // Set the preference
-    setAllProtocols(checked);
+    setShareProxySettings(checked);
   } catch (e) {
-    log("allProtocols(): " + e);
+    log("shareProxySettings(): " + e);
   } 
 }
 
