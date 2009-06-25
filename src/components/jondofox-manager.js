@@ -219,6 +219,8 @@ var JDFManager = {
       if (cookiePref == 0) {
         this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
       }
+      // Disable client-side session and persistent storage for web pages
+      this.prefsHandler.setBoolPref('dom.storage.enabled', false);
       // If this is set (MR Tech Toolkit), set it to false       
       if (this.prefsHandler.
                   isPreferenceSet('local_install.showBuildinWindowTitle')) {
