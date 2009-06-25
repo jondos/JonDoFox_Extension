@@ -566,28 +566,28 @@ var JDFManager = {
             break;
 
           case this.STATE_CUSTOM:
-            // Ensure that share_proxy_settings is unset 
-            this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
-            // Get custom prefs ..
             var prefix = "extensions.jondofox.custom.";
+            // Set share_proxy_settings to custom.share_proxy_settings
+            this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", 
+                this.prefsHandler.getBoolPref(prefix + "share_proxy_settings"));
             this.proxyManager.setProxyHTTP(
-                    this.prefsHandler.getStringPref(prefix + "http_host"),
-                    this.prefsHandler.getIntPref(prefix + "http_port"));
+                this.prefsHandler.getStringPref(prefix + "http_host"),
+                this.prefsHandler.getIntPref(prefix + "http_port"));
             this.proxyManager.setProxySSL(
-                    this.prefsHandler.getStringPref(prefix + "ssl_host"),
-                    this.prefsHandler.getIntPref(prefix + "ssl_port"));
+                this.prefsHandler.getStringPref(prefix + "ssl_host"),
+                this.prefsHandler.getIntPref(prefix + "ssl_port"));
             this.proxyManager.setProxyFTP(
-                    this.prefsHandler.getStringPref(prefix + "ftp_host"),
-                    this.prefsHandler.getIntPref(prefix + "ftp_port"));
+                this.prefsHandler.getStringPref(prefix + "ftp_host"),
+                this.prefsHandler.getIntPref(prefix + "ftp_port"));
             this.proxyManager.setProxyGopher(
-                    this.prefsHandler.getStringPref(prefix + "gopher_host"),
-                    this.prefsHandler.getIntPref(prefix + "gopher_port"));
+                this.prefsHandler.getStringPref(prefix + "gopher_host"),
+                this.prefsHandler.getIntPref(prefix + "gopher_port"));
             this.proxyManager.setProxySOCKS(
-                    this.prefsHandler.getStringPref(prefix + "socks_host"),
-                    this.prefsHandler.getIntPref(prefix + "socks_port"),
-                    this.prefsHandler.getIntPref(prefix + "socks_version"));
+                this.prefsHandler.getStringPref(prefix + "socks_host"),
+                this.prefsHandler.getIntPref(prefix + "socks_port"),
+                this.prefsHandler.getIntPref(prefix + "socks_version"));
             this.proxyManager.setExceptions(
-                    this.prefsHandler.getStringPref(prefix + "no_proxies_on"));
+                this.prefsHandler.getStringPref(prefix + "no_proxies_on"));
             break;
 
           default:
