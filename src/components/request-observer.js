@@ -52,23 +52,21 @@ var requestObserver = {
   // This is called on every event occurrence
   modifyRequest: function(channel) {
     try {
-      // Check if 'set_referrer' is true
-      // XXX: Is this a performance issue?
+      // Check if 'set_referrer' is true, is this a performance issue?
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
-        // Set the referrer attribute to channel object + request header
-        if (channel.referrer) {
-          //log("BEFORE: " + channel.getRequestHeader("Referer"));
-          var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-          channel.setRequestHeader("Referer", ref, false);
-          channel.referrer.spec = ref;
-          //log("AFTER: " + channel.getRequestHeader("Referer"));
-        }
+        //log("BEFORE: " + channel.getRequestHeader("Referer"));        
+        // Set the request header
+        var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
+        channel.setRequestHeader("Referer", ref, false);
+        // Set the referrer attribute to channel object (necessary?)
+        //channel.referrer.spec = ref;
+        //log("AFTER: " + channel.getRequestHeader("Referer"));
       }
       // Set other headers here
       channel.setRequestHeader("Accept", "*/*", false);
       return true;
-    } catch (ex) {
-      log("Got exception: " + ex);
+    } catch (e) {
+      log("modifyRequest(): " + e);
     }
     return false;
   },
