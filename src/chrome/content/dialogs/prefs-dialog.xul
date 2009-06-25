@@ -20,7 +20,7 @@
 
   <!-- Create command elements -->
   <command id="set_referrer" oncommand="setReferrer();"/>
-  <command id="all_protocols" oncommand="allProtocols();"/>
+  <command id="share_proxy_settings" oncommand="shareProxySettings();"/>
 
   <!-- Always pre-select the first tab -->
   <tabbox id="tab-box" selectedIndex="0">
@@ -119,7 +119,7 @@
                     <!-- Checkbox to toggle 'all protocols' -->
                     <checkbox id="checkbox_all_protocols" 
                               label="&jondofox.dialogtab.custom.allprotocols;"
-                              command="all_protocols" 
+                              command="share_proxy_settings" 
                               accesskey="a"/>
                   </hbox>
                 </row>
