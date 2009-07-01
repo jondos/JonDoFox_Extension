@@ -25,9 +25,9 @@
   <text value="Philipp Kaplycz"/>
   <separator class="thin"/>
   <text value="Homepage:" style="font-weight: bold;"/>
-  <text value="https://www.jondonym.net"
+  <text value="http://www.jondonym.net"
         class="url"
-        onclick="window.open('https://www.jondonym.net');"/>
+        onclick="window.open('http://www.jondonym.net');"/>
   <separator class="thin"/>
 </vbox>
 <spring flex="1"/>
