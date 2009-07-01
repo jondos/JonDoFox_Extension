@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
+  
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
+
+<dialog id="prefs-dialog" 
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title="&jondofox.dialog.preferences.title;"
+        buttons="accept,cancel,extra1"
+        buttonlabelaccept="&jondofox.dialog.save;"
+        buttonlabelcancel="&jondofox.dialog.cancel;"
+        buttonlabelextra1="&jondofox.dialog.apply;"
+        onload="onLoad();"
+        ondialogaccept="onAccept();"
+        ondialogextra1="onApply();">
+
+  <!-- Include javascript code -->
+  <script type="application/x-javascript" 
+          src="chrome://jondofox/content/dialogs/prefs-dialog.js"></script>
+
+  <!-- Create command elements -->
+  <command id="set_referrer" oncommand="setReferrer();"/>
+  <command id="share_proxy_settings" oncommand="shareProxySettings();"/>
+
+  <!-- Always pre-select the first tab -->
+  <tabbox id="tab-box" selectedIndex="0">
+  
+    <!-- Pre-define tabs -->
+    <tabs>
+      <tab label="&jondofox.dialogtab.options.title;"/>
+      <tab label="&jondofox.dialogtab.custom.title;"/>
+    </tabs>
+ 
+    <!-- Re-define the single tabs --> 
+    <tabpanels>
+
+      <!-- First tabpanel -->
+      <tabpanel id="general-tab"
+                align="start">
+
+        <grid>
+          <!-- Define columns -->
+          <columns>
+            <column flex="1"/>
+          </columns>
+
+          <!-- Define rows -->      
+          <rows>
+
+            <!-- Header preferences -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.header;:"/>
+                <!-- Checkbox to toggle 'set referrer' -->
+                <checkbox id="checkbox_set_referrer" 
+                          label="&jondofox.dialogtab.options.referrer;"
+                          command="set_referrer" 
+                          accesskey="r"/>
+              </groupbox>
+            </row>
+
+            <!-- Global proxy exceptions -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.noproxy;:"/>
+                <!-- Proxy exceptions textbox -->
+                <textbox id="no_proxies_on" flex="1"/>
+                <!-- Static example row -->
+                <label value="&jondofox.dialogtab.options.example;: .mozilla.org, 192.168.1.0/24"/>
+              </groupbox>
+            </row>
+          </rows>
+        </grid>
+      </tabpanel>
+
+      <!-- Second tabpanel -->
+      <tabpanel id="editcustom-tab">
+
+        <grid>
+          <columns>
+            <column/>
+          </columns>
+    
+          <rows>
+            <row>
+
+            <grid>
+              <!-- Define columns here -->
+              <columns>
+                <column/>
+                <column flex="1"/>
+              </columns>
+
+              <!-- Label and proxies for different protocols -->
+              <rows>
+                <row align="center">
+                  <hbox pack="end">
+                    <label value="&jondofox.dialogtab.custom.label;:"/>
+                  </hbox>
+                  <hbox>
+                    <textbox id="textbox_custom_label" flex="1"/>          
+                  </hbox>            
+                </row>
+
+                <row align="center">
+                  <hbox align="center" pack="end">
+                    <label value="HTTP Proxy:" />
+                  </hbox>
+                  <hbox align="center">
+                    <textbox id="http_host" flex="1" oninput="allProtocols();"/>
+                    <label value="Port:" />
+                    <textbox id="http_port" size="5" oninput="allProtocols();"/>
+                  </hbox>
+                </row>
+
+                <row align="center">
+                  <hbox align="center" pack="end"/>
+                  <hbox align="center">
+                    <!-- Checkbox to toggle 'all protocols' -->
+                    <checkbox id="checkbox_all_protocols" 
+                              label="&jondofox.dialogtab.custom.allprotocols;"
+                              command="share_proxy_settings" 
+                              accesskey="a"/>
+                  </hbox>
+                </row>
+
+                <row align="center">
+                  <hbox align="center" pack="end">
+                    <label value="SSL Proxy:" />
+                  </hbox>
+                  <hbox align="center">
+                    <textbox id="ssl_host" flex="1"/>
+                    <label value="Port:" />
+                    <textbox id="ssl_port" size="5"/>
+                  </hbox>
+                </row>
+
+                <row align="center" id="ftp_row">
+                  <hbox align="center" pack="end">
+                    <label value="FTP Proxy:" />
+                  </hbox>
+                  <hbox align="center">
+                    <textbox id="ftp_host" flex="1"/>
+                    <label value="Port:" />
+                    <textbox id="ftp_port" size="5"/>
+                  </hbox>
+                </row>
+
+                <row align="center" id="gopher_row">
+                  <hbox align="center" pack="end">
+                    <label value="Gopher Proxy:" />
+                  </hbox>
+                  <hbox align="center">
+                    <textbox id="gopher_host" flex="1"/>
+                    <label value="Port:" />
+                    <textbox id="gopher_port" size="5"/>
+                  </hbox>
+                </row>
+
+                <row align="center">
+                  <hbox align="center" pack="end">
+                    <label value="SOCKS Proxy:" />
+                  </hbox>
+                  <hbox align="center">
+                    <textbox id="socks_host" flex="1"/>
+                    <label value="Port:" />
+                    <textbox id="socks_port" size="5"/>
+                  </hbox>
+                </row>
+
+                <!-- SOCKS version -->
+                <row>
+                  <spacer/>
+                  <radiogroup id="socks_version" orient="horizontal">
+                    <radio id="version4" value="4" label="SOCKS v4"/>
+                    <radio id="version5" value="5" label="SOCKS v5"/>
+                  </radiogroup>
+                </row>
+              </rows>
+            </grid>
+
+            </row>
+          </rows>
+        </grid>
+      </tabpanel>
+    </tabpanels>
+  </tabbox>
+</dialog>
+
