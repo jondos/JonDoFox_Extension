@@ -18,9 +18,8 @@
   <script type="application/x-javascript" 
           src="chrome://jondofox/content/dialogs/prefs-dialog.js"></script>
 
-  <!-- Create command elements -->
-  <command id="set_referrer" oncommand="setReferrer();"/>
-  <command id="share_proxy_settings" oncommand="shareProxySettings();"/>
+  <!-- Create command element -->
+  <command id="share_proxy_settings" oncommand="shareProxySettings(false);"/>
 
   <!-- Always pre-select the first tab -->
   <tabbox id="tab-box" selectedIndex="0">
@@ -54,7 +53,6 @@
                 <!-- Checkbox to toggle 'set referrer' -->
                 <checkbox id="checkbox_set_referrer" 
                           label="&jondofox.dialogtab.options.referrer;"
-                          command="set_referrer" 
                           accesskey="r"/>
               </groupbox>
             </row>
@@ -186,4 +184,3 @@
     </tabpanels>
   </tabbox>
 </dialog>
-
