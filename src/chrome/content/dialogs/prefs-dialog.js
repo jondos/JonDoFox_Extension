@@ -29,7 +29,7 @@ function onLoad() {
   log("Init dialog, loading values ..");
   try {
     loadPrefsGeneral();
-    loadPrefsCustomProxy();
+    loadPrefsCustomProxy(true);
   } catch (e) {
     log("onLoad(): " + e);    
   }
@@ -54,17 +54,20 @@ function loadPrefsGeneral() {
 function writePrefsGeneral() {
   log("Write prefs general");
   try {
+    // Should already be done
+    // GEORG: No, just here. Otherwise we do not use the abort-button properly.
+    prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
+        document.getElementById('checkbox_set_referrer').checked);
+    // Setting 'no_proxies_on'
     prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
         document.getElementById('no_proxies_on').value);
-    // Should already be done
-    setReferrer();
   } catch (e) {
     log("writePrefsGeneral(): " + e);
   }
 }
  
 // Load custom proxy preferences into the dialog
-function loadPrefsCustomProxy() {
+function loadPrefsCustomProxy(onLoad) {
   log("Loading custom proxy preferences");
   try {
     // Get the custom proxy label
@@ -108,7 +111,7 @@ function loadPrefsCustomProxy() {
     // Get 'custom.share_proxy_settings' and enable/disable components
     document.getElementById('checkbox_all_protocols').checked = 
         prefsHandler.getBoolPref(prefix + 'share_proxy_settings');
-    shareProxySettings();
+    shareProxySettings(onLoad); 
   } catch (e) {
     log("loadPrefsCustomProxy(): " + e);
   }
@@ -126,7 +129,7 @@ function writePrefsCustomProxy() {
         document.getElementById('http_host').value);
     prefsHandler.setIntPref(prefix + 'http_port', 
         document.getElementById('http_port').value);
-    shareProxySettings();
+    //shareProxySettings();
     prefsHandler.setStringPref(prefix + 'ssl_host', 
         document.getElementById('ssl_host').value);
     prefsHandler.setIntPref(prefix + 'ssl_port', 
@@ -146,36 +149,67 @@ function writePrefsCustomProxy() {
     // Set socks version
     prefsHandler.setIntPref(prefix + 'socks_version', 
         document.getElementById('socks_version').selectedItem.value);
+    // Set the preference according to checkbox state
+    prefsHandler.setBoolPref(prefix + 'share_proxy_settings',
+          document.getElementById('checkbox_all_protocols').checked);
+    // We should overwrite our backup with the new settings.
+    // Without that, the backup values are displayed all the time.
+    var checked = document.getElementById('checkbox_all_protocols').checked;
+    if(!checked) {
+      prefsHandler.setStringPref(prefix + 'backup.ssl_host', 
+        document.getElementById('ssl_host').value);
+      prefsHandler.setIntPref(prefix + 'backup.ssl_port', 
+        document.getElementById('ssl_port').value);
+      prefsHandler.setStringPref(prefix + 'backup.ftp_host', 
+        document.getElementById('ftp_host').value);
+      prefsHandler.setIntPref(prefix + 'backup.ftp_port', 
+        document.getElementById('ftp_port').value);
+      prefsHandler.setStringPref(prefix + 'backup.gopher_host', 
+        document.getElementById('gopher_host').value);
+      prefsHandler.setIntPref(prefix + 'backup.gopher_port', 
+        document.getElementById('gopher_port').value);
+      prefsHandler.setStringPref(prefix + 'backup.socks_host', 
+        document.getElementById('socks_host').value);
+      prefsHandler.setIntPref(prefix + 'backup.socks_port', 
+        document.getElementById('socks_port').value);        
+      // Set socks version
+      prefsHandler.setIntPref(prefix + 'backup.socks_version', 
+        document.getElementById('socks_version').selectedItem.value);
+    }
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);
   }
 }
 
-// Set 'set_referrer' according to checkbox state
-function setReferrer() {
-  try {
-    prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
-        document.getElementById('checkbox_set_referrer').checked);
-  } catch (e) {
-    log("setReferrer(): " + e);
-  }
-}
-
-// Set 'share_proxy_settings' according to a given value
-function setShareProxySettings(value) {
-  try {
-    // Set 'share_proxy_settings'
-    prefsHandler.setBoolPref(prefix + 'share_proxy_settings', value);
-  } catch (e) {
-    log("setShareProxySettings(): " + e);
-  }
-}
 
 // Use proxy server for all protocols 
-function shareProxySettings() { 
+function shareProxySettings(onLoad) { 
   try {
     var checked = document.getElementById('checkbox_all_protocols').checked; 
     if (checked) {
+      if (!onLoad) {
+        // Mirroring Firefox' behaviour, we save the old proxy values first
+        // but not during startup... 
+        prefsHandler.setStringPref(prefix + 'backup.ssl_host', 
+            document.getElementById('ssl_host').value);
+        prefsHandler.setIntPref(prefix + 'backup.ssl_port', 
+            document.getElementById('ssl_port').value);
+        prefsHandler.setStringPref(prefix + 'backup.ftp_host', 
+            document.getElementById('ftp_host').value);
+        prefsHandler.setIntPref(prefix + 'backup.ftp_port', 
+            document.getElementById('ftp_port').value);
+        prefsHandler.setStringPref(prefix + 'backup.gopher_host', 
+            document.getElementById('gopher_host').value);
+        prefsHandler.setIntPref(prefix + 'backup.gopher_port', 
+            document.getElementById('gopher_port').value);
+        prefsHandler.setStringPref(prefix + 'backup.socks_host', 
+            document.getElementById('socks_host').value);
+        prefsHandler.setIntPref(prefix + 'backup.socks_port', 
+            document.getElementById('socks_port').value);        
+        // and save socks version...
+        prefsHandler.setIntPref(prefix + 'backup.socks_version', 
+            document.getElementById('socks_version').selectedItem.value);
+      }
       var host = document.getElementById("http_host").value;
       var port = document.getElementById("http_port").value;
       // Set host and port for all protocols
@@ -205,9 +239,33 @@ function shareProxySettings() {
       document.getElementById("gopher_port").disabled = false;
       document.getElementById("socks_host").disabled = false;
       document.getElementById("socks_port").disabled = false;
+      // And now we are going to restore everything...
+      document.getElementById('ssl_host').value = 
+        prefsHandler.getStringPref(prefix + 'backup.ssl_host');
+      document.getElementById('ssl_port').value = 
+        prefsHandler.getIntPref(prefix + 'backup.ssl_port'); 
+      document.getElementById('ftp_host').value = 
+        prefsHandler.getStringPref(prefix + 'backup.ftp_host');
+      document.getElementById('ftp_port').value = 
+        prefsHandler.getIntPref(prefix + 'backup.ftp_port');
+      document.getElementById('gopher_host').value = 
+        prefsHandler.getStringPref(prefix + 'backup.gopher_host');
+      document.getElementById('gopher_port').value = 
+        prefsHandler.getIntPref(prefix + 'backup.gopher_port'); 
+      document.getElementById('socks_host').value = 
+        prefsHandler.getStringPref(prefix + 'backup.socks_host');
+      document.getElementById('socks_port').value = 
+        prefsHandler.getIntPref(prefix + 'backup.socks_port');        
+      // At last we restore the socks version
+      var version = prefsHandler.getIntPref(prefix + 'backup.socks_version');
+      if (version == 4) {
+        document.getElementById('socks_version').selectedItem = 
+          document.getElementById('version4');
+      } else {
+      document.getElementById('socks_version').selectedItem = 
+          document.getElementById('version5');
+      }
     }
-    // Set the preference
-    setShareProxySettings(checked);
   } catch (e) {
     log("shareProxySettings(): " + e);
   } 
@@ -277,4 +335,3 @@ function enableOptions() {
   }
   // TODO: Disable textfields
 }
-
