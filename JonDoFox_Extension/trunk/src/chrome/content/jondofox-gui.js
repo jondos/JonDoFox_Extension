@@ -176,7 +176,7 @@ function openBrowserTabJondofox() {
                  getMostRecentWindow('navigator:browser');
     win.openUILinkIn(jdfManager.getString('jondofox.homepage.url'), 'tab');
   } catch (e) {
-    log("openBrowserTabAnontest(): " + e);
+    log("openBrowserTabJondofox(): " + e);
   }
 }
 
