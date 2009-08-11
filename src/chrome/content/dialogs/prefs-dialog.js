@@ -12,6 +12,11 @@ const TABINDEX_CUSTOMPROXY = 1;
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
     getService().wrappedJSObject;
 
+// Set the proxy manager (only for setting proxy exceptions)
+// TODO: Set proxies using the proxy manager and do not edit prefs directly
+var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
+    getService().wrappedJSObject;
+
 // JonDoFox-Manager is used for setting the proxy to custom
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
     getService().wrappedJSObject;
@@ -181,7 +186,6 @@ function writePrefsCustomProxy() {
   }
 }
 
-
 // Use proxy server for all protocols 
 function shareProxySettings(onLoad) { 
   try {
@@ -262,7 +266,7 @@ function shareProxySettings(onLoad) {
         document.getElementById('socks_version').selectedItem = 
           document.getElementById('version4');
       } else {
-      document.getElementById('socks_version').selectedItem = 
+        document.getElementById('socks_version').selectedItem = 
           document.getElementById('version5');
       }
     }
@@ -277,6 +281,9 @@ function onAccept() {
     // Store all preferences
     writePrefsGeneral();
     writePrefsCustomProxy();
+    // Set proxy exceptions to FF
+    proxyManager.setExceptions(prefsHandler.getStringPref(
+        'extensions.jondofox.no_proxies_on'));
     // If the current state is 'custom': reset it
     if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 
         'custom') {
@@ -297,6 +304,9 @@ function onApply() {
     // Call the respective write-method
     if (index == TABINDEX_GENERAL) {
       writePrefsGeneral();
+      // Set proxy exceptions to FF
+      proxyManager.setExceptions(prefsHandler.getStringPref(
+          'extensions.jondofox.no_proxies_on'));
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
       setProxyCustom();
