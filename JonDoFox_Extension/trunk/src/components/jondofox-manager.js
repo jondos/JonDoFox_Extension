@@ -589,7 +589,7 @@ var JDFManager = {
                 this.prefsHandler.getIntPref(prefix + "socks_port"),
                 this.prefsHandler.getIntPref(prefix + "socks_version"));
             this.proxyManager.setExceptions(
-                this.prefsHandler.getStringPref(prefix + "no_proxies_on"));
+                this.prefsHandler.getStringPref(this.NO_PROXIES));
             break;
 
           default:
