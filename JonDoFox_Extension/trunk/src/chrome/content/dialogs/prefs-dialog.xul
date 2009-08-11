@@ -105,9 +105,9 @@
                     <label value="HTTP Proxy:" />
                   </hbox>
                   <hbox align="center">
-                    <textbox id="http_host" flex="1" oninput="allProtocols();"/>
+                    <textbox id="http_host" flex="1" oninput="shareProxySettings(true);"/>
                     <label value="Port:" />
-                    <textbox id="http_port" size="5" oninput="allProtocols();"/>
+                    <textbox id="http_port" size="5" oninput="shareProxySettings(true);"/>
                   </hbox>
                 </row>
 
