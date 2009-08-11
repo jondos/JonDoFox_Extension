@@ -126,7 +126,7 @@ ProxyManager.prototype = {
 
   // Set 'network.proxy.no_proxies_on'
   setExceptions: function(value) {
-    log("No proxy list --> " + value);
+    log("No proxies on --> " + value);
     try {
       this.ph.setStringPref("network.proxy.no_proxies_on", value);
     } catch (e) {
