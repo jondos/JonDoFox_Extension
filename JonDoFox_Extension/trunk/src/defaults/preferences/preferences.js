@@ -32,7 +32,7 @@ pref("extensions.jondofox.buildID_override", "0");
 pref("extensions.jondofox.oscpu_override", "Windows NT 5.1");
 pref("extensions.jondofox.platform_override", "Win32");
 pref("extensions.jondofox.productsub_override", "2009021910");
-pref("extensions.jondofox.useragent_override", "Mozilla/5.0 (en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7");
+pref("extensions.jondofox.useragent_override", "Mozilla/5.0 (en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2");
 pref("extensions.jondofox.useragent_vendor", "");
 pref("extensions.jondofox.useragent_vendorSub", "");
 
