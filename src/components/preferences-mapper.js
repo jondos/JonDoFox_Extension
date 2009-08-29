@@ -65,14 +65,52 @@ PrefsMapper.prototype = {
     return this.stringPrefsMap;
   },
 
+  // Set boolean pref mappings
+  setBoolPrefs: function(boolPrefsMap) {
+    log("Set boolean preferences map");
+    try {
+      this.boolPrefsMap = boolPrefsMap;
+    } catch (e) {
+      log("setBoolPrefs(): "+ e);
+    }
+  },
+
+  // Return boolean pref mappings
+  getBoolPrefs: function() {
+    return this.boolPrefsMap;
+  },
+
+  // Set integer pref mappings
+  setIntPrefs: function(intPrefsMap) {
+    log("Set integer preferences map");
+    try {
+      this.intPrefsMap = intPrefsMap;
+    } catch (e) {
+      log("setIntPrefs(): "+ e);
+    }
+  },
+
+  // Return integer pref mappings
+  getIntPrefs: function() {
+    return this.intPrefsMap;
+  },
+
   // Perform the mapping
   map: function() {
     log("Mapping user agent preferences");
     try {
-      // Iterate through the map
+      // Iterate through the maps
       for (p in this.stringPrefsMap) {
         this.prefsHandler.setStringPref(p,
                 this.prefsHandler.getStringPref(this.stringPrefsMap[p]));
+      }
+      for (p in this.boolPrefsMap) {
+	this.prefsHandler.setBoolPref(p,
+	        this.prefsHandler.getBoolPref(this.boolPrefsMap[p]));
+      }
+      for (p in this.intPrefsMap) {
+	this.prefsHandler.setIntPref(p,
+		this.prefsHandler.getIntPref(this.intPrefsMap[p]));
       }
     } catch (e) {
       log("map(): " + e);
