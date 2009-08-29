@@ -7,7 +7,7 @@ pref("extensions.jondofox.proxy.state", "jondo");
 
 // Set the 'Referer' header to the current domain
 pref("extensions.jondofox.set_referrer", true);
-pref("extensions.jondofox.disable_history", true);
+
 pref("extensions.jondofox.no_proxies_on", "localhost, 127.0.0.1");
 
 // Custom proxy
@@ -41,3 +41,14 @@ pref("extensions.jondofox.accept_languages", "en-us");
 pref("extensions.jondofox.accept_charsets", "*");
 pref("extensions.jondofox.default_charset", "");
 pref("extensions.jondofox.accept_default", "*/*");
+
+// Miscellaneous
+
+pref("extensions.jondofox.storage_enabled", false);
+pref("extensions.jondofox.geo_enabled", false);
+pref("extensions.jondofox.network_prefetch-next", false);
+pref("extensions.jondofox.cookie_Behaviour", 2);
+pref("extensions.jondofox.socks_remoteDns", true);
+pref("extensions.jondofox.history_expireDays", 0);
+pref("extensions.jondofox.proxy_keepAlive", false);
+pref("extensions.jondofox.noscript_contentBlocker", true);
