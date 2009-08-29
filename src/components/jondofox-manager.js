@@ -90,18 +90,18 @@ var JDFManager = {
   // This map of boolean preferences is given to the prefsMapper
   // XXX What about 'network.http.keep_alive'?
   boolPrefsMap: {
-    'dom.storage.enabled':'extensions.jondofox.storage_enabled',
+    'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
-    'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remoteDns',
-    'network.http.proxy.keep_alive':'extensions.jondofox.proxy_keepAlive',
+    'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
+    'network.http.proxy.keep-alive':'extensions.jondofox.proxy_keep-alive',
     'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker'    
   },
 
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
-    'browser.history_expire_days':'extensions.jondofox.history_expireDays',
-    'network.cookie.cookieBehavior':'extensions.jondofox.cookie_Behavior'
+    'browser.history_expire_days':'extensions.jondofox.history_expire_days',
+    'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior'
   },
 
   // Different services

@@ -44,11 +44,11 @@ pref("extensions.jondofox.accept_default", "*/*");
 
 // Miscellaneous
 
-pref("extensions.jondofox.storage_enabled", false);
+pref("extensions.jondofox.dom_storage_enabled", false);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
-pref("extensions.jondofox.cookie_Behavior", 2);
-pref("extensions.jondofox.socks_remoteDns", true);
-pref("extensions.jondofox.history_expireDays", 0);
-pref("extensions.jondofox.proxy_keepAlive", false);
+pref("extensions.jondofox.cookieBehavior", 2);
+pref("extensions.jondofox.socks_remote_dns", true);
+pref("extensions.jondofox.history_expire_days", 0);
+pref("extensions.jondofox.proxy_keep-Alive", false);
 pref("extensions.jondofox.noscript_contentBlocker", true);
