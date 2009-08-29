@@ -101,7 +101,7 @@ var JDFManager = {
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
     'browser.history_expire_days':'extensions.jondofox.history_expireDays',
-    'network.cookie.cookieBehaviour':'extensions.jondofox.cookie_Behaviour'
+    'network.cookie.cookieBehavior':'extensions.jondofox.cookie_Behavior'
   },
 
   // Different services
