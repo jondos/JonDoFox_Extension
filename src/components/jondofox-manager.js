@@ -208,6 +208,7 @@ var JDFManager = {
         // Programmatically restart the browser
         this.restartBrowser();
       }
+      // Now we check whether necessary extensions are installed...
       for (e in this.necessaryExtensions) {
         log ('Checking for ' + e);
         if (!this.isInstalled(this.necessaryExtensions[e])) {
@@ -216,6 +217,7 @@ var JDFManager = {
           log(e + ' is missing');
         } else {
           log(e + ' is installed');
+          //... and if so whether they are enabled.
           if (this.isUserDisabled(this.necessaryExtensions[e])) {
 	    this.showAlert(this.getString('jondofox.dialog.attention'),
                            this.formatString('jondofox.dialog.message.enableExtension', [e]));
@@ -419,8 +421,9 @@ var JDFManager = {
     }    
   },
 
-  // Check whether a given extension is disabled by an user
-   
+  /**
+   * Check whether a given extension is disabled by an user
+   */
   isUserDisabled: function(eID) {
     //log('Checking for ' + eID);
     try { 
@@ -428,17 +431,23 @@ var JDFManager = {
 	          getService(CI.nsIRDFService);
 	var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
 	             getService(CI.nsIExtensionManager).datasource;
-     	// Get the extension element
+     	// We have to build the relevant resources to work with the
+        // GetTarget function.
 	var element = RDFService.GetResource("urn:mozilla:item:" + eID);
         var rdfInstall = RDFService.GetResource("http://www.mozilla.org/2004/em-rdf#userDisabled");
         var userDisabled = extensionsDS.GetTarget(element, rdfInstall, true);
+        // If the extension is disabled by the user "true" should be
+        // returned, so we cast our result a little bit.
         var userDisabled = userDisabled.QueryInterface(CI.nsIRDFLiteral);
         var userDisabled = userDisabled.Value;
 	return userDisabled; 
       } catch (err) {
+        // If the extensions are not disabled just return "false".
 	if(err.toString() == "TypeError: userDisabled is null") {
 	  return false;
         } else {
+	// If there occurred a different error than the above mentioned,
+        // print it.
 	  log("isDisabled(): " + err);
         }
     }
