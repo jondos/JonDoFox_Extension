@@ -50,5 +50,5 @@ pref("extensions.jondofox.network_prefetch-next", false);
 pref("extensions.jondofox.cookieBehavior", 2);
 pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.history_expire_days", 0);
-pref("extensions.jondofox.proxy_keep-Alive", false);
+pref("extensions.jondofox.proxy_keep-alive", false);
 pref("extensions.jondofox.noscript_contentBlocker", true);
