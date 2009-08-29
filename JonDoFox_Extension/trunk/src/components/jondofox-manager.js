@@ -64,6 +64,12 @@ var JDFManager = {
     'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}' 
   },
 
+  // Necessary security extensions with their IDs
+  necessaryExtensions: {
+    'NoScript':'{73a6fe31-595d-460b-a920-fcc0f8843232}',
+    'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}'
+  },
+
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: { 
     'general.appname.override':'extensions.jondofox.appname_override',
@@ -79,6 +85,23 @@ var JDFManager = {
     'intl.charset.default':'extensions.jondofox.default_charset',
     'intl.accept_charsets':'extensions.jondofox.accept_charsets',
     'network.http.accept.default':'extensions.jondofox.accept_default' 
+  },
+
+  // This map of boolean preferences is given to the prefsMapper
+  // XXX What about 'network.http.keep_alive'?
+  boolPrefsMap: {
+    'dom.storage.enabled':'extensions.jondofox.storage_enabled',
+    'geo.enabled':'extensions.jondofox.geo_enabled',
+    'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
+    'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remoteDns',
+    'network.http.proxy.keep_alive':'extensions.jondofox.proxy_keepAlive',
+    'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker'    
+  },
+
+  //This map of integer preferences is given to the prefsMapper
+  intPrefsMap: {
+    'browser.history_expire_days':'extensions.jondofox.history_expireDays',
+    'network.cookie.cookieBehaviour':'extensions.jondofox.cookie_Behaviour'
   },
 
   // Different services
@@ -185,6 +208,23 @@ var JDFManager = {
         // Programmatically restart the browser
         this.restartBrowser();
       }
+      for (e in this.necessaryExtensions) {
+        log ('Checking for ' + e);
+        if (!this.isInstalled(this.necessaryExtensions[e])) {
+          this.showAlert(this.getString('jondofox.dialog.attention'),
+                         this.formatString('jondofox.dialog.message.necessaryExtension', [e]));
+          log(e + ' is missing');
+        } else {
+          log(e + ' is installed');
+          if (this.isUserDisabled(this.necessaryExtensions[e])) {
+	    this.showAlert(this.getString('jondofox.dialog.attention'),
+                           this.formatString('jondofox.dialog.message.enableExtension', [e]));
+	    log(e + ' is disabled by user');
+          } else {
+	    log(e + ' is enabled by user');
+          }
+        }
+      }
     } catch (err) {
       log("checkExtensions(): " + err);
     }
@@ -199,7 +239,9 @@ var JDFManager = {
       // Check for incompatible extensions
       this.checkExtensions();
       // Map all preferences
-      this.prefsMapper.setStringPrefs(this.stringPrefsMap);  
+      this.prefsMapper.setStringPrefs(this.stringPrefsMap);
+      this.prefsMapper.setBoolPrefs(this.boolPrefsMap);
+      this.prefsMapper.setIntPrefs(this.intPrefsMap); 
       this.prefsMapper.map();
       // Add an observer to the main pref branch after setting the prefs
       var prefs = this.prefsHandler.prefs;
@@ -207,20 +249,20 @@ var JDFManager = {
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
       // Optionally disable the history
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.disable_history')) {
-        this.prefsHandler.setIntPref('browser.history_expire_days', 0);
-      }
+      //if (this.prefsHandler.getBoolPref('extensions.jondofox.disable_history')) {
+      //this.prefsHandler.setIntPref('browser.history_expire_days', 0);
+      //}
       // Disable proxy keep-alive connections
-      // XXX What about 'network.http.keep_alive'?
-      this.prefsHandler.setBoolPref('network.http.proxy.keep_alive', false);
+      
+      //this.prefsHandler.setBoolPref('network.http.proxy.keep_alive', false);
       // If cookies are accepted from *all* sites --> reject 3rd-party cookies
-      var cookiePref = this.prefsHandler.
-                               getIntPref('network.cookie.cookieBehavior');
-      if (cookiePref == 0) {
-        this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
-      }
+      //var cookiePref = this.prefsHandler.
+      //getIntPref('network.cookie.cookieBehavior');
+			       //if (cookiePref == 0) {
+			       //this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
+			       //}
       // Disable client-side session and persistent storage for web pages
-      this.prefsHandler.setBoolPref('dom.storage.enabled', false);
+      //this.prefsHandler.setBoolPref('dom.storage.enabled', false);
       // If this is set (MR Tech Toolkit), set it to false       
       if (this.prefsHandler.
                   isPreferenceSet('local_install.showBuildinWindowTitle')) {
@@ -377,26 +419,28 @@ var JDFManager = {
     }    
   },
 
-  /**
-   * TODO: Check whether a given extension is enabled
-   */
-  isEnabled: function(eID) {
+  // Check whether a given extension is disabled by an user
+   
+  isUserDisabled: function(eID) {
     //log('Checking for ' + eID);
     try { 
-      var RDFService = CC["@mozilla.org/rdf/rdf-service;1"].
-                          getService(CI.nsIRDFService);
-      var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
-                           getService(CI.nsIExtensionManager).datasource;
-      // Get the extension element
-      var element = RDFService.GetResource("" + eID); 
-      var disabled = getRDFValue(element, "isDisabled");
-      if (disabled && disabled == 'true') {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (err) {
-      log("isEnabled(): " + err);
+	var RDFService = CC["@mozilla.org/rdf/rdf-service;1"].
+	          getService(CI.nsIRDFService);
+	var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
+	             getService(CI.nsIExtensionManager).datasource;
+     	// Get the extension element
+	var element = RDFService.GetResource("urn:mozilla:item:" + eID);
+        var rdfInstall = RDFService.GetResource("http://www.mozilla.org/2004/em-rdf#userDisabled");
+        var userDisabled = extensionsDS.GetTarget(element, rdfInstall, true);
+        var userDisabled = userDisabled.QueryInterface(CI.nsIRDFLiteral);
+        var userDisabled = userDisabled.Value;
+	return userDisabled; 
+      } catch (err) {
+	if(err.toString() == "TypeError: userDisabled is null") {
+	  return false;
+        } else {
+	  log("isDisabled(): " + err);
+        }
     }
   }, 
 
