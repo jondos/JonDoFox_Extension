@@ -54,7 +54,7 @@ var requestObserver = {
     try {
       // Check if 'set_referrer' is true, is this a performance issue?
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
-        //log("BEFORE: " + channel.getRequestHeader("Referer"));        
+	  //log("BEFORE: " + channel.getRequestHeader("Referer"));        
         // Set the request header
         var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
         channel.setRequestHeader("Referer", ref, false);
