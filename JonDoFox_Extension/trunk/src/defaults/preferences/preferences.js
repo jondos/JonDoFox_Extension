@@ -1,6 +1,6 @@
 // General prefs
-pref("extensions.jondofox.profile_version", "2.2.0");
 pref("extensions.jondofox.last_version", "");
+pref("extensions.jondofox.profile_update", false);
 
 // Proxy state and default no proxy list
 pref("extensions.jondofox.proxy.state", "jondo");

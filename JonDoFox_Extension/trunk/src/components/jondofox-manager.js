@@ -52,10 +52,9 @@ var JDFManager = {
 
   // Set this to indicate that cleaning up is necessary
   clean: false,
+
   // Remove jondofox preferences branch on uninstall only
   uninstall: false,
-  // Set this to true if the user was warned that an important pref was modified
-  userWarned: false,
 
   // Incompatible extensions with their IDs
   extensions: { 
@@ -238,6 +237,8 @@ var JDFManager = {
     try {
       // Call init() first
       this.init();
+      // Check for a necessary update of the whole profile
+      this.checkProfileUpdate();
       // Check for incompatible extensions
       this.checkExtensions();
       // Map all preferences
@@ -250,21 +251,6 @@ var JDFManager = {
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
-      // Optionally disable the history
-      //if (this.prefsHandler.getBoolPref('extensions.jondofox.disable_history')) {
-      //this.prefsHandler.setIntPref('browser.history_expire_days', 0);
-      //}
-      // Disable proxy keep-alive connections
-      
-      //this.prefsHandler.setBoolPref('network.http.proxy.keep_alive', false);
-      // If cookies are accepted from *all* sites --> reject 3rd-party cookies
-      //var cookiePref = this.prefsHandler.
-      //getIntPref('network.cookie.cookieBehavior');
-			       //if (cookiePref == 0) {
-			       //this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1);
-			       //}
-      // Disable client-side session and persistent storage for web pages
-      //this.prefsHandler.setBoolPref('dom.storage.enabled', false);
       // If this is set (MR Tech Toolkit), set it to false       
       if (this.prefsHandler.
                   isPreferenceSet('local_install.showBuildinWindowTitle')) {
@@ -427,19 +413,19 @@ var JDFManager = {
   isUserDisabled: function(eID) {
     //log('Checking for ' + eID);
     try { 
-	var RDFService = CC["@mozilla.org/rdf/rdf-service;1"].
+	var rdfService = CC["@mozilla.org/rdf/rdf-service;1"].
 	          getService(CI.nsIRDFService);
 	var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
 	             getService(CI.nsIExtensionManager).datasource;
      	// We have to build the relevant resources to work with the
         // GetTarget function.
-	var element = RDFService.GetResource("urn:mozilla:item:" + eID);
-        var rdfInstall = RDFService.GetResource("http://www.mozilla.org/2004/em-rdf#userDisabled");
+	var element = rdfService.GetResource("urn:mozilla:item:" + eID);
+        var rdfInstall = rdfService.
+                 GetResource("http://www.mozilla.org/2004/em-rdf#userDisabled");
         var userDisabled = extensionsDS.GetTarget(element, rdfInstall, true);
         // If the extension is disabled by the user "true" should be
         // returned, so we cast our result a little bit.
-        var userDisabled = userDisabled.QueryInterface(CI.nsIRDFLiteral);
-        var userDisabled = userDisabled.Value;
+        var userDisabled = userDisabled.QueryInterface(CI.nsIRDFLiteral).Value;
 	return userDisabled; 
       } catch (err) {
         // If the extensions are not disabled just return "false".
@@ -496,6 +482,24 @@ var JDFManager = {
       appStartup.quit(CI.nsIAppStartup.eAttemptQuit|CI.nsIAppStartup.eRestart);
     } catch (e) {
       log("restartBrowser(): " + e);
+    }
+  },
+
+  /**
+   * Show a warning if the whole profile has to be updated and not just our
+   * extension
+   */
+
+  checkProfileUpdate: function() {
+    log("Checking whether we have to update the profile ..");
+    try {
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.profile_update') &&
+          this.prefsHandler.getStringPref('extensions.jondofox.profile_version') == "2.2.4") {
+        this.showAlert(this.getString('jondofox.dialog.attention'), 
+                       this.getString('jondofox.dialog.message.profileupdate'));
+      }
+    } catch (e) {
+      log("checkUpdateProfile(): " + e);
     }
   },
  
@@ -744,23 +748,51 @@ var JDFManager = {
           // Do not allow to accept ALL cookies
           if (data == 'network.cookie.cookieBehavior') {
             if (this.prefsHandler.getIntPref('network.cookie.cookieBehavior') == 0) {
-              this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1)
+	      this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1)
               // Warn the user
               this.showAlert(this.getString('jondofox.dialog.attention'), 
                              this.getString('jondofox.dialog.message.cookies'));
+          } else if (this.prefsHandler.
+                     getIntPref('network.cookie.cookieBehavior') == 1) {
+		this.showAlert(this.getString('jondofox.dialog.attention'), 
+                               this.getString('jondofox.dialog.message.prefchange'));
             }
           }
 
-          // Check if the changed preference is on the map
-          else if (data in this.stringPrefsMap && !this.userWarned) {
-            log("Pref '" + data + "' is on the map!");
+          // Check if the changed preference is on the stringprefsmap
+          else if (data in this.stringPrefsMap) {
+            log("Pref '" + data + "' is on the string prefsmap!");
             // If the new value is not the recommended ..
             if (this.prefsHandler.getStringPref(data) != 
                    this.prefsHandler.getStringPref(this.stringPrefsMap[data])) {
               // ... warn the user
               this.showAlert(this.getString('jondofox.dialog.attention'), 
                              this.getString('jondofox.dialog.message.prefchange'));
-              this.userWarned = true;
+            } else {
+              log("All good!");
+            }
+          }
+          else if (data in this.boolPrefsMap) {
+            log("Pref '" + data + "' is on the boolean prefsmap!");
+            // If the new value is not the recommended ..
+            if (this.prefsHandler.getBoolPref(data) != 
+                   this.prefsHandler.getBoolPref(this.boolPrefsMap[data])) {
+              // ... warn the user
+              this.showAlert(this.getString('jondofox.dialog.attention'), 
+                             this.getString('jondofox.dialog.message.prefchange'));
+            } else {
+              log("All good!");
+            }
+          }
+	  else if (data in this.intPrefsMap && data !=
+                   'network.cookie.cookieBehavior') {
+            log("Pref '" + data + "' is on the integer prefsmap!");
+            // If the new value is not the recommended ..
+            if (this.prefsHandler.getIntPref(data) != 
+                   this.prefsHandler.getIntPref(this.intPrefsMap[data])) {
+              // ... warn the user
+              this.showAlert(this.getString('jondofox.dialog.attention'), 
+                             this.getString('jondofox.dialog.message.prefchange'));
             } else {
               log("All good!");
             }
