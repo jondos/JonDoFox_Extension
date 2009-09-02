@@ -30,10 +30,13 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
+var prefix = "extensions.jondofox.custom.";
+
 // Preferences that need to be observed for triggering GUI changes
-var STATE_PREF = jdfManager.STATE_PREF
+var STATE_PREF = jdfManager.STATE_PREF;
 var PROXY_PREF = 'network.proxy.type';
 var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
+var EMPTY_PROXY = 'extensions.jondofox.custom.empty_proxy';
 
 // Set the extension into a certain state, 
 // pass one of the jdfManager.STATE_XXXs
@@ -79,6 +82,38 @@ function setProxyNone() {
   }
 }
 
+// Check whether there are really proxy settings set if changing to custom proxy
+// If not, ask the user whether she really wants to surf without proxy.
+
+function setCustomProxy() {
+  log("Check whether there is a proxy set at all ..");
+  try {
+    // Hide 'menupopup'
+    document.getElementById('jondofox-proxy-list').hidePopup();
+    //Check whether one of the relevant preferences is zero
+      if(!(prefsHandler.getStringPref(prefix + 'http_host') &&
+           prefsHandler.getIntPref(prefix + 'http_port')) &&
+         !(prefsHandler.getStringPref(prefix + 'socks_host') &&
+           prefsHandler.getIntPref(prefix + 'socks_port'))) {
+        // Request user confirmation
+        var disable = jdfManager.showConfirm(
+                     jdfManager.getString('jondofox.dialog.warning'),
+                     jdfManager.getString('jondofox.dialog.message.nocustomproxy'));
+        if (disable) {
+          // Call the setProxy-method
+	  setProxy(jdfManager.STATE_CUSTOM);
+        } else {
+          // Refresh the statusbar
+	  refresh();
+        }
+      } else {
+	  setProxy(jdfManager.STATE_CUSTOM);
+      }
+  } catch (e) {
+    log("setCustomProxy(): " + e);
+  }
+}
+
 // Map the current proxy status to a (localized) string label,
 // pass one of the jdfManager.STATE_XXXs here
 function getLabel(state) {
@@ -121,8 +156,11 @@ function refresh() {
     var state = jdfManager.getState();
     var label = getLabel(state);
     var statusbar = document.getElementById('jondofox-proxy-status');
-    // Set the text color
-    if (state == jdfManager.STATE_NONE) {
+    var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
+    // Set the text color; if we have proxy state custom and an empty proxy
+    // then change the text color as well...
+    if (state == jdfManager.STATE_NONE || 
+        (state == jdfManager.STATE_CUSTOM && emptyCustomProxy)) {
       statusbar.style.color = "#F00";
     } else {
       statusbar.style.color = "#000";
@@ -249,8 +287,10 @@ var prefsObserver = {
             // .. set the state to 'none'
             jdfManager.setState(jdfManager.STATE_NONE);
           }
-        } else {
-          // STATE_PREF or CUSTOM_LABEL has changed, just refresh the statusbar
+        } 
+        else {
+          // STATE_PREF or CUSTOM_LABEL or EMPTY_PROXY has changed,
+          // just refresh the statusbar
           refresh();
         }
         break;
@@ -273,11 +313,19 @@ var overlayObserver = {
         //log("uri.spec is " + uri.spec);
         if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
           // Overlay is ready --> refresh the GUI
-          refresh();
+	  refresh();
           // Add observer to different preferences
           prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
+
+          //We need to obersve this preference because otherwise there would be
+          //no refreshing of the status bar if we had already 'custom' as a
+          //our proxy state: the correct writing of 'custom' with either red
+          //or black letters would not work.
+
+          prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
+                  
           log("New window is ready");
           // Get the last version property
           var last_version = prefsHandler.
