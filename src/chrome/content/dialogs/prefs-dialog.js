@@ -180,6 +180,17 @@ function writePrefsCustomProxy() {
       // Set socks version
       prefsHandler.setIntPref(prefix + 'backup.socks_version', 
         document.getElementById('socks_version').selectedItem.value);
+      // Check if the relevant values are okay for using JonDo, i.e. not
+      // empty; the 'empty_proxy' preference will be observed in jondofox-gui.js
+      // in order to set the text color of 'custom' properly
+      if(!(prefsHandler.getStringPref(prefix + 'http_host') &&
+           prefsHandler.getIntPref(prefix + 'http_port')) &&
+         !(prefsHandler.getStringPref(prefix + 'socks_host') &&
+           prefsHandler.getIntPref(prefix + 'socks_port'))) {
+	prefsHandler.setBoolPref(prefix + 'empty_proxy', true);
+      } else {
+	prefsHandler.setBoolPref(prefix + 'empty_proxy', false);
+      }
     }
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);

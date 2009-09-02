@@ -43,7 +43,7 @@
       <menuseparator />
       <radio id="custom-radio"
              label=""
-             oncommand="setProxy('custom');" />
+             oncommand="setCustomProxy();" />
       <radio id="tor-radio"
              label="Tor"
              oncommand="setProxy('tor');" />
