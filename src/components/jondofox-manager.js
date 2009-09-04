@@ -239,7 +239,8 @@ var JDFManager = {
       this.init();
       // Check for a necessary update of the whole profile
       this.checkProfileUpdate();
-      // Check for incompatible extensions
+      // Check for incompatible extensions and whether the necessary ones
+      // are installed and enabled.
       this.checkExtensions();
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);
@@ -494,7 +495,7 @@ var JDFManager = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getBoolPref('extensions.jondofox.profile_update') &&
-          this.prefsHandler.getStringPref('extensions.jondofox.profile_version') == "2.2.4") {
+          this.prefsHandler.getStringPref('extensions.jondofox.profile_version') != "2.2.5") {
         this.showAlert(this.getString('jondofox.dialog.attention'), 
                        this.getString('jondofox.dialog.message.profileupdate'));
       }
