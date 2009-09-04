@@ -752,14 +752,10 @@ var JDFManager = {
               // Warn the user
               this.showAlert(this.getString('jondofox.dialog.attention'), 
                              this.getString('jondofox.dialog.message.cookies'));
-          } else if (this.prefsHandler.
-                     getIntPref('network.cookie.cookieBehavior') == 1) {
-		this.showAlert(this.getString('jondofox.dialog.attention'), 
-                               this.getString('jondofox.dialog.message.prefchange'));
-            }
+            } 
           }
 
-          // Check if the changed preference is on the stringprefsmap
+          // Check if the changed preference is on the stringprefsmap...
           else if (data in this.stringPrefsMap) {
             log("Pref '" + data + "' is on the string prefsmap!");
             // If the new value is not the recommended ..
@@ -772,6 +768,7 @@ var JDFManager = {
               log("All good!");
             }
           }
+	  // or on the boolean prefsmap...
           else if (data in this.boolPrefsMap) {
             log("Pref '" + data + "' is on the boolean prefsmap!");
             // If the new value is not the recommended ..
@@ -784,7 +781,8 @@ var JDFManager = {
               log("All good!");
             }
           }
-	  else if (data in this.intPrefsMap && data !=
+	  // or on the integer prefsmap (with the cookie-pref is already dealt).
+	  else if (data in this.intPrefsMap && data != 
                    'network.cookie.cookieBehavior') {
             log("Pref '" + data + "' is on the integer prefsmap!");
             // If the new value is not the recommended ..

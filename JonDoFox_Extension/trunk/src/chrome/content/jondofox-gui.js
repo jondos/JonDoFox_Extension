@@ -82,7 +82,7 @@ function setProxyNone() {
   }
 }
 
-// Check whether there are really proxy settings set if changing to custom proxy
+// Check whether there are really proxy settings if changing to custom proxy.
 // If not, ask the user whether she really wants to surf without proxy.
 
 function setCustomProxy() {
@@ -322,7 +322,8 @@ var overlayObserver = {
           //We need to obersve this preference because otherwise there would be
           //no refreshing of the status bar if we had already 'custom' as a
           //our proxy state: the correct writing of 'custom' with either red
-          //or black letters would not work.
+          //or black letters would not work if we accepted or applied new
+          //settings.
 
           prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
                   
