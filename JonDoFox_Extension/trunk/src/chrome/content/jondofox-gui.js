@@ -187,7 +187,9 @@ function refresh() {
 // Return false if state is NONE, else true (called from jondofox-overlay.xul)
 function isProxyActive() {
   //log("Checking if proxy is active");
-  return (jdfManager.getState() != jdfManager.STATE_NONE);
+    var customAndDisabled = jdfManager.getState() == jdfManager.STATE_CUSTOM &&
+	prefsHandler.getBoolPref(prefix + 'empty_proxy') == true;
+  return (jdfManager.getState() != jdfManager.STATE_NONE && !customAndDisabled);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
