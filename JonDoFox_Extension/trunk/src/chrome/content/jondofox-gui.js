@@ -91,10 +91,8 @@ function setCustomProxy() {
     // Hide 'menupopup'
     document.getElementById('jondofox-proxy-list').hidePopup();
     //Check whether one of the relevant preferences is zero
-      if(!(prefsHandler.getStringPref(prefix + 'http_host') &&
-           prefsHandler.getIntPref(prefix + 'http_port')) &&
-         !(prefsHandler.getStringPref(prefix + 'socks_host') &&
-           prefsHandler.getIntPref(prefix + 'socks_port'))) {
+    
+    if(prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
         // Request user confirmation
         var disable = jdfManager.showConfirm(
                      jdfManager.getString('jondofox.dialog.warning'),
@@ -111,6 +109,25 @@ function setCustomProxy() {
       }
   } catch (e) {
     log("setCustomProxy(): " + e);
+  }
+}
+
+// We are showing a warning if the user wants to start surfing either without
+// any proxy at all or without a valid custom one. Maybe she has just forgotten 
+// to activate it...
+
+function isProxyDisabled() {
+  if(jdfManager.getState() == jdfManager.STATE_NONE) {
+    jdfManager.showAlert(
+               jdfManager.getString('jondofox.dialog.attention'),
+               jdfManager.getString('jondofox.dialog.message.proxyoff'));
+  }
+  else if(jdfManager.getState() == jdfManager.STATE_CUSTOM) {
+    if(prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
+      jdfManager.showAlert(
+                 jdfManager.getString('jondofox.dialog.attention'),
+                 jdfManager.getString('jondofox.dialog.message.nocustomproxy'));
+    }
   }
 }
 
@@ -184,7 +201,8 @@ function refresh() {
   }
 }
 
-// Return false if state is NONE, else true (called from jondofox-overlay.xul)
+// Return false if state is NONE or CUSTOM with no valid proxy
+// else true (called from jondofox-overlay.xul)
 function isProxyActive() {
   //log("Checking if proxy is active");
     var customAndDisabled = jdfManager.getState() == jdfManager.STATE_CUSTOM &&
@@ -330,6 +348,9 @@ var overlayObserver = {
           prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
                   
           log("New window is ready");
+          //Let's test whether the user starts with appropriate proxy-settings..
+          isProxyDisabled();
+
           // Get the last version property
           var last_version = prefsHandler.
                  getStringPref('extensions.jondofox.last_version');
