@@ -8,6 +8,12 @@ pref("extensions.jondofox.proxy.state", "jondo");
 // Set the 'Referer' header to the current domain
 pref("extensions.jondofox.set_referrer", true);
 
+// Show different warnings in the beginning
+pref("extensions.jondofox.update_warning", true);
+pref("extensions.jondofox.preferences_warning", true);
+pref("extensions.jondofox.proxy_warning", true);
+
+// No proxy list
 pref("extensions.jondofox.no_proxies_on", "localhost, 127.0.0.1");
 
 // Custom proxy

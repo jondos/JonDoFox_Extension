@@ -47,6 +47,13 @@ function loadPrefsGeneral() {
     // 'set_referrer' is a checkbox
     document.getElementById('checkbox_set_referrer').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.set_referrer');
+    // the warnings are checkboxes as well
+    document.getElementById('checkbox_update_warning').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.update_warning');
+    document.getElementById('checkbox_preferences_warning').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.preferences_warning'); 
+    document.getElementById('checkbox_proxy_warning').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.proxy_warning');
     // 'no_proxies_on'
     document.getElementById('no_proxies_on').value = 
         prefsHandler.getStringPref('extensions.jondofox.no_proxies_on');
@@ -63,6 +70,13 @@ function writePrefsGeneral() {
     // GEORG: No, just here. Otherwise we do not use the abort-button properly.
     prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
         document.getElementById('checkbox_set_referrer').checked);
+    // Now the settings concerning different warnings
+    prefsHandler.setBoolPref('extensions.jondofox.update_warning',
+        document.getElementById('checkbox_update_warning').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.preferences_warning',
+        document.getElementById('checkbox_preferences_warning').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.proxy_warning',
+        document.getElementById('checkbox_proxy_warning').checked);
     // Setting 'no_proxies_on'
     prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
         document.getElementById('no_proxies_on').value);
