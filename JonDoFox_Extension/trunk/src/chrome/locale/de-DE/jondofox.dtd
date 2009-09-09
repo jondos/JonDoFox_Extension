@@ -51,6 +51,10 @@
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.referrer "Ersetze 'Referrer'-Header durch aktuelle Stamm-URL">
+<!ENTITY jondofox.dialogtab.options.warnings "Warnungen">
+<!ENTITY jondofox.dialogtab.options.warnings.update "Zeige Warnung bei notwendigem Profil-Update">
+<!ENTITY jondofox.dialogtab.options.warnings.prefs "Zeige Warnung bei Veränderung wichtiger Einstellungen">
+<!ENTITY jondofox.dialogtab.options.warnings.proxy "Zeige Warnung bei nicht eingestelltem Proxy">
 <!ENTITY jondofox.dialogtab.options.noproxy "Globale Proxy-Ausnahmen">
 <!ENTITY jondofox.dialogtab.options.example "Beispiel">
 

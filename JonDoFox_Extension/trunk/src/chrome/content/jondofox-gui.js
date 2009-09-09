@@ -62,14 +62,20 @@ function setProxy(state) {
 
 // Disable the proxy and ask the user for confirmation first
 function setProxyNone() {
-  log("Asking for confirmation ..");
   try {
     // Hide 'menupopup'
     document.getElementById('jondofox-proxy-list').hidePopup();
-    // Request user confirmation
-    var disable = jdfManager.showConfirm(
-                     jdfManager.getString('jondofox.dialog.warning'),
-                     jdfManager.getString('jondofox.dialog.message.proxyoff'));
+    // Request user confirmation if she has not disabled the warning
+    var disable;
+    if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
+      disable = true; 
+    }
+    else {  
+      log("Asking for confirmation ..");
+      disable = jdfManager.showConfirmCheck(
+                          jdfManager.getString('jondofox.dialog.warning'),
+                          jdfManager.getString('jondofox.dialog.message.proxyoff'), 'proxy');
+    }
     if (disable) {
       // Call the method above
       setProxy(jdfManager.STATE_NONE);
@@ -92,21 +98,27 @@ function setCustomProxy() {
     document.getElementById('jondofox-proxy-list').hidePopup();
     //Check whether one of the relevant preferences is zero
     
-    if(prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
+    if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
+      var disable;
+      if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
+        disable = true; 
+      }
+      else {
         // Request user confirmation
-        var disable = jdfManager.showConfirm(
-                     jdfManager.getString('jondofox.dialog.warning'),
-                     jdfManager.getString('jondofox.dialog.message.nocustomproxy'));
-        if (disable) {
-          // Call the setProxy-method
-	  setProxy(jdfManager.STATE_CUSTOM);
-        } else {
+        var disable = jdfManager.showConfirmCheck(
+                                jdfManager.getString('jondofox.dialog.warning'),
+                                jdfManager.getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
+      }
+      if (disable) {
+        // Call the setProxy-method
+	setProxy(jdfManager.STATE_CUSTOM);
+      } else {
           // Refresh the statusbar
 	  refresh();
         }
-      } else {
-	  setProxy(jdfManager.STATE_CUSTOM);
-      }
+    } else {
+	setProxy(jdfManager.STATE_CUSTOM);
+    }
   } catch (e) {
     log("setCustomProxy(): " + e);
   }
@@ -117,16 +129,18 @@ function setCustomProxy() {
 // to activate it...
 
 function isProxyDisabled() {
-  if(jdfManager.getState() == jdfManager.STATE_NONE) {
-    jdfManager.showAlert(
+  if (prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
+    if (jdfManager.getState() == jdfManager.STATE_NONE) {
+      jdfManager.showAlertCheck(
                jdfManager.getString('jondofox.dialog.attention'),
-               jdfManager.getString('jondofox.dialog.message.proxyoff'));
-  }
-  else if(jdfManager.getState() == jdfManager.STATE_CUSTOM) {
-    if(prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
-      jdfManager.showAlert(
+               jdfManager.getString('jondofox.dialog.message.proxyoff'), 'proxy');
+    }
+    else if (jdfManager.getState() == jdfManager.STATE_CUSTOM) {
+      if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
+        jdfManager.showAlertCheck(
                  jdfManager.getString('jondofox.dialog.attention'),
-                 jdfManager.getString('jondofox.dialog.message.nocustomproxy'));
+                 jdfManager.getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
+      }
     }
   }
 }
@@ -206,7 +220,7 @@ function refresh() {
 function isProxyActive() {
   //log("Checking if proxy is active");
     var customAndDisabled = jdfManager.getState() == jdfManager.STATE_CUSTOM &&
-	prefsHandler.getBoolPref(prefix + 'empty_proxy') == true;
+	prefsHandler.getBoolPref(prefix + 'empty_proxy');
   return (jdfManager.getState() != jdfManager.STATE_NONE && !customAndDisabled);
 }
 

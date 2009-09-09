@@ -48,6 +48,10 @@
 <!ENTITY jondofox.dialogtab.options.title "Preferences">
 <!ENTITY jondofox.dialogtab.options.header "Headers">
 <!ENTITY jondofox.dialogtab.options.referrer "Replace 'Referrer'-headers by current URL">
+<!ENTITY jondofox.dialogtab.options.warnings "Warnings">
+<!ENTITY jondofox.dialogtab.options.warnings.update "Show warning if a profile update is necessary">
+<!ENTITY jondofox.dialogtab.options.warnings.prefs "Show warning if important preferences changed">
+<!ENTITY jondofox.dialogtab.options.warnings.proxy "Show warning if there is no proxy set">
 <!ENTITY jondofox.dialogtab.options.noproxy "Global proxy exceptions">
 <!ENTITY jondofox.dialogtab.options.example "Example">
 
