@@ -68,18 +68,46 @@ var JDFManager = {
     'NoScript':'{73a6fe31-595d-460b-a920-fcc0f8843232}',
     'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}'
   },
+  
+  // The user agent maps...
+  // If JonDo is set as proxy take these UA-settings
+  jondoUAMap: {
+    'general.appname.override':'extensions.jondofox.jondo.appname_override',
+    'general.appversion.override':'extensions.jondofox.jondo.appversion_override',
+    'general.buildID.override':'extensions.jondofox.jondo.buildID_override',
+    'general.oscpu.override':'extensions.jondofox.jondo.oscpu_override',
+    'general.platform.override':'extensions.jondofox.jondo.platform_override',
+    'general.productsub.override':'extensions.jondofox.jondo.productsub_override',
+    'general.useragent.override':'extensions.jondofox.jondo.useragent_override',
+    'general.useragent.vendor':'extensions.jondofox.jondo.useragent_vendor',
+    'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub',  
+  },
+
+  // If Tor is set as proxy take these UA-settings
+  torUAMap: {
+    'general.appname.override':'extensions.jondofox.tor.appname_override',
+    'general.appversion.override':'extensions.jondofox.tor.appversion_override',
+    'general.buildID.override':'extensions.jondofox.tor.buildID_override',
+    'general.oscpu.override':'extensions.jondofox.tor.oscpu_override',
+    'general.platform.override':'extensions.jondofox.tor.platform_override',
+    'general.productsub.override':'extensions.jondofox.tor.productsub_override',
+    'general.useragent.override':'extensions.jondofox.tor.useragent_override',
+    'general.useragent.vendor':'extensions.jondofox.tor.useragent_vendor',
+    'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub',
+  },
+  
+  // If no proxy is set or an invalid custom one take these UA-settings
+  noneUAMap: {
+    'general.appname.override':'extensions.jondofox.none.appname_override',
+    'general.appversion.override':'extensions.jondofox.none.appversion_override',
+    'general.platform.override':'extensions.jondofox.none.platform_override',
+    'general.useragent.override':'extensions.jondofox.none.useragent_override',
+    'general.oscpu.override':'extensions.jondofox.none.oscpu_override',
+    'general.productsub.override':'extensions.jondofox.tor.productsub_override'
+  },
 
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: { 
-    'general.appname.override':'extensions.jondofox.appname_override',
-    'general.appversion.override':'extensions.jondofox.appversion_override',
-    'general.buildID.override':'extensions.jondofox.buildID_override',
-    'general.oscpu.override':'extensions.jondofox.oscpu_override',
-    'general.platform.override':'extensions.jondofox.platform_override',
-    'general.productsub.override':'extensions.jondofox.productsub_override',
-    'general.useragent.override':'extensions.jondofox.useragent_override',
-    'general.useragent.vendor':'extensions.jondofox.useragent_vendor',
-    'general.useragent.vendorSub':'extensions.jondofox.useragent_vendorSub',
     'intl.accept_languages':'extensions.jondofox.accept_languages',
     'intl.charset.default':'extensions.jondofox.default_charset',
     'intl.accept_charsets':'extensions.jondofox.accept_charsets',
@@ -262,9 +290,6 @@ var JDFManager = {
         this.prefsHandler.
                 setBoolPref('local_install.showBuildinWindowTitle', false);
       }
-      // Set the initial proxy state
-      log("Setting initial proxy state ..");
-      this.setProxy(this.getState());
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -529,7 +554,58 @@ var JDFManager = {
       log("checkUpdateProfile(): " + e);
     }
   },
- 
+
+  // Setting the user agent for the different proxy states
+  setUserAgent: function(state) {
+    log("Setting user agent for: " + state);
+    switch(state) {
+      case (this.STATE_JONDO): 
+        for (p in this.jondoUAMap) {
+          this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.jondoUAMap[p]));
+        }
+	break;
+      case (this.STATE_TOR):
+        for (p in this.torUAMap) {
+          this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.torUAMap[p]));
+        }
+        break;
+      case (this.STATE_CUSTOM):
+	if (!this.prefsHandler.getBoolPref(
+		   'extensions.jondofox.custom.empty_proxy')) {
+          var userAgent = this.prefsHandler.getStringPref(
+			       'extensions.jondofox.custom.user_agent');
+          if (userAgent == 'jondo') {
+            for (p in this.jondoUAMap) {
+            this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.jondoUAMap[p]));
+            }
+          } else {
+            for (p in this.torUAMap) {
+            this.prefsHandler.setStringPref(p,
+                 this.prefsHandler.getStringPref(this.torUAMap[p]));
+	    }
+	  }
+        } else {
+	  for (p in this.noneUAMap) {
+            this.prefsHandler.setStringPref(p,
+                this.prefsHandler.getStringPref(this.noneUAMap[p]));
+	  }
+        }
+        break;
+      case (this.STATE_NONE):
+	for (p in this.noneUAMap) {
+            this.prefsHandler.setStringPref(p,
+                 this.prefsHandler.getStringPref(this.noneUAMap[p]));
+	}
+        break;
+      default:
+	log("We should not be here!");
+        break;
+    }
+  },
+
   // 'No proxy list' implementation ///////////////////////////////////////////
 
   // A list of URIs

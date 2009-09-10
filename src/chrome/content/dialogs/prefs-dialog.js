@@ -97,8 +97,17 @@ function loadPrefsCustomProxy(onLoad) {
     }
     // Set the label to the textfield
     document.getElementById('textbox_custom_label').value = label;
+    // Get the user agent
+    var userAgent = prefsHandler.getStringPref(prefix + 'user_agent');
+    if (userAgent == 'jondo') {
+      document.getElementById('user_agent').selectedItem =
+	  document.getElementById('jondoUA');
+    } else {
+      document.getElementById('user_agent').selectedItem =
+	  document.getElementById('torUA');
+    }
     // Get host and port settings for different protocols
-    document.getElementById('http_host').value = 
+    document.getElementById('http_host').value =
         prefsHandler.getStringPref(prefix + 'http_host');
     document.getElementById('http_port').value = 
         prefsHandler.getIntPref(prefix + 'http_port');
@@ -143,6 +152,9 @@ function writePrefsCustomProxy() {
     // Set the label
     prefsHandler.setStringPref(prefix + 'label',
         document.getElementById('textbox_custom_label').value);
+    // Set the user agent
+    prefsHandler.setStringPref(prefix + 'user_agent', 
+        document.getElementById('user_agent').selectedItem.value);
     // Set single proxies
     prefsHandler.setStringPref(prefix + 'http_host', 
         document.getElementById('http_host').value);
@@ -347,8 +359,17 @@ function onApply() {
 // Set the proxy state to 'custom'
 function setProxyCustom() {
   try {
-    // Enable the custom proxy using jdfManager
-    jdfManager.setProxy('custom');
+    // Enable the custom proxy using jdfManager and if we changed the proxy
+    // state then we should clear all cookies as well
+    if (jdfManager.setProxy('custom')) {
+      jdfManager.clearAllCookies();
+    }
+    // Set the user agent because maybe the user changed the proxy (and thus 
+    // the UA) with the help of the apply-button or she did not change the 
+    // proxy at all but only the UA. Or maybe the user entered now a valid 
+    // proxy and instead of using the unfaked UA, now there is a choice (again)
+    // between the one of Tor and the one of JonDo.
+    jdfManager.setUserAgent(jdfManager.STATE_CUSTOM);
   } catch (e) {
     log("setProxyCustom(): " + e);
   }

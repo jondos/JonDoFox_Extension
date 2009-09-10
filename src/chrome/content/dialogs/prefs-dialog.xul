@@ -117,6 +117,16 @@
                   </hbox>            
                 </row>
 
+                <row>
+                  <hbox align="center" pack="end">
+                    <label value="User Agent:" />
+                  </hbox>
+                  <radiogroup id="user_agent" orient="horizontal">
+                    <radio id="jondoUA" value="jondo" label="JonDo"/>
+                    <radio id="torUA" value="tor" label="Tor"/>
+                  </radiogroup>
+                </row>
+
                 <row align="center">
                   <hbox align="center" pack="end">
                     <label value="HTTP Proxy:" />
