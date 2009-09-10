@@ -97,7 +97,7 @@ PrefsMapper.prototype = {
 
   // Perform the mapping
   map: function() {
-    log("Mapping user agent preferences");
+    log("Mapping security preferences");
     try {
       // Iterate through the maps
       for (p in this.stringPrefsMap) {
@@ -124,6 +124,12 @@ PrefsMapper.prototype = {
       // Reset all prefs
       for (p in this.stringPrefsMap) {
         this.prefsHandler.deletePreference(p);
+      }
+      for (p in this.boolPrefsMap) {
+        this.prefsHandler.deletePreference(p);
+      }
+      for (p in this.intPrefsMap) {
+	this.prefsHandler.deletePreference(P);
       }
     } catch (e) {
       log("unmap(): " + e);

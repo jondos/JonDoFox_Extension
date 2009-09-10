@@ -49,9 +49,10 @@ function setProxy(state) {
       log("NOT a state change, calling refresh() ..");
       refresh();
     } else {
-      // The state has changed --> clear cookies
+      // The state has changed --> set the user agent and clear cookies
+      jdfManager.setUserAgent(state);
       jdfManager.clearAllCookies();
-    }
+     }
   } catch (e) {
     log("setProxy(): " + e);
   } finally {
@@ -113,7 +114,7 @@ function setCustomProxy() {
         // Call the setProxy-method
 	setProxy(jdfManager.STATE_CUSTOM);
       } else {
-          // Refresh the statusbar
+          // Refresh the statusbar 
 	  refresh();
         }
     } else {
@@ -223,6 +224,30 @@ function isProxyActive() {
 	prefsHandler.getBoolPref(prefix + 'empty_proxy');
   return (jdfManager.getState() != jdfManager.STATE_NONE && !customAndDisabled);
 }
+
+// Now we save the relevant values to set if the proxy is set to none or a
+// invalid custom one. We have to do it here because im jdfManager we do not
+// have a navigator object
+
+function saveNoneProxyUA() {
+    try {
+      this.prefsHandler.setStringPref('extensions.jondofox.none.appname_override',
+	     navigator.appName);
+      this.prefsHandler.setStringPref('extensions.jondofox.none.appversion_override',
+	     navigator.appVersion);
+      this.prefsHandler.setStringPref('extensions.jondofox.none.oscpu_override',
+ 	     navigator.oscpu);
+      this.prefsHandler.setStringPref('extensions.jondofox.none.platform_override',
+	     navigator.platform);
+      this.prefsHandler.setStringPref('extensions.jondofox.none.productsub_override',
+	     navigator.productSub);
+      this.prefsHandler.setStringPref('extensions.jondofox.none.useragent_override',
+	     navigator.userAgent);
+    } catch(e) {
+      log("saveNoneProxyUA(): " + e);
+    }
+ }    
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Utility functions
@@ -374,6 +399,22 @@ var overlayObserver = {
             prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
           }
+          // Do we have already saved the browser's default user agent values?
+          // If the tested preference is empty then not. In this case read and
+          // save the relevant values because we need them to send the unfaked
+          // user agent if a user selects no proxy or a invalid custom one.
+          // BUT: This just works properly if with every browser upgrade comes a
+          // profile update! Otherwise the old settings of the user prefs.js
+          // are used. In a fresh profile the relevant values are not set yet,
+          // thus the values of the default pref files are used.
+          if (prefsHandler.getStringPref(
+		   'extensions.jondofox.none.appname_override') == "") {
+	    log("Saving none proxy user agent values ..");
+	    saveNoneProxyUA();
+	  }
+          log("Setting initial proxy state ..");
+          jdfManager.setProxy(jdfManager.getState());
+          jdfManager.setUserAgent(jdfManager.getState());
         } else {
           log("!! Wrong uri: " + uri.spec);
         }
