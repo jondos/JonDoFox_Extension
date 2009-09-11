@@ -96,16 +96,6 @@ var JDFManager = {
     'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub',
   },
   
-  // If no proxy is set or an invalid custom one take these UA-settings
-  noneUAMap: {
-    'general.appname.override':'extensions.jondofox.none.appname_override',
-    'general.appversion.override':'extensions.jondofox.none.appversion_override',
-    'general.platform.override':'extensions.jondofox.none.platform_override',
-    'general.useragent.override':'extensions.jondofox.none.useragent_override',
-    'general.oscpu.override':'extensions.jondofox.none.oscpu_override',
-    'general.productsub.override':'extensions.jondofox.tor.productsub_override'
-  },
-
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: { 
     'intl.accept_languages':'extensions.jondofox.accept_languages',
@@ -290,6 +280,8 @@ var JDFManager = {
         this.prefsHandler.
                 setBoolPref('local_install.showBuildinWindowTitle', false);
       }
+      log("Setting initial proxy state ..");
+      this.setProxy(this.getState());
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -588,21 +580,40 @@ var JDFManager = {
 	    }
 	  }
         } else {
-	  for (p in this.noneUAMap) {
-            this.prefsHandler.setStringPref(p,
-                this.prefsHandler.getStringPref(this.noneUAMap[p]));
-	  }
+	  this.clearUAPrefs();
         }
         break;
       case (this.STATE_NONE):
-	for (p in this.noneUAMap) {
-            this.prefsHandler.setStringPref(p,
-                 this.prefsHandler.getStringPref(this.noneUAMap[p]));
-	}
-        break;
+	this.clearUAPrefs();
+	break;
       default:
 	log("We should not be here!");
         break;
+    }
+  },
+
+  // We get the original values (needed for proxy = none and if the user 
+  // chooses no correct custom proxy) if we clear the relevant preferences
+  clearUAPrefs: function() {
+    try {
+      // We only have to reset the values if this has not yet been done.
+      // For instance, if there was no previous proxy set before and now the 
+      // user uses a not well configured custom one, the values are already set.
+      if (this.prefsHandler.getStringPref("general.useragent.override") != null) {
+        var branch = CC['@mozilla.org/preferences-service;1']
+                   .getService(CI.nsIPrefBranch);
+        branch.clearUserPref("general.useragent.override");
+        branch.clearUserPref("general.appname.override");
+        branch.clearUserPref("general.appversion.override");
+        branch.clearUserPref("general.useragent.vendor");
+        branch.clearUserPref("general.useragent.vendorSub");
+        branch.clearUserPref("general.platform.override");
+        branch.clearUserPref("general.oscpu.override");
+        branch.clearUserPref("general.buildID.override");
+        branch.clearUserPref("general.productsub.override");
+      }
+    } catch (e) {
+      log("clearUAPrefs(): " + e);
     }
   },
 
