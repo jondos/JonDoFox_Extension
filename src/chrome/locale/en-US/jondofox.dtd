@@ -58,6 +58,7 @@
 <!-- Edit custom proxy tab -->
 <!ENTITY jondofox.dialogtab.custom.title "Custom Proxy Configuration">
 <!ENTITY jondofox.dialogtab.custom.label "Label">
+<!ENTITY jondofox.dialogtab.custom.useragent.normal "Unchanged">
 <!ENTITY jondofox.dialogtab.custom.allprotocols "Use this proxy server for all protocols">
 
 
