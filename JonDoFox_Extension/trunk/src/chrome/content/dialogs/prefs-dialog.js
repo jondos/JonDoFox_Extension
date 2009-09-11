@@ -102,9 +102,12 @@ function loadPrefsCustomProxy(onLoad) {
     if (userAgent == 'jondo') {
       document.getElementById('user_agent').selectedItem =
 	  document.getElementById('jondoUA');
-    } else {
+    } else if (userAgent == 'tor') {
       document.getElementById('user_agent').selectedItem =
 	  document.getElementById('torUA');
+    } else {
+      document.getElementById('user_agent').selectedItem =
+          document.getElementById('normalUA');
     }
     // Get host and port settings for different protocols
     document.getElementById('http_host').value =

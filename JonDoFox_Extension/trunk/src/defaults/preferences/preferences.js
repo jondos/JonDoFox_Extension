@@ -18,7 +18,7 @@ pref("extensions.jondofox.no_proxies_on", "localhost, 127.0.0.1");
 
 // Custom proxy
 pref("extensions.jondofox.custom.label", "");
-pref("extensions.jondofox.custom.user_agent", "jondo");
+pref("extensions.jondofox.custom.user_agent", "normal");
 pref("extensions.jondofox.custom.http_host", "");
 pref("extensions.jondofox.custom.http_port", 0);
 pref("extensions.jondofox.custom.ssl_host", "");

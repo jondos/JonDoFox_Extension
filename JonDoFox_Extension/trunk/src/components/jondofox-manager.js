@@ -502,7 +502,7 @@ var JDFManager = {
    * Return the current number of browser windows (not used at the moment)
    */
   getWindowCount: function() {
-    var ww = CC["@mozilla.org/embedcomp/window-watcher;1"].
+    var ww = CC['@mozilla.org/embedcomp/window-watcher;1'].
                 getService(CI.nsIWindowWatcher);  
     var window_enum = ww.getWindowEnumerator();
     var count = 0;
@@ -564,25 +564,22 @@ var JDFManager = {
         }
         break;
       case (this.STATE_CUSTOM):
-	if (!this.prefsHandler.getBoolPref(
-		   'extensions.jondofox.custom.empty_proxy')) {
-          var userAgent = this.prefsHandler.getStringPref(
+	var userAgent = this.prefsHandler.getStringPref(
 			       'extensions.jondofox.custom.user_agent');
-          if (userAgent == 'jondo') {
-            for (p in this.jondoUAMap) {
-            this.prefsHandler.setStringPref(p,
-               this.prefsHandler.getStringPref(this.jondoUAMap[p]));
-            }
-          } else {
-            for (p in this.torUAMap) {
-            this.prefsHandler.setStringPref(p,
-                 this.prefsHandler.getStringPref(this.torUAMap[p]));
-	    }
+        if (userAgent == 'jondo') {
+          for (p in this.jondoUAMap) {
+          this.prefsHandler.setStringPref(p,
+             this.prefsHandler.getStringPref(this.jondoUAMap[p]));
+          }
+        } else if (userAgent == 'tor') {
+          for (p in this.torUAMap) {
+          this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.torUAMap[p]));
 	  }
         } else {
 	  this.clearUAPrefs();
         }
-        break;
+	break;
       case (this.STATE_NONE):
 	this.clearUAPrefs();
 	break;
@@ -599,18 +596,18 @@ var JDFManager = {
       // We only have to reset the values if this has not yet been done.
       // For instance, if there was no previous proxy set before and now the 
       // user uses a not well configured custom one, the values are already set.
-      if (this.prefsHandler.getStringPref("general.useragent.override") != null) {
+      if (this.prefsHandler.getStringPref('general.useragent.override') != null) {
         var branch = CC['@mozilla.org/preferences-service;1']
                    .getService(CI.nsIPrefBranch);
-        branch.clearUserPref("general.useragent.override");
-        branch.clearUserPref("general.appname.override");
-        branch.clearUserPref("general.appversion.override");
-        branch.clearUserPref("general.useragent.vendor");
-        branch.clearUserPref("general.useragent.vendorSub");
-        branch.clearUserPref("general.platform.override");
-        branch.clearUserPref("general.oscpu.override");
-        branch.clearUserPref("general.buildID.override");
-        branch.clearUserPref("general.productsub.override");
+        branch.clearUserPref('general.useragent.override');
+        branch.clearUserPref('general.appname.override');
+        branch.clearUserPref('general.appversion.override');
+        branch.clearUserPref('general.useragent.vendor');
+        branch.clearUserPref('general.useragent.vendorSub');
+        branch.clearUserPref('general.platform.override');
+        branch.clearUserPref('general.oscpu.override');
+        branch.clearUserPref('general.buildID.override');
+        branch.clearUserPref('general.productsub.override');
       }
     } catch (e) {
       log("clearUAPrefs(): " + e);

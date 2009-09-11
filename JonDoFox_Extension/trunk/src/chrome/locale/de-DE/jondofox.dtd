@@ -61,6 +61,7 @@
 <!-- Edit custom proxy tab -->
 <!ENTITY jondofox.dialogtab.custom.title "Benutzerdefinierte Proxy-Konfiguration">
 <!ENTITY jondofox.dialogtab.custom.label "Bezeichner">
+<!ENTITY jondofox.dialogtab.custom.useragent.normal "Unverändert">
 <!ENTITY jondofox.dialogtab.custom.allprotocols "Verwende diesen Proxy für alle Protokolle">
 
 <!-- ENTITY jondofox.dialogtab.custom.manual "Konfiguration" -->

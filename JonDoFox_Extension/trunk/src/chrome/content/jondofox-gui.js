@@ -321,6 +321,7 @@ var prefsObserver = {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
             // .. set the state to 'none'
             jdfManager.setState(jdfManager.STATE_NONE);
+            jdfManager.setUserAgent(jdfManager.STATE_NONE);
           }
         } 
         else {
