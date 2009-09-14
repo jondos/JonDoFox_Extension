@@ -590,7 +590,8 @@ var JDFManager = {
   },
 
   // We get the original values (needed for proxy = none and if the user 
-  // chooses no correct custom proxy) if we clear the relevant preferences
+  // chooses the unfaked UA for her custom proxy) if we clear the relevant
+  // preferences.
   clearUAPrefs: function() {
     try {
       // We only have to reset the values if this has not yet been done.

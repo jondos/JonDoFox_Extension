@@ -209,17 +209,17 @@ function writePrefsCustomProxy() {
       // Set socks version
       prefsHandler.setIntPref(prefix + 'backup.socks_version', 
         document.getElementById('socks_version').selectedItem.value);
-      // Check if the relevant values are okay for using JonDo, i.e. not
+    }
+    // Check if the relevant values are okay for using JonDo, i.e. not
       // empty; the 'empty_proxy' preference will be observed in jondofox-gui.js
       // in order to set the text color of 'custom' properly
-      if(!(prefsHandler.getStringPref(prefix + 'http_host') &&
-           prefsHandler.getIntPref(prefix + 'http_port')) &&
-         !(prefsHandler.getStringPref(prefix + 'socks_host') &&
-           prefsHandler.getIntPref(prefix + 'socks_port'))) {
-	prefsHandler.setBoolPref(prefix + 'empty_proxy', true);
-      } else {
-	prefsHandler.setBoolPref(prefix + 'empty_proxy', false);
-      }
+    if (!(prefsHandler.getStringPref(prefix + 'http_host') &&
+          prefsHandler.getIntPref(prefix + 'http_port')) &&
+        !(prefsHandler.getStringPref(prefix + 'socks_host') &&
+          prefsHandler.getIntPref(prefix + 'socks_port'))) {
+      prefsHandler.setBoolPref(prefix + 'empty_proxy', true);
+    } else {
+      prefsHandler.setBoolPref(prefix + 'empty_proxy', false);
     }
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);
@@ -368,10 +368,8 @@ function setProxyCustom() {
       jdfManager.clearAllCookies();
     }
     // Set the user agent because maybe the user changed the proxy (and thus 
-    // the UA) with the help of the apply-button or she did not change the 
-    // proxy at all but only the UA. Or maybe the user entered now a valid 
-    // proxy and instead of using the unfaked UA, now there is a choice (again)
-    // between the one of Tor and the one of JonDo.
+    // possibly the UA) with the help of the apply-button or she did not
+    // change the proxy at all but only the UA. 
     jdfManager.setUserAgent(jdfManager.STATE_CUSTOM);
   } catch (e) {
     log("setProxyCustom(): " + e);
