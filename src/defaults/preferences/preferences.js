@@ -56,14 +56,6 @@ pref("extensions.jondofox.tor.buildID_override","0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 
-// No (valid) proxy settings
-pref("extensions.jondofox.none.appname_override","");
-pref("extensions.jondofox.none.appversion_override","");
-pref("extensions.jondofox.none.platform_override","");
-pref("extensions.jondofox.none.oscpu_override", "");
-pref("extensions.jondofox.none.useragent_override", "");
-pref("extensions.jondofox.none.productsub_override","");
-
 // Location neutrality
 pref("extensions.jondofox.accept_languages", "en-us");
 pref("extensions.jondofox.accept_charsets", "*");
