@@ -126,7 +126,7 @@ var JDFManager = {
   prefsMapper: null,
   proxyManager: null,
   promptService: null,
-
+  
   // Localization strings
   stringBundle: null,
 
@@ -205,7 +205,7 @@ var JDFManager = {
         if (this.isInstalled(this.extensions[e])) {
           // XXX: Allow RefControl in some cases
           if (e == 'RefControl' && 
-                 !this.prefsHandler.getBoolPref(this.REF_PREF)) {
+              !this.prefsHandler.getBoolPref(this.REF_PREF)) {
             log("Ignoring RefControl");
           } else {
             log('Found ' + e + ', uninstalling ..');
@@ -219,6 +219,10 @@ var JDFManager = {
           }
         } else {
           log(e + ' not found');
+          if (e == 'RefControl' && 
+	      !this.prefsHandler.getBoolPref(this.REF_PREF)) {
+	    this.prefsHandler.setBoolPref(this.REF_PREF, true); 
+          }
         }
       }
       if (restart) {
@@ -913,7 +917,6 @@ var JDFManager = {
             }
           }
           break;
-          
         default:
           log("!! Topic not handled --> " + topic);
           break;
