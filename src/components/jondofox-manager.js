@@ -126,16 +126,22 @@ var JDFManager = {
   prefsMapper: null,
   proxyManager: null,
   promptService: null,
+  rdfService: null,
+  directoryService: null,
+  handlerService: null,
   
   // Localization strings
   stringBundle: null,
+
+  // We need the MIME-Type datasource to observe the always-ask property.
+  // And we need the MIME-Types which need an external helper app.
+  mimeTypesDs: null,
+  handledMimeTypes: null,
 
   // Inititalize services and stringBundle
   init: function() {
     log("Initialize JDFManager");
     try {
-      // Determine version
-      this.VERSION = this.getVersion();
       // Init services
       this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
                              getService().wrappedJSObject;
@@ -145,6 +151,14 @@ var JDFManager = {
                              getService().wrappedJSObject;
       this.promptService = CC['@mozilla.org/embedcomp/prompt-service;1'].
                               getService(CI.nsIPromptService);
+      this.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].
+	                      getService(CI.nsIRDFService);
+      this.directoryService = CC['@mozilla.org/file/directory_service;1'].
+	                         getService(CI.nsIProperties);
+      this.handlerService = CC['@mozilla.org/uriloader/handler-service;1'].
+	                       getService(CI.nsIHandlerService);
+      // Determine version
+      this.VERSION = this.getVersion();
       var bundleService = CC['@mozilla.org/intl/stringbundle;1'].
                              getService(CI.nsIStringBundleService);
       // Create the string bundle
@@ -278,6 +292,7 @@ var JDFManager = {
       prefs.QueryInterface(CI.nsIPrefBranch2);
       prefs.addObserver("", this, false);
       log("Observing privacy-related preferences ..");
+      //this.windowWatcher.registerNotification
       // If this is set (MR Tech Toolkit), set it to false       
       if (this.prefsHandler.
                   isPreferenceSet('local_install.showBuildinWindowTitle')) {
@@ -286,6 +301,12 @@ var JDFManager = {
       }
       log("Setting initial proxy state ..");
       this.setProxy(this.getState());
+      // First, we check the mimetypes.rdf in order to prevent the user from
+      // opening automatically an external helper app. If we find a MIME-type 
+      // which is opened automatically we correct this.
+      this.correctExternalApplications();
+      // Then, we observe the datasource in order to be able to prohibit it.
+      this.observeMimeTypes();
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -324,6 +345,7 @@ var JDFManager = {
       observers.addObserver(this, "em-action-requested", false);
       observers.addObserver(this, "quit-application-granted", false);
       observers.addObserver(this, "xul-window-destroyed", false);
+      observers.addObserver(this, "domwindowopened", false);
     } catch (ex) {
       log("registerObservers(): " + ex);
     }
@@ -340,6 +362,7 @@ var JDFManager = {
       observers.removeObserver(this, "em-action-requested");
       observers.removeObserver(this, "quit-application-granted");    
       observers.removeObserver(this, "xul-window-destroyed");
+      observers.removeObserver(this, "domwindowopened");
     } catch (ex) {
       log("unregisterObservers(): " + ex);
     }
@@ -347,6 +370,14 @@ var JDFManager = {
   
   // Utility functions ////////////////////////////////////////////////////////
   
+  showAlert: function(title, text) {
+    try {
+      return this.promptService.alert(null, title, text);
+    } catch (e) {
+      log("showAlert(): " + e);
+    }
+  },
+
   showConfirm: function(title, text) {
     try {
       return this.promptService.confirm(null, title, text);
@@ -415,15 +446,13 @@ var JDFManager = {
       // Get the extension-manager and rdf-service
       var extMgr = CC["@mozilla.org/extensions/manager;1"].
                       getService(CI.nsIExtensionManager);
-      var rdfService = CC["@mozilla.org/rdf/rdf-service;1"].getService().
-                          QueryInterface(CI.nsIRDFService);
       // Our ID
       var extID="{437be45a-4114-11dd-b9ab-71d256d89593}";
       var version = "";
       // Init ingredients
       var ds = extMgr.datasource;
-      var res = rdfService.GetResource("urn:mozilla:item:" + extID);
-      var prop = rdfService.
+      var res = this.rdfService.GetResource("urn:mozilla:item:" + extID);
+      var prop = this.rdfService.
                     GetResource("http://www.mozilla.org/2004/em-rdf#version");
       // Get the target
       var target = ds.GetTarget(res, prop, true);
@@ -460,14 +489,12 @@ var JDFManager = {
   isUserDisabled: function(eID) {
     //log('Checking for ' + eID);
     try { 
-	var rdfService = CC["@mozilla.org/rdf/rdf-service;1"].
-	          getService(CI.nsIRDFService);
 	var extensionsDS= CC["@mozilla.org/extensions/manager;1"].
 	             getService(CI.nsIExtensionManager).datasource;
      	// We have to build the relevant resources to work with the
         // GetTarget function.
-	var element = rdfService.GetResource("urn:mozilla:item:" + eID);
-        var rdfInstall = rdfService.
+	var element = this.rdfService.GetResource("urn:mozilla:item:" + eID);
+        var rdfInstall = this.rdfService.
                  GetResource("http://www.mozilla.org/2004/em-rdf#userDisabled");
         var userDisabled = extensionsDS.GetTarget(element, rdfInstall, true);
         // If the extension is disabled by the user "true" should be
@@ -616,6 +643,108 @@ var JDFManager = {
       }
     } catch (e) {
       log("clearUAPrefs(): " + e);
+    }
+  },
+
+  // First we check whether we found the unknownContentType dialog. If so
+  // we add two eventlisteners, one to the checkbox and one to the radiobutton.
+  // The reason is that we need both, otherwise the users could just select
+  // the 'save'-radiobutton then select the checkbox and finally select the
+  // 'open'-radiobutton.
+  // If we did not find the dialog we remove the eventlistener because we got 
+  // the wrong one...
+   
+  getUnknownContentTypeDialog: function() {
+    try {
+      var checkBox = this.document.getElementById("rememberChoice");
+      var radioOpen = this.document.getElementById("open");
+      if (checkBox && radioOpen) {
+         log("We still got the checkbox!!");
+         checkBox.addEventListener("click", function() {JDFManager.
+	    checkboxChecked(radioOpen, checkBox);}, false);
+         radioOpen.addEventListener("click", function() {JDFManager.
+            checkboxChecked(radioOpen, checkBox);}, false);
+       } else {
+         log("Wrong dialog, removing the listener...");
+         this.removeEventListener("load", JDFManager.getApplicationDialogs, false);
+      }
+    } catch (e) {
+      log("getUnknownContentTypeDialog(): " + e);
+    }
+  },
+  
+  // Let's see whether the checkbox and the approproate radiobutton is selected.
+  // If so we show a warning dialog and disable the checkbox.
+  // XXX Find a better way to disable the checkbox if 'save' was first selected.
+  // Because in this case the "additional" text does not vanish...
+  checkboxChecked: function(radioOpen, checkBox) {
+    log("We clicked on it!");
+    if (checkBox.checked && radioOpen.selected) {
+      log("Now it is checked!");
+      this.showAlert(this.getString('jondofox.dialog.attention'), 
+			   this.getString(
+                           'jondofox.dialog.message.automaticAction'));
+      checkBox.checked=false;
+    }
+  },
+
+  observeMimeTypes: function() {
+    var rdfObserver = {
+      onChange : function(aData, aRes, aProp, aOldTarget, aNewTarget) {
+        try {
+	  var newTargetValue = aNewTarget.QueryInterface(CI.nsIRDFLiteral).Value;
+          log("onChange newValue: " + newTargetValue);
+          if (aProp.Value == "http://home.netscape.com/NC-rdf#alwaysAsk" &&
+              newTargetValue == "false") {
+	    correctedValue = JDFManager.correctExternalApplications();
+            if (correctedValue) {
+              var wm = CC['@mozilla.org/appshell/window-mediator;1']
+		          .getService(CI.nsIWindowMediator);
+              var applicationPane = wm.getMostRecentWindow(null);
+              applicationPane.openDialog(
+					 "chrome://browser/content/preferences/preferences.xul");
+              applicationPane.close();
+            }
+           
+          }
+        } catch (e) {
+	  log("rdfObserver: " + e);
+        }
+      },
+    };
+     
+    // For the following few lines of code see nsHandlerService.js
+    if (!this.mimeTypesDs) {
+	var mimeFile = this.directoryService.get("UMimTyp", CI.nsIFile);
+        var ioService = CC['@mozilla.org/network/io-service;1'].
+	                   getService(CI.nsIIOService);
+        var fileHandler = ioService.getProtocolHandler("file").
+	                  QueryInterface(CI.nsIFileProtocolHandler);
+        this.mimeTypesDs = this.rdfService.GetDataSourceBlocking(fileHandler.
+					   getURLSpecFromFile(mimeFile));
+        
+    }
+    this.mimeTypesDs.AddObserver(rdfObserver);
+  },
+
+  correctExternalApplications: function() {
+    try {
+      log("We are correcting...");
+      var handledMimeTypes = this.handlerService.enumerate();
+      while (handledMimeTypes.hasMoreElements()) {
+        var handledMimeType = handledMimeTypes.getNext().QueryInterface(CI.nsIHandlerInfo);
+        if (!handledMimeType.alwaysAskBeforeHandling && 
+            handledMimeType.preferredAction != 0) {
+	  var mimeType = handledMimeType.type;
+          this.showAlert(this.getString('jondofox.dialog.attention'), 
+	  	         this.formatString('jondofox.dialog.message.automaticAction', [mimeType]));
+          handledMimeType.alwaysAskBeforeHandling = true;
+          this.handlerService.store(handledMimeType);
+          return true;
+        }
+      }
+    } catch (e) {
+      log("correctExternalApplications(): " + e);
     }
   },
 
@@ -842,6 +971,14 @@ var JDFManager = {
             }
           }
           break;
+        
+        // We are trying to get the unknownContentType dialog in order to 
+        // prevent the user from choosing an external helper app automatically.
+        // Unfortuneatley there is no special notification (really?), so we have
+        // to do it this way...
+        case 'domwindowopened':
+ 	  subject.addEventListener("load", this.getUnknownContentTypeDialog, false);
+	  break;
 
         case 'xul-window-destroyed':
           // Get the index of the closed window
