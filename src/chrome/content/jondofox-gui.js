@@ -355,7 +355,7 @@ var overlayObserver = {
           prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
           prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
 
-          //We need to obersve this preference because otherwise there would be
+          //We need to obser ve this preference because otherwise there would be
           //no refreshing of the status bar if we had already 'custom' as a
           //our proxy state: the correct writing of 'custom' with either red
           //or black letters would not work if we accepted or applied new
