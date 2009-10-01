@@ -282,6 +282,9 @@ var JDFManager = {
       // Check for incompatible extensions and whether the necessary ones
       // are installed and enabled.
       this.checkExtensions();
+      // Check whether we have some MIME-types which use external helper apps
+      // automatically and if so correct this
+      this.firstMimeTypeCheck();
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);
       this.prefsMapper.setBoolPrefs(this.boolPrefsMap);
@@ -301,11 +304,8 @@ var JDFManager = {
       }
       log("Setting initial proxy state ..");
       this.setProxy(this.getState());
-      // First, we check the mimetypes.rdf in order to prevent the user from
-      // opening automatically an external helper app. If we find a MIME-type 
-      // which is opened automatically we correct this.
-      this.correctExternalApplications();
-      // Then, we observe the datasource in order to be able to prohibit it.
+      // Now, we observe the datasource in order to be able to prevent the user
+      // from using external applications automatically.
       this.observeMimeTypes();
     } catch (e) {
       log("onUIStartup(): " + e);
@@ -646,7 +646,50 @@ var JDFManager = {
     }
   },
 
-  // First we check whether we found the unknownContentType dialog. If so
+  // First, we check the mimetypes.rdf in order to prevent the user from
+  // opening automatically an external helper app. If we find a MIME-type 
+  // which is opened automatically we correct this. 
+  // Second, we look if someone has set his feed prefs in a way that they 
+  // are automatically passed to an external reader. If this is the case, we
+  // set the value silently back to "ask".
+  //If it is the first start after a new installation, we do not show the
+  // warning in order to not confuse the user.
+
+  firstMimeTypeCheck: function() {
+    try {
+      var feedArray = ["feeds", "audioFeeds", "videoFeeds"];
+      if (this.prefsHandler.getStringPref('extensions.jondofox.last_version') !=
+          this.VERSION) {
+        this.correctExternalApplications(true);
+        for (i = 0; i < 3; i++) {
+          if (this.prefsHandler.getStringPref(
+	      'browser.' + feedArray[i] + '.handler') == "reader" && 
+	      this.prefsHandler.getStringPref(
+              'browser.' + feedArray[i] + '.handler.default') == "client") {
+            this.prefsHandler.setStringPref(
+              'browser.'+ feedArray[i] + '.handler', "ask");
+	  }
+        }
+      } else {
+	this.correctExternalApplications(false);
+        for (i = 0; i < 3; i++) {
+          if (this.prefsHandler.getStringPref(
+	      'browser.' + feedArray[i] + '.handler') == "reader" && 
+	      this.prefsHandler.getStringPref(
+              'browser.' + feedArray[i] + '.handler.default') == "client") {
+            this.prefsHandler.setStringPref(
+              'browser.'+ feedArray[i] + '.handler', "ask");
+            this.showAlert(this.getString('jondofox.dialog.attention'), 
+		 this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+	  }
+        }
+      }
+    } catch (e) {
+      log("firstMimeTypeCheck(): " + e);
+    }
+  },
+
+  // First, we check whether we found the unknownContentType dialog. If so
   // we add two eventlisteners, one to the checkbox and one to the radiobutton.
   // The reason is that we need both, otherwise the users could just select
   // the 'save'-radiobutton then select the checkbox and finally select the
@@ -658,15 +701,14 @@ var JDFManager = {
     try {
       var checkBox = this.document.getElementById("rememberChoice");
       var radioOpen = this.document.getElementById("open");
+      var type = this.document.getElementById("type");
       if (checkBox && radioOpen) {
-         log("We still got the checkbox!!");
          checkBox.addEventListener("click", function() {JDFManager.
-	    checkboxChecked(radioOpen, checkBox);}, false);
+		     checkboxChecked(radioOpen, checkBox, type);}, false);
          radioOpen.addEventListener("click", function() {JDFManager.
-            checkboxChecked(radioOpen, checkBox);}, false);
+		     checkboxChecked(radioOpen, checkBox, type);}, false);
        } else {
-         log("Wrong dialog, removing the listener...");
-         this.removeEventListener("load", JDFManager.getApplicationDialogs, false);
+         this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
       }
     } catch (e) {
       log("getUnknownContentTypeDialog(): " + e);
@@ -677,13 +719,13 @@ var JDFManager = {
   // If so we show a warning dialog and disable the checkbox.
   // XXX Find a better way to disable the checkbox if 'save' was first selected.
   // Because in this case the "additional" text does not vanish...
-  checkboxChecked: function(radioOpen, checkBox) {
-    log("We clicked on it!");
+
+  checkboxChecked: function(radioOpen, checkBox, type) {
     if (checkBox.checked && radioOpen.selected) {
-      log("Now it is checked!");
+      type = type.value;
       this.showAlert(this.getString('jondofox.dialog.attention'), 
-			   this.getString(
-                           'jondofox.dialog.message.automaticAction'));
+		     this.formatString(
+				       'jondofox.dialog.message.automaticAction', [type]));
       checkBox.checked=false;
     }
   },
@@ -693,19 +735,17 @@ var JDFManager = {
       onChange : function(aData, aRes, aProp, aOldTarget, aNewTarget) {
         try {
 	  var newTargetValue = aNewTarget.QueryInterface(CI.nsIRDFLiteral).Value;
-          log("onChange newValue: " + newTargetValue);
           if (aProp.Value == "http://home.netscape.com/NC-rdf#alwaysAsk" &&
               newTargetValue == "false") {
-	    correctedValue = JDFManager.correctExternalApplications();
+	    var correctedValue = JDFManager.correctExternalApplications(false);
             if (correctedValue) {
-              var wm = CC['@mozilla.org/appshell/window-mediator;1']
+	      var wm = CC['@mozilla.org/appshell/window-mediator;1']
 		          .getService(CI.nsIWindowMediator);
               var applicationPane = wm.getMostRecentWindow(null);
-              applicationPane.openDialog(
-					 "chrome://browser/content/preferences/preferences.xul");
-              applicationPane.close();
+              applicationPane.addEventListener("unload", function()
+                           {JDFManager.appPaneReload(applicationPane);}, false);
+              applicationPane.close(); 
             }
-           
           }
         } catch (e) {
 	  log("rdfObserver: " + e);
@@ -727,21 +767,41 @@ var JDFManager = {
     this.mimeTypesDs.AddObserver(rdfObserver);
   },
 
-  correctExternalApplications: function() {
+  // After changing back to a safe value we have to correct the label as well.
+  // The only method I am aware of at this moment is to close and reload the
+  // applictaion pane. The result is not exactly the same as correcting the
+  // label but it is less confusing than doing nothing... This does not work
+  // regarding feeds because they are pref-based and do not use mimetypes.rdf.
+
+  appPaneReload: function(applicationPane) {
+    applicationPane.openDialog(
+	      "chrome://browser/content/preferences/preferences.xul");
+    applicationPane.removeEventListener("unload", function()
+                           {JDFManager.appPaneReload(applicationPane);}, false);
+  },
+
+  correctExternalApplications: function(firstProgramStart) {
     try {
-      log("We are correcting...");
+      var changedValue = false;
       var handledMimeTypes = this.handlerService.enumerate();
       while (handledMimeTypes.hasMoreElements()) {
         var handledMimeType = handledMimeTypes.getNext().QueryInterface(CI.nsIHandlerInfo);
+        var mimeType = handledMimeType.type;
         if (!handledMimeType.alwaysAskBeforeHandling && 
-            handledMimeType.preferredAction != 0) {
-	  var mimeType = handledMimeType.type;
-          this.showAlert(this.getString('jondofox.dialog.attention'), 
-	  	         this.formatString('jondofox.dialog.message.automaticAction', [mimeType]));
+            handledMimeType.preferredAction != 0 && mimeType != "mailto") {
+	  if (!firstProgramStart) {
+            this.showAlert(this.getString('jondofox.dialog.attention'), 
+	  	           this.formatString('jondofox.dialog.message.automaticAction', [mimeType]));
+          }
           handledMimeType.alwaysAskBeforeHandling = true;
           this.handlerService.store(handledMimeType);
-          return true;
-        }
+          changedValue = true;
+        }        
+      }
+      if (changedValue) {
+        return true;
+      } else {
+	return false;
       }
     } catch (e) {
       log("correctExternalApplications(): " + e);
@@ -927,6 +987,7 @@ var JDFManager = {
   // Implement nsIObserver ////////////////////////////////////////////////////
   
   observe: function(subject, topic, data) {
+	//var rememberAsk = false;
     try {
       switch (topic) {        
         case 'app-startup':
@@ -974,10 +1035,11 @@ var JDFManager = {
         
         // We are trying to get the unknownContentType dialog in order to 
         // prevent the user from choosing an external helper app automatically.
-        // Unfortuneatley there is no special notification (really?), so we have
+        // Unfortunatley there is no special notification (really?), so we have
         // to do it this way...
+
         case 'domwindowopened':
- 	  subject.addEventListener("load", this.getUnknownContentTypeDialog, false);
+ 	  subject.addEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
 	  break;
 
         case 'xul-window-destroyed':
@@ -1010,6 +1072,66 @@ var JDFManager = {
             } 
           }
 
+          else if (data == 'browser.feeds.handler') {
+	    if (this.prefsHandler.getStringPref(data) != "ask" &&
+                this.prefsHandler.getStringPref('browser.feeds.handler.default')
+		== "client") {
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
+		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+              this.prefsHandler.setStringPref('browser.feeds.handler', "ask");   
+            }
+	  }
+
+	  else if (data == 'browser.feeds.handler.default') {
+	    if (this.prefsHandler.getStringPref(data) == "client" && 
+                this.prefsHandler.getStringPref('browser.feeds.handler') !=
+                "ask") {
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
+		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+	      this.prefsHandler.setStringPref('browser.feeds.handler', "ask");
+	    }
+	  }
+          
+          else if (data == 'browser.audioFeeds.handler') {
+	    if (this.prefsHandler.getStringPref(data) != "ask" &&
+                this.prefsHandler.getStringPref(
+                'browser.audioFeeds.handler.default') == "client") {
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
+		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+              this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");   
+            }
+	  }
+
+	  else if (data == 'browser.audioFeeds.handler.default') {
+	    if (this.prefsHandler.getStringPref(data) == "client" && 
+                this.prefsHandler.getStringPref('browser.audioFeeds.handler') !=
+                "ask") {
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
+		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+	      this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");
+	    }
+	  }
+
+          else if (data == 'browser.videoFeeds.handler') {
+	    if (this.prefsHandler.getStringPref(data) != "ask" &&
+                this.prefsHandler.getStringPref(
+                'browser.videoFeeds.handler.default') == "client") {
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
+		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+              this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");   
+            }
+	  }
+
+	  else if (data == 'browser.videoFeeds.handler.default') {
+	    if (this.prefsHandler.getStringPref(data) == "client" && 
+                this.prefsHandler.getStringPref('browser.videoFeeds.handler') !=
+                "ask") {
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
+		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
+	      this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");
+	    }
+	  }
+          
           // Check if the changed preference is on the stringprefsmap...
           else if (data in this.stringPrefsMap) {
             log("Pref '" + data + "' is on the string prefsmap!");
