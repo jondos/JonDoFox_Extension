@@ -62,6 +62,12 @@ pref("extensions.jondofox.accept_charsets", "*");
 pref("extensions.jondofox.default_charset", "");
 pref("extensions.jondofox.accept_default", "*/*");
 
+// Feed prefs
+
+pref("extensions.jondofox.feeds_handler_default", "bookmarks");
+pref("extensions.jondofox.audioFeeds_handler_default", "bookmarks");
+pref("extensions.jondofox.videoFeeds_handler_default", "bookmarks");
+
 // Miscellaneous
 
 pref("extensions.jondofox.dom_storage_enabled", false);

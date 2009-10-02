@@ -43,12 +43,21 @@ var JDFManager = {
   STATE_PREF: 'extensions.jondofox.proxy.state',
   NO_PROXIES: 'extensions.jondofox.no_proxies_on',
   REF_PREF: 'extensions.jondofox.set_referrer',
+  FEEDS_PREF: 'extensions.jondofox.feeds_handler_default',
+  AUDIO_FEEDS_PREF: 'extensions.jondofox.audioFeeds_handler_default',
+  VIDEO_FEEDS_PREF: 'extensions.jondofox.videoFeeds_handler_default',
  
   // Possible values of the 'STATE_PREF'
   STATE_NONE: 'none',  
   STATE_JONDO: 'jondo',
   STATE_TOR: 'tor',
   STATE_CUSTOM: 'custom',
+
+  // We need this value to compare to the profile version actually deployed
+  // If there are differennces we may start some additional functions (that
+  // depends partly on some other flags set) mainly for warning the user or
+  // ocrrecting silently some unsafe values...
+  JDF_VERSION: "2.2.5",
 
   // Set this to indicate that cleaning up is necessary
   clean: false,
@@ -302,11 +311,11 @@ var JDFManager = {
         this.prefsHandler.
                 setBoolPref('local_install.showBuildinWindowTitle', false);
       }
-      log("Setting initial proxy state ..");
-      this.setProxy(this.getState());
       // Now, we observe the datasource in order to be able to prevent the user
       // from using external applications automatically.
       this.observeMimeTypes();
+      log("Setting initial proxy state ..");
+      this.setProxy(this.getState());
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -568,7 +577,7 @@ var JDFManager = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getBoolPref('extensions.jondofox.profile_update') &&
-          this.prefsHandler.getStringPref('extensions.jondofox.profile_version') != "2.2.5" &&
+          this.prefsHandler.getStringPref('extensions.jondofox.profile_version') != this.JDF_VERSION &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
         this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
 			    this.getString('jondofox.dialog.message.profileupdate'), 'update');
@@ -657,9 +666,10 @@ var JDFManager = {
 
   firstMimeTypeCheck: function() {
     try {
+      var result;
       var feedArray = ["feeds", "audioFeeds", "videoFeeds"];
-      if (this.prefsHandler.getStringPref('extensions.jondofox.last_version') !=
-          this.VERSION) {
+      if (this.prefsHandler.getStringPref('extensions.jondofox.profile_version')
+          != this.JDF_VERSION) {
         this.correctExternalApplications(true);
         for (i = 0; i < 3; i++) {
           if (this.prefsHandler.getStringPref(
@@ -671,17 +681,22 @@ var JDFManager = {
 	  }
         }
       } else {
-	this.correctExternalApplications(false);
-        for (i = 0; i < 3; i++) {
-          if (this.prefsHandler.getStringPref(
-	      'browser.' + feedArray[i] + '.handler') == "reader" && 
-	      this.prefsHandler.getStringPref(
-              'browser.' + feedArray[i] + '.handler.default') == "client") {
-            this.prefsHandler.setStringPref(
-              'browser.'+ feedArray[i] + '.handler', "ask");
-            this.showAlert(this.getString('jondofox.dialog.attention'), 
-		 this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-	  }
+        this.correctExternalApplications(false);
+        if (this.prefsHandler.getBoolPref(
+                              'extensions.jondofox.preferences_warning')) {
+          for (i = 0; i < 3; i++) {
+            if (this.prefsHandler.getStringPref(
+	        'browser.' + feedArray[i] + '.handler') == "reader" && 
+	        this.prefsHandler.getStringPref(
+                'browser.' + feedArray[i] + '.handler.default') == "client") {
+              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+                       this.getString('jondofox.dialog.message.feeds'), 'preferences');       
+              if (!result) {
+                this.prefsHandler.setStringPref(
+                'browser.'+ feedArray[i] + '.handler', "ask");
+	      }
+	    }
+          }
         }
       }
     } catch (e) {
@@ -752,7 +767,7 @@ var JDFManager = {
         }
       },
     };
-     
+    
     // For the following few lines of code see nsHandlerService.js
     if (!this.mimeTypesDs) {
 	var mimeFile = this.directoryService.get("UMimTyp", CI.nsIFile);
@@ -765,7 +780,7 @@ var JDFManager = {
         
     }
     this.mimeTypesDs.AddObserver(rdfObserver);
-  },
+    },
 
   // After changing back to a safe value we have to correct the label as well.
   // The only method I am aware of at this moment is to close and reload the
@@ -987,7 +1002,7 @@ var JDFManager = {
   // Implement nsIObserver ////////////////////////////////////////////////////
   
   observe: function(subject, topic, data) {
-	//var rememberAsk = false;
+    var result;
     try {
       switch (topic) {        
         case 'app-startup':
@@ -1071,14 +1086,19 @@ var JDFManager = {
               }
             } 
           }
-
+          
+          // Feeds are regulated by prefs, so we have to handle them (feeds, 
+          // audiofeeds and videofeeds) here...
           else if (data == 'browser.feeds.handler') {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
                 this.prefsHandler.getStringPref('browser.feeds.handler.default')
 		== "client") {
-              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
-		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-              this.prefsHandler.setStringPref('browser.feeds.handler', "ask");   
+                result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+	                 this.getString('jondofox.dialog.message.feeds'), 'preferences');
+	      // If the user wants in fact to be asked because of security
+              // concerns or whatever, just set the pref back to "ask"
+              if (!result) {
+		  this.prefsHandler.setStringPref('browser.feeds.handler', "ask");            }
             }
 	  }
 
@@ -1086,39 +1106,65 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) == "client" && 
                 this.prefsHandler.getStringPref('browser.feeds.handler') !=
                 "ask") {
-              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
-		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-	      this.prefsHandler.setStringPref('browser.feeds.handler', "ask");
+              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+	               this.getString('jondofox.dialog.message.feeds'), 'preferences');
+              // We cannot set the pref back as easy as in the case of
+              // 'browser.feeds.handler' if the user wants to be asked.
+              // The reason is: the pref has not two but three values. So
+              // we take always the last one which the user selected (it
+              // is saved everytime the user changes this pref to the pref
+              // 'extensions.jondofox.feeds_handler_default').
+              if (!result) {
+	        this.prefsHandler.setStringPref(data, 
+		     this.prefsHandler.getStringPref(this.FEEDS_PREF));
+              }
 	    }
-	  }
-          
+            // Now we adjust the last selected value of the pref...
+            this.prefsHandler.setStringPref(this.FEEDS_PREF, 
+				  this.prefsHandler.getStringPref(data));
+          }
+
+          // The same as above applies to 'browser.audioFeeds.handler' and 
+          // 'browser.audioFeeds.handler.default' respectively.
           else if (data == 'browser.audioFeeds.handler') {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
                 this.prefsHandler.getStringPref(
                 'browser.audioFeeds.handler.default') == "client") {
-              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
-		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-              this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");   
+              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+                       this.getString('jondofox.dialog.message.feeds'), 'preferences');
+              if (!result) {
+	        this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");   
+              }
             }
 	  }
 
-	  else if (data == 'browser.audioFeeds.handler.default') {
+          else if (data == 'browser.audioFeeds.handler.default') {
 	    if (this.prefsHandler.getStringPref(data) == "client" && 
                 this.prefsHandler.getStringPref('browser.audioFeeds.handler') !=
                 "ask") {
-              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
-		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-	      this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");
+              oldFeedValue = this.prefsHandler.getStringPref
+              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+                       this.getString('jondofox.dialog.message.feeds'), 'preferences');
+              if (!result) {
+                this.prefsHandler.setStringPref(data, 
+		     this.prefsHandler.getStringPref(this.AUDIO_FEEDS_PREF));
+              }
 	    }
+	    this.prefsHandler.setStringPref(this.AUDIO_FEEDS_PREF, 
+				  this.prefsHandler.getStringPref(data));
 	  }
 
+          // And yes, the same applies to 'browser.vudioFeeds.handler' and 
+          // 'browser.vudioFeeds.handler.default' respectively.
           else if (data == 'browser.videoFeeds.handler') {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
                 this.prefsHandler.getStringPref(
                 'browser.videoFeeds.handler.default') == "client") {
-              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
-		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-              this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");   
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+                       this.getString('jondofox.dialog.message.feeds'), 'preferences');       
+              if (!result) {
+                this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");   
+              }
             }
 	  }
 
@@ -1126,10 +1172,15 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) == "client" && 
                 this.prefsHandler.getStringPref('browser.videoFeeds.handler') !=
                 "ask") {
-              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              this.showAlert(this.getString('jondofox.dialog.attention'), 
-		   this.formatString('jondofox.dialog.message.automaticAction', ["feed"]));
-	      this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");
+              log ("We got a feed!!: " + this.prefsHandler.getStringPref(data));              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+                       this.getString('jondofox.dialog.message.feeds'), 'preferences');
+              if (!result) {
+	        this.prefsHandler.setStringPref(data,
+		     this.prefsHandler.getStringPref( this.VIDEO_FEEDS_PREF));
+              }
 	    }
+	    this.prefsHandler.setStringPref(this.VIDEO_FEEDS_PREF, 
+				  this.prefsHandler.getStringPref(data));
 	  }
           
           // Check if the changed preference is on the stringprefsmap...
