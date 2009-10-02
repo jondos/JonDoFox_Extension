@@ -666,7 +666,6 @@ var JDFManager = {
 
   firstMimeTypeCheck: function() {
     try {
-      var result;
       var feedType =  [this.getString('jondofox.feed'),
                        this.getString('jondofox.audiofeed'),
                        this.getString('jondofox.videofeed')];
@@ -692,13 +691,11 @@ var JDFManager = {
 	        'browser.' + feedArray[i] + '.handler') == "reader" && 
 	        this.prefsHandler.getStringPref(
                 'browser.' + feedArray[i] + '.handler.default') == "client") {
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
                        this.formatString('jondofox.dialog.message.automaticAction',
-		       [feedType[i]]), 'preferences');       
-              if (!result) {
-                this.prefsHandler.setStringPref(
+		       [feedType[i]]));       
+              this.prefsHandler.setStringPref(
                 'browser.'+ feedArray[i] + '.handler', "ask");
-	      }
 	    }
           }
         }
@@ -1006,7 +1003,6 @@ var JDFManager = {
   // Implement nsIObserver ////////////////////////////////////////////////////
   
   observe: function(subject, topic, data) {
-    var result;
     try {
       switch (topic) {        
         case 'app-startup':
@@ -1097,13 +1093,10 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
                 this.prefsHandler.getStringPref('browser.feeds.handler.default')
 		== "client") {
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
 		       this.formatString('jondofox.dialog.message.automaticAction', 
-                       [this.getString('jondofox.feed')]), 'preferences');
-	      // If the user wants in fact to be asked because of security
-              // concerns or whatever, just set the pref back to "ask"
-              if (!result) {
-		  this.prefsHandler.setStringPref('browser.feeds.handler', "ask");            }
+		       [this.getString('jondofox.feed')]));
+	      this.prefsHandler.setStringPref('browser.feeds.handler', "ask");  
             }
 	  }
 
@@ -1111,19 +1104,11 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) == "client" && 
                 this.prefsHandler.getStringPref('browser.feeds.handler') !=
                 "ask") {
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
                        this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.feed')]), 'preferences');
-              // We cannot set the pref back as easy as in the case of
-              // 'browser.feeds.handler' if the user wants to be asked.
-              // The reason is: the pref has not two but three values. So
-              // we take always the last one which the user selected (it
-              // is saved everytime the user changes this pref to the pref
-              // 'extensions.jondofox.feeds_handler_default').
-              if (!result) {
-	        this.prefsHandler.setStringPref(data, 
+		       [this.getString('jondofox.feed')]));
+              this.prefsHandler.setStringPref(data, 
 		     this.prefsHandler.getStringPref(this.FEEDS_PREF));
-              }
 	    }
             // Now we adjust the last selected value of the pref...
             this.prefsHandler.setStringPref(this.FEEDS_PREF, 
@@ -1136,12 +1121,10 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
                 this.prefsHandler.getStringPref(
                 'browser.audioFeeds.handler.default') == "client") {
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
 		       this.formatString('jondofox.dialog.message.automaticAction', 
-		       [this.getString('jondofox.audiofeed')]), 'preferences');
-              if (!result) {
-	        this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");   
-              }
+		       [this.getString('jondofox.audiofeed')]));
+              this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");   
             }
 	  }
 
@@ -1149,14 +1132,12 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) == "client" && 
                 this.prefsHandler.getStringPref('browser.audioFeeds.handler') !=
                 "ask") {
-              oldFeedValue = this.prefsHandler.getStringPref
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
                        this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.audiofeed')]), 'preferences');
-              if (!result) {
-                this.prefsHandler.setStringPref(data, 
+		       [this.getString('jondofox.audiofeed')]));
+              this.prefsHandler.setStringPref(data, 
 		     this.prefsHandler.getStringPref(this.AUDIO_FEEDS_PREF));
-              }
+              
 	    }
 	    this.prefsHandler.setStringPref(this.AUDIO_FEEDS_PREF, 
 				  this.prefsHandler.getStringPref(data));
@@ -1168,12 +1149,10 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
                 this.prefsHandler.getStringPref(
                 'browser.videoFeeds.handler.default') == "client") {
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
                        this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.videofeed')]), 'preferences');       
-              if (!result) {
-                this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");   
-              }
+		       [this.getString('jondofox.videofeed')]));       
+              this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");   
             }
 	  }
 
@@ -1181,13 +1160,11 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) == "client" && 
                 this.prefsHandler.getStringPref('browser.videoFeeds.handler') !=
                 "ask") {
-              result = this.showConfirmCheck(this.getString('jondofox.dialog.attention'),
+              this.showAlert(this.getString('jondofox.dialog.attention'),
                        this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.videofeed')]), 'preferences');
-              if (!result) {
-	        this.prefsHandler.setStringPref(data,
+		       [this.getString('jondofox.videofeed')]));
+              this.prefsHandler.setStringPref(data,
 		     this.prefsHandler.getStringPref( this.VIDEO_FEEDS_PREF));
-              }
 	    }
 	    this.prefsHandler.setStringPref(this.VIDEO_FEEDS_PREF, 
 				  this.prefsHandler.getStringPref(data));
