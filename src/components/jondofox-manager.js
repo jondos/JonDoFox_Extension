@@ -121,7 +121,9 @@ var JDFManager = {
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
     'network.http.proxy.keep-alive':'extensions.jondofox.proxy_keep-alive',
-    'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker'    
+    'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
+    'network.protocol-handler.warn-external.news':
+    'extensions.jondofox.network-protocol-handler.warn_external_news'    
   },
 
   //This map of integer preferences is given to the prefsMapper
@@ -758,9 +760,12 @@ var JDFManager = {
 	      var wm = CC['@mozilla.org/appshell/window-mediator;1']
 		          .getService(CI.nsIWindowMediator);
               var applicationPane = wm.getMostRecentWindow(null);
-              applicationPane.addEventListener("unload", function()
+              // Is the recent window really the application pane?
+              if (applicationPane.document.getElementById("handlersView")) {
+                applicationPane.addEventListener("unload", function()
                            {JDFManager.appPaneReload(applicationPane);}, false);
-              applicationPane.close(); 
+                applicationPane.close(); 
+              }
             }
           }
         } catch (e) {
@@ -803,8 +808,8 @@ var JDFManager = {
       while (handledMimeTypes.hasMoreElements()) {
         var handledMimeType = handledMimeTypes.getNext().QueryInterface(CI.nsIHandlerInfo);
         var mimeType = handledMimeType.type;
-        if (!handledMimeType.alwaysAskBeforeHandling && 
-            handledMimeType.preferredAction != 0 && mimeType != "mailto") {
+        if (!handledMimeType.alwaysAskBeforeHandling && mimeType != "mailto" &&
+            handledMimeType.preferredAction > 1) {
 	  if (!firstProgramStart) {
             this.showAlert(this.getString('jondofox.dialog.attention'), 
 	  	           this.formatString('jondofox.dialog.message.automaticAction', [mimeType]));
@@ -1077,8 +1082,8 @@ var JDFManager = {
           
           // Do not allow to accept ALL cookies
           if (data == 'network.cookie.cookieBehavior') {
-            if (this.prefsHandler.getIntPref('network.cookie.cookieBehavior') == 0) {
-	      this.prefsHandler.setIntPref('network.cookie.cookieBehavior', 1)
+	    if (this.prefsHandler.getIntPref(data) == 0) {
+	      this.prefsHandler.setIntPref(data, 1)
               // Warn the user if she has not disabled preference warnings
               if (this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
                 this.showAlertCheck(this.getString('jondofox.dialog.attention'),
@@ -1086,7 +1091,19 @@ var JDFManager = {
               }
             } 
           }
-          
+	  
+	  // Do not allow to open news feeds automatically
+          if (data == 'network.protocol-handler.warn-external.news') {
+	    if (!this.prefsHandler.getBoolPref(data)) {
+	      this.prefsHandler.setBoolPref(data, true);  
+              // Warn the user if she has not disabled preference warnings
+              if (this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
+                this.showAlertCheck(this.getString('jondofox.dialog.attention'),
+                     this.getString('jondofox.dialog.message.newsfeeds'), 'preferences');
+              }
+            }
+          }
+    
           // Feeds are regulated by prefs, so we have to handle them (feeds, 
           // audiofeeds and videofeeds) here...
           else if (data == 'browser.feeds.handler') {
@@ -1143,7 +1160,7 @@ var JDFManager = {
 				  this.prefsHandler.getStringPref(data));
 	  }
 
-          // And yes, the same applies to 'browser.vudioFeeds.handler' and 
+          // And yes, the same applies to 'browser.audioFeeds.handler' and 
           // 'browser.vudioFeeds.handler.default' respectively.
           else if (data == 'browser.videoFeeds.handler') {
 	    if (this.prefsHandler.getStringPref(data) != "ask" &&
@@ -1185,7 +1202,8 @@ var JDFManager = {
             }
           }
 	  // or on the boolean prefsmap...
-          else if (data in this.boolPrefsMap) {
+          else if (data in this.boolPrefsMap && data !=
+                   'network.protocol-handler.warn-external.news') {
             log("Pref '" + data + "' is on the boolean prefsmap!");
             // If the new value is not the recommended ..
             if (this.prefsHandler.getBoolPref(data) != 
@@ -1194,6 +1212,7 @@ var JDFManager = {
               // ... warn the user
               this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
 				  this.getString('jondofox.dialog.message.prefchange'), 'preferences');
+	    
             } else {
               log("All good!");
             }
