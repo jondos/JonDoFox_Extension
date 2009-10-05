@@ -68,6 +68,8 @@ pref("extensions.jondofox.feeds_handler_default", "bookmarks");
 pref("extensions.jondofox.audioFeeds_handler_default", "bookmarks");
 pref("extensions.jondofox.videoFeeds_handler_default", "bookmarks");
 
+pref("extensions.jondofox.network-protocol-handler.warn_external_news", true);
+
 // Miscellaneous
 
 pref("extensions.jondofox.dom_storage_enabled", false);
