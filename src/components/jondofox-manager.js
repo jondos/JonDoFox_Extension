@@ -53,11 +53,10 @@ var JDFManager = {
   STATE_TOR: 'tor',
   STATE_CUSTOM: 'custom',
 
-  // We need this value to compare to the profile version actually deployed
-  // If there are differences we may start some additional functions (that
-  // depends partly on some other flags set) mainly for warning the user or
-  // ocrrecting silently some unsafe values...
-  JDF_VERSION: "2.2.5",
+  // We need this value to compare it to the profile version actually deployed.
+  // If there are differences we pop up a warning that the user has to update
+  // the profile (if she has not disabled this). 
+  JDF_VERSION: "2.2.4",
 
   // Set this to indicate that cleaning up is necessary
   clean: false,
@@ -578,8 +577,8 @@ var JDFManager = {
   checkProfileUpdate: function() {
     log("Checking whether we have to update the profile ..");
     try {
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.profile_update') &&
-          this.prefsHandler.getStringPref('extensions.jondofox.profile_version') != this.JDF_VERSION &&
+      if (this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') != this.JDF_VERSION &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
         this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
 			    this.getString('jondofox.dialog.message.profileupdate'), 'update');
@@ -672,8 +671,7 @@ var JDFManager = {
                        this.getString('jondofox.audiofeed'),
                        this.getString('jondofox.videofeed')];
       var feedArray = ["feeds", "audioFeeds", "videoFeeds"];
-      if (this.prefsHandler.getStringPref('extensions.jondofox.profile_version')
-          != this.JDF_VERSION) {
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.new_profile')) {
         this.correctExternalApplications(true);
         for (i = 0; i < 3; i++) {
           if (this.prefsHandler.getStringPref(
@@ -684,21 +682,22 @@ var JDFManager = {
               'browser.'+ feedArray[i] + '.handler', "ask");
 	  }
         }
+        this.prefsHandler.setBoolPref('extensions.jondofox.new_profile', false);
       } else {
         this.correctExternalApplications(false);
-        if (this.prefsHandler.getBoolPref(
+        for (i = 0; i < 3; i++) {
+          if (this.prefsHandler.getStringPref(
+	      'browser.' + feedArray[i] + '.handler') == "reader" && 
+	      this.prefsHandler.getStringPref(
+              'browser.' + feedArray[i] + '.handler.default') == "client") {
+            this.prefsHandler.setStringPref(
+                'browser.'+ feedArray[i] + '.handler', "ask");
+            if (this.prefsHandler.getBoolPref(
                               'extensions.jondofox.preferences_warning')) {
-          for (i = 0; i < 3; i++) {
-            if (this.prefsHandler.getStringPref(
-	        'browser.' + feedArray[i] + '.handler') == "reader" && 
-	        this.prefsHandler.getStringPref(
-                'browser.' + feedArray[i] + '.handler.default') == "client") {
               this.showAlert(this.getString('jondofox.dialog.attention'),
                        this.formatString('jondofox.dialog.message.automaticAction',
-		       [feedType[i]]));       
-              this.prefsHandler.setStringPref(
-                'browser.'+ feedArray[i] + '.handler', "ask");
-	    }
+		       [feedType[i]])); 
+	    } 
           }
         }
       }
