@@ -67,10 +67,18 @@ pref("extensions.jondofox.feeds_handler_default", "bookmarks");
 pref("extensions.jondofox.audioFeeds_handler_default", "bookmarks");
 pref("extensions.jondofox.videoFeeds_handler_default", "bookmarks");
 
+// External app warn prefs
+
 pref("extensions.jondofox.network-protocol-handler.warn_external_news", true);
+pref("extensions.jondofox.network-protocol-handler.warn_external_snews", true);
+pref("extensions.jondofox.network-protocol-handler.warn_external_file", true);
+pref("extensions.jondofox.network-protocol-handler.warn_external_nntp", true);
+pref("extensions.jondofox.network-protocol-handler.warn_external_mailto", true);
+pref("extensions.jondofox.network-protocol-handler.warn_external_default", true);
 
 // Miscellaneous
 
+pref("extensions.jondofox.source_editor_external", false);
 pref("extensions.jondofox.dom_storage_enabled", false);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
