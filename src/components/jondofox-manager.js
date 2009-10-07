@@ -120,15 +120,31 @@ var JDFManager = {
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
     'network.http.proxy.keep-alive':'extensions.jondofox.proxy_keep-alive',
-    'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
-    'network.protocol-handler.warn-external.news':
-    'extensions.jondofox.network-protocol-handler.warn_external_news'    
+    'view_source.editor.external': 'extensions.jondofox.source_editor_external',
+    'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker'
   },
 
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
     'browser.history_expire_days':'extensions.jondofox.history_expire_days',
     'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior'
+  },
+
+  // This map contains those preferences which avoid external apps being opened
+  // automatically.
+  externalAppWarnings: {
+    'network.protocol-handler.warn-external.news':
+    'extensions.jondofox.network-protocol-handler.warn_external_news',
+    'network.protocol-handler.warn-external.snews':
+    'extensions.jondofox.network-protocol-handler.warn_external_snews',
+    'network.protocol-handler.warn-external.nntp':
+    'extensions.jondofox.network-protocol-handler.warn_external_nntp',
+    'network.protocol-handler.warn-external.file':
+    'extensions.jondofox.network-protocol-handler.warn_external_file',
+    'network.protocol-handler.warn-external.mailto':
+    'extensions.jondofox.network-protocol-handler.warn_external_mailto',
+    'network.protocol-handler.warn-external-default':
+    'extensions.jondofox.network-protocol-handler.warn_external_default'
   },
 
   // Different services
@@ -298,6 +314,7 @@ var JDFManager = {
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);
       this.prefsMapper.setBoolPrefs(this.boolPrefsMap);
+      this.prefsMapper.setBoolPrefs(this.externalAppWarnings);
       this.prefsMapper.setIntPrefs(this.intPrefsMap); 
       this.prefsMapper.map();
       // Add an observer to the main pref branch after setting the prefs
@@ -706,6 +723,7 @@ var JDFManager = {
     }
   },
 
+  
   // First, we check whether we found the unknownContentType dialog. If so
   // we add two eventlisteners, one to the checkbox and one to the radiobutton.
   // The reason is that we need both, otherwise the users could just select
@@ -717,20 +735,28 @@ var JDFManager = {
   getUnknownContentTypeDialog: function() {
     try {
       var checkBox = this.document.getElementById("rememberChoice");
+      //var checkBoxFeed = this.document.getElementById("remember");
       var radioOpen = this.document.getElementById("open");
       var type = this.document.getElementById("type");
       if (checkBox && radioOpen) {
-         checkBox.addEventListener("click", function() {JDFManager.
+        checkBox.addEventListener("click", function() {JDFManager.
 		     checkboxChecked(radioOpen, checkBox, type);}, false);
-         radioOpen.addEventListener("click", function() {JDFManager.
+        radioOpen.addEventListener("click", function() {JDFManager.
 		     checkboxChecked(radioOpen, checkBox, type);}, false);
-       } else {
+        var typeValue = type.value;
+        log("Type: " + typeValue);
+      } /*else if (checkBoxFeed){
+	var checkBoxText = this.document.getElementById("remember-text").value;
+        log ("checkboxText: " + checkBoxText);
+          
+	}*/ else {
          this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
       }
     } catch (e) {
       log("getUnknownContentTypeDialog(): " + e);
     }
   },
+
   
   // Let's see whether the checkbox and the approproate radiobutton is selected.
   // If so we show a warning dialog and disable the checkbox.
@@ -740,6 +766,7 @@ var JDFManager = {
   checkboxChecked: function(radioOpen, checkBox, type) {
     if (checkBox.checked && radioOpen.selected) {
       type = type.value;
+      log("Type ist nun: " + type);
       this.showAlert(this.getString('jondofox.dialog.attention'), 
 		     this.formatString(
 				       'jondofox.dialog.message.automaticAction', [type]));
@@ -770,8 +797,8 @@ var JDFManager = {
         } catch (e) {
 	  log("rdfObserver: " + e);
         }
-      },
-    };
+      }
+    }
     
     // For the following few lines of code see nsHandlerService.js
     if (!this.mimeTypesDs) {
@@ -785,7 +812,7 @@ var JDFManager = {
         
     }
     this.mimeTypesDs.AddObserver(rdfObserver);
-    },
+  },
 
   // After changing back to a safe value we have to correct the label as well.
   // The only method I am aware of at this moment is to close and reload the
@@ -807,7 +834,7 @@ var JDFManager = {
       while (handledMimeTypes.hasMoreElements()) {
         var handledMimeType = handledMimeTypes.getNext().QueryInterface(CI.nsIHandlerInfo);
         var mimeType = handledMimeType.type;
-        if (!handledMimeType.alwaysAskBeforeHandling && mimeType != "mailto" &&
+        if (!handledMimeType.alwaysAskBeforeHandling &&
             handledMimeType.preferredAction > 1) {
 	  if (!firstProgramStart) {
             this.showAlert(this.getString('jondofox.dialog.attention'), 
@@ -1091,18 +1118,6 @@ var JDFManager = {
             } 
           }
 	  
-	  // Do not allow to open news feeds automatically
-          if (data == 'network.protocol-handler.warn-external.news') {
-	    if (!this.prefsHandler.getBoolPref(data)) {
-	      this.prefsHandler.setBoolPref(data, true);  
-              // Warn the user if she has not disabled preference warnings
-              if (this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
-                this.showAlertCheck(this.getString('jondofox.dialog.attention'),
-                     this.getString('jondofox.dialog.message.newsfeeds'), 'preferences');
-              }
-            }
-          }
-    
           // Feeds are regulated by prefs, so we have to handle them (feeds, 
           // audiofeeds and videofeeds) here...
           else if (data == 'browser.feeds.handler') {
@@ -1201,8 +1216,7 @@ var JDFManager = {
             }
           }
 	  // or on the boolean prefsmap...
-          else if (data in this.boolPrefsMap && data !=
-                   'network.protocol-handler.warn-external.news') {
+          else if (data in this.boolPrefsMap) {
             log("Pref '" + data + "' is on the boolean prefsmap!");
             // If the new value is not the recommended ..
             if (this.prefsHandler.getBoolPref(data) != 
@@ -1227,6 +1241,19 @@ var JDFManager = {
               // ... warn the user
               this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
                                   this.getString('jondofox.dialog.message.prefchange'), 'preferences');
+            } else {
+              log("All good!");
+            }
+          }
+	  // Now we have all the external app warnings...
+          else if (data in this.externalAppWarnings) {
+	    log("Pref '" + data + "' is on the external app warning map!");
+            if (!this.prefsHandler.getBoolPref(data) && this.prefsHandler.
+		      getBoolPref('extensions.jondofox.preferences_warning')) {
+               // ... warn the user
+              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
+                                  this.getString('jondofox.dialog.message.appWarning'), 'preferences');
+              this.prefsHandler.setBoolPref(data, true);
             } else {
               log("All good!");
             }
