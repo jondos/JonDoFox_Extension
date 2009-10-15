@@ -314,7 +314,6 @@ var JDFManager = {
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);
       this.prefsMapper.setBoolPrefs(this.boolPrefsMap);
-      this.prefsMapper.setBoolPrefs(this.externalAppWarnings);
       this.prefsMapper.setIntPrefs(this.intPrefsMap); 
       this.prefsMapper.map();
       // Add an observer to the main pref branch after setting the prefs
@@ -734,22 +733,21 @@ var JDFManager = {
    
   getUnknownContentTypeDialog: function() {
     try {
-      var checkBox = this.document.getElementById("rememberChoice");
-      //var checkBoxFeed = this.document.getElementById("remember");
+      var checkbox = this.document.getElementById("rememberChoice");
+      var checkboxNews = this.document.getElementById("remember");
       var radioOpen = this.document.getElementById("open");
       var type = this.document.getElementById("type");
-      if (checkBox && radioOpen) {
-        checkBox.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkBox, type);}, false);
+      if (checkbox && radioOpen) {
+        checkbox.addEventListener("click", function() {JDFManager.
+		     checkboxChecked(radioOpen, checkbox, type);}, false);
         radioOpen.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkBox, type);}, false);
-        var typeValue = type.value;
-        log("Type: " + typeValue);
-      } /*else if (checkBoxFeed){
-	var checkBoxText = this.document.getElementById("remember-text").value;
-        log ("checkboxText: " + checkBoxText);
-          
-	}*/ else {
+		     checkboxChecked(radioOpen, checkbox, type);}, false);
+      } else if (checkboxNews){
+	var handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
+        type = handlerInfo.type;
+        checkboxNews.addEventListener("click", function() {JDFManager.
+		    checkboxNewsChecked(checkboxNews, type);}, false);
+      } else {
          this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
       }
     } catch (e) {
@@ -763,14 +761,25 @@ var JDFManager = {
   // XXX Find a better way to disable the checkbox if 'save' was first selected.
   // Because in this case the "additional" text does not vanish...
 
-  checkboxChecked: function(radioOpen, checkBox, type) {
-    if (checkBox.checked && radioOpen.selected) {
+  checkboxChecked: function(radioOpen, checkbox, type) {
+    if (checkbox.checked && radioOpen.selected) {
       type = type.value;
-      log("Type ist nun: " + type);
       this.showAlert(this.getString('jondofox.dialog.attention'), 
-		     this.formatString(
-				       'jondofox.dialog.message.automaticAction', [type]));
-      checkBox.checked=false;
+	             this.formatString(
+                          'jondofox.dialog.message.automaticAction', [type]));
+      checkbox.checked = false;
+    }
+  },         
+
+  // Well, and the other dialog concerning external apps contains no Open-
+  // button and is therefore treated a bit differently...
+
+  checkboxNewsChecked: function(checkboxNews, type) {
+    if (checkboxNews.checked) {
+      this.showAlert(this.getString('jondofox.dialog.attention'),
+	             this.formatString(
+			  'jondofox.dialog.message.automaticAction', [type]));
+      checkboxNews.checked = false;
     }
   },
 
