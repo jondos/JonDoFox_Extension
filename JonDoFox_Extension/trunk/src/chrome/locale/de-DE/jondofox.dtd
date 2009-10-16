@@ -29,6 +29,12 @@
    Internet identifizieren oder wiedererkennen. In diesem Fall sollten Sie ihre 
    Einstellungen überprüfen und die zugehörige Hilfe lesen.">
 
+
+<!-- Warnings -->
+<!ENTITY jondofox.warnings.externalApp "Das direkte Öffnen von Dateien mit Hilfe externer Anwendungen kann Ihre Anonymität beeinträchtigen!">
+<!ENTITY jondofox.warnings.externalPdf "Stellen Sie vor dem Öffnen von pdf-Dateien sicher, dass JavaScript und Flash in ihrem Reader abgeschaltet sind!">
+
+
 <!-- Context menu strings -->
 <!ENTITY jondofox.contextmenu.noproxylist.add "Diesen Link zur 'No Proxy'-Liste hinzufügen">
 <!ENTITY jondofox.contextmenu.noproxylist.remove "Diesen Link von 'No Proxy'-Liste entfernen">
