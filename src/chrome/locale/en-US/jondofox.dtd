@@ -26,6 +26,11 @@
    <b><font color='red'>red</font></b> you might be identifyable or recognizable. In this case you 
    should re-check your configuration and read the help files.">
 
+<!-- Warnings-->
+<!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files directly with external applications!">
+<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content are deactivated in your pdf-reader before opening the file!">
+
+
 <!-- Context menu strings -->
 <!ENTITY jondofox.contextmenu.noproxylist.add "Add Link to 'No Proxy'-List">
 <!ENTITY jondofox.contextmenu.noproxylist.remove "Remove Link from 'No Proxy'-List">

@@ -728,8 +728,8 @@ var JDFManager = {
   // The reason is that we need both, otherwise the users could just select
   // the 'save'-radiobutton then select the checkbox and finally select the
   // 'open'-radiobutton.
-  // If we did not find the dialog we remove the eventlistener because we got 
-  // the wrong one...
+  // If we did not find the dialog we try if we got the other external app
+  // dialog. If not we remove the eventlistener because we got the wrong one...
    
   getUnknownContentTypeDialog: function() {
     try {
@@ -738,11 +738,19 @@ var JDFManager = {
       var radioOpen = this.document.getElementById("open");
       var type = this.document.getElementById("type");
       if (checkbox && radioOpen) {
+	  /*if (type.value == "PDF-Datei") {
+            this.document.loadOverlay(
+                 "chrome://jondofox/content/external-pdf.xul", null);
+		 } else {}*/
+            this.document.loadOverlay(
+                 "chrome://jondofox/content/external-app.xul", null);
+          
         checkbox.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkbox, type);}, false);
+		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
         radioOpen.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkbox, type);}, false);
+		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
       } else if (checkboxNews){
+	this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
 	var handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
         checkboxNews.addEventListener("click", function() {JDFManager.
@@ -750,12 +758,12 @@ var JDFManager = {
       } else {
          this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
       }
-    } catch (e) {
+     } catch (e) {
       log("getUnknownContentTypeDialog(): " + e);
     }
   },
 
-  
+   
   // Let's see whether the checkbox and the approproate radiobutton is selected.
   // If so we show a warning dialog and disable the checkbox.
   // XXX Find a better way to disable the checkbox if 'save' was first selected.
@@ -763,7 +771,6 @@ var JDFManager = {
 
   checkboxChecked: function(radioOpen, checkbox, type) {
     if (checkbox.checked && radioOpen.selected) {
-      type = type.value;
       this.showAlert(this.getString('jondofox.dialog.attention'), 
 	             this.formatString(
                           'jondofox.dialog.message.automaticAction', [type]));
