@@ -27,8 +27,8 @@
    should re-check your configuration and read the help files.">
 
 <!-- Warnings-->
-<!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files directly with external applications!">
-<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content are deactivated in your pdf-reader before opening the file!">
+<!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files/links directly with external applications!">
+<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content is deactivated in your pdf-reader before opening the file!">
 
 
 <!-- Context menu strings -->
