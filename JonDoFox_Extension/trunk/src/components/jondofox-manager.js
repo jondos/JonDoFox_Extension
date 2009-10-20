@@ -316,6 +316,8 @@ var JDFManager = {
       this.prefsMapper.setBoolPrefs(this.boolPrefsMap);
       this.prefsMapper.setIntPrefs(this.intPrefsMap); 
       this.prefsMapper.map();
+      this.prefsMapper.setBoolPrefs(this.externalAppWarnings);
+      this.prefsMapper.map();
       // Add an observer to the main pref branch after setting the prefs
       var prefs = this.prefsHandler.prefs;
       prefs.QueryInterface(CI.nsIPrefBranch2);
@@ -751,6 +753,9 @@ var JDFManager = {
 		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
       } else if (checkboxNews){
 	this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+        // 10 arguments are passed to the external app window. We take the
+        // seventh, the handlerInfo to show the file type to the user. For 
+        // details, see: chrome://mpzapps/content/handling/dialog.js
 	var handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
         checkboxNews.addEventListener("click", function() {JDFManager.
@@ -782,7 +787,7 @@ var JDFManager = {
   // button and is therefore treated a bit differently...
 
   checkboxNewsChecked: function(checkboxNews, type) {
-    if (checkboxNews.checked) {
+    if (checkboxNews.checked && type != "mailto") {
       this.showAlert(this.getString('jondofox.dialog.attention'),
 	             this.formatString(
 			  'jondofox.dialog.message.automaticAction', [type]));
@@ -850,7 +855,7 @@ var JDFManager = {
       while (handledMimeTypes.hasMoreElements()) {
         var handledMimeType = handledMimeTypes.getNext().QueryInterface(CI.nsIHandlerInfo);
         var mimeType = handledMimeType.type;
-        if (!handledMimeType.alwaysAskBeforeHandling &&
+        if (!handledMimeType.alwaysAskBeforeHandling && mimeType != "mailto" &&
             handledMimeType.preferredAction > 1) {
 	  if (!firstProgramStart) {
             this.showAlert(this.getString('jondofox.dialog.attention'), 
