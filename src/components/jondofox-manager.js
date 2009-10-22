@@ -160,9 +160,9 @@ var JDFManager = {
   stringBundle: null,
 
   // We need the MIME-Type datasource to observe the always-ask property.
-  // And we need the MIME-Types which need an external helper app.
   mimeTypesDs: null,
-  handledMimeTypes: null,
+ 
+  fileTypes: [],
 
   // Inititalize services and stringBundle
   init: function() {
@@ -740,6 +740,10 @@ var JDFManager = {
       var radioSave = this.document.getElementById("save");
       var type = this.document.getElementById("type");
       if (checkbox && radioOpen) {
+          // We need a Timeout here because for some reason type.value gives 
+          // null beack if executed at once. But without getting the type we
+          // cannot discriminate between showing the pdf-overlay and the 
+          // normal one...
 	  this.setTimeout(JDFManager.test, 5, type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews){
 	this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
@@ -760,20 +764,35 @@ var JDFManager = {
 
   test: function(type, checkbox, radioOpen, radioSave, window) {
     try {
-        if (type.value.toLowerCase().search("pdf") != -1 ||
+      var fileTypeExists = false;
+      if (type.value.toLowerCase().search("pdf") != -1 ||
             type.value.toLowerCase().search("adobe acrobat") != -1) {
 	 window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
       } else {
          window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
       }
-      /*if (radioSave.selected && !checkbox.checked) {
-	 checkbox.checked = true;
-         checkbox.checked = false;
-      } else if (radioOpen.selected) {
-        radioSave.click();
-        checkbox.click();
-        window.setTimeout(JDFManager.checkboxClick, 10, checkbox, radioOpen);
-	}*/
+      // The for-loop and the if-clause are for some nasty linux systems :-) 
+      // were the unknownContentTypeDialog is not rendered properly after loaded
+      // for the first time (it is per mimetype!). This is probably due to the 
+      // setTimout-function, we need to get the file/link-type...
+      for (var i = 0; i < JDFManager.fileTypes.length; i++) {
+	if (JDFManager.fileTypes[i] == type.value) {
+	  fileTypeExists = true;
+          break;
+        }
+      }
+      if (!fileTypeExists) {
+        if (radioSave.selected && !checkbox.checked) {
+	  checkbox.checked = true;
+          checkbox.checked = false;
+        } else if (radioOpen.selected) {
+          radioSave.click();
+          checkbox.click();
+          window.setTimeout(JDFManager.checkboxClick, 10, checkbox, radioOpen);
+          
+	}
+        JDFManager.fileTypes[JDFManager.fileTypes.length + 1] = type.value;
+      }
       checkbox.addEventListener("click", function() {JDFManager.
 		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
       radioOpen.addEventListener("click", function() {JDFManager.
@@ -783,10 +802,12 @@ var JDFManager = {
     }
   },
 
-  /*checkboxClick: function(checkbox, radioOpen) {
+  // And yes, another timeout to get the rendering properly on some linux
+  // systems...
+  checkboxClick: function(checkbox, radioOpen) {
     checkbox.click();
     radioOpen.click();      
-    },*/
+  },
 
   // Let's see whether the checkbox and the approproate radiobutton is selected.
   // If so we show a warning dialog and disable the checkbox.
