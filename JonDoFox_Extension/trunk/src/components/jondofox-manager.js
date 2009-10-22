@@ -724,7 +724,6 @@ var JDFManager = {
     }
   },
 
-  
   // First, we check whether we found the unknownContentType dialog. If so
   // we add two eventlisteners, one to the checkbox and one to the radiobutton.
   // The reason is that we need both, otherwise the users could just select
@@ -738,24 +737,15 @@ var JDFManager = {
       var checkbox = this.document.getElementById("rememberChoice");
       var checkboxNews = this.document.getElementById("remember");
       var radioOpen = this.document.getElementById("open");
+      var radioSave = this.document.getElementById("save");
       var type = this.document.getElementById("type");
       if (checkbox && radioOpen) {
-	  /*if (type.value == "PDF-Datei") {
-            this.document.loadOverlay(
-                 "chrome://jondofox/content/external-pdf.xul", null);
-		 } else {}*/
-            this.document.loadOverlay(
-                 "chrome://jondofox/content/external-app.xul", null);
-          
-        checkbox.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
-        radioOpen.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
+	  this.setTimeout(JDFManager.test, 5, type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews){
 	this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
-        // 10 arguments are passed to the external app window. We take the
+        // 10 arguments are passed to this external app window. We take the
         // seventh, the handlerInfo to show the file type to the user. For 
-        // details, see: chrome://mpzapps/content/handling/dialog.js
+        // details, see: chrome://mozapps/content/handling/dialog.js
 	var handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
         checkboxNews.addEventListener("click", function() {JDFManager.
@@ -768,7 +758,36 @@ var JDFManager = {
     }
   },
 
-   
+  test: function(type, checkbox, radioOpen, radioSave, window) {
+    try {
+        if (type.value.toLowerCase().search("pdf") != -1 ||
+            type.value.toLowerCase().search("adobe acrobat") != -1) {
+	 window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
+      } else {
+         window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+      }
+      /*if (radioSave.selected && !checkbox.checked) {
+	 checkbox.checked = true;
+         checkbox.checked = false;
+      } else if (radioOpen.selected) {
+        radioSave.click();
+        checkbox.click();
+        window.setTimeout(JDFManager.checkboxClick, 10, checkbox, radioOpen);
+	}*/
+      checkbox.addEventListener("click", function() {JDFManager.
+		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
+      radioOpen.addEventListener("click", function() {JDFManager.
+	             checkboxChecked(radioOpen, checkbox, type.value);}, false);
+    } catch (e) {
+      log("test: " + e);
+    }
+  },
+
+  /*checkboxClick: function(checkbox, radioOpen) {
+    checkbox.click();
+    radioOpen.click();      
+    },*/
+
   // Let's see whether the checkbox and the approproate radiobutton is selected.
   // If so we show a warning dialog and disable the checkbox.
   // XXX Find a better way to disable the checkbox if 'save' was first selected.
@@ -1106,7 +1125,7 @@ var JDFManager = {
         // to do it this way...
 
         case 'domwindowopened':
- 	  subject.addEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
+	subject.addEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
 	  break;
 
         case 'xul-window-destroyed':
