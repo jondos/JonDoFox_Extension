@@ -766,8 +766,13 @@ var JDFManager = {
     try {
       var fileTypeExists = false;
       if (type.value.toLowerCase().search("pdf") != -1 ||
-            type.value.toLowerCase().search("adobe acrobat") != -1) {
+          type.value.toLowerCase().search("adobe acrobat") != -1) {
 	 window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
+      } else if (type.value.toLowerCase().search("bin") != -1 ||
+                 type.value.toLowerCase().search("dos") != -1) {
+      //do nothing: we do not want any warning here because the user cannot
+      //open these files directly so we return
+	return;
       } else {
          window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
       }
@@ -783,12 +788,12 @@ var JDFManager = {
       }
       if (!fileTypeExists) {
         if (radioSave.selected && !checkbox.checked) {
-	  checkbox.checked = true;
-          checkbox.checked = false;
+	  checkbox.click();
+          window.setTimeout(JDFManager.checkboxClick, 10, checkbox);
         } else if (radioOpen.selected) {
           radioSave.click();
           checkbox.click();
-          window.setTimeout(JDFManager.checkboxClick, 10, checkbox, radioOpen);
+          window.setTimeout(JDFManager.checkboxClick, 10, checkbox);
           
 	}
         JDFManager.fileTypes[JDFManager.fileTypes.length + 1] = type.value;
@@ -803,10 +808,9 @@ var JDFManager = {
   },
 
   // And yes, another timeout to get the rendering properly on some linux
-  // systems...
-  checkboxClick: function(checkbox, radioOpen) {
+  // systems and to set the default action to "save" on all OSs...
+  checkboxClick: function(checkbox) {
     checkbox.click();
-    radioOpen.click();      
   },
 
   // Let's see whether the checkbox and the approproate radiobutton is selected.
