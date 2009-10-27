@@ -768,6 +768,7 @@ var JDFManager = {
       if (type.value.toLowerCase().search("pdf") != -1 ||
           type.value.toLowerCase().search("adobe acrobat") != -1) {
 	 window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
+         log("Das Fenster ist: " + window);
       } else if (type.value.toLowerCase().search("bin") != -1 ||
                  type.value.toLowerCase().search("dos") != -1) {
       //do nothing: we do not want any warning here because the user cannot
@@ -787,13 +788,21 @@ var JDFManager = {
         }
       }
       if (!fileTypeExists) {
+	// If the checkbox is disabled our trick won't work. That's why we enable
+        // it here. This is unproblematic because we set the radiobutton "save"
+        // as default.
+	if (checkbox.disabled) {
+	  checkbox.disabled = false;
+        }        
         if (radioSave.selected && !checkbox.checked) {
 	  checkbox.click();
-          window.setTimeout(JDFManager.checkboxClick, 10, checkbox);
+          // And yes, another timeout to get the rendering properly on some linux
+          // systems and to set the default action to "save" on all OSs...
+          window.setTimeout(JDFManager.checkboxClick, 10, checkbox, window);
         } else if (radioOpen.selected) {
           radioSave.click();
           checkbox.click();
-          window.setTimeout(JDFManager.checkboxClick, 10, checkbox);
+          window.setTimeout(JDFManager.checkboxClick, 10, checkbox, window);
           
 	}
         JDFManager.fileTypes[JDFManager.fileTypes.length + 1] = type.value;
@@ -807,9 +816,11 @@ var JDFManager = {
     }
   },
 
-  // And yes, another timeout to get the rendering properly on some linux
-  // systems and to set the default action to "save" on all OSs...
-  checkboxClick: function(checkbox) {
+  checkboxClick: function(checkbox, window) {
+    // Yes, another trick here: We resize the dialog a bit because otherwise,
+    // again on some linux systems, the widening and shrinking and thus avoinding
+    // the first problem does not work: The dialog stays sometimes just widened.
+    window.resizeBy(1,1);
     checkbox.click();
   },
 
