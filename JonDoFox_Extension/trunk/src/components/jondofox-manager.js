@@ -739,6 +739,12 @@ var JDFManager = {
       var radioOpen = this.document.getElementById("open");
       var radioSave = this.document.getElementById("save");
       var type = this.document.getElementById("type");
+      var alwaysUse = this.document.getElementById("alwaysUse");
+      if (alwaysUse != null) {
+        log("We got the feed-checkbox!");
+      } else {
+        log("Nix feed-checkbox");
+      }
       if (checkbox && radioOpen) {
           // We need a Timeout here because for some reason type.value gives 
           // null beack if executed at once. But without getting the type we

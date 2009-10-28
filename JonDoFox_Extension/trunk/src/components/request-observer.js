@@ -63,7 +63,7 @@ var requestObserver = {
         //log("AFTER: " + channel.getRequestHeader("Referer"));
       }
       // Set other headers here
-      channel.setRequestHeader("Accept", "*/*", false);
+      //channel.setRequestHeader("Accept", "*/*", false);
       return true;
     } catch (e) {
       log("modifyRequest(): " + e);
