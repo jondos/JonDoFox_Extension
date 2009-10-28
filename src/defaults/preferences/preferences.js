@@ -59,7 +59,7 @@ pref("extensions.jondofox.tor.useragent_vendorSub","");
 pref("extensions.jondofox.accept_languages", "en-us");
 pref("extensions.jondofox.accept_charsets", "*");
 pref("extensions.jondofox.default_charset", "");
-pref("extensions.jondofox.accept_default", "*/*");
+pref("extensions.jondofox.accept_default", "text/html,application/xml,*/*");
 
 // Feed prefs
 
