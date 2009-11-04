@@ -41,7 +41,7 @@ var EMPTY_PROXY = 'extensions.jondofox.custom.empty_proxy';
 // Set the extension into a certain state, 
 // pass one of the jdfManager.STATE_XXXs
 function setProxy(state) {
-  log("Setting proxy state to '" + state + "'");
+  log("Started helper function for setting proxy state to '" + state + "'");
   try {
     // Call the underlying method in JDFManager
     if (!jdfManager.setProxy(state)) {
