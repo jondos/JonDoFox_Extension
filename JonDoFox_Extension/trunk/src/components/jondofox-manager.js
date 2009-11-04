@@ -335,6 +335,13 @@ var JDFManager = {
       this.observeMimeTypes();
       log("Setting initial proxy state ..");
       this.setProxy(this.getState());
+      // Maybe the proposed UA has changed due to an update. Thus, we are on the
+      // safe side if we set it on startup.
+      if (this.VERSION != 
+          this.prefsHandler.getStringPref('extensions.jondofox.last_version')) {
+ 
+        this.setUserAgent(this.getState());
+      }
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -739,12 +746,6 @@ var JDFManager = {
       var radioOpen = this.document.getElementById("open");
       var radioSave = this.document.getElementById("save");
       var type = this.document.getElementById("type");
-      var alwaysUse = this.document.getElementById("alwaysUse");
-      if (alwaysUse != null) {
-        log("We got the feed-checkbox!");
-      } else {
-        log("Nix feed-checkbox");
-      }
       if (checkbox && radioOpen) {
           // We need a Timeout here because for some reason type.value gives 
           // null beack if executed at once. But without getting the type we
