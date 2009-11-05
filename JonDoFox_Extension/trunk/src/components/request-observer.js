@@ -90,7 +90,7 @@ var requestObserver = {
       // not set on the noProxyList as well. Thus it can happen that the user
       // wants to avoid a download via a proxy but uses it nevertheless
       // because a redirection occurred.
-      var URI = channel.URI.scheme + "://" + channel.URI.host + channel.URI.path;
+      var URI = channel.URI.spec;
       // If it is on the list let's check whether we will be redirected.
       if (this.jdfManager.noProxyListContains(URI)) {
         var location = channel.getResponseHeader("Location");
