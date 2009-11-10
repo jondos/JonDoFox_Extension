@@ -1,3 +1,45 @@
+Changes in verison 0.2.3 - 2009-11-10
+
+  New Feature:
+    o Minimized the need for updating the whole profile if there are
+      changes in the extension
+    o included several new warnings which may be disabled by the user:
+      -update warnings (if the user has to update/enable the profile or some 
+       other extensions (NoScript, SafeCache))
+      -preference warnings (in case the user modifies the recommended prefs and
+       thus is not surfing securely anymore)
+      -proxy warnings (if the user is not using a proper configured proxy or 
+       no proxy at all for her surfing)
+
+    o 'Benutzerdefiniert' or 'Custom Proxy' is now shown in red letters as well
+       if there is, despite its appearance, no properly configured proxy in use
+    o The user may change the UA if she configures a custom proxy (not faked,
+      the Tor-UA, JonDo-UA). If there is no proxy in use, the unfaked UA is sent
+      if Tor the Tor one and if JonDo the JonDo UA
+    o Improvement of the downlaod of files without using a proxy (via the 
+      context menu). Now the user can be redirected to an other location and 
+      the download is not done using the cascades.
+    o Warnings if the downloads files which may be opened by external apps
+    o Prohibiting the option of opening files automatically with an external app
+    o Improved the Custom Proxy dialog. It works now like the proxy settings
+      panel in Firefox (remembering old values if the box 'Use settings
+      for all protocols' is checked...)
+    o If there is no appropriate Custom Proxy set but nevertheless used
+      it is not possible to download files via the context menu: 
+      the bypassing proxy option is deactivated
+
+
+  Location Neutrality:
+    o Preference for setting 'accept charsets' to 
+      'text/html,application/xml,*/*'; this was necessary due to some yahoo
+      pages which do not work with '*/*' anymore 
+
+  Minor improvements:
+    o Copied a icon in the root directory of the extension (icon.png) thus the
+      JonDoFox icon is still shown even if the extension is disabled (Feature of
+      Firefox 3.6)
+    o modified a misleading log message in jondofox-gui.js
+
 Changes in version 0.2.0 - 2009-05-xx:
 
   New Features:
