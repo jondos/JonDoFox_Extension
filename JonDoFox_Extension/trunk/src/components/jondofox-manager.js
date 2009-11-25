@@ -314,9 +314,14 @@ var JDFManager = {
       // Map all preferences
       this.prefsMapper.setStringPrefs(this.stringPrefsMap);
       this.prefsMapper.setBoolPrefs(this.boolPrefsMap);
+      // We want to set the external app warnings together with the boolean 
+      // prefs (in order to unmap them all properly), thus we add the former 
+      // to the letter. We keep them seperated in order to show more 
+      // fine-grained warnings if the prefs are changed by the user.
+      log("Adding externalAppWarnings to boolean preferences map ..");
+      for (p in this.externalAppWarnings)
+	this.boolPrefsMap[p] = this.externalAppWarnings[p];
       this.prefsMapper.setIntPrefs(this.intPrefsMap); 
-      this.prefsMapper.map();
-      this.prefsMapper.setBoolPrefs(this.externalAppWarnings);
       this.prefsMapper.map();
       // Add an observer to the main pref branch after setting the prefs
       var prefs = this.prefsHandler.prefs;
@@ -1298,6 +1303,19 @@ var JDFManager = {
               log("All good!");
             }
           }
+          // Now we have all the external app warnings...
+          else if (data in this.externalAppWarnings) {
+	    log("Pref '" + data + "' is on the external app warning map!");
+            if (!this.prefsHandler.getBoolPref(data) && this.prefsHandler.
+		      getBoolPref('extensions.jondofox.preferences_warning')) {
+               // ... warn the user
+              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
+                                  this.getString('jondofox.dialog.message.appWarning'), 'preferences');
+              this.prefsHandler.setBoolPref(data, true);
+            } else {
+              log("All good!");
+            }
+          }
 	  // or on the boolean prefsmap...
           else if (data in this.boolPrefsMap) {
             log("Pref '" + data + "' is on the boolean prefsmap!");
@@ -1328,20 +1346,7 @@ var JDFManager = {
               log("All good!");
             }
           }
-	  // Now we have all the external app warnings...
-          else if (data in this.externalAppWarnings) {
-	    log("Pref '" + data + "' is on the external app warning map!");
-            if (!this.prefsHandler.getBoolPref(data) && this.prefsHandler.
-		      getBoolPref('extensions.jondofox.preferences_warning')) {
-               // ... warn the user
-              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
-                                  this.getString('jondofox.dialog.message.appWarning'), 'preferences');
-              this.prefsHandler.setBoolPref(data, true);
-            } else {
-              log("All good!");
-            }
-          }
-          break;
+	  break;
         default:
           log("!! Topic not handled --> " + topic);
           break;
