@@ -56,7 +56,7 @@ var JDFManager = {
   // We need this value to compare it to the profile version actually deployed.
   // If there are differences we pop up a warning that the user has to update
   // the profile (if she has not disabled this). 
-  JDF_VERSION: "2.2.5",
+  // JDF_VERSION: "2.2.5",
 
   // Set this to indicate that cleaning up is necessary
   clean: false,
@@ -304,7 +304,7 @@ var JDFManager = {
       // Call init() first
       this.init();
       // Check for a necessary update of the whole profile
-      this.checkProfileUpdate();
+      //this.checkProfileUpdate();
       // Check for incompatible extensions and whether the necessary ones
       // are installed and enabled.
       this.checkExtensions();
