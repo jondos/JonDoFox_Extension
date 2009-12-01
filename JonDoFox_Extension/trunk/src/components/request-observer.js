@@ -6,6 +6,39 @@
  *
  * - Replace RefControl functionality by simply forging every referrer
  * - Arbitrary HTTP request headers can be set from here as well
+ * - Including SafeCache's functionality
+ * The functions safeCache(), setCacheKey(), readCacheKey(), bypassCache(),
+ * getCookieBehavior(), newCacheKey() and getHash() are shipped with the 
+ * following license:
+ *
+ *Redistribution and use in source and binary forms, with or without 
+ *modification, are permitted provided that the following conditions are met:
+ *
+ *  * Redistributions of source code must retain the above copyright notice, 
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *  * Neither the name of Stanford University nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software with
+ *    out specific prior written permission.
+ *
+ *THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ *AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ *IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ *ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
+ *LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ *CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ *SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ *INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ *CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ *ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *POSSIBILITY OF SUCH DAMAGE.
+ *
+ *These functions were written by Collin Jackson, other contributors were
+ *Andrew Bortz, John Mitchell, Dan Boneh.
+ *
+ *These functions were slightly adapted by Georg Koppen.
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,6 +62,7 @@ const CONTRACT_ID = '@jondos.de/request-observer;1';
 
 const CC = Components.classes;
 const CI = Components.interfaces;
+const CU = Components.utils;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Observer for "http-on-modify-request"
@@ -38,6 +72,10 @@ var requestObserver = {
 
   // Preferences handler object
   prefsHandler: null,
+  jdfUtils: null,
+  ACCEPT_COOKIES: 0,
+  NO_FOREIGN_COOKIES: 1,
+  REJECT_COOKIES: 2,
 
   // Init the preferences handler
   init: function() {
@@ -45,6 +83,8 @@ var requestObserver = {
       this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
           getService().wrappedJSObject;
       this.jdfManager = CC['@jondos.de/jondofox-manager;1'].
+          getService().wrappedJSObject;
+      this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
           getService().wrappedJSObject;
     } catch (e) {
       log("init(): " + e);
@@ -54,6 +94,11 @@ var requestObserver = {
   // This is called on every event occurrence
   modifyRequest: function(channel) {
     try {
+      if (this.prefsHandler.getBoolPref('stanford-safecache.enabled')) {
+	channel.QueryInterface(CI.nsIHttpChannelInternal);
+        channel.QueryInterface(CI.nsICachingChannel);
+        this.safeCache(channel); 
+      }
       // Check if 'set_referrer' is true, is this a performance issue?
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
 	  //log("BEFORE: " + channel.getRequestHeader("Referer"));        
@@ -114,6 +159,138 @@ var requestObserver = {
     }
   },
 
+  safeCache: function(channel) {
+    var parent = channel.referrer;
+    if (channel.documentURI && channel.documentURI === channel.URI) {
+      parent = null;  // first party interaction
+    }
+    // Same-origin policy
+    if (parent && parent.host !== channel.URI.host) {
+      log("||||||||||SSC: Segmenting " + channel.URI.host + 
+               " content loaded by " + parent.host);
+      this.setCacheKey(channel, parent.host);
+    } else if(this.readCacheKey(channel.cacheKey)) {
+      this.setCacheKey(channel, channel.URI.host);
+    } else {
+      log("||||||||||SSC: POST data detected; leaving cache key unchanged.");
+    }
+
+    // Third-party blocking policy
+    switch(this.getCookieBehavior()) {
+      case this.ACCEPT_COOKIES: 
+        break;
+      case this.NO_FOREIGN_COOKIES: 
+        if(parent && parent.host !== channel.URI.host) {
+          log("||||||||||SSC: Third party cache blocked for " +
+               channel.URI.spec + " content loaded by " + parent.spec);
+          this.bypassCache(channel);
+        }
+        break;
+      case this.REJECT_COOKIES: 
+        this.bypassCache(channel);
+        break;
+      default:
+        log("||||||||||SSC: " + this.getCookieBehavior() + 
+                 " is not a valid cookie behavior.");
+        break;
+    }
+  },
+
+  getCookieBehavior: function() {
+    //return Components.classes["@mozilla.org/preferences-service;1"]
+    //           .getService(Components.interfaces.nsIPrefService)
+    //           .getIntPref(kSSC_COOKIE_BEHAVIOR_PREF);
+    return 1;
+  },
+
+  setCacheKey: function(channel, str) {
+    var oldData = this.readCacheKey(channel.cacheKey);
+    var newKey = this.newCacheKey(this.getHash(str) + oldData);
+    channel.cacheKey = newKey;
+    // log("||||||||||SSC: Set cache key to hash(" + str + ") = " + 
+    //          newKey.data + "\n   for " + channel.URI.spec + "\n");
+  },
+
+  // Read the integer data contained in a cache key
+  readCacheKey: function(key) {
+    key.QueryInterface(Components.interfaces.nsISupportsPRUint32);
+    return key.data;
+  },
+
+  // Construct a new cache key with some integer data
+  newCacheKey: function(data) {
+    var cacheKey = 
+      Components.classes["@mozilla.org/supports-PRUint32;1"]
+                .createInstance(Components.interfaces.nsISupportsPRUint32);
+    cacheKey.data = data;
+    return cacheKey;
+  },
+
+  bypassCache: function(channel) {
+    channel.loadFlags |= channel.LOAD_BYPASS_CACHE;  
+      // INHIBIT_PERSISTENT_CACHING instead?
+    channel.cacheKey = this.newCacheKey(0);
+    log("||||||||||SSC: Bypassed cache for " + channel.URI.spec + "\n");
+  },
+
+  getHash: function(str) {
+    var hash = this.jdfUtils.str_md5(str); 
+    var intHash = 0;    
+    for(var i = 0; i < hash.length && i < 8; i++)
+      intHash += hash.charCodeAt(i) << (i << 3);
+    return intHash;
+  },
+
+  /*cookieChange: function(httpChannel) {
+    try {
+      var notificationCallbacks = 
+        httpChannel.notificationCallbacks ? httpChannel.notificationCallbacks :
+        httpChannel.loadGroup.notificationCallbacks;
+      if (!notificationCallbacks) {
+        log("There are no notificationCallbacks!");
+      
+      } else {
+        var DOMWindow = notificationCallbacks.
+                      QueryInterface(CI.nsIInterfaceRequestor).
+                      getInterface(CI.nsIDOMWindow);
+        if (DOMWindow) {
+          var doc = DOMWindow.document;
+          log("DOMWindow ist vom Typ: " + DOMWindow);
+          log("WrappedWindow ist vom Typ: " + DOMWindow.wrappedJSObject);
+          log(DOMWindow.document.location.href);
+          log(DOMWindow.wrappedJSObject.document.domain);
+            var s = new CU.Sandbox(DOMWindow.wrappedJSObject);
+	    s.window = DOMWindow.wrappedJSObject;*/
+          //s.window.navigator.__defineGetter__("appVersion", function(){s.window.navigator.myCookieSetterFunction();});
+          /*s.window.navigator.myCookieSetterFunction = function() {
+	      s.window.alert("Geht doch!");
+	      };*/
+          
+          //s.document = DOMWindow.wrappedJSObject.document;
+          //Beim ersten Mal kommt noch ungefakte Ausgabe bei http://87.230.20.186/Test.html!! Einmal schauen, ob das für Torbutton auch gilt! Nein, dort funzt es richtig. Vermutlich wegen ProgressListener
+          //var cookieModification = "window.navigator.appVersion;";
+          //var test = "window.alert(window.document.domain);";
+          //var testNavigator = "window.navigator.__defineGetter__(\"appVersion\", function(){window.alert(\"Geht doch!\");});";
+          //var testRolf = "window.document.cookie";
+          //var testNavigatorRolf = "window.document.__defineGetter__(\"cookie\", function(){return \"42=24\";});";
+          //CU.evalInSandbox(testNavigatorRolf, s);
+          //DOMWindow.navigator.myCookieSetterFunction = function() {window.alert(\"Aber nun!\");
+          //log(DOMWindow.wrappedJSObject.document.cookie);
+	  /*         DOMWindow.wrappedJSObject.navigator.myCookieSetterFunction = function() {
+	     DOMWindow.wrappedJSObject.alert("Geht doch!");
+	     };*/
+          //log("Das Ergebnis: " + result);
+          //log("Wir haben ein Cookie ausgewertet: " + cookie);
+          /*} else {
+	  log ("There is no DOMWindow!");
+      
+	}
+      }
+    } catch (ex) {
+      log("cookieChange(): " + ex);
+    }
+    },*/
+
   // This is called once on 'app-startup'
   registerObservers: function() {
     log("Register observers");
@@ -167,6 +344,7 @@ var requestObserver = {
         case 'http-on-examine-response':
 	  subject.QueryInterface(CI.nsIHttpChannel);
 	  this.onExamineResponse(subject);
+	  //this.cookieChange(subject);
 	  break;
         default:
           log("!! Topic not handled --> " + topic);
@@ -182,7 +360,7 @@ var requestObserver = {
     if (!iid.equals(CI.nsISupports) &&
         !iid.equals(CI.nsIObserver) &&
         !iid.equals(CI.nsISupportsWeakReference))
-                        throw Components.results.NS_ERROR_NO_INTERFACE;
+      throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
 }

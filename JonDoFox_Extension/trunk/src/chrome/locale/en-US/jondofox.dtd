@@ -1,3 +1,7 @@
+<!-- SafeCache -->
+
+<!ENTITY jondofox.safecache.label "Use SafeCache to protect from third-party cache cookies.">
+
 <!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
 <!ENTITY jondofox.instructions.titleText "JonDoFox <b>additionally</b> needs the JonDo client
