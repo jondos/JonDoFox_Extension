@@ -376,6 +376,9 @@ var overlayObserver = {
             prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
           }
+          if (!isProxyActive()) {
+	    openBrowserTabAnontest();
+          } 
         } else {
           log("!! Wrong uri: " + uri.spec);
         }
