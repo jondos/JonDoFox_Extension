@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<overlay id="jondofox-test"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+  <!-- Include jondofox-title.js and jondofox-gui.js -->
+  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-title.js" />
+  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
+  
+  <!-- Add listener that loads jondofox-gui.xul on "load" -->
+  <script type="application/x-javascript"><![CDATA[
+
+    try {
+      window.addEventListener("load", initWindow, true);
+      window.addEventListener("load", init, true);
+    } catch(e) {
+      log("!! Error initing new window: " + e);
+    }
+
+    // Init an event listener for the context menu
+    function init() {
+      log("Init the context menu");
+      try {
+        var contextMenu = document.getElementById("contentAreaContextMenu");
+        if (contextMenu) {
+          //log("Adding event listener to context menu");
+          contextMenu.addEventListener("popupshowing", showMenuItem, false);
+        }
+      } catch(e) { 
+        log("init(): " + e);
+      }
+    }
+    
+    // Set the hidden attribute on 'bypass-proxy'
+    function showMenuItem(event) {
+      //log("showMenuItem()");
+      try {
+        if (gContextMenu != null) {
+          if (gContextMenu.onLink && isProxyActive()) {
+            document.getElementById("bypass-proxy").hidden = false;
+            
+            // Check if the linkURL is on the list
+            //var onList = noProxyListContains(gContextMenu.linkURL);
+            //document.getElementById("noproxy-add").hidden = onList;
+            //document.getElementById("noproxy-remove").hidden = !onList;
+          } else {
+            // Hide
+            document.getElementById("bypass-proxy").hidden = true;
+          
+            //document.getElementById("noproxy-add").hidden = true;
+            //document.getElementById("noproxy-remove").hidden = true;
+          }
+        } else {
+          // Do nothing
+          //log("gContextMenu is null");
+        }
+      } catch (e) {
+        log("showMenuItem(): " + e);
+      }
+    }
+
+  ]]></script>
+
+</overlay>
