@@ -12,6 +12,8 @@ skin jondofox classic/1.0 jar:chrome/jondofox.jar!/skin/
 
 # Overlay
 overlay chrome://browser/content/browser.xul chrome://jondofox/content/jondofox-overlay.xul
+## SafeCache
+overlay chrome://browser/content/preferences/preferences.xul chrome://jondofox/content/safecache-pref-privacy.xul
 
 # Overrides
 override chrome://global/content/netError.xhtml chrome://jondofox/content/error/netError-ff3.xhtml appversion>=3.0
