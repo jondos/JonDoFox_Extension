@@ -192,7 +192,6 @@ var JDFManager = {
       this.VERSION = this.getVersion();
       bundleService = CC['@mozilla.org/intl/stringbundle;1'].
                              getService(CI.nsIStringBundleService);
-      log(this.jdfUtils.md5_vm_test());
       // Create the string bundle
       this.stringBundle = bundleService.createBundle(
                              'chrome://jondofox/locale/jondofox.properties');
@@ -291,14 +290,14 @@ var JDFManager = {
            this.showAlertCheck(this.getString('jondofox.dialog.attention'),
 		this.formatString('jondofox.dialog.message.necessaryExtension', [e]), 'update');
 	  }
-          log(e + ' is missing');
+          log(extension + ' is missing');
         } else {
-          log(e + ' is installed');
+          log(extension + ' is installed');
           //... and if so whether they are enabled.
-          if (this.isUserDisabled(this.necessaryExtensions[e])) {
+          if (this.isUserDisabled(this.necessaryExtensions[extension])) {
             if (this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
 	      this.showAlertCheck(this.getString('jondofox.dialog.attention'),
-		   this.formatString('jondofox.dialog.message.enableExtension', [e]), 'update');
+		   this.formatString('jondofox.dialog.message.enableExtension', [extension]), 'update');
             }
 	    log(extension + ' is disabled by user');
           } else {

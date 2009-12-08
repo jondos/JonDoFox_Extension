@@ -76,7 +76,7 @@ var requestObserver = {
   ACCEPT_COOKIES: 0,
   NO_FOREIGN_COOKIES: 1,
   REJECT_COOKIES: 2,
-
+ 
   // Init the preferences handler
   init: function() {
     try {
@@ -241,56 +241,7 @@ var requestObserver = {
     return intHash;
   },
 
-  /*cookieChange: function(httpChannel) {
-    try {
-      var notificationCallbacks = 
-        httpChannel.notificationCallbacks ? httpChannel.notificationCallbacks :
-        httpChannel.loadGroup.notificationCallbacks;
-      if (!notificationCallbacks) {
-        log("There are no notificationCallbacks!");
-      
-      } else {
-        var DOMWindow = notificationCallbacks.
-                      QueryInterface(CI.nsIInterfaceRequestor).
-                      getInterface(CI.nsIDOMWindow);
-        if (DOMWindow) {
-          var doc = DOMWindow.document;
-          log("DOMWindow ist vom Typ: " + DOMWindow);
-          log("WrappedWindow ist vom Typ: " + DOMWindow.wrappedJSObject);
-          log(DOMWindow.document.location.href);
-          log(DOMWindow.wrappedJSObject.document.domain);
-            var s = new CU.Sandbox(DOMWindow.wrappedJSObject);
-	    s.window = DOMWindow.wrappedJSObject;*/
-          //s.window.navigator.__defineGetter__("appVersion", function(){s.window.navigator.myCookieSetterFunction();});
-          /*s.window.navigator.myCookieSetterFunction = function() {
-	      s.window.alert("Geht doch!");
-	      };*/
-          
-          //s.document = DOMWindow.wrappedJSObject.document;
-          //Beim ersten Mal kommt noch ungefakte Ausgabe bei http://87.230.20.186/Test.html!! Einmal schauen, ob das für Torbutton auch gilt! Nein, dort funzt es richtig. Vermutlich wegen ProgressListener
-          //var cookieModification = "window.navigator.appVersion;";
-          //var test = "window.alert(window.document.domain);";
-          //var testNavigator = "window.navigator.__defineGetter__(\"appVersion\", function(){window.alert(\"Geht doch!\");});";
-          //var testRolf = "window.document.cookie";
-          //var testNavigatorRolf = "window.document.__defineGetter__(\"cookie\", function(){return \"42=24\";});";
-          //CU.evalInSandbox(testNavigatorRolf, s);
-          //DOMWindow.navigator.myCookieSetterFunction = function() {window.alert(\"Aber nun!\");
-          //log(DOMWindow.wrappedJSObject.document.cookie);
-	  /*         DOMWindow.wrappedJSObject.navigator.myCookieSetterFunction = function() {
-	     DOMWindow.wrappedJSObject.alert("Geht doch!");
-	     };*/
-          //log("Das Ergebnis: " + result);
-          //log("Wir haben ein Cookie ausgewertet: " + cookie);
-          /*} else {
-	  log ("There is no DOMWindow!");
-      
-	}
-      }
-    } catch (ex) {
-      log("cookieChange(): " + ex);
-    }
-    },*/
-
+ 
   // This is called once on 'app-startup'
   registerObservers: function() {
     log("Register observers");
@@ -344,7 +295,6 @@ var requestObserver = {
         case 'http-on-examine-response':
 	  subject.QueryInterface(CI.nsIHttpChannel);
 	  this.onExamineResponse(subject);
-	  //this.cookieChange(subject);
 	  break;
         default:
           log("!! Topic not handled --> " + topic);

@@ -1,3 +1,13 @@
+Changes in version 0.2.x - XXXX-XX-XX
+
+  New Feature:
+    o included SafeCache's functionality
+    o show anontest page on startup if no (proper) proxy is configured
+  
+  New XPCOM component:
+    o jondofox-utils.js: all the utility functions needed shall be stored here
+
+
 Changes in verison 0.2.3 - 2009-11-10
 
   New Feature:
