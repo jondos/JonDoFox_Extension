@@ -789,15 +789,17 @@ var JDFManager = {
           // cannot discriminate between showing the pdf-overlay and the 
           // normal one...
 	  this.setTimeout(JDFManager.test, 5, type, checkbox, radioOpen, radioSave, this);
-      } else if (checkboxNews){
-	this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+      } else if (checkboxNews) {
         // 10 arguments are passed to this external app window. We take the
         // seventh, the handlerInfo to show the file type to the user. For 
         // details, see: chrome://mozapps/content/handling/dialog.js
-	handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
+        handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
-        checkboxNews.addEventListener("click", function() {JDFManager.
+	if (type !== "mailto") { 
+	  this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+          checkboxNews.addEventListener("click", function() {JDFManager.
 		    checkboxNewsChecked(checkboxNews, type);}, false);
+        }
       } else {
          this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
       }
@@ -887,7 +889,7 @@ var JDFManager = {
   // button and is therefore treated a bit differently...
 
   checkboxNewsChecked: function(checkboxNews, type) {
-    if (checkboxNews.checked && type !== "mailto") {
+    if (checkboxNews.checked) {
       this.showAlert(this.getString('jondofox.dialog.attention'),
 	             this.formatString(
 			  'jondofox.dialog.message.automaticAction', [type]));
