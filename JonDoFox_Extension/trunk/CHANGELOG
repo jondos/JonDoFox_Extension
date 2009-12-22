@@ -7,6 +7,9 @@ Changes in version 0.2.x - XXXX-XX-XX
   New XPCOM component:
     o jondofox-utils.js: all the utility functions needed shall be stored here
 
+  Minor improvements:
+    o excluded the warning regarding opening mailto-links
+
 
 Changes in verison 0.2.3 - 2009-11-10
 
