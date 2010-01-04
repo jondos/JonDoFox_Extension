@@ -36,6 +36,7 @@
 <!-- Warnings -->
 <!ENTITY jondofox.warnings.externalApp "Das direkte Öffnen von Dateien/Links mit Hilfe externer Anwendungen kann Ihre Anonymität beeinträchtigen!">
 <!ENTITY jondofox.warnings.externalPdf "Stellen Sie vor dem Öffnen von pdf-Dateien sicher, dass JavaScript, Flash und andere aktive Inhalte in Ihrem Reader deaktiviert sind!">
+<!ENTITY jondofox.warnings.externalDoc "Benutzen Sie OpenOffice.org statt Word, um die Datei zu öffnen, wenn Ihre IP-Adresse geschützt bleiben soll!">
 
 
 <!-- Context menu strings -->

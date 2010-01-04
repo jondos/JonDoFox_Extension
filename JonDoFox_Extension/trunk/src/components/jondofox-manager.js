@@ -772,8 +772,9 @@ var JDFManager = {
   // The reason is that we need both, otherwise the users could just select
   // the 'save'-radiobutton then select the checkbox and finally select the
   // 'open'-radiobutton.
-  // If we did not find the dialog we try if we got the other external app
-  // dialog. If not we remove the eventlistener because we got the wrong one...
+  // If we did not find the dialog we try to find the other external app
+  // dialog. If this does not succeed, we remove the eventlistener
+  // because we got the wrong dialog...
    
   getUnknownContentTypeDialog: function() {
     try {
@@ -785,9 +786,8 @@ var JDFManager = {
       var handlerInfo;
       if (checkbox && radioOpen) {
           // We need a Timeout here because for some reason type.value gives 
-          // null beack if executed at once. But without getting the type we
-          // cannot discriminate between showing the pdf-overlay and the 
-          // normal one...
+          // null back if executed at once. But without getting the type we
+          // cannot discriminate between showing the different overlays
 	  this.setTimeout(JDFManager.test, 5, type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews) {
         // 10 arguments are passed to this external app window. We take the
@@ -795,6 +795,7 @@ var JDFManager = {
         // details, see: chrome://mozapps/content/handling/dialog.js
         handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
+        log("Der MIME-Type ist: " + type);
 	if (type !== "mailto") { 
 	  this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
           checkboxNews.addEventListener("click", function() {JDFManager.
@@ -812,17 +813,27 @@ var JDFManager = {
     try {
       var i;
       var fileTypeExists = false;
-      if (type.value.toLowerCase().search("pdf") !== -1 ||
-          type.value.toLowerCase().search("adobe acrobat") !== -1) {
-	 window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
-         log("Das Fenster ist: " + window);
+      // We cannot just use the MIME-Type here because it is set according
+      // to the delivered content-type header and some other sophisticated means
+      // (see nsURILoader.cpp and nsExternalHelperAppService.cpp). Some servers
+      // suck and deliver the wrong MIME-Type (e.g. application/octetstream)
+      // but the file is a .pdf or a .doc, though. In this case checking the 
+      // MIME-Type would not result in showing the proper warning dialog. 
+      // It is, therefore safer to use the title of the window which contains
+      // the filename and its extension.
+      if (window.document.title.toLowerCase().search(".pdf") !== -1) {
+        window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
+
+      } else if (window.document.title.toLowerCase().search(".doc") !== -1 ||
+                 window.document.title.toLowerCase().search(".rtf") !== -1) {
+        window.document.loadOverlay("chrome://jondofox/content/external-doc.xul", null);
       } else if (type.value.toLowerCase().search("bin") !== -1 ||
                  type.value.toLowerCase().search("dos") !== -1) {
       //do nothing: we do not want any warning here because the user cannot
-      //open these files directly so we return
+      //open these files directly and they are no pdf's or doc's so we return
 	return;
       } else {
-         window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+        window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
       }
       // The for-loop and the if-clause are for some nasty linux systems :-) 
       // were the unknownContentTypeDialog is not rendered properly after loaded
