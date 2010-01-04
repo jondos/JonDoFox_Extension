@@ -72,6 +72,7 @@ var requestObserver = {
 
   // Preferences handler object
   prefsHandler: null,
+  jdfManager: null,
   jdfUtils: null,
   ACCEPT_COOKIES: 0,
   NO_FOREIGN_COOKIES: 1,
