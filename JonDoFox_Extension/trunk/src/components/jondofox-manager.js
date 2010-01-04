@@ -785,9 +785,10 @@ var JDFManager = {
       var type = this.document.getElementById("type");
       var handlerInfo;
       if (checkbox && radioOpen) {
-          // We need a Timeout here because for some reason type.value gives 
-          // null back if executed at once. But without getting the type we
-          // cannot discriminate between showing the different overlays
+          // We need a Timeout here because type.value or getting the 
+          // MIME-/filetype via the filename gives null back if executed at 
+          // once. But without getting the type we cannot discriminate between
+          // showing the different overlays
 	  this.setTimeout(JDFManager.test, 5, type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews) {
         // 10 arguments are passed to this external app window. We take the
@@ -819,7 +820,7 @@ var JDFManager = {
       // suck and deliver the wrong MIME-Type (e.g. application/octetstream)
       // but the file is a .pdf or a .doc, though. In this case checking the 
       // MIME-Type would not result in showing the proper warning dialog. 
-      // It is, therefore safer to use the title of the window which contains
+      // It is, therefore, safer to use the title of the window which contains
       // the filename and its extension.
       if (window.document.title.toLowerCase().search(".pdf") !== -1) {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
@@ -828,9 +829,10 @@ var JDFManager = {
                  window.document.title.toLowerCase().search(".rtf") !== -1) {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul", null);
       } else if (type.value.toLowerCase().search("bin") !== -1 ||
-                 type.value.toLowerCase().search("dos") !== -1) {
+                 type.value.toLowerCase().search("dos") !== -1 ||
+                 type.value.toLowerCase().search("tex") !== -1) {
       //do nothing: we do not want any warning here because the user cannot
-      //open these files directly and they are no pdf's or doc's so we return
+      //open these files directly or they are not dangerous, thus we return
 	return;
       } else {
         window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
