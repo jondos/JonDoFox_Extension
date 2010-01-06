@@ -814,6 +814,9 @@ var JDFManager = {
     try {
       var i;
       var fileTypeExists = false;
+      var titleString = window.document.title.trim().toLowerCase();
+      var fileExtension = titleString.substring(titleString.length - 4, 
+                          titleString.length);
       // We cannot just use the MIME-Type here because it is set according
       // to the delivered content-type header and some other sophisticated means
       // (see nsURILoader.cpp and nsExternalHelperAppService.cpp). Some servers
@@ -822,15 +825,13 @@ var JDFManager = {
       // MIME-Type would not result in showing the proper warning dialog. 
       // It is, therefore, safer to use the title of the window which contains
       // the filename and its extension.
-      if (window.document.title.toLowerCase().search(".pdf") !== -1) {
+      if (fileExtension === ".pdf") {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
-
-      } else if (window.document.title.toLowerCase().search(".doc") !== -1 ||
-                 window.document.title.toLowerCase().search(".rtf") !== -1) {
+      } else if (fileExtension === ".doc" || fileExtension === ".rtf") {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul", null);
       } else if (type.value.toLowerCase().search("bin") !== -1 ||
                  type.value.toLowerCase().search("dos") !== -1 ||
-                 type.value.toLowerCase().search("tex") !== -1) {
+                 fileExtension === ".tex") {
       //do nothing: we do not want any warning here because the user cannot
       //open these files directly or they are not dangerous, thus we return
 	return;
