@@ -2,8 +2,9 @@
 pref("extensions.jondofox.last_version", "");
 pref("extensions.jondofox.new_profile", true);
 
-// Proxy state and default no proxy list
+// Proxy state 
 pref("extensions.jondofox.proxy.state", "jondo");
+pref("extensions.jondofox.alwaysUseJonDo", false);
 
 // Set the 'Referer' header to the current domain
 pref("extensions.jondofox.set_referrer", true);
