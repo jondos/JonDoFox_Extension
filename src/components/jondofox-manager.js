@@ -355,7 +355,13 @@ var JDFManager = {
       // from using external applications automatically.
       this.observeMimeTypes();
       log("Setting initial proxy state ..");
-      this.setProxy(this.getState());
+      //If somebody wants to have always JonDo as a proxy she gets it. Otherwise
+      //the last used proxy will be set.
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.alwaysUseJonDo')) {
+	this.setProxy('jondo');
+      } else {
+        this.setProxy(this.getState());
+      }
       // Maybe the proposed UA has changed due to an update. Thus, we are on the
       // safe side if we set it on startup.
       if (this.VERSION !== 
