@@ -3,13 +3,21 @@ Changes in version 0.2.x - XXXX-XX-XX
   New Feature:
     o included SafeCache's functionality
     o show anontest page on startup if no (proper) proxy is configured
+    o there is now a new preference, extensions.jondofox.alwaysUseJonDo, which,
+      if set to true, ignores the proxy used in the last sessino and lets the 
+      browser start always with JonDo; default is "false"
+    o added a special overlay which is shown to the user if she wants to
+      download a .doc or a .rtf file: OpenOffice.org shall be used for
+      security's sake
   
   New XPCOM component:
     o jondofox-utils.js: all the utility functions needed shall be stored here
 
   Minor improvements:
     o excluded the warning regarding opening mailto-links
-
+    o the modified unknowncontenttype dialog behaves more like the unmodified
+      one; i.e. the settingschange element is hidden again if the Open-button is
+      selected after the Save-button and the checkbox have been selected
 
 Changes in verison 0.2.3 - 2009-11-10
 
@@ -23,7 +31,6 @@ Changes in verison 0.2.3 - 2009-11-10
        thus is not surfing securely anymore)
       -proxy warnings (if the user is not using a proper configured proxy or 
        no proxy at all for her surfing)
-
     o 'Benutzerdefiniert' or 'Custom Proxy' is now shown in red letters as well
        if there is, despite its appearance, no properly configured proxy in use
     o The user may change the UA if she configures a custom proxy (not faked,
@@ -31,7 +38,7 @@ Changes in verison 0.2.3 - 2009-11-10
       if Tor the Tor one and if JonDo the JonDo UA
     o Improvement of the downlaod of files without using a proxy (via the 
       context menu). Now the user can be redirected to an other location and 
-      the download is not done using the cascades.
+      the download is not done using the Mix-cascades.
     o Warnings if the downloads files which may be opened by external apps
     o Prohibiting the option of opening files automatically with an external app
     o Improved the Custom Proxy dialog. It works now like the proxy settings
@@ -40,7 +47,6 @@ Changes in verison 0.2.3 - 2009-11-10
     o If there is no appropriate Custom Proxy set but nevertheless used
       it is not possible to download files via the context menu: 
       the bypassing proxy option is deactivated
-
 
   Location Neutrality:
     o Preference for setting 'accept charsets' to 
