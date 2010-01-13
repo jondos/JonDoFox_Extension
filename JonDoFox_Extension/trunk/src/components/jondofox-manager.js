@@ -812,7 +812,7 @@ var JDFManager = {
          this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
       }
      } catch (e) {
-      log("getUnknownContentTypeDialog(): " + e);
+       log("getUnknownContentTypeDialog(): " + e);
     }
   },
 
@@ -873,11 +873,11 @@ var JDFManager = {
           
 	}
         JDFManager.fileTypes[JDFManager.fileTypes.length + 1] = type.value;
-      }
+	}
       checkbox.addEventListener("click", function() {JDFManager.
-		     checkboxChecked(radioOpen, checkbox, type.value);}, false);
+	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
       radioOpen.addEventListener("click", function() {JDFManager.
-	             checkboxChecked(radioOpen, checkbox, type.value);}, false);
+	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
     } catch (e) {
       log("test: " + e);
     }
@@ -889,19 +889,25 @@ var JDFManager = {
     // the first problem does not work: The dialog stays sometimes just widened.
     window.resizeBy(1,1);
     checkbox.click();
-  },
+    },
 
   // Let's see whether the checkbox and the approproate radiobutton is selected.
   // If so we show a warning dialog and disable the checkbox.
-  // XXX Find a better way to disable the checkbox if 'save' was first selected.
-  // Because in this case the "additional" text does not vanish...
-
-  checkboxChecked: function(radioOpen, checkbox, type) {
+  
+  checkboxChecked: function(radioOpen, checkbox, type, window) {
+    var settingsChange = window.document.getElementById("settingsChange");
     if (checkbox.checked && radioOpen.selected) {
       this.showAlert(this.getString('jondofox.dialog.attention'), 
 	             this.formatString(
-                          'jondofox.dialog.message.automaticAction', [type]));
+                          'jondofox.dialog.message.automaticAction', [type.value]));
       checkbox.checked = false;
+      //If the settingschange element is still shown, hide it again in a way
+      //it is normally done. This "feature" is just here in order to give the
+      //user the ordinary experience concerning the unknowcontenttype-dialog.
+      if (!settingsChange.hidden) {
+        settingsChange.hidden = true; 
+        window.sizeToContent();
+      }
     }
   },         
 
