@@ -49,7 +49,7 @@ m_debug = true;
 
 // Log method
 function log(message) {
-  if (m_debug) dump("HttpObserver :: " + message + "\n");
+  if (m_debug) dump("RequestObserver :: " + message + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,31 +87,63 @@ var requestObserver = {
           getService().wrappedJSObject;
       this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
           getService().wrappedJSObject;
+      this.tldService = CC['@mozilla.org/network/effective-tld-service;1'].
+          getService(Components.interfaces.nsIEffectiveTLDService);
     } catch (e) {
       log("init(): " + e);
     }
   },
 
-  // This is called on every event occurrence
+  // This is called on every request
   modifyRequest: function(channel) {
     try {
+      // Perform safecache
       if (this.prefsHandler.getBoolPref('stanford-safecache.enabled')) {
 	channel.QueryInterface(CI.nsIHttpChannelInternal);
         channel.QueryInterface(CI.nsICachingChannel);
         this.safeCache(channel); 
       }
-      // Check if 'set_referrer' is true, is this a performance issue?
+
+      // Forge the referrer if necessary
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
-	  //log("BEFORE: " + channel.getRequestHeader("Referer"));        
-        // Set the request header
-        var ref = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-        channel.setRequestHeader("Referer", ref, false);
-        // Set the referrer attribute to channel object (necessary?)
-        //channel.referrer.spec = ref;
-        //log("AFTER: " + channel.getRequestHeader("Referer"));
+        // Determine the first level domain of the request
+        var domain = this.tldService.getBaseDomain(channel.URI, 0);
+        log("Request (TLD): " + domain);
+        
+        // ... the string to compare to
+        var substrTLD;
+        try {
+          // ... the referer header
+          var oldRef = channel.getRequestHeader("Referer"); 
+          // Cut off the path from the referer if not null
+          log("Referrer (unmodified): " + oldRef);
+          var split = oldRef.split("/", 3);
+          var domainRef = split[2];
+          log("Referrer (domain): " + domainRef);  
+          // Take a substring with the length of the request TLD for comparison
+          substrTLD = domainRef.substr(
+              domainRef.length - domain.length, domainRef.length - 1);
+          log("Comparing " + domain + " to " + substrTLD);
+        } catch (e if e.name == "NS_ERROR_NOT_AVAILABLE") {
+          // The header is not set
+          log("Referrer is not set!");
+        }
+
+        // Set the request header if TLD is changing
+        if (domain != substrTLD) {
+          var newRef = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
+          channel.setRequestHeader("Referer", newRef, false);
+          // Set the referrer attribute to channel object (necessary?)
+          //channel.referrer.spec = newRef;
+          log("Referrer (modified): " + channel.getRequestHeader("Referer"));
+        } else {
+          log("Referrer not modified");
+        }
       }
+
       // Set other headers here
       //channel.setRequestHeader("Accept", "*/*", false);
+      
       return true;
     } catch (e) {
       log("modifyRequest(): " + e);
