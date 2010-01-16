@@ -106,31 +106,30 @@ var requestObserver = {
 
       // Forge the referrer if necessary
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
-        // Determine the first level domain of the request
-        var domain = this.tldService.getBaseDomain(channel.URI, 0);
-        log("Request (TLD): " + domain);
+        // Determine the base domain of the request
+        var baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+        log("Request (base domain): " + baseDomain);
         
         // ... the string to compare to
-        var substrTLD;
+        var suffix;
         try {
-          // ... the referer header
+          // ... the value of the referer header
           var oldRef = channel.getRequestHeader("Referer"); 
-          // Cut off the path from the referer if not null
+          // Cut off the path from the referer
           log("Referrer (unmodified): " + oldRef);
-          var split = oldRef.split("/", 3);
-          var domainRef = split[2];
-          log("Referrer (domain): " + domainRef);  
-          // Take a substring with the length of the request TLD for comparison
-          substrTLD = domainRef.substr(
-              domainRef.length - domain.length, domainRef.length - 1);
-          log("Comparing " + domain + " to " + substrTLD);
+          var refDomain = oldRef.split("/", 3)[2];
+          //log("Referrer (domain): " + refDomain);  
+          // Take a substring with the length of the base domain for comparison
+          suffix = refDomain.substr(
+              refDomain.length - baseDomain.length, refDomain.length);
+          log("Comparing " + baseDomain + " to " + suffix);
         } catch (e if e.name == "NS_ERROR_NOT_AVAILABLE") {
           // The header is not set
           log("Referrer is not set!");
         }
 
-        // Set the request header if TLD is changing
-        if (domain != substrTLD) {
+        // Set the request header if the base domain is changing
+        if (baseDomain != suffix) {
           var newRef = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
           channel.setRequestHeader("Referer", newRef, false);
           // Set the referrer attribute to channel object (necessary?)
