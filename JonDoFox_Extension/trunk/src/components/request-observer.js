@@ -107,9 +107,15 @@ var requestObserver = {
       // Forge the referrer if necessary
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
         // Determine the base domain of the request
-        var baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+        var baseDomain;
+        try {
+          baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+        } catch (e if e.name == "NS_ERROR_HOST_IS_IP_ADDRESS") {
+          // It's an IP address
+          baseDomain = channel.URI.hostPort;
+        }       
         log("Request (base domain): " + baseDomain);
-        
+
         // ... the string to compare to
         var suffix;
         try {
@@ -262,7 +268,7 @@ var requestObserver = {
     channel.loadFlags |= channel.LOAD_BYPASS_CACHE;  
       // INHIBIT_PERSISTENT_CACHING instead?
     channel.cacheKey = this.newCacheKey(0);
-    log("||||||||||SSC: Bypassed cache for " + channel.URI.spec + "\n");
+    log("||||||||||SSC: Bypassed cache for " + channel.URI.spec);
   },
 
   getHash: function(str) {
@@ -273,7 +279,6 @@ var requestObserver = {
     return intHash;
   },
 
- 
   // This is called once on 'app-startup'
   registerObservers: function() {
     log("Register observers");
