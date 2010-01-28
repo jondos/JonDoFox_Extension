@@ -25,9 +25,9 @@
   <text value="Artwork:" style="font-weight: bold;"/>
   <text value="Philipp Kaplycz"/>
   <separator class="thin"/>  <text value="Homepage:" style="font-weight: bold;"/>
-  <text value="http://www.jondonym.net"
+  <text value="http://anonymous-proxy-servers.net/en/jondofox"
         class="url"
-        onclick="window.open('http://www.jondonym.net');"/>
+        onclick="window.open('http://anonymous-proxy-servers.net/en/jondofox');"/>
   <separator class="thin"/>
 </vbox>
 <spring flex="1"/>

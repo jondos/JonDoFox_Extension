@@ -1,10 +1,17 @@
-Changes in version 0.2.x - XXXX-XX-XX
+Changes in version 0.2.4.1 - 2010-01-25
+
+  Minor improvement:
+    o removed loading of anontest automatically during startup if the user is 
+      trying to surf without a proxy
+
+Changes in version 0.2.4 - 2010-01-21 
 
   New Feature:
+    o new referrer logic
     o included SafeCache's functionality
     o show anontest page on startup if no (proper) proxy is configured
     o there is now a new preference, extensions.jondofox.alwaysUseJonDo, which,
-      if set to true, ignores the proxy used in the last sessino and lets the 
+      if set to true, ignores the proxy used in the last session and lets the 
       browser start always with JonDo; default is "false"
     o added a special overlay which is shown to the user if she wants to
       download a .doc or a .rtf file: OpenOffice.org shall be used for
