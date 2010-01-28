@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
+
+<overlay id="SafeCacheConfigOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <prefwindow id="BrowserPreferences">
+      <prefpane id="panePrivacy">
+        <preferences id="privacyPreferences">
+           <preference id="stanford-safecache.enabled" 
+             name="stanford-safecache.enabled" type="bool"/>
+        </preferences>
+	<groupbox id="historyGroup" />
+	<groupbox id="cookiesGroup" />
+	<groupbox id="privateDataGroup">
+            <hbox id="safeCacheContainer">
+              <image
+                src="chrome://jondofox/skin/stanford-safecache.png"/>
+              <checkbox 
+                preference="stanford-safecache.enabled" 
+                id="enableSafeCache"
+                label="&jondofox.safecache.label;"/>
+            </hbox>
+        </groupbox>  
+      </prefpane>
+    </prefwindow>
+
+</overlay>
+

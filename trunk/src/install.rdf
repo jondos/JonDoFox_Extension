@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+
+  <Description about="urn:mozilla:install-manifest">	
+    <!-- Required properties -->
+    <em:id>{437be45a-4114-11dd-b9ab-71d256d89593}</em:id>
+    <em:name>JonDoFox</em:name>
+    <em:version>0.2.4.1</em:version>
+    <em:description>Private and Secure Web Surfing</em:description>
+    <em:creator>JonDos GmbH</em:creator>
+		
+    <!-- Optional properties -->
+    <em:developer>Johannes Renner</em:developer>
+    <em:developer>Georg Koppen</em:developer>	
+    <em:contributor>Philipp Kaplycz</em:contributor>
+ 
+    <!-- URLs -->
+    <em:homepageURL>http://anonymous-proxy-servers.net/en/jondofox</em:homepageURL>
+    <em:updateURL>https://www.jondos.de/files/downloads/update.rdf</em:updateURL>
+    <em:aboutURL>chrome://jondofox/content/dialogs/about-dialog.xul</em:aboutURL>
+    <em:iconURL>chrome://jondofox/skin/icon-32x32.png</em:iconURL>
+    <em:optionsURL>chrome://jondofox/content/dialogs/prefs-dialog.xul</em:optionsURL>
+                
+    <!-- Firefox -->
+    <em:targetApplication>
+      <Description>
+	<em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+        <em:minVersion>2.0</em:minVersion>
+        <em:maxVersion>3.6.*</em:maxVersion>
+      </Description>
+    </em:targetApplication>
+  </Description>
+  
+</RDF>
