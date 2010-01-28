@@ -376,9 +376,10 @@ var overlayObserver = {
             prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
           }
-          if (!isProxyActive()) {
-	    openBrowserTabAnontest();
-          } 
+          //if (!isProxyActive() && 
+          //    prefsHandler.getBoolPref('extensions.jondofox.showAnontestNoProxy')) {
+	  //  openBrowserTabAnontest();
+          //} 
         } else {
           log("!! Wrong uri: " + uri.spec);
         }
