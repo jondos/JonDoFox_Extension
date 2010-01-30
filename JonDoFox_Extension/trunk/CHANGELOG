@@ -1,3 +1,9 @@
+Changes in version XXX - YYY
+
+  New Feature:
+    o show the JonDoFox download page if the user should update the profile and
+      has not disabled the update warning
+
 Changes in version 0.2.4.1 - 2010-01-25
 
   Minor improvement:
