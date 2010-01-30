@@ -318,8 +318,6 @@ var JDFManager = {
     try {
       // Call init() first
       this.init();
-      // Check for a necessary update of the whole profile
-      this.checkProfileUpdate();
       // Check for incompatible extensions and whether the necessary ones
       // are installed and enabled.
       this.checkExtensions();
@@ -646,9 +644,11 @@ var JDFManager = {
       if (this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== this.JDF_VERSION &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
-        this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
+          this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
 			    this.getString('jondofox.dialog.message.profileupdate'), 'update');
+          return true;
       }
+      return false;
     } catch (e) {
       log("checkUpdateProfile(): " + e);
     }

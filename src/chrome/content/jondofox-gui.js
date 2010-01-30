@@ -242,12 +242,16 @@ function openBrowserTabAnontest() {
 }
 
 // Open up the jondofox homepage in a new tab of the current window
-function openBrowserTabJondofox() {
+function openBrowserTabJondofox(update) {
   try {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
-    win.openUILinkIn(jdfManager.getString('jondofox.homepage.url'), 'tab');
+    if (update) {
+      win.openUILinkIn(jdfManager.getString('jondofox.homepage.download'), 'tab');
+    } else {
+      win.openUILinkIn(jdfManager.getString('jondofox.homepage.url'), 'tab');
+    }
   } catch (e) {
     log("openBrowserTabJondofox(): " + e);
   }
@@ -372,14 +376,15 @@ var overlayObserver = {
                  getStringPref('extensions.jondofox.last_version');
           if (last_version != jdfManager.VERSION) {
             log("New version detected, opening homepage ..");
-            openBrowserTabJondofox();
+            openBrowserTabJondofox(false);
             prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
           }
-          //if (!isProxyActive() && 
-          //    prefsHandler.getBoolPref('extensions.jondofox.showAnontestNoProxy')) {
-	  //  openBrowserTabAnontest();
-          //} 
+          // If the user should update the profile and has not diabled the update
+          // warning, help her and show the JonDoFox homepage after startup
+          if (jdfManager.checkProfileUpdate()) {
+	    openBrowserTabJondofox(true);
+          } 
         } else {
           log("!! Wrong uri: " + uri.spec);
         }
