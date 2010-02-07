@@ -89,6 +89,8 @@ var requestObserver = {
           getService().wrappedJSObject;
       this.tldService = CC['@mozilla.org/network/effective-tld-service;1'].
           getService(Components.interfaces.nsIEffectiveTLDService);
+      this.cookiePerm = CC['@mozilla.org/cookie/permission;1'].
+          getService(Components.interfaces.nsICookiePermission);
     } catch (e) {
       log("init(): " + e);
     }
@@ -96,6 +98,7 @@ var requestObserver = {
 
   // This is called on every request
   modifyRequest: function(channel) {
+    var originatingDomain;
     try {
       // Perform safecache
       if (this.prefsHandler.getBoolPref('stanford-safecache.enabled')) {
@@ -132,15 +135,41 @@ var requestObserver = {
         } catch (e if e.name == "NS_ERROR_NOT_AVAILABLE") {
           // The header is not set
           log("Referrer is not set!");
+          oldRef = false;
         }
 
         // Set the request header if the base domain is changing
-        if (baseDomain != suffix) {
-          var newRef = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-          channel.setRequestHeader("Referer", newRef, false);
-          // Set the referrer attribute to channel object (necessary?)
-          //channel.referrer.spec = newRef;
-          log("Referrer (modified): " + channel.getRequestHeader("Referer"));
+        if (baseDomain != suffix && oldRef) {
+          log ("URI is: " + baseDomain);
+          try {
+            originatingDomain = this.cookiePerm.getOriginatingURI(channel);
+          } catch (e) {
+            log ("Getting the originating URI failed!");
+            originatingDomain = false;
+          }
+          if (originatingDomain) {
+            try {
+              originatingDomain = this.tldService.
+                                     getBaseDomain(originatingDomain, 0);
+            } catch (e if e.name == "NS_ERROR_HOST_IS_IP_ADDRESS") {
+            // It's an IP address
+            originatingDomain = originatingDomain.hostPort;
+            }  
+          }
+          log ("Originating URI is: " + originatingDomain);
+          if (baseDomain === originatingDomain || !originatingDomain) {
+            var newRef = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
+            channel.setRequestHeader("Referer", newRef, false);
+            // Set the referrer attribute to channel object (necessary?)
+            //channel.referrer.spec = newRef;
+            log("Referrer (modified): " + channel.getRequestHeader("Referer"));
+          } else {
+            if (originatingDomain !== "false") {
+              log("3rd party content, Referrer not modified");
+            } else {
+              log("We got a referrer but no originating URI! Modify the referrer, although it may be 3rd party content!");
+            }
+          }
         } else {
           log("Referrer not modified");
         }
