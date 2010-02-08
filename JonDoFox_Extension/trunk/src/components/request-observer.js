@@ -138,7 +138,11 @@ var requestObserver = {
           oldRef = false;
         }
 
-        // Set the request header if the base domain is changing
+        // Set the request header if the base domain is changing but only if
+        // if no 3rd party content is loaded but a new domain is requested.
+        // If no Referrer is set we imitate Firefox' behavior and do not set
+        // one as well. If we have a Referrer but do not get an originating
+        // URI we set the Referrer for security's sake to the requested domain.
         if (baseDomain != suffix && oldRef) {
           log ("URI is: " + baseDomain);
           try {
