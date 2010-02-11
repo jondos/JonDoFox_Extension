@@ -279,6 +279,9 @@ function bypassProxyAndSave(uri) {
   try {
     noProxyListAdd(uri);
     document.getElementById('context-savelink').doCommand();
+    // The user made an exception and set the URI on the list. But
+    // it was an exception. Therefore, we should remove the URI again. 
+    noProxyListRemove(uri);
   } catch (e) {
     log("bypassProxyAndSave(): " + e);
   }
