@@ -821,10 +821,13 @@ var JDFManager = {
   test: function(type, checkbox, radioOpen, radioSave, window) {
     try {
       var i;
+      var normalBox;
       var fileTypeExists = false;
+      normalBox = window.document.getElementById("normalBox").getAttribute("collapsed");
       var titleString = window.document.title.trim().toLowerCase();
       var fileExtension = titleString.substring(titleString.length - 4, 
                           titleString.length);
+
       // We cannot just use the MIME-Type here because it is set according
       // to the delivered content-type header and some other sophisticated means
       // (see nsURILoader.cpp and nsExternalHelperAppService.cpp). Some servers
@@ -833,12 +836,19 @@ var JDFManager = {
       // MIME-Type would not result in showing the proper warning dialog. 
       // It is, therefore, safer to use the title of the window which contains
       // the filename and its extension.
+      // If the XUL-window is collapsed then we only see a "Save file" and a
+      // "Cancel"-Button. This happens e.g. if the File is a binary or a DOS-
+      // executable. Hence, we do not need to show the warning. Besides checking
+      // whether the normalBox is collapsed we check in the first else if 
+      // clause other file extensions. These are part of a whitelist whose 
+      // members are not dangerous if one opens them directly. Thus, again,
+      // no sign of a warning.
+
       if (fileExtension === ".pdf") {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
       } else if (fileExtension === ".doc" || fileExtension === ".rtf") {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul", null);
-      } else if (type.value.toLowerCase().search("bin") !== -1 ||
-                 type.value.toLowerCase().search("dos") !== -1 ||
+      } else if (normalBox ||
                  fileExtension === ".tex") {
       //do nothing: we do not want any warning here because the user cannot
       //open these files directly or they are not dangerous, thus we return
