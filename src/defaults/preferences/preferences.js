@@ -101,6 +101,7 @@ pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.history_expire_days", 0);
 pref("extensions.jondofox.proxy_keep-alive", false);
 pref("extensions.jondofox.noscript_contentBlocker", true);
+pref('extensions.jondofox.noscript_showDomain", false);
 //pref("extensions.jondofox.showAnontestNoProxy", true);
 
 //SafeCache
