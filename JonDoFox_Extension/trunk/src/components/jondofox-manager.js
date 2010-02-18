@@ -188,6 +188,8 @@ var JDFManager = {
 	                         getService(CI.nsIProperties);
       this.handlerService = CC['@mozilla.org/uriloader/handler-service;1'].
 	                       getService(CI.nsIHandlerService);
+      this.windowWatcher = CC['@mozilla.org/embedcomp/window-watcher;1'].
+                getService(CI.nsIWindowWatcher);  
       // Determine version
       this.VERSION = this.getVersion();
       bundleService = CC['@mozilla.org/intl/stringbundle;1'].
@@ -606,9 +608,7 @@ var JDFManager = {
    * Return the current number of browser windows (not used at the moment)
    */
   getWindowCount: function() {
-    var ww = CC['@mozilla.org/embedcomp/window-watcher;1'].
-                getService(CI.nsIWindowWatcher);  
-    var window_enum = ww.getWindowEnumerator();
+    var window_enum = this.windowWatcher.getWindowEnumerator();
     var count = 0;
     while (window_enum.hasMoreElements()) {
       count++;
@@ -1059,6 +1059,11 @@ var JDFManager = {
       } else {
         log("NOT adding " + uri + " since it is already on the list");
       }
+      // The user made an exception and set the URI on the list. But
+      // it was an exception. Therefore, we should remove the URI again. But
+      // we should wait some time otherwise it can happen that the URI is
+      // removed before the download started.
+      this.windowWatcher.activeWindow.setTimeout(this.noProxyListRemove, 2000, uri);
     } catch (e) {
       log("noProxyListAdd(): " + e);
     }
@@ -1068,7 +1073,7 @@ var JDFManager = {
   noProxyListRemove: function(uri) {
     log("No proxy list remove: " + uri);
     try {
-      this.noProxyList.splice(this.noProxyList.indexOf(uri), 1);
+      JDFManager.noProxyList.splice(JDFManager.noProxyList.indexOf(uri), 1);
     } catch (ex) {
       log("noProxyListRemove(): " + ex);
     } 
