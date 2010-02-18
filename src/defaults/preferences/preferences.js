@@ -45,7 +45,6 @@ pref("extensions.jondofox.custom.backup.socks_host", "");
 pref("extensions.jondofox.custom.backup.socks_port", 0);
 pref("extensions.jondofox.custom.backup.socks_version", 5);
 
-
 // Useragent
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
@@ -87,6 +86,10 @@ pref("extensions.jondofox.network-protocol-handler.warn_external_file", true);
 pref("extensions.jondofox.network-protocol-handler.warn_external_nntp", true);
 pref("extensions.jondofox.network-protocol-handler.warn_external_mailto", true);
 pref("extensions.jondofox.network-protocol-handler.warn_external_default", true);
+
+// Certificate prefs
+pref("extensions.jondofox.security.default_personal_cert", "Ask Every Time");
+pref("extensions.jondofox.security.remember_cert_checkbox_default_setting", false);
 
 // Miscellaneous
 pref("extensions.jondofox.source_editor_external", false);
