@@ -379,8 +379,12 @@ var overlayObserver = {
             openBrowserTabJondofox(false);
             prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
+            if (!prefsHandler.getBoolPref(
+                'extensions.jondofox.noscript_showDomain')) {
+              prefsHandler.setBoolPref('noscript.showDomain', false);
+            }
           }
-          // If the user should update the profile and has not diabled the update
+          // If the user should update the profile and has not disabled the update
           // warning, help her and show the JonDoFox homepage after startup
           if (jdfManager.checkProfileUpdate()) {
 	    openBrowserTabJondofox(true);
