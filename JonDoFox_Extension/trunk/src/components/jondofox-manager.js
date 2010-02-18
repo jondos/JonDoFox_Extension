@@ -109,7 +109,9 @@ var JDFManager = {
     'intl.accept_languages':'extensions.jondofox.accept_languages',
     'intl.charset.default':'extensions.jondofox.default_charset',
     'intl.accept_charsets':'extensions.jondofox.accept_charsets',
-    'network.http.accept.default':'extensions.jondofox.accept_default' 
+    'network.http.accept.default':'extensions.jondofox.accept_default',
+    'security.default_personal_cert':
+    'extensions.jondofox.security.default_personal_cert' 
   },
 
   // This map of boolean preferences is given to the prefsMapper
@@ -122,7 +124,9 @@ var JDFManager = {
     'network.http.proxy.keep-alive':'extensions.jondofox.proxy_keep-alive',
     'view_source.editor.external': 'extensions.jondofox.source_editor_external',
     'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
-    'stanford-safecache.enabled':'extensions.jondofox.stanford-safecache_enabled'
+    'stanford-safecache.enabled':'extensions.jondofox.stanford-safecache_enabled',
+    'security.remember_cert_checkbox_default_setting':
+    'extensions.jondofox.security.remember_cert_checkbox_default_setting'
   },
 
   //This map of integer preferences is given to the prefsMapper
