@@ -88,7 +88,7 @@ var JDFManager = {
     'general.productsub.override':'extensions.jondofox.jondo.productsub_override',
     'general.useragent.override':'extensions.jondofox.jondo.useragent_override',
     'general.useragent.vendor':'extensions.jondofox.jondo.useragent_vendor',
-    'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub',  
+    'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub'  
   },
 
   // If Tor is set as proxy take these UA-settings
@@ -101,7 +101,7 @@ var JDFManager = {
     'general.productsub.override':'extensions.jondofox.tor.productsub_override',
     'general.useragent.override':'extensions.jondofox.tor.useragent_override',
     'general.useragent.vendor':'extensions.jondofox.tor.useragent_vendor',
-    'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub',
+    'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub'
   },
   
   // This map of string preferences is given to the prefsMapper
