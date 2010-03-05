@@ -2,9 +2,13 @@
 
 <!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
 
-<overlay id="external-app-overlay"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-  
-  <description style="color: red;">&jondofox.warnings.externalApp;</description>
+  <vbox id="container">  
+    <description id="warning"
+                 style="color: red;"
+                 hiddden="true">
+      &jondofox.warnings.externalApp;
+    </description>
+  </vbox>
 </overlay>
