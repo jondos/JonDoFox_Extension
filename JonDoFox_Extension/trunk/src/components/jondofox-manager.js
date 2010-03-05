@@ -790,6 +790,8 @@ var JDFManager = {
    
   getUnknownContentTypeDialog: function() {
     try {
+      var dialogParam; 
+      var dialogMessage; 
       var checkbox = this.document.getElementById("rememberChoice");
       var checkboxNews = this.document.getElementById("remember");
       var radioOpen = this.document.getElementById("open");
@@ -800,29 +802,46 @@ var JDFManager = {
           // We need a Timeout here because type.value or getting the 
           // MIME-/filetype via the filename gives null back if executed at 
           // once. But without getting the type we cannot discriminate between
-          // showing the different overlays
-	  this.setTimeout(JDFManager.test, 5, type, checkbox, radioOpen, radioSave, this);
+          // showing the different overlays...
+	  this.setTimeout(JDFManager.showUnknownContentTypeWarnings, 5, 
+                          type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews) {
         // 10 arguments are passed to this external app window. We take the
         // seventh, the handlerInfo to show the file type to the user. For 
         // details, see: chrome://mozapps/content/handling/dialog.js
         handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
-        log("Der MIME-Type ist: " + type);
-	if (type !== "mailto") { 
-	  this.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+        //if (type !== "mailto") { 
+	  this.document.loadOverlay(
+               "chrome://jondofox/content/external-appDialog.xul", null);
+          this.setTimeout(JDFManager.showWarning, 50, this, true, true);
           checkboxNews.addEventListener("click", function() {JDFManager.
 		    checkboxNewsChecked(checkboxNews, type);}, false);
+        //}
+      } else if (this.arguments[0].QueryInterface(CI.nsIDialogParamBlock)) {
+        log("We got probably a commonDialog...");
+        dialogParam = this.arguments[0].QueryInterface(CI.nsIDialogParamBlock);
+        log("Let's check whether we've got a NoScript pdf-dialog...");
+        dialogMessage = dialogParam.GetString(0).substr(0,10000).trim().
+                        toLowerCase();
+        if (dialogMessage.indexOf(".pdf") !== -1) {
+          this.document.loadOverlay(
+               "chrome://jondofox/content/external-pdfPlugin.xul", null);
+          this.setTimeout(JDFManager.showWarning, 50, this, true, false);
         }
-      } else {
-         this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
+      } 
+      else {
+        this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog,
+                                 false);
       }
-     } catch (e) {
+    } catch (e) {
        log("getUnknownContentTypeDialog(): " + e);
+       this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
     }
   },
 
-  test: function(type, checkbox, radioOpen, radioSave, window) {
+  showUnknownContentTypeWarnings: function(type, checkbox, radioOpen,
+                                           radioSave, window) {
     try {
       var i;
       var normalBox;
@@ -841,7 +860,7 @@ var JDFManager = {
       // It is, therefore, safer to use the title of the window which contains
       // the filename and its extension.
       // If the XUL-window is collapsed then we only see a "Save file" and a
-      // "Cancel"-Button. This happens e.g. if the File is a binary or a DOS-
+      // "Cancel"-Button. This happens e.g. if the file is a binary or a DOS-
       // executable. Hence, we do not need to show the warning. Besides checking
       // whether the normalBox is collapsed we check in the first else if 
       // clause other file extensions. These are part of a whitelist whose 
@@ -849,63 +868,75 @@ var JDFManager = {
       // no sign of a warning.
 
       if (fileExtension === ".pdf") {
-        window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul", null);
+        window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul",
+                                    null);
+        window.setTimeout(JDFManager.showWarning, 50, window, false, false);
       } else if (fileExtension === ".doc" || fileExtension === ".rtf") {
-        window.document.loadOverlay("chrome://jondofox/content/external-doc.xul", null);
+        window.document.loadOverlay("chrome://jondofox/content/external-doc.xul",
+                                    null);
+        window.setTimeout(JDFManager.showWarning, 50, window, false, false);
       } else if (normalBox ||
                  fileExtension === ".tex") {
       //do nothing: we do not want any warning here because the user cannot
       //open these files directly or they are not dangerous, thus we return
 	return;
       } else {
-        window.document.loadOverlay("chrome://jondofox/content/external-app.xul", null);
+        window.document.loadOverlay("chrome://jondofox/content/external-app.xul",
+                                    null);
+        window.setTimeout(JDFManager.showWarning, 50, window, false, false);
       }
-      // The for-loop and the if-clause are for some nasty linux systems :-) 
-      // were the unknownContentTypeDialog is not rendered properly after loaded
-      // for the first time (it is per mimetype!). This is probably due to the 
-      // setTimout-function, we need to get the file/link-type...
-      for (i = 0; i < JDFManager.fileTypes.length; i++) {
-	if (JDFManager.fileTypes[i] === type.value) {
-	  fileTypeExists = true;
-          break;
-        }
-      }
-      if (!fileTypeExists) {
-	// If the checkbox is disabled our trick won't work. That's why we enable
-        // it here. This is unproblematic because we set the radiobutton "save"
-        // as default.
-	if (checkbox.disabled) {
-	  checkbox.disabled = false;
-        }        
-        if (radioSave.selected && !checkbox.checked) {
-	  checkbox.click();
-          // And yes, another timeout to get the rendering properly on some linux
-          // systems and to set the default action to "save" on all OSs...
-          window.setTimeout(JDFManager.checkboxClick, 10, checkbox, window);
-        } else if (radioOpen.selected) {
-          radioSave.click();
-          checkbox.click();
-          window.setTimeout(JDFManager.checkboxClick, 10, checkbox, window);
-          
-	}
-        JDFManager.fileTypes[JDFManager.fileTypes.length + 1] = type.value;
-	}
-      checkbox.addEventListener("click", function() {JDFManager.
+        checkbox.addEventListener("click",function() {JDFManager.
 	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
-      radioOpen.addEventListener("click", function() {JDFManager.
+        radioOpen.addEventListener("click", function() {JDFManager.
 	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
     } catch (e) {
-      log("test: " + e);
+      log("showUnknownContentTypeWarnings(): " + e);
     }
   },
 
-  checkboxClick: function(checkbox, window) {
-    // Yes, another trick here: We resize the dialog a bit because otherwise,
-    // again on some linux systems, the widening and shrinking and thus avoinding
-    // the first problem does not work: The dialog stays sometimes just widened.
-    window.resizeBy(1,1);
-    checkbox.click();
-    },
+  /*overlayObserver: { 
+    observe: function(subject, topic, data) {
+      switch (topic) {
+        case 'xul-overlay-merged':
+          var uri = subject.QueryInterface(CI.nsIURI);
+          log("uri.spec ist: " + uri.spec);
+          if (uri.spec == "chrome://jondofox/content/
+          break;
+        default:
+          log("Something went wrong concerning the overlayObserver: " + topic);
+         break;
+      }
+    }
+  },*/
+
+  showWarning: function(window, modifyStyle, appDialog) {
+    try {
+      var warningHidden;
+      if (modifyStyle) {
+        var windowWidth;
+        var style;
+        windowWidth = window.innerWidth;
+        log("The width of the window is: " + windowWidth);
+        style = window.document.getElementById("warning").getAttribute("style");
+        style = style + "width: " + windowWidth + "px;";
+        window.document.getElementById("warning").setAttribute("style", style);
+        if (appDialog) {
+          var persist = "screenX screenY";
+          window.document.getElementById("handling").setAttribute("persist",
+                                                                   persist);
+          persist = window.document.getElementById("handling").
+                    getAttribute("persist");
+          log("The persist Attribute is now: " + persist);
+        }
+      }
+      window.document.getElementById("warning").hidden = false;
+      warningHidden = window.document.getElementById("warning").hidden;
+      log("The hidden attribute is now set to: " + warningHidden);
+      window.sizeToContent();
+    } catch (e) {
+      log("showWarning(): " +e);
+    }
+  },
 
   // Let's see whether the checkbox and the approproate radiobutton is selected.
   // If so we show a warning dialog and disable the checkbox.
