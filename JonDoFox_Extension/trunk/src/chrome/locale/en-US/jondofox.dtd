@@ -49,6 +49,7 @@
 <!ENTITY jondofox.dialog.cancel "Cancel">
 <!ENTITY jondofox.dialog.save "Save">
 <!ENTITY jondofox.dialog.apply "Apply">
+<!ENTITY jondofox.dialog.help "Help">
 
 <!-- Preferences dialog -->
 <!ENTITY jondofox.dialog.preferences.title "JonDoFox Settings">
