@@ -827,7 +827,7 @@ var JDFManager = {
         if (dialogMessage.indexOf(".pdf") !== -1) {
           this.document.loadOverlay(
                "chrome://jondofox/content/external-pdfPlugin.xul", null);
-          this.setTimeout(JDFManager.showWarning, 50, this, true, false);
+          this.setTimeout(JDFManager.showWarning, 200, this, true, false);
         }
       } 
       else {
@@ -870,7 +870,7 @@ var JDFManager = {
       if (fileExtension === ".pdf") {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul",
                                     null);
-        window.setTimeout(JDFManager.showWarning, 50, window, false, false);
+        window.setTimeout(JDFManager.showWarning, 200, window, false, false);
       } else if (fileExtension === ".doc" || fileExtension === ".rtf") {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul",
                                     null);
