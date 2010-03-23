@@ -180,7 +180,9 @@ var requestObserver = {
       }
 
       // Set other headers here
-      //channel.setRequestHeader("Accept", "*/*", false);
+      // It is not enough to have the values only in the about:config!
+      channel.setRequestHeader("Accept", "text/html,application/xml,*/*",
+                               false);
       
       return true;
     } catch (e) {
