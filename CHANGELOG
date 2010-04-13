@@ -1,29 +1,33 @@
 Changes in version XXX - YYY
 
   New Feature:
+    * included a 'pdf-warning' if a pdf-plugin is enabled; and added a help-button
+      which opens a new Tab with the 'harden Adobe' text in our Wiki
     * show the JonDoFox download page if the user should update the profile and
       has not disabled the update warning
     * improved referrer logic: if 3rd party content is loaded the referrer is 
       not modified
     * introduced two new preferences which control the user certificate handling:
-      * "extensions.jondofox.security.default_personal_cert" is set to 
-        "Ask Every Time" and makes thus sure that user certificates are not
-        sent automatically to the server
-      * "extensions.jondofox.security.remember_cert_checkbox_default_setting"
-        is set to "false" and makes thus sure that the user is not sending
-        a user certificate automatically during a session if she just clicks
-        through the dialog once
+    * "extensions.jondofox.security.default_personal_cert" is set to 
+      "Ask Every Time" and makes thus sure that user certificates are not
+      sent automatically to the server
+    * "extensions.jondofox.security.remember_cert_checkbox_default_setting"
+      is set to "false" and makes thus sure that the user is not sending
+      a user certificate automatically during a session if she just clicks
+      through the dialog once
 
   Minor Improvement:
     * show only second-level domains in the NoScript menu (once a new version of
       the JonDoFox extension is found "extensions.jondofox.noscript_showDomain"
       is checked and if it is set to "false" only the second-level domains are
       shown)
+    * updated the Tor Uaer Agent
 
   Bug fixing:
+    * fixed leaking Accept-Header
     * the URI put on the proxy list is removed now as well (the user just
       wanted to make one exception)
-    * corrceted a problem concering rendering the external helperapp dialog
+    * corrected a problem concering rendering the external helperapp dialog
   
 Changes in version 0.2.4.1 - 2010-01-25
 
