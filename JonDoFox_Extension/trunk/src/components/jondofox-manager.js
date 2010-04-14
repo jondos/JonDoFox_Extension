@@ -156,7 +156,7 @@ var JDFManager = {
   prefsHandler: null,
   prefsMapper: null,
   proxyManager: null,
-  jdfUtils: null,
+  //jdfUtils: null,
   promptService: null,
   rdfService: null,
   directoryService: null,
@@ -182,8 +182,8 @@ var JDFManager = {
                             getService().wrappedJSObject;
       this.proxyManager = CC['@jondos.de/proxy-manager;1'].
                              getService().wrappedJSObject;
-      this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
-	                 getService().wrappedJSObject;
+      //this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
+      //                 getService().wrappedJSObject;
       this.promptService = CC['@mozilla.org/embedcomp/prompt-service;1'].
                               getService(CI.nsIPromptService);
       this.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].

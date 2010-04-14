@@ -28,7 +28,6 @@ const CONTRACT_ID = '@jondos.de/preferences-handler;1';
 const CC = Components.classes;
 const CI = Components.interfaces;
 const CR = Components.results;
-const nsISupports = CI.nsISupports;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -173,7 +172,7 @@ PreferencesHandler.prototype = {
 
   // Implement nsISupports
   QueryInterface: function(aIID) {
-    if (!aIID.equals(nsISupports))
+    if (!aIID.equals(CI.nsISupports))
       throw CR.NS_ERROR_NO_INTERFACE;
     return this;
   }
@@ -189,12 +188,13 @@ var PreferencesHandlerFactory = {
   createInstance: function (aOuter, aIID) {    
     if (aOuter != null)
       throw CR.NS_ERROR_NO_AGGREGATION;
-    if (!aIID.equals(nsISupports))
+    if (!aIID.equals(CI.nsISupports))
       throw CR.NS_ERROR_NO_INTERFACE;
     // Singleton
-    if (PreferencesHandlerInstance == null)
+    if (PreferencesHandlerInstance === null) {
       log("Creating instance");
       PreferencesHandlerInstance = new PreferencesHandler();
+    }
     return PreferencesHandlerInstance;
   }
 };
