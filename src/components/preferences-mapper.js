@@ -56,7 +56,7 @@ PrefsMapper.prototype = {
     try {
       this.stringPrefsMap = stringPrefsMap;
     } catch (e) {
-      log("setStringPrefs(): "+ e);
+      log("setStringPrefs(): " + e);
     }
   },
 
@@ -71,7 +71,7 @@ PrefsMapper.prototype = {
     try {
       this.boolPrefsMap = boolPrefsMap;
     } catch (e) {
-      log("setBoolPrefs(): "+ e);
+      log("setBoolPrefs(): " + e);
     }
   },
 
@@ -86,7 +86,7 @@ PrefsMapper.prototype = {
     try {
       this.intPrefsMap = intPrefsMap;
     } catch (e) {
-      log("setIntPrefs(): "+ e);
+      log("setIntPrefs(): " + e);
     }
   },
 

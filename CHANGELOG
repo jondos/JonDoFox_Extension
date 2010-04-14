@@ -21,12 +21,15 @@ Changes in version XXX - YYY
       the JonDoFox extension is found "extensions.jondofox.noscript_showDomain"
       is checked and if it is set to "false" only the second-level domains are
       shown)
-    * updated the Tor Uaer Agent
+    * updated the Tor User Agent
+
+  New XPCOM-Component:
+    * safecache.js: moved SafeCache's functionality to an own component
 
   Bug fixing:
     * fixed leaking Accept-Header
     * the URI put on the proxy list is removed now as well (the user just
-      wanted to make one exception)
+      wanted to make _one_ exception)
     * corrected a problem concering rendering the external helperapp dialog
   
 Changes in version 0.2.4.1 - 2010-01-25
