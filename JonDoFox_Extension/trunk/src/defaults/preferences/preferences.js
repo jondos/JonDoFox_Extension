@@ -59,10 +59,10 @@ pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 
 // Tor settings
 pref("extensions.jondofox.tor.appname_override","Netscape");
-pref("extensions.jondofox.tor.appversion_override","5.0 (Windows; LANG)");
+pref("extensions.jondofox.tor.appversion_override","5.0 (Windows; en-US)");
 pref("extensions.jondofox.tor.platform_override","Win32");
 pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
-pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows; U; Windows NT 6.1; LANG; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3");
+pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3");
 pref("extensions.jondofox.tor.productsub_override","20100401");
 pref("extensions.jondofox.tor.buildID_override","0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
