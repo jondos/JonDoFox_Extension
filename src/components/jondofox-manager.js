@@ -367,6 +367,12 @@ var JDFManager = {
         this.setUserAgent('jondo');
       } else {
         this.setProxy(this.getState());
+        // Setting Tor values...
+        if (this.prefsHandler.getStringPref(
+            'general.useragent.override') === this.prefsHandler.getStringPref(
+            'extensions.jondofox.tor.useragent_override')) {
+          this.setUserAgent('tor');
+        }
       }
       // Maybe the proposed UA has changed due to an update. Thus, we are on the
       // safe side if we set it on startup.
@@ -669,11 +675,24 @@ var JDFManager = {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.jondoUAMap[p]));
         }
+        //Check whether we had a Tor UA before. If so, the value of the pref
+        //is not equal to "en-us" and we change it back to JonDoFox values. (Of
+        //course, this does not mean that we really had a Tor UA before, maybe
+        //the user changed the pref manually (and got a warning). But we can
+        //safely ignore this case. 
+        if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
+            "en-us") {
+          this.settingLocationNeutrality("");
+        }
 	break;
       case (this.STATE_TOR):
         for (p in this.torUAMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
+        }
+        if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
+            "en-us, en") {
+          this.settingLocationNeutrality("tor.");
         }
         break;
       case (this.STATE_CUSTOM):
@@ -681,14 +700,22 @@ var JDFManager = {
 			       'extensions.jondofox.custom.user_agent');
         if (userAgent === 'jondo') {
           for (p in this.jondoUAMap) {
-          this.prefsHandler.setStringPref(p,
+            this.prefsHandler.setStringPref(p,
              this.prefsHandler.getStringPref(this.jondoUAMap[p]));
+          }
+          if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
+            "en-us") {
+          this.settingLocationNeutrality("");
           }
         } else if (userAgent === 'tor') {
           for (p in this.torUAMap) {
-          this.prefsHandler.setStringPref(p,
+            this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
 	  }
+          if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
+            "en-us, en") {
+          this.settingLocationNeutrality("tor.");
+          }
         } else {
 	  this.clearUAPrefs();
         }
@@ -711,7 +738,8 @@ var JDFManager = {
       // We only have to reset the values if this has not yet been done.
       // For instance, if there was no previous proxy set before and now the 
       // user uses a not well configured custom one, the values are already set.
-      if (this.prefsHandler.getStringPref('general.useragent.override') !== null) {
+      if (this.prefsHandler.getStringPref('general.useragent.override') !==
+          null) {
         branch = CC['@mozilla.org/preferences-service;1']
                    .getService(CI.nsIPrefBranch);
         branch.clearUserPref('general.useragent.override');
@@ -723,10 +751,23 @@ var JDFManager = {
         branch.clearUserPref('general.oscpu.override');
         branch.clearUserPref('general.buildID.override');
         branch.clearUserPref('general.productsub.override');
+        if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
+            "en-us") {
+          this.settingLocationNeutrality("");
+        }
       }
     } catch (e) {
       log("clearUAPrefs(): " + e);
     }
+  },
+
+  settingLocationNeutrality: function(torString) {
+    this.prefsHandler.setStringPref("intl.accept_languages", 
+         this.prefsHandler.getStringPref(
+         "extensions.jondofox." + torString + "accept_languages"));
+    this.prefsHandler.setStringPref("intl.accept_charsets", 
+         this.prefsHandler.getStringPref(
+         "extensions.jondofox." + torString + "accept_charsets"));
   },
 
   // First, we check the mimetypes.rdf in order to prevent the user from
@@ -735,7 +776,7 @@ var JDFManager = {
   // Second, we look if someone has set his feed prefs in a way that they 
   // are automatically passed to an external reader. If this is the case, we
   // set the value silently back to "ask".
-  //If it is the first start after a new installation, we do not show the
+  // If it is the first start after a new installation, we do not show the
   // warning in order to not confuse the user.
 
   firstMimeTypeCheck: function() {
@@ -1417,6 +1458,13 @@ var JDFManager = {
 				  this.prefsHandler.getStringPref(data));
 	  }
           
+          else if ((data === 'intl.accept_languages' || 
+            data === 'intl.accept_charsets') && this.prefsHandler.getStringPref(
+            'general.useragent.override') === this.prefsHandler.getStringPref(
+            'extensions.jondofox.tor.useragent_override')) {
+            // Do nothing here because the pref changed but it was for imitating
+            // Tor properly after the Tor UA was activated.
+          }
           // Check if the changed preference is on the stringprefsmap...
           else if (data in this.stringPrefsMap) {
             log("Pref '" + data + "' is on the string prefsmap!");
