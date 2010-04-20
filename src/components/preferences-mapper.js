@@ -24,7 +24,7 @@ const CLASS_ID = Components.ID('{67d79e27-f32d-4e7f-97d7-68de76795611}');
 const CLASS_NAME = 'Preferences-Mapper'; 
 const CONTRACT_ID = '@jondos.de/preferences-mapper;1';
 
-const nsISupports = Components.interfaces.nsISupports;
+const CI = Components.interfaces;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -97,6 +97,7 @@ PrefsMapper.prototype = {
 
   // Perform the mapping
   map: function() {
+    var p;
     log("Mapping security preferences");
     try {
       // Iterate through the maps
@@ -119,6 +120,7 @@ PrefsMapper.prototype = {
 
   // Reset all prefs
   unmap: function() {
+    var p;
     log("Unmapping preferences");
     try {
       // Reset all prefs
@@ -138,7 +140,7 @@ PrefsMapper.prototype = {
 
   // Implement nsISupports
   QueryInterface: function(aIID) {
-    if (!aIID.equals(nsISupports))
+    if (!aIID.equals(CI.nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
     return this;
   }
@@ -152,11 +154,12 @@ var PrefsMapperInstance = null;
 
 var PrefsMapperFactory = {
   createInstance: function (aOuter, aIID) {    
-    if (aOuter != null)
+    if (aOuter !== null)
       throw Components.results.NS_ERROR_NO_AGGREGATION;
-    if (!aIID.equals(nsISupports))
+    if (!aIID.equals(CI.nsISupports))
       throw Components.results.NS_ERROR_NO_INTERFACE;
     // NOT a singleton class here
+    // GEORG: But why?
     log("Creating instance");
     return new PrefsMapper();
   }

@@ -21,6 +21,9 @@ var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
     getService().wrappedJSObject;
 
+var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
+    getService().wrappedJSObject;
+
 // Prefix for custom proxy settings
 var prefix = "extensions.jondofox.custom.";
 
@@ -93,7 +96,7 @@ function loadPrefsCustomProxy(onLoad) {
     var label = prefsHandler.getStringPref(prefix + 'label');    
     if (label == "") {
       // If label is empty, get the default label
-      label = jdfManager.getString('jondofox.statusbar.label.custom');
+      label = jdfUtils.getString('jondofox.statusbar.label.custom');
     }
     // Set the label to the textfield
     document.getElementById('textbox_custom_label').value = label;

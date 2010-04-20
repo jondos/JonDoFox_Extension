@@ -425,13 +425,13 @@ var SafeCacheInstance = null;
 
 var SafeCacheFactory = {
   createInstance: function (aOuter, aIID) {    
-    if (aOuter != null)
+    if (aOuter !== null)
       throw CR.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(CI.nsISupports))
       throw CR.NS_ERROR_NO_INTERFACE;
     // Singleton
     if (SafeCacheInstance === null) {
-      log("Creating instance");
+      log("Creating singleton");
       SafeCacheInstance = new SafeCache();
     }
     return SafeCacheInstance;
