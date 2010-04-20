@@ -38,12 +38,12 @@ const CU = Components.utils;
 
 var requestObserver = {
 
-  // Preferences handler object
   prefsHandler: null,
   jdfManager: null,
   safeCache: null,
+  tldService: null,
+  cookiePerm: null,
   
-  // Init the preferences handler
   init: function() {
     try {
       this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
@@ -64,6 +64,10 @@ var requestObserver = {
   // This is called on every request
   modifyRequest: function(channel) {
     var originatingDomain;
+    var baseDomain;
+    var suffix;
+    var oldRef;
+    var refDomain;
     try {
       // Perform safecache
       if (this.prefsHandler.getBoolPref('stanford-safecache.enabled')) {
@@ -75,29 +79,27 @@ var requestObserver = {
       // Forge the referrer if necessary
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
         // Determine the base domain of the request
-        var baseDomain;
         try {
           baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
-        } catch (e if e.name == "NS_ERROR_HOST_IS_IP_ADDRESS") {
+        } catch (e if e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
           // It's an IP address
           baseDomain = channel.URI.hostPort;
         }       
         log("Request (base domain): " + baseDomain);
 
         // ... the string to compare to
-        var suffix;
         try {
           // ... the value of the referer header
-          var oldRef = channel.getRequestHeader("Referer"); 
+          oldRef = channel.getRequestHeader("Referer"); 
           // Cut off the path from the referer
           log("Referrer (unmodified): " + oldRef);
-          var refDomain = oldRef.split("/", 3)[2];
+          refDomain = oldRef.split("/", 3)[2];
           //log("Referrer (domain): " + refDomain);  
           // Take a substring with the length of the base domain for comparison
           suffix = refDomain.substr(
               refDomain.length - baseDomain.length, refDomain.length);
           log("Comparing " + baseDomain + " to " + suffix);
-        } catch (e if e.name == "NS_ERROR_NOT_AVAILABLE") {
+        } catch (e if e.name === "NS_ERROR_NOT_AVAILABLE") {
           // The header is not set
           log("Referrer is not set!");
           oldRef = false;
@@ -108,7 +110,7 @@ var requestObserver = {
         // If no Referrer is set we imitate Firefox' behavior and do not set
         // one as well. If we have a Referrer but do not get an originating
         // URI we set the Referrer for security's sake to the requested domain.
-        if (baseDomain != suffix && oldRef) {
+        if (baseDomain !== suffix && oldRef) {
           log ("URI is: " + baseDomain);
           try {
             originatingDomain = this.cookiePerm.getOriginatingURI(channel);
@@ -120,7 +122,7 @@ var requestObserver = {
             try {
               originatingDomain = this.tldService.
                                      getBaseDomain(originatingDomain, 0);
-            } catch (e if e.name == "NS_ERROR_HOST_IS_IP_ADDRESS") {
+            } catch (e if e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
             // It's an IP address
             originatingDomain = originatingDomain.hostPort;
             }  
@@ -167,17 +169,18 @@ var requestObserver = {
   },
 
   examineResponse: function(channel) {
+    var URI;
     try {
       // We are looking for URL's which are on the noProxyList first. The
       // reason is if there occurred a redirection to a different URL it is
       // not set on the noProxyList as well. Thus it can happen that the user
       // wants to avoid a download via a proxy but uses it nevertheless
       // because a redirection occurred.
-      var URI = channel.URI.spec;
+      URI = channel.URI.spec;
       // If it is on the list let's check whether we will be redirected.
       if (this.jdfManager.noProxyListContains(URI)) {
         var location = channel.getResponseHeader("Location");
-        if (location != null) {
+        if (location !== null) {
 	  //If so add the new location to the noProxyList as well.
           log("Got a redirection to: " + location);
           this.jdfManager.noProxyListAdd(location);     
@@ -317,7 +320,7 @@ var RequestObserverModule = {
   classFactory: {
     createInstance: function(outer, iid) {
       log("Creating instance");
-      if (outer != null)
+      if (outer !== null)
         throw Components.results.NS_ERROR_NO_AGGREGATION;
       return requestObserver.QueryInterface(iid);
     }

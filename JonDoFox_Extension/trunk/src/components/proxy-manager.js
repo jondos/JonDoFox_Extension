@@ -28,7 +28,6 @@ const CONTRACT_ID = '@jondos.de/proxy-manager;1';
 const CC = Components.classes;
 const CI = Components.interfaces;
 const CR = Components.results;
-const nsISupports = CI.nsISupports;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -181,7 +180,7 @@ ProxyManager.prototype = {
 
   // Implement nsISupports
   QueryInterface: function(aIID) {
-    if (!aIID.equals(nsISupports))
+    if (!aIID.equals(CI.nsISupports))
       throw CR.NS_ERROR_NO_INTERFACE;
     return this;
   }
@@ -197,10 +196,10 @@ var ProxyManagerFactory = {
   createInstance: function (aOuter, aIID) {    
     if (aOuter != null)
       throw CR.NS_ERROR_NO_AGGREGATION;
-    if (!aIID.equals(nsISupports))
+    if (!aIID.equals(CI.nsISupports))
       throw CR.NS_ERROR_NO_INTERFACE;
     // Singleton
-    if (ProxyManagerInstance == null)
+    if (ProxyManagerInstance === null)
       log("Creating instance");
       ProxyManagerInstance = new ProxyManager();
     return ProxyManagerInstance;

@@ -15,7 +15,7 @@ var mDebug = true;
 
 // Send data to the console if we're in debug mode
 function log(msg) {
-  if (mDebug) dump("JonDoFox :: " + msg + "\n");
+  if (mDebug) dump("JonDoFoxGUI :: " + msg + "\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,6 +29,10 @@ var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
 // Get the JDFManager
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
+
+// Get the utility Object
+var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
+                               getService().wrappedJSObject;
 
 var prefix = "extensions.jondofox.custom.";
 
@@ -73,9 +77,9 @@ function setProxyNone() {
     }
     else {  
       log("Asking for confirmation ..");
-      disable = jdfManager.showConfirmCheck(
-                          jdfManager.getString('jondofox.dialog.warning'),
-                          jdfManager.getString('jondofox.dialog.message.proxyoff'), 'proxy');
+      disable = jdfUtils.showConfirmCheck(jdfUtils.
+                  getString('jondofox.dialog.warning'), jdfUtils.
+                  getString('jondofox.dialog.message.proxyoff'), 'proxy');
     }
     if (disable) {
       // Call the method above
@@ -93,6 +97,7 @@ function setProxyNone() {
 // If not, ask the user whether she really wants to surf without proxy.
 
 function setCustomProxy() {
+  var disable;
   log("Check whether there is a proxy set at all ..");
   try {
     // Hide 'menupopup'
@@ -100,15 +105,14 @@ function setCustomProxy() {
     //Check whether one of the relevant preferences is zero
     
     if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
-      var disable;
       if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
         disable = true; 
       }
       else {
         // Request user confirmation
-        var disable = jdfManager.showConfirmCheck(
-                                jdfManager.getString('jondofox.dialog.warning'),
-                                jdfManager.getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
+        disable = jdfUtils.showConfirmCheck(jdfUtils.
+          getString('jondofox.dialog.warning'), jdfUtils.
+          getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
       }
       if (disable) {
         // Call the setProxy-method
@@ -132,15 +136,15 @@ function setCustomProxy() {
 function isProxyDisabled() {
   if (prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
     if (jdfManager.getState() == jdfManager.STATE_NONE) {
-      jdfManager.showAlertCheck(
-               jdfManager.getString('jondofox.dialog.attention'),
-               jdfManager.getString('jondofox.dialog.message.proxyoff'), 'proxy');
+      jdfUtils.showAlertCheck(jdfUtils.
+        getString('jondofox.dialog.attention'), jdfUtils.
+        getString('jondofox.dialog.message.proxyoff'), 'proxy');
     }
     else if (jdfManager.getState() == jdfManager.STATE_CUSTOM) {
       if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
-        jdfManager.showAlertCheck(
-                 jdfManager.getString('jondofox.dialog.attention'),
-                 jdfManager.getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
+        jdfUtils.showAlertCheck(jdfUtils.
+          getString('jondofox.dialog.attention'), jdfUtils.
+          getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
       }
     }
   }
@@ -153,13 +157,13 @@ function getLabel(state) {
   try {
     switch (state) {
       case jdfManager.STATE_NONE:
-        return jdfManager.getString('jondofox.statusbar.label.noproxy');
+        return jdfUtils.getString('jondofox.statusbar.label.noproxy');
 
       case jdfManager.STATE_JONDO:
-        return jdfManager.getString('jondofox.statusbar.label.jondo');
+        return jdfUtils.getString('jondofox.statusbar.label.jondo');
 
       case jdfManager.STATE_TOR:
-        return jdfManager.getString('jondofox.statusbar.label.tor');
+        return jdfUtils.getString('jondofox.statusbar.label.tor');
 
       case jdfManager.STATE_CUSTOM:
         // Return the custom set label if it's not empty
@@ -167,13 +171,13 @@ function getLabel(state) {
         if (l != "") {
           return l;
         } else {
-          return jdfManager.getString('jondofox.statusbar.label.custom');
+          return jdfUtils.getString('jondofox.statusbar.label.custom');
         }
 
       default:
         // This should actually never happen
         log("!! Unknown proxy state: " + state);
-        return jdfManager.getString('jondofox.statusbar.label.unknown');
+        return jdfUtils.getString('jondofox.statusbar.label.unknown');
     }
   } catch (e) {
     log("getLabel(): " + e);
@@ -209,7 +213,7 @@ function refresh() {
     radiogroupElement.selectedItem = document.getElementById(state + "-radio");
 
     // Refresh context menu: Set the label of 'bypass-proxy'
-    document.getElementById('bypass-proxy').label = jdfManager.
+    document.getElementById('bypass-proxy').label = jdfUtils.
        formatString("jondofox.contextmenu.bypass.label", [label]);
   } catch (e) {
     log("refresh(): " + e);
@@ -235,7 +239,7 @@ function openBrowserTabAnontest() {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
-    win.openUILinkIn(jdfManager.getString('jondofox.anontest.url'), 'tab');
+    win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab');
   } catch (e) {
     log("openBrowserTabAnontest(): " + e);
   }
@@ -248,9 +252,9 @@ function openBrowserTabJondofox(update) {
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
     if (update) {
-      win.openUILinkIn(jdfManager.getString('jondofox.homepage.download'), 'tab');
+      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.download'), 'tab');
     } else {
-      win.openUILinkIn(jdfManager.getString('jondofox.homepage.url'), 'tab');
+      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
     }
   } catch (e) {
     log("openBrowserTabJondofox(): " + e);

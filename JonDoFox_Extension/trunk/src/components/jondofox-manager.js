@@ -156,15 +156,12 @@ var JDFManager = {
   prefsHandler: null,
   prefsMapper: null,
   proxyManager: null,
-  //jdfUtils: null,
+  jdfUtils: null,
   promptService: null,
   rdfService: null,
   directoryService: null,
   handlerService: null,
   
-  // Localization strings
-  stringBundle: null,
-
   // We need the MIME-Type datasource to observe the always-ask property.
   mimeTypesDs: null,
  
@@ -182,10 +179,8 @@ var JDFManager = {
                             getService().wrappedJSObject;
       this.proxyManager = CC['@jondos.de/proxy-manager;1'].
                              getService().wrappedJSObject;
-      //this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
-      //                 getService().wrappedJSObject;
-      this.promptService = CC['@mozilla.org/embedcomp/prompt-service;1'].
-                              getService(CI.nsIPromptService);
+      this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
+                         getService().wrappedJSObject;
       this.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].
 	                      getService(CI.nsIRDFService);
       this.directoryService = CC['@mozilla.org/file/directory_service;1'].
@@ -196,11 +191,6 @@ var JDFManager = {
                 getService(CI.nsIWindowWatcher);  
       // Determine version
       this.VERSION = this.getVersion();
-      bundleService = CC['@mozilla.org/intl/stringbundle;1'].
-                             getService(CI.nsIStringBundleService);
-      // Create the string bundle
-      this.stringBundle = bundleService.createBundle(
-                             'chrome://jondofox/locale/jondofox.properties');
       // Register the proxy filter
       this.registerProxyFilter();
     } catch (e) {
@@ -262,15 +252,18 @@ var JDFManager = {
           } else if (extension === 'SafeCache') {
             log('Found ' + extension + ', uninstalling ..');
             // Prompt a message window for every extension
-            this.showAlert(this.getString('jondofox.dialog.attention'),
-			       this.getString('jondofox.dialog.message.uninstallSafecache'));
+            this.jdfUtils.showAlert(this.jdfUtils.
+              getString('jondofox.dialog.attention'), this.jdfUtils.
+              getString('jondofox.dialog.message.uninstallSafecache'));
               // Uninstall and set restart to true
             this.uninstallExtension(this.extensions[extension]);
             restart = true;
 
 	  } else {
-            if (this.showConfirm(this.getString('jondofox.dialog.attention'), 
-                this.formatString('jondofox.dialog.message.extension', [extension]))) {
+            if (this.jdfUtils.showConfirm(this.jdfUtils.
+                  getString('jondofox.dialog.attention'), this.jdfUtils.
+                  formatString('jondofox.dialog.message.extension', 
+                  [extension]))) {
               // Uninstall and set restart to true
               this.uninstallExtension(this.extensions[extension]);
               restart = true;
@@ -293,8 +286,10 @@ var JDFManager = {
         log ('Checking for ' + extension);
         if (!this.isInstalled(this.necessaryExtensions[extension])) {
 	  if (this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
-           this.showAlertCheck(this.getString('jondofox.dialog.attention'),
-		this.formatString('jondofox.dialog.message.necessaryExtension', [e]), 'update');
+           this.jdfUtils.showAlertCheck(this.jdfUtils.
+             getString('jondofox.dialog.attention'), this.jdfUtils.
+             formatString('jondofox.dialog.message.necessaryExtension', [e]),
+            'update');
 	  }
           log(extension + ' is missing');
         } else {
@@ -302,8 +297,10 @@ var JDFManager = {
           //... and if so whether they are enabled.
           if (this.isUserDisabled(this.necessaryExtensions[extension])) {
             if (this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
-	      this.showAlertCheck(this.getString('jondofox.dialog.attention'),
-		   this.formatString('jondofox.dialog.message.enableExtension', [extension]), 'update');
+	      this.jdfUtils.showAlertCheck(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.enableExtension',
+                [extension]), 'update');
             }
 	    log(extension + ' is disabled by user');
           } else {
@@ -378,7 +375,6 @@ var JDFManager = {
       // safe side if we set it on startup.
       if (this.VERSION !== 
           this.prefsHandler.getStringPref('extensions.jondofox.last_version')) {
- 
         this.setUserAgent(this.getState());
       }
     } catch (e) {
@@ -444,82 +440,6 @@ var JDFManager = {
     }
   },
   
-  // Utility functions ////////////////////////////////////////////////////////
-  
-  showAlert: function(title, text) {
-    try {
-      return this.promptService.alert(null, title, text);
-    } catch (e) {
-      log("showAlert(): " + e);
-    }
-  },
-
-  showConfirm: function(title, text) {
-    try {
-      return this.promptService.confirm(null, title, text);
-    } catch (e) {
-      log("showConfirm(): " + e);
-    }
-  },
-
-  // Show an alert with a checkbox using the prompt service
-  showAlertCheck: function(title, text, type) {
-    var checkboxMessage;
-    var check;
-    var result;
-    try {
-      checkboxMessage = this.getString('jondofox.dialog.checkbox.' + type + '.warning');
-      check = {value: false};
-      result = this.promptService.alertCheck(null, title, text, checkboxMessage, check);
-      if(check.value) {
-        this.prefsHandler.setBoolPref('extensions.jondofox.' + type + '_warning', false);
-      }
-      return result;
-    } catch (e) {
-      log("showAlert(): " + e);
-    }
-  },
-  
-  // Show a confirm dialog with a checkbox using the prompt service
-  showConfirmCheck: function(title, text, type) {
-    var checkboxMessage;
-    var check;
-    var result;
-    try {
-      checkboxMessage = this.getString('jondofox.dialog.checkbox.' + type + '.warning');
-      check = {value: false};
-      result = this.promptService.confirmCheck(null, title, text, checkboxMessage, check);
-      if(check.value) {
-        this.prefsHandler.setBoolPref('extensions.jondofox.' + type + '_warning', false);
-      }
-      //log("checked = " + check.value);
-      return result;
-    } catch (e) {
-      log("showConfirm(): " + e);
-    }
-  },
-
-  // Return a properties string
-  getString: function(name) {
-    //log("Getting localized string: '" + name + "'");
-    try {
-      return this.stringBundle.GetStringFromName(name);
-    } catch (e) {
-      log("getString(): " + e);
-    }
-  },
-
-  // Return a formatted string
-  formatString: function(name, strArray) {
-    //log("Getting formatted string: '" + name + "'");
-    try {
-      return this.stringBundle.formatStringFromName(name, strArray, 
-                                  strArray.length);
-    } catch (e) {
-      log("formatString(): " + e);
-    }  
-  },
-
   /**
    * Return the version string of this extension
    */
@@ -615,19 +535,6 @@ var JDFManager = {
   },
 
   /**
-   * Return the current number of browser windows (not used at the moment)
-   */
-  getWindowCount: function() {
-    var window_enum = this.windowWatcher.getWindowEnumerator();
-    var count = 0;
-    while (window_enum.hasMoreElements()) {
-      count++;
-      window_enum.getNext();
-    }
-    return count;
-  },
-
-  /**
    * Restart the browser using nsIAppStartup
    */
   restartBrowser: function() {
@@ -654,8 +561,9 @@ var JDFManager = {
       if (this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== this.JDF_VERSION &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
-          this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
-			    this.getString('jondofox.dialog.message.profileupdate'), 'update');
+          this.jdfUtils.showAlertCheck(this.jdfUtils.
+            getString('jondofox.dialog.attention'), this.jdfUtils.
+            getString('jondofox.dialog.message.profileupdate'), 'update');
           return true;
       }
       return false;
@@ -781,9 +689,9 @@ var JDFManager = {
 
   firstMimeTypeCheck: function() {
     try {
-      var feedType =  [this.getString('jondofox.feed'),
-                       this.getString('jondofox.audiofeed'),
-                       this.getString('jondofox.videofeed')];
+      var feedType =  [this.jdfUtils.getString('jondofox.feed'),
+                       this.jdfUtils.getString('jondofox.audiofeed'),
+                       this.jdfUtils.getString('jondofox.videofeed')];
       var feedArray = ["feeds", "audioFeeds", "videoFeeds"];
       if (this.prefsHandler.getBoolPref('extensions.jondofox.new_profile')) {
         this.correctExternalApplications(true);
@@ -808,9 +716,10 @@ var JDFManager = {
                 'browser.'+ feedArray[i] + '.handler', "ask");
             if (this.prefsHandler.getBoolPref(
                               'extensions.jondofox.preferences_warning')) {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-                       this.formatString('jondofox.dialog.message.automaticAction',
-		       [feedType[i]])); 
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction',
+		[feedType[i]])); 
 	    } 
           }
         }
@@ -985,9 +894,9 @@ var JDFManager = {
   checkboxChecked: function(radioOpen, checkbox, type, window) {
     var settingsChange = window.document.getElementById("settingsChange");
     if (checkbox.checked && radioOpen.selected) {
-      this.showAlert(this.getString('jondofox.dialog.attention'), 
-	             this.formatString(
-                          'jondofox.dialog.message.automaticAction', [type.value]));
+      this.jdfUtils.showAlert(this.jdfUtils.
+        getString('jondofox.dialog.attention'), this.jdfUtils.
+        formatString('jondofox.dialog.message.automaticAction', [type.value]));
       checkbox.checked = false;
       //If the settingschange element is still shown, hide it again in a way
       //it is normally done. This "feature" is just here in order to give the
@@ -1004,9 +913,9 @@ var JDFManager = {
 
   checkboxNewsChecked: function(checkboxNews, type) {
     if (checkboxNews.checked) {
-      this.showAlert(this.getString('jondofox.dialog.attention'),
-	             this.formatString(
-			  'jondofox.dialog.message.automaticAction', [type]));
+      this.jdfUtils.showAlert(this.jdfUtils.
+        getString('jondofox.dialog.attention'), this.jdfUtils.
+        formatString('jondofox.dialog.message.automaticAction', [type]));
       checkboxNews.checked = false;
     }
   },
@@ -1072,13 +981,16 @@ var JDFManager = {
       var changedValue = false;
       var handledMimeTypes = this.handlerService.enumerate();
       while (handledMimeTypes.hasMoreElements()) {
-        var handledMimeType = handledMimeTypes.getNext().QueryInterface(CI.nsIHandlerInfo);
+        var handledMimeType = handledMimeTypes.getNext().
+            QueryInterface(CI.nsIHandlerInfo);
         var mimeType = handledMimeType.type;
-        if (!handledMimeType.alwaysAskBeforeHandling && mimeType !== "mailto" &&
-            handledMimeType.preferredAction > 1) {
+        if (!handledMimeType.alwaysAskBeforeHandling && 
+            mimeType !== "mailto" && handledMimeType.preferredAction > 1) {
 	  if (!firstProgramStart) {
-            this.showAlert(this.getString('jondofox.dialog.attention'), 
-	  	           this.formatString('jondofox.dialog.message.automaticAction', [mimeType]));
+            this.jdfUtils.showAlert(this.jdfUtils.
+              getString('jondofox.dialog.attention'), this.jdfUtils.
+              formatString('jondofox.dialog.message.automaticAction', 
+              [mimeType]));
           }
           handledMimeType.alwaysAskBeforeHandling = true;
           this.handlerService.store(handledMimeType);
@@ -1357,9 +1269,11 @@ var JDFManager = {
 	    if (this.prefsHandler.getIntPref(data) === 0) {
 	      this.prefsHandler.setIntPref(data, 1);
               // Warn the user if she has not disabled preference warnings
-              if (this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
-                this.showAlertCheck(this.getString('jondofox.dialog.attention'),
-                     this.getString('jondofox.dialog.message.cookies'), 'preferences');
+              if (this.prefsHandler.
+                    getBoolPref('extensions.jondofox.preferences_warning')) {
+                this.jdfUtils.showAlertCheck(this.jdfUtils.
+                  getString('jondofox.dialog.attention'), this.jdfUtils.
+                  getString('jondofox.dialog.message.cookies'), 'preferences');
               }
             } 
 	  }
@@ -1368,9 +1282,12 @@ var JDFManager = {
 	    if (!this.prefsHandler.getBoolPref(data)) {
 	      this.prefsHandler.setBoolPref(data, true);
               // Warn the user if she has not disabled preference warnings
-              if (this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
-                this.showAlertCheck(this.getString('jondofox.dialog.attention'),
-                     this.getString('jondofox.dialog.message.safecache'), 'preferences');
+              if (this.prefsHandler.
+                    getBoolPref('extensions.jondofox.preferences_warning')) {
+                this.jdfUtils.showAlertCheck(this.jdfUtils.
+                  getString('jondofox.dialog.attention'), this.jdfUtils.
+                  getString('jondofox.dialog.message.safecache'), 
+                  'preferences');
               }
             } 
 	  }
@@ -1379,11 +1296,12 @@ var JDFManager = {
           // audiofeeds and videofeeds) here...
           else if (data === 'browser.feeds.handler') {
 	    if (this.prefsHandler.getStringPref(data) !== "ask" &&
-                this.prefsHandler.getStringPref('browser.feeds.handler.default')
-		=== "client") {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-		       this.formatString('jondofox.dialog.message.automaticAction', 
-		       [this.getString('jondofox.feed')]));
+                this.prefsHandler.
+                getStringPref('browser.feeds.handler.default') === "client") {
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction', 
+		[this.jdfUtils.getString('jondofox.feed')]));
 	      this.prefsHandler.setStringPref('browser.feeds.handler', "ask");  
             }
 	  }
@@ -1392,15 +1310,16 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) === "client" && 
                 this.prefsHandler.getStringPref('browser.feeds.handler') !==
                 "ask") {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-                       this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.feed')]));
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction',
+		[this.jdfUtils.getString('jondofox.feed')]));
               this.prefsHandler.setStringPref(data, 
-		     this.prefsHandler.getStringPref(this.FEEDS_PREF));
+		   this.prefsHandler.getStringPref(this.FEEDS_PREF));
 	    }
             // Now we adjust the last selected value of the pref...
             this.prefsHandler.setStringPref(this.FEEDS_PREF, 
-				  this.prefsHandler.getStringPref(data));
+		 this.prefsHandler.getStringPref(data));
           }
 
           // The same as above applies to 'browser.audioFeeds.handler' and 
@@ -1408,11 +1327,13 @@ var JDFManager = {
           else if (data === 'browser.audioFeeds.handler') {
 	    if (this.prefsHandler.getStringPref(data) !== "ask" &&
                 this.prefsHandler.getStringPref(
-                'browser.audioFeeds.handler.default') === "client") {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-		       this.formatString('jondofox.dialog.message.automaticAction', 
-		       [this.getString('jondofox.audiofeed')]));
-              this.prefsHandler.setStringPref('browser.audioFeeds.handler', "ask");   
+                     'browser.audioFeeds.handler.default') === "client") {
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction', 
+		[this.jdfUtils.getString('jondofox.audiofeed')]));
+              this.prefsHandler.setStringPref('browser.audioFeeds.handler',
+                "ask");   
             }
 	  }
 
@@ -1420,15 +1341,16 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) === "client" && 
                 this.prefsHandler.
                      getStringPref('browser.audioFeeds.handler') !== "ask") {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-                       this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.audiofeed')]));
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction',
+		[this.jdfUtils.getString('jondofox.audiofeed')]));
               this.prefsHandler.setStringPref(data, 
-		     this.prefsHandler.getStringPref(this.AUDIO_FEEDS_PREF));
+		   this.prefsHandler.getStringPref(this.AUDIO_FEEDS_PREF));
               
 	    }
 	    this.prefsHandler.setStringPref(this.AUDIO_FEEDS_PREF, 
-				  this.prefsHandler.getStringPref(data));
+		 this.prefsHandler.getStringPref(data));
 	  }
 
           // And yes, the same applies to 'browser.audioFeeds.handler' and 
@@ -1437,10 +1359,12 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) !== "ask" &&
                 this.prefsHandler.getStringPref(
                 'browser.videoFeeds.handler.default') === "client") {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-                       this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.videofeed')]));       
-              this.prefsHandler.setStringPref('browser.videoFeeds.handler', "ask");   
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'),  this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction',
+		[this.jdfUtils.getString('jondofox.videofeed')]));       
+              this.prefsHandler.setStringPref('browser.videoFeeds.handler',
+                "ask");   
             }
 	  }
 
@@ -1448,33 +1372,37 @@ var JDFManager = {
 	    if (this.prefsHandler.getStringPref(data) === "client" && 
                 this.prefsHandler.
                      getStringPref('browser.videoFeeds.handler') !== "ask") {
-              this.showAlert(this.getString('jondofox.dialog.attention'),
-                       this.formatString('jondofox.dialog.message.automaticAction',
-		       [this.getString('jondofox.videofeed')]));
+              this.jdfUtils.showAlert(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                formatString('jondofox.dialog.message.automaticAction',
+		[this.jdfUtils.getString('jondofox.videofeed')]));
               this.prefsHandler.setStringPref(data,
-		     this.prefsHandler.getStringPref( this.VIDEO_FEEDS_PREF));
+		   this.prefsHandler.getStringPref( this.VIDEO_FEEDS_PREF));
 	    }
 	    this.prefsHandler.setStringPref(this.VIDEO_FEEDS_PREF, 
-				  this.prefsHandler.getStringPref(data));
+		 this.prefsHandler.getStringPref(data));
 	  }
           
           else if ((data === 'intl.accept_languages' || 
-            data === 'intl.accept_charsets') && this.prefsHandler.getStringPref(
-            'general.useragent.override') === this.prefsHandler.getStringPref(
-            'extensions.jondofox.tor.useragent_override')) {
-            // Do nothing here because the pref changed but it was for imitating
-            // Tor properly after the Tor UA was activated.
+            data === 'intl.accept_charsets') && this.prefsHandler.
+            getStringPref('general.useragent.override') === this.prefsHandler.
+            getStringPref('extensions.jondofox.tor.useragent_override')) {
+            // Do nothing here because the pref changed but it was for 
+            // imitating Tor properly after the Tor UA has been activated.
           }
+
           // Check if the changed preference is on the stringprefsmap...
           else if (data in this.stringPrefsMap) {
             log("Pref '" + data + "' is on the string prefsmap!");
             // If the new value is not the recommended ..
             if (this.prefsHandler.getStringPref(data) !== 
-                   this.prefsHandler.getStringPref(this.stringPrefsMap[data]) &&
-                this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
+                 this.prefsHandler.getStringPref(this.stringPrefsMap[data]) &&
+                 this.prefsHandler.
+                 getBoolPref('extensions.jondofox.preferences_warning')) {
               // ... warn the user
-              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
-				  this.getString('jondofox.dialog.message.prefchange'), 'preferences');
+              this.jdfUtils.showAlertCheck(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                getString('jondofox.dialog.message.prefchange'), 'preferences');
             } else {
               log("All good!");
             }
@@ -1485,8 +1413,9 @@ var JDFManager = {
             if (!this.prefsHandler.getBoolPref(data) && this.prefsHandler.
 		      getBoolPref('extensions.jondofox.preferences_warning')) {
                // ... warn the user
-              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
-                                  this.getString('jondofox.dialog.message.appWarning'), 'preferences');
+              this.jdfUtils.showAlertCheck(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                getString('jondofox.dialog.message.appWarning'), 'preferences');
               this.prefsHandler.setBoolPref(data, true);
             } else {
               log("All good!");
@@ -1496,12 +1425,13 @@ var JDFManager = {
           else if (data in this.boolPrefsMap) {
             log("Pref '" + data + "' is on the boolean prefsmap!");
             // If the new value is not the recommended ..
-            if (this.prefsHandler.getBoolPref(data) !== 
-                   this.prefsHandler.getBoolPref(this.boolPrefsMap[data]) &&
-                this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
+            if (this.prefsHandler.getBoolPref(data) !== this.prefsHandler.
+                     getBoolPref(this.boolPrefsMap[data]) && this.prefsHandler.
+                     getBoolPref('extensions.jondofox.preferences_warning')) {
               // ... warn the user
-              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
-				  this.getString('jondofox.dialog.message.prefchange'), 'preferences');
+              this.jdfUtils.showAlertCheck(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                getString('jondofox.dialog.message.prefchange'), 'preferences');
 	    
             } else {
               log("All good!");
@@ -1512,12 +1442,13 @@ var JDFManager = {
                    'network.cookie.cookieBehavior') {
             log("Pref '" + data + "' is on the integer prefsmap!");
             // If the new value is not the recommended ..
-            if (this.prefsHandler.getIntPref(data) !== 
-                   this.prefsHandler.getIntPref(this.intPrefsMap[data]) &&
-                this.prefsHandler.getBoolPref('extensions.jondofox.preferences_warning')) {
+            if (this.prefsHandler.getIntPref(data) !== this.prefsHandler.
+                     getIntPref(this.intPrefsMap[data]) && this.prefsHandler.
+                     getBoolPref('extensions.jondofox.preferences_warning')) {
               // ... warn the user
-              this.showAlertCheck(this.getString('jondofox.dialog.attention'), 
-                                  this.getString('jondofox.dialog.message.prefchange'), 'preferences');
+              this.jdfUtils.showAlertCheck(this.jdfUtils.
+                getString('jondofox.dialog.attention'), this.jdfUtils.
+                getString('jondofox.dialog.message.prefchange'), 'preferences');
             } else {
               log("All good!");
             }

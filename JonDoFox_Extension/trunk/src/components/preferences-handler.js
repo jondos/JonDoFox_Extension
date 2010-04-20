@@ -186,7 +186,7 @@ var PreferencesHandlerInstance = null;
 
 var PreferencesHandlerFactory = {
   createInstance: function (aOuter, aIID) {    
-    if (aOuter != null)
+    if (aOuter !== null)
       throw CR.NS_ERROR_NO_AGGREGATION;
     if (!aIID.equals(CI.nsISupports))
       throw CR.NS_ERROR_NO_INTERFACE;
