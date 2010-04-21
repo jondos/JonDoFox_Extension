@@ -761,13 +761,13 @@ var JDFManager = {
         // details, see: chrome://mozapps/content/handling/dialog.js
         handlerInfo = this.arguments[7].QueryInterface(CI.nsIHandlerInfo);
         type = handlerInfo.type;
-        //if (type !== "mailto") { 
+        if (type !== "mailto") { 
 	  this.document.loadOverlay(
                "chrome://jondofox/content/external-appDialog.xul", null);
           this.setTimeout(JDFManager.showWarning, 50, this, true, true);
           checkboxNews.addEventListener("click", function() {JDFManager.
 		    checkboxNewsChecked(checkboxNews, type);}, false);
-        //}
+        }
       } else if (this.arguments[0].QueryInterface(CI.nsIDialogParamBlock)) {
         log("We got probably a commonDialog...");
         dialogParam = this.arguments[0].QueryInterface(CI.nsIDialogParamBlock);
