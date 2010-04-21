@@ -21,7 +21,8 @@ Changes in version XXX - YYY
       the JonDoFox extension is found "extensions.jondofox.noscript_showDomain"
       is checked and if it is set to "false" only the second-level domains are
       shown)
-    * updated the Tor User Agent
+    * updated the Tor User Agent and corrected Accept Header while faking Tor
+    * moved relevant functions to jondofox-utils
 
   New XPCOM-Component:
     * safecache.js: moved SafeCache's functionality to an own component
