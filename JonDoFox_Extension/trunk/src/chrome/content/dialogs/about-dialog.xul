@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
+
 <window class="dialog"
 	title="JonDoFox-Extension - About"
 	orient="vertical"
@@ -15,19 +18,19 @@
   <!-- Somehow get the version dynamically here -->
   <!-- text value="Version 1234abc"/ -->
   <separator class="thin"/>
-  <text value="Created By:" style="font-weight: bold;"/>
+  <text value="&jondofox.about.createdBy;" style="font-weight: bold;"/>
   <text value="JonDos GmbH"/>
   <separator class="thin"/>
-  <text value="Developers:" style="font-weight: bold;"/>
+  <text value="&jondofox.about.developers;" style="font-weight: bold;"/>
   <text value="Johannes Renner"/>
   <text value="Georg Koppen"/> 
   <separator class="thin"/>
   <text value="Artwork:" style="font-weight: bold;"/>
   <text value="Philipp Kaplycz"/>
   <separator class="thin"/>  <text value="Homepage:" style="font-weight: bold;"/>
-  <text value="http://anonymous-proxy-servers.net/en/jondofox"
+  <text value="&jondofox.about.homepageURL;"
         class="url"
-        onclick="window.open('http://anonymous-proxy-servers.net/en/jondofox');"/>
+        onclick="window.open('&jondofox.about.homepageURL;');"/>
   <separator class="thin"/>
 </vbox>
 <spring flex="1"/>

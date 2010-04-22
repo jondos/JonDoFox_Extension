@@ -75,6 +75,9 @@
 <!ENTITY jondofox.dialogtab.custom.useragent.normal "Unverändert">
 <!ENTITY jondofox.dialogtab.custom.allprotocols "Verwende diesen Proxy für alle Protokolle">
 
-<!-- ENTITY jondofox.dialogtab.custom.manual "Konfiguration" -->
-<!-- ENTITY jondofox.dialogtab.custom.auto "URL für automatische Proxy-Konfiguration" -->
+<!-- about settings -->
+<!ENTITY jondofox.about.createdBy "Erstellt von:">
+<!ENTITY jondofox.about.developers "Entwickler:">
+<!ENTITY jondofox.about.homepageURL "http://anonymous-proxy-servers.net/de/jondofox">
+
 

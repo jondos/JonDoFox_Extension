@@ -28,6 +28,7 @@ Changes in version XXX - YYY
     * safecache.js: moved SafeCache's functionality to an own component
 
   Bug fixing:
+    * fixed localization issues in about dialog
     * fixed leaking Accept-Header
     * the URI put on the proxy list is removed now as well (the user just
       wanted to make _one_ exception)
