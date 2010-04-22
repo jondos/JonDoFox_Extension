@@ -71,4 +71,8 @@
 <!ENTITY jondofox.dialogtab.custom.useragent.normal "Unchanged">
 <!ENTITY jondofox.dialogtab.custom.allprotocols "Use this proxy server for all protocols">
 
+<!-- about settings -->
+<!ENTITY jondofox.about.createdBy "Created by:">
+<!ENTITY jondofox.about.developers "Developers:">
+<!ENTITY jondofox.about.homepageURL "http://anonymous-proxy-servers.net/en/jondofox">
 
