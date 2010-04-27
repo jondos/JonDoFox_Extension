@@ -18,7 +18,7 @@ function log(msg) {
 }
 
 // Get the JDFManager
-var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
                                  getService().wrappedJSObject;
 
 
@@ -27,7 +27,7 @@ function externalHelp() {
     var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
-    win.openUILinkIn(jdfManager.getString('jondofox.pdfHelp.url'), 'tab');
+    win.openUILinkIn(jdfUtils.getString('jondofox.pdfHelp.url'), 'tab');
   } catch (e) {
     log("externalHelp(): " + e);
   }
