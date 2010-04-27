@@ -1,4 +1,4 @@
-Changes in version XXX - YYY
+Changes in version 0.2.5 - YYY
 
   New Feature:
     * included a 'pdf-warning' if a pdf-plugin is enabled; and added a help-button
@@ -7,7 +7,6 @@ Changes in version XXX - YYY
       has not disabled the update warning
     * improved referrer logic: if 3rd party content is loaded the referrer is 
       not modified
-    * introduced two new preferences which control the user certificate handling:
     * "extensions.jondofox.security.default_personal_cert" is set to 
       "Ask Every Time" and makes thus sure that user certificates are not
       sent automatically to the server
