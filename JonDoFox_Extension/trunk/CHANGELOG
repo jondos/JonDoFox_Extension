@@ -20,7 +20,7 @@ Changes in version 0.2.5 - YYY
       the JonDoFox extension is found "extensions.jondofox.noscript_showDomain"
       is checked and if it is set to "false" only the second-level domains are
       shown)
-    * updated the Tor User Agent and corrected Accept Header while faking Tor
+    * updated the Tor User Agent and corrected Accept Headers while faking Tor
     * moved relevant functions to jondofox-utils
 
   New XPCOM-Component:
@@ -28,10 +28,10 @@ Changes in version 0.2.5 - YYY
 
   Bug fixing:
     * fixed localization issues in about dialog
-    * fixed leaking Accept-Header
+    * fixed leaking Accept Header
     * the URI put on the proxy list is removed now as well (the user just
       wanted to make _one_ exception)
-    * corrected a problem concering rendering the external helperapp dialog
+    * corrected a problem concerning rendering the external helperapp dialog
   
 Changes in version 0.2.4.1 - 2010-01-25
 
