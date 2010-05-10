@@ -1047,11 +1047,6 @@ var JDFManager = {
       } else {
         log("NOT adding " + uri + " since it is already on the list");
       }
-      // The user made an exception and set the URI on the list. But
-      // it was an exception. Therefore, we should remove the URI again. But
-      // we should wait some time otherwise it can happen that the URI is
-      // removed before the download started.
-      this.windowWatcher.activeWindow.setTimeout(this.noProxyListRemove, 2000, uri);
     } catch (e) {
       log("noProxyListAdd(): " + e);
     }
