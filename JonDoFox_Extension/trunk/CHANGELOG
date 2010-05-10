@@ -29,8 +29,6 @@ Changes in version 0.2.5 - YYY
   Bug fixing:
     * fixed localization issues in about dialog
     * fixed leaking Accept Header
-    * the URI put on the proxy list is removed now as well (the user just
-      wanted to make _one_ exception)
     * corrected a problem concerning rendering the external helperapp dialog
   
 Changes in version 0.2.4.1 - 2010-01-25
