@@ -68,6 +68,7 @@ var requestObserver = {
     var suffix;
     var oldRef;
     var refDomain;
+    var acceptHeader;
     try {
       // Perform safecache
       if (this.prefsHandler.getBoolPref('stanford-safecache.enabled')) {
@@ -147,8 +148,12 @@ var requestObserver = {
       }
 
       // Set other headers here
-      // It is not enough to have the values only in the about:config!
-      channel.setRequestHeader("Accept", "text/html,application/xml,*/*",
+      // It is not enough to have the values only in the about:config! But in
+      // order to use them for all requests we must use setRequestHeader() and
+      // give them as an argument...
+      acceptHeader = this.prefsHandler.
+                          getStringPref("network.http.accept.default");
+      channel.setRequestHeader("Accept", acceptHeader,
                                false);
       
       return true;

@@ -1,4 +1,10 @@
-Changes in version 0.2.5 - YYY
+Changes in version 0.2.6 - YYY
+
+  Minor improvement:
+    * changes regarding network.http.accept.default are not ignored anymore
+
+
+Changes in version 0.2.5 - 2010-05-19
 
   New Feature:
     * included a 'pdf-warning' if a pdf-plugin is enabled; and added a help-button
