@@ -126,7 +126,9 @@ var JDFManager = {
     'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
     'stanford-safecache.enabled':'extensions.jondofox.stanford-safecache_enabled',
     'security.remember_cert_checkbox_default_setting':
-    'extensions.jondofox.security.remember_cert_checkbox_default_setting'
+    'extensions.jondofox.security.remember_cert_checkbox_default_setting',
+    'browser.search.suggest.enabled':
+    'extensions.jondofox.search_suggest_enabled'
   },
 
   //This map of integer preferences is given to the prefsMapper
