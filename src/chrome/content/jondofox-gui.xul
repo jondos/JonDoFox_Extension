@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
 
 <overlay id="jondofox-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"

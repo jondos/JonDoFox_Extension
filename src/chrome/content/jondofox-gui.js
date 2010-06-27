@@ -254,7 +254,7 @@ function openBrowserTabJondofox(update) {
     if (update) {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.download'), 'tab');
     } else {
-      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
+      win.openUILinkIn("chrome://jondofox/content/jondofox-features.xhtml", 'tab');
     }
   } catch (e) {
     log("openBrowserTabJondofox(): " + e);
@@ -388,8 +388,9 @@ var overlayObserver = {
               prefsHandler.setBoolPref('noscript.showDomain', false);
             }
           }
-          // If the user should update the profile and has not disabled the update
-          // warning, help her and show the JonDoFox homepage after startup
+          // If the user should update the profile and has not disabled the 
+          // update warning, help her and show the JonDoFox homepage after 
+          // startup
           if (jdfManager.checkProfileUpdate()) {
 	    openBrowserTabJondofox(true);
           } 
