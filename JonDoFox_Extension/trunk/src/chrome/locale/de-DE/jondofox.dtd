@@ -1,3 +1,84 @@
+<!-- JonDoFox Features -->
+<!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank dafür, 
+dass Sie das JonDoFox-Profil heruntergeladen und gestartet haben!</h3>Im 
+Folgenden werden die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her 
+erl&auml;utert, die ein sichereres Surfen im Internet erm&ouml;glichen:">
+<!ENTITY jondofox.features.proxyswitcher.head "Flexibel bleiben und Proxies 
+wechseln">
+<!ENTITY jondofox.features.proxyswitcher.part1 "Wenn Sie mit einem anderen 
+(lokalen) Proxy als JonDo oder ganz ohne Proxy im Web surfen wollen, benutzen 
+Sie einfach die in JonDoFox (rechts unten) integrierte Schaltfl&#xe4;che">
+<!ENTITY jondofox.features.proxyswitcher.part2 "um zwischen verschiedenen 
+Proxy-Konfigurationen bequem hin- und herzuschalten: ">
+<!ENTITY jondofox.features.proxyswitcher.picurl "chrome://jondofox/skin/jondofox_popup_de.png">
+<!ENTITY jondofox.features.proxyswitcher.list1 "<b>Kein Proxy</b>: Wenn kein 
+Proxy eingestellt ist, verbindet sich JonDoFox direkt zum Internet. <strong>
+Achtung: Ihre IP-Adresse wird dadurch im Klartext geschickt und nicht 
+verschleiert!</strong>">
+<!ENTITY jondofox.features.proxyswitcher.list2_1 "<b>Benutzerdefiniert</b>: 
+Mithilfe dieser Einstellung k&#xf6;nnen Sie Ihre eigene Proxydefinition 
+aktivieren. &#xdc;ber den Men&#xfc;punkt ">
+<!ENTITY jondofox.features.proxyswitcher.list_alt "nicht vertrauensw&uuml;rdig">
+<!ENTITY jondofox.features.proxyswitcher.list_configure "Konfigurieren">
+<!ENTITY jondofox.features.proxyswitcher.list2_2 "k&#xf6;nnen Sie eine solche 
+individuelle Proxykonfiguration erstellen. Dies wird aber nur Experten empfohlen.">
+<!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: Wenn Sie das Programm
+ <a href='http://www.torproject.org/index.html.de'>Tor</a> installiert und 
+gestartet haben, k&#xf6;nnen Sie es mithilfe dieser Einstellung als Alternative 
+zu JonDo verwenden.">
+<!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: Bei dieser 
+Einstellung schickt JonDoFox die Kommunikationsdaten des Browsers &#xfc;ber 
+JonDo. JonDo muss dazu separat
+<a href='http://anonymous-proxy-servers.net/de/download'>installiert und 
+gestartet</a> sein."> 
+<!ENTITY jondofox.features.proxyswitcher.contextmenu "Wenn Sie eine Datei am 
+Proxy vorbei herunterladen m&#xf6;chten, ohne den Proxy dabei zu deaktivieren 
+(z.B. um bei gro&#xdf;en Downloads Kosten oder Zeit zu sparen), &#xf6;ffnen Sie 
+dazu einfach das Kontextmen&#xfc; mit einem rechten Mausklick auf die Datei und 
+w&#xe4;hlen Sie <em>JonDo/Tor/Proxy umgehen und Ziel speichern unter...</em>.">
+<!ENTITY jondofox.features.referer1 "Der Referer ist eines der Merkmale, mit 
+dessen Hilfe sich Nutzer beim Surfen unterscheiden lassen. Das kann allerdings 
+verhindert werden, indem man unser Referer-Management aktiviert:">
+<!ENTITY jondofox.features.referer_picurl "chrome://jondofox/skin/referer_management_de.png">
+<!ENTITY jondofox.features.referer2 "Dabei wird der Referer nicht einfach 
+gel&ouml;scht, schlie&szlig;lich lassen sich einige Webangebote ohne einen 
+mitgeschickten Referer &uuml;berhaupt nicht benutzen. Vielmehr wird je nach 
+Kontext des Seitenaufrufs ein Referer gesetzt (z.B. bei Weiterleitungen 
+innerhalb derselben Domain) oder leer &uuml;bergeben (z.B. beim Laden von 
+Lesezeichen). Damit wird garantiert, dass aus dem Referer keine Informationen 
+zur Nutzeridentifizierung gewonnen werden k&ouml;nnen.">
+<!ENTITY jondofox.features.useragent "Nicht nur &uuml;ber den Referer, sodern 
+auch &uuml;ber den individuellen User Agent, den der Browser bei Webanfragen 
+mitsendet, lassen sich Nutzerinformationen gewinnen. Daher haben wir einen 
+einheitlichen User Agent zusammengestellt, den alle JonDo-Nutzer mitschicken, 
+wenn sie Anfragen an das WWW stellen. Wenn hingegen Tor als Proxy eingestellt 
+wird, so wird der User Agent an die Vorgaben von 
+<a href='http://www.torproject.org/torbutton/'> Torbutton</a> angepasst. Wer 
+seinen Proxy manuell konfigurieren m&ouml;chte, hat die M&ouml;glichkeit, 
+zwischen verschiedenen User Agents zu w&auml;hlen:">
+<!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_de.png">
+<!ENTITY jondofox.features.safecache.head "Schutz vor Cacheangriffen">
+<!ENTITY jondofox.features.safecache "Neben dem Versuch, aus dem Referer, dem 
+User Agent und anderen HTTP Headern Informationen &uuml;ber den Nutzer zu 
+gewinnen, gibt es noch die M&ouml;glichkeit, den Cache des Browsers f&uuml;r 
+Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
+Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
+installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
+SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung integriert.
+ In den Einstellungen im Reiter Datenschutz findet sich ein entsprechender 
+Hinweis darauf:">
+<!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
+<!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
+gef&auml;lschten SSL-Zertifikaten">
+<!ENTITY jondofox.features.certpatrol "F&uuml;r einen besseren Schutz vor 
+gef&auml;lschten SSL-Zertifikaten wurde in den JonDoFox-Code die 
+Funktionalit&auml;t der Certificate Patrol-Extension aufgenommen. Dadurch wird 
+es f&uuml;r den Nutzer zum einen sehr komfortabel, die Fingerabdr&uuml;cke der 
+Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei 
+Zertfikats&auml;nderungen ein Dialog eingeblendet, der dem Nutzer das alte und 
+das neue Zertifikat gegen&uuml;berstellt und dabei auf eventuell vorhandene 
+Unregelm&auml;&szlig;igkeiten hinweist.">
+
 <!-- SafeCache -->
 <!ENTITY jondofox.safecache.label "SafeCache zum Schutz vor Cache-Cookies von Drittseiten benutzen.">
 
@@ -61,7 +142,7 @@
 <!-- General configuration tab -->
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
-<!ENTITY jondofox.dialogtab.options.referrer "Ersetze 'Referrer'-Header durch aktuelle Stamm-URL">
+<!ENTITY jondofox.dialogtab.options.referrer "Aktiviere Referer-Management">
 <!ENTITY jondofox.dialogtab.options.warnings "Warnungen">
 <!ENTITY jondofox.dialogtab.options.warnings.update "Zeige Warnung bei notwendigem Profil-Update">
 <!ENTITY jondofox.dialogtab.options.warnings.prefs "Zeige Warnung bei Veränderung wichtiger Einstellungen">

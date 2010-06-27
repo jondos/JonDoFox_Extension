@@ -3,10 +3,13 @@ Changes in version 0.2.6 - YYY
   New Feature:
     * "extensions.jondofox.search_suggest_enabled" is set to "false" and disables
       the search suggestion feature in the browser
-  
+    * a JonDoFox feature page is shown during start-up of a new extension version
+
   Minor improvement:
     * changes regarding network.http.accept.default are not ignored anymore
-
+   
+  Bug fixing:
+    * adapted the text concerning the "referer-checkbox" 
 
 Changes in version 0.2.5 - 2010-05-19
 
