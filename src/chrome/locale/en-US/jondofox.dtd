@@ -17,7 +17,7 @@ address will be sent in plain and is not hidden!</strong>">
 <!ENTITY jondofox.features.proxyswitcher.list2_1 "Using this setting, you may 
 use your own proxy configuration. Choose ">
 <!ENTITY jondofox.features.proxyswitcher.list_alt "not trustworthy">
-<!ENTITY jondofox.features.proxyswitcher.list_configure "Exit Custom Proxy">
+<!ENTITY jondofox.features.proxyswitcher.list_configure "Preferences">
 <!ENTITY jondofox.features.proxyswitcher.list2_2 "in order to create an 
 individual proxy configuration. However, this is only recommended for experts.">
 <!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: If you have installed
