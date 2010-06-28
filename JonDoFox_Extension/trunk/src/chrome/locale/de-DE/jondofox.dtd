@@ -19,7 +19,7 @@ verschleiert!</strong>">
 Mithilfe dieser Einstellung k&#xf6;nnen Sie Ihre eigene Proxydefinition 
 aktivieren. &#xdc;ber den Men&#xfc;punkt ">
 <!ENTITY jondofox.features.proxyswitcher.list_alt "nicht vertrauensw&uuml;rdig">
-<!ENTITY jondofox.features.proxyswitcher.list_configure "Konfigurieren">
+<!ENTITY jondofox.features.proxyswitcher.list_configure "Einstellungen">
 <!ENTITY jondofox.features.proxyswitcher.list2_2 "k&#xf6;nnen Sie eine solche 
 individuelle Proxykonfiguration erstellen. Dies wird aber nur Experten empfohlen.">
 <!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: Wenn Sie das Programm
