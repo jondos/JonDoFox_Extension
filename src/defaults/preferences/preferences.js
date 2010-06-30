@@ -108,5 +108,11 @@ pref("extensions.jondofox.noscript_contentBlocker", true);
 pref("extensions.jondofox.noscript_showDomain", false);
 //pref("extensions.jondofox.showAnontestNoProxy", true);
 pref("extensions.jondofox.search_suggest_enabled", false);
+
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
+
+//Certificate Patrol
+pref("extensions.jondofox.certpatrol_enabled", true);
+pref("extensions.jondofox.certpatrol_showNewCert", true);
+pref("extensions.jondofox.certpatrol_showChangedCert", true);

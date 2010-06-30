@@ -56,7 +56,18 @@
                           accesskey="r"/>
               </groupbox>
             </row>
-            
+
+           <!-- SSL preferences -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.SSL;:"/>
+                <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
+                <checkbox id="checkbox_set_certpatrol" 
+                          label="&jondofox.dialogtab.options.certpatrol;"
+                          accesskey="C"/>
+              </groupbox>
+            </row>
+ 
             <!-- Warning preferences -->
             <row align="center">
               <groupbox>

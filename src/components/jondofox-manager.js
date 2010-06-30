@@ -69,7 +69,8 @@ var JDFManager = {
     'CuteMenus':'{63df8e21-711c-4074-a257-b065cadc28d8}',
     'RefControl':'{455D905A-D37C-4643-A9E2-F6FEFAA0424A}',
     'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}',
-    'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}' 
+    'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}',
+    'Certificate Patrol':'CertPatrol@PSYC.EU'
   },
 
   // Necessary security extensions with their IDs
@@ -251,12 +252,19 @@ var JDFManager = {
           if (extension === 'RefControl' && 
               !this.prefsHandler.getBoolPref(this.REF_PREF)) {
             log("Ignoring RefControl");
-          } else if (extension === 'SafeCache') {
+          } else if (extension === 'Certificate Patrol' && 
+              !this.prefsHandler.
+              getBoolPref('extensions.jondofox.certpatrol_enabled')) {
+            log("Ignoring Cerificate Patrol");
+          } else if (extension === 'SafeCache' || 
+                     extension === 'Certificate Patrol' ||
+                     extension === 'RefControl') {
             log('Found ' + extension + ', uninstalling ..');
             // Prompt a message window for every extension
             this.jdfUtils.showAlert(this.jdfUtils.
               getString('jondofox.dialog.attention'), this.jdfUtils.
-              getString('jondofox.dialog.message.uninstallSafecache'));
+              formatString('jondofox.dialog.message.uninstallExtension',
+              [extension]));
               // Uninstall and set restart to true
             this.uninstallExtension(this.extensions[extension]);
             restart = true;
@@ -742,6 +750,8 @@ var JDFManager = {
    
   getUnknownContentTypeDialog: function() {
     try {
+      this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog,
+           false);
       var dialogParam; 
       var dialogMessage; 
       var checkbox = this.document.getElementById("rememberChoice");
@@ -782,13 +792,8 @@ var JDFManager = {
           this.setTimeout(JDFManager.showWarning, 200, this, true, false);
         }
       } 
-      else {
-        this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog,
-                                 false);
-      }
     } catch (e) {
        log("getUnknownContentTypeDialog(): " + e);
-       this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
     }
   },
 
