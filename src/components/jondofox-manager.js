@@ -61,6 +61,11 @@ var JDFManager = {
   // Set this to indicate that cleaning up is necessary
   clean: false,
 
+  // This is set to true if Certificate Patrol is found and our respective 
+  // checkbox not checked. It helps to optimize the incorporation of Certificate 
+  // Patrol code. 
+  certPatrol: false,
+
   // Remove jondofox preferences branch on uninstall only
   uninstall: false,
 
@@ -251,10 +256,11 @@ var JDFManager = {
           // XXX: Allow RefControl in some cases
           if (extension === 'RefControl' && 
               !this.prefsHandler.getBoolPref(this.REF_PREF)) {
-            log("Ignoring RefControl");
+            log("Ignoring RefControl " + "refControl is " + this.refControl);
           } else if (extension === 'Certificate Patrol' && 
               !this.prefsHandler.
               getBoolPref('extensions.jondofox.certpatrol_enabled')) {
+            this.certPatrol = true;
             log("Ignoring Cerificate Patrol");
           } else if (extension === 'SafeCache' || 
                      extension === 'Certificate Patrol' ||

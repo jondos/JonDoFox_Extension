@@ -72,8 +72,6 @@ function loadPrefsGeneral() {
 function writePrefsGeneral() {
   log("Write prefs general");
   try {
-    // Should already be done
-    // GEORG: No, just here. Otherwise we do not use the abort-button properly.
     prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
         document.getElementById('checkbox_set_referrer').checked);
     prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',

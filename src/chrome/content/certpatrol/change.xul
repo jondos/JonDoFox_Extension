@@ -165,8 +165,8 @@
         </row>
         <row>
           <label id="cmsha1l" />
-          <textbox class="plain" readonly="true" width="64" id="cmsha1o" />
-          <textbox class="plain" readonly="true" width="64" id="cmsha1n" />
+          <textbox class="plain" readonly="true" width="128" id="cmsha1o" />
+          <textbox class="plain" readonly="true" width="128" id="cmsha1n" />
         </row>
       </rows>
     </grid>
