@@ -37,12 +37,21 @@ var CertPatrol = {
   // Main
   onLoad: function() {
     this.initialized = true;
-    this.jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
+    this.jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+	            getService().wrappedJSObject;
+    // We check whether the original Certificate Patrol extension should be 
+    // used. If so, we avoid using as much of our adapted CertPatrol code as 
+    // possible, especially we try to avoid registering event listeners twice 
+    // (those in our init() code additionally to the ones in the CertPatrol 
+    // init() code).
+    if (!jdfManager.certPatrol) {
+      this.jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
                     getService().wrappedJSObject;
-    this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+      this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
                     getService().wrappedJSObject;
-    this.dbinit();
-    this.init();
+      this.dbinit();
+      this.init();
+    }
     window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); }, 
            false); 
   },
@@ -409,21 +418,20 @@ var CertPatrol = {
 
   outnew: function(browser, certobj) {
 	window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
-               "_blank", "chrome,dialog,modal", certobj);
+               "_blank", "modal", certobj);
   },
   
   
   outchange: function(browser, certobj) {
 	window.openDialog("chrome://jondofox/content/certpatrol/change.xul", 
-               "_blank", "chrome,dialog,modal", certobj);
+               "_blank", "modal", certobj);
   },
   
   
   warn: function(result) {
     window.openDialog("chrome://jondofox/content/certpatrol/warning.xul",
-		      /* "ssl-warning" */ "_blank",
-                      "chrome,dialog,modal", result);
-  },
+		      /* "ssl-warning" */ "_blank", "modal", result);
+  }
 };
 
 
