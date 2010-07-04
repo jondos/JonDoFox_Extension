@@ -274,6 +274,7 @@ var CertPatrol = {
   // Certificate check
   certCheck: function(browser, certobj) {
     var found = false;
+    var wildcardCert = false;
 
     // Get certificate
     var stmt = this.dbselect;
@@ -404,15 +405,33 @@ var CertPatrol = {
       // checks are done by firefox before we even get here
       // that's why we don't complain about host != common name etc.
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
-				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
+				this.daysdelta(this.timedelta(certobj.moz.
+				notBeforeGMT));
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
-				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
+				this.daysdelta(this.timedelta(certobj.moz.
+				notAfterGMT));
 
+      wildcardCert = this.wildcardCertCheck(certobj.host, 
+		     certobj.moz.commonName);
       // Output
+      if (wildcardCert) {
+        dump("We got a wildcard-cert! Do not show it!!\n");
+	return;
+      }
       if (this.prefsHandler.
                getBoolPref('extensions.jondofox.certpatrol_showNewCert')) {
         this.outnew(browser, certobj);
       }
+    }
+  },
+
+  wildcardCertCheck: function(host, commonName) {
+    dump("Host ist: " + host + " und ausgestellt wurde das Zertifikat für: " + 
+	  commonName + "\n");
+    if (commonName.charAt(0) === '*') {
+      return true;
+    } else {
+      return false;
     }
   },
 
