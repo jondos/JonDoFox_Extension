@@ -153,8 +153,7 @@ var requestObserver = {
       // give them as an argument...
       acceptHeader = this.prefsHandler.
                           getStringPref("network.http.accept.default");
-      channel.setRequestHeader("Accept", acceptHeader,
-                               false);
+      channel.setRequestHeader("Accept", acceptHeader, false);
       
       return true;
     } catch (e) {
