@@ -91,6 +91,8 @@ var CertPatrol = {
       // Prepared statements
       this.dbselect = this.dbh.createStatement(
       "SELECT * FROM certificates where host=?1");
+      this.dbselectWildcard = this.dbh.createStatement(
+      "SELECT * FROM certificates where sha1Fingerprint=?13");		      
       this.dbinsert = this.dbh.createStatement(
       "INSERT INTO certificates (host, commonName, organization, organizationalUnit,serialNumber, emailAddress, notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, md5Fingerprint, sha1Fingerprint) values (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
       this.dbupdate = this.dbh.createStatement(
@@ -274,7 +276,7 @@ var CertPatrol = {
   // Certificate check
   certCheck: function(browser, certobj) {
     var found = false;
-    var wildcardCert = false;
+    var existingWildcardCert = false;
 
     // Get certificate
     var stmt = this.dbselect;
@@ -307,7 +309,13 @@ var CertPatrol = {
          certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
          certobj.sql.md5Fingerprint  != certobj.moz.md5Fingerprint 
        )) {
-      
+      // Let's check whether we have a wildcard certificate and whether we 
+      // have the same certificare already stored...
+      // We have to do this here, before the certificate is updated. Otherwise,
+      // the updated wildcard certificate is obviously always found and the 
+      // test fails...
+      existingWildcardCert = this.wildcardCertCheck(certobj.moz.commonName,
+		      certobj.moz.sha1Fingerprint);
       // DB update
       stmt = this.dbupdate;
       try {
@@ -370,7 +378,12 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      // Output
+      // Output: If we found an already updated wildcard cert then do not show
+      // the changed cert dialog as we do not really have a newly updated cert.
+      if (existingWildcardCert) {
+        return;
+      } 
+
       if (this.prefsHandler.
           getBoolPref('extensions.jondofox.certpatrol_showChangedCert')) {
         this.outchange(browser, certobj);
@@ -378,8 +391,14 @@ var CertPatrol = {
 
     // New certificate
     } else if (!found) {
-      
-      // Store data
+      // Let's check whether we have a wildcard certificate and whether we 
+      // have the same certificare already stored...
+      // We have to do this here, before the new certificate is written.
+      // Otherwise, a wildcard certificate is always found: at least the one
+      // just written and the test fails...
+      existingWildcardCert = this.wildcardCertCheck(certobj.moz.commonName, 
+		      certobj.moz.sha1Fingerprint); 
+      // Now, store data
       stmt = this.dbinsert;
       try {
         stmt.bindUTF8StringParameter( 0, certobj.host);
@@ -410,12 +429,9 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.
 				notAfterGMT));
-
-      wildcardCert = this.wildcardCertCheck(certobj.host, 
-		     certobj.moz.commonName);
-      // Output
-      if (wildcardCert) {
-        dump("We got a wildcard-cert! Do not show it!!\n");
+      // Output: If we found an already saved wildcard cert, do not show it
+      // again to the user, as it is not really a new certificate.
+      if (existingWildcardCert) {
 	return;
       }
       if (this.prefsHandler.
@@ -425,18 +441,43 @@ var CertPatrol = {
     }
   },
 
-  wildcardCertCheck: function(host, commonName) {
-    dump("Host ist: " + host + " und ausgestellt wurde das Zertifikat für: " + 
-	  commonName + "\n");
-    if (commonName.charAt(0) === '*') {
-      return true;
+  wildcardCertCheck: function(commonName, sha1Fingerprint) {
+    var stmt;
+    // First, we check whether we have a wildcard certificate at all. If not
+    // just return false and the new cert dialog will be schown. But even if
+    // we have one but no SHA1 fingerprint we should show it for security's
+    // sake...
+    if (commonName.charAt(0) === '*' && sha1Fingerprint) {
+      // We got one, check now if we have it already. If not, return false and
+      // the certificate will be shown. Otherwise, return yes and the new cert
+      // dialog will be omitted. 
+      try {
+        stmt = this.dbselectWildcard;
+        stmt.bindUTF8StringParameter(12, sha1Fingerprint);
+        if (stmt.executeStep()) {
+	  return true; 
+        } else {
+          // This case could occur as well if we have *.example.com and 
+	  // foo.example.com with SHA1(1) saved and we find a cert with
+	  // *.example.com and bar.example.com and SHA1(2): We would show
+	  // the dialog even if we have already saved the wildcard cert. But
+	  // that's okay due to the changed SHA1 fingerprint, thus prioritizing
+	  // security and not convenience...
+          return false;
+        }
+      } catch (err) {
+        this.warn("Error trying to check wildcardcertificate "+commonName+
+                  ": "+err);
+      } finally {
+        stmt.reset();
+      }
     } else {
       return false;
     }
   },
 
   outnew: function(browser, certobj) {
-	window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
+          window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
                "_blank", "modal", certobj);
   },
   
