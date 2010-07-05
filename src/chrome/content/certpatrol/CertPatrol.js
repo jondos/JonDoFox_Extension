@@ -30,7 +30,9 @@
  *                              
  * ***** END LICENSE BLOCK ***** */
 
-// This code was slightly adapted by Georg Koppen, JonDos GmbH
+// The original Certificate Patrol code was slightly adapted by Georg Koppen, 
+// JonDos GmbH 2010. The wildcard functionality was developed by Georg Koppen,
+// JonDos GmbH 2010.
 
 var CertPatrol = {
 
