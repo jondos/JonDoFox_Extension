@@ -341,6 +341,12 @@ var CertPatrol = {
         stmt.reset();
       }
 
+      // If we found an already updated wildcard cert then do not show the 
+      // changed cert dialog as we do not really have a newly updated cert.
+      if (existingWildcardCert) {
+        return;
+      } 
+
       // Try to make some sense out of the certificate changes
       var natd = this.timedelta(certobj.sql.notAfterGMT);
       if (natd <= 0) certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") +"\n";
@@ -380,12 +386,6 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      // Output: If we found an already updated wildcard cert then do not show
-      // the changed cert dialog as we do not really have a newly updated cert.
-      if (existingWildcardCert) {
-        return;
-      } 
-
       if (this.prefsHandler.
           getBoolPref('extensions.jondofox.certpatrol_showChangedCert')) {
         this.outchange(browser, certobj);
@@ -423,6 +423,11 @@ var CertPatrol = {
       } finally {
         stmt.reset();
       }
+      // If we found an already saved wildcard cert, do not show it
+      // again to the user, as it is not really a new certificate.
+      if (existingWildcardCert) {
+	return;
+      }
       // checks are done by firefox before we even get here
       // that's why we don't complain about host != common name etc.
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
@@ -431,11 +436,6 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.
 				notAfterGMT));
-      // Output: If we found an already saved wildcard cert, do not show it
-      // again to the user, as it is not really a new certificate.
-      if (existingWildcardCert) {
-	return;
-      }
       if (this.prefsHandler.
                getBoolPref('extensions.jondofox.certpatrol_showNewCert')) {
         this.outnew(browser, certobj);
