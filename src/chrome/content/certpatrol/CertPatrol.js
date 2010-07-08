@@ -174,6 +174,7 @@ var CertPatrol = {
 
     var certobj={
       threat:0,
+      coloredWarnings:{},
       info:"",
       host:"",
       moz:{
@@ -349,28 +350,33 @@ var CertPatrol = {
 
       // Try to make some sense out of the certificate changes
       var natd = this.timedelta(certobj.sql.notAfterGMT);
-      if (natd <= 0) certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") +"\n";
-      else if (natd > 10364400000) {
+      if (natd <= 0) {
+        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") +"\n";
+      } else if (natd > 10364400000) {
 	certobj.threat += 2;
-        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_notdue") +"\n";
+        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_notdue_atAll") +"\n";
       } else if (natd > 5182200000) {
 	certobj.threat ++;
+        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_notdue") +"\n";
+      } else if (natd > 0) {
         certobj.info += this.jdfUtils.getString("warn_notAfterGMT_due") +"\n";
       }
-      else if (natd > 0) certobj.info += this.jdfUtils.getString("warn_notAfterGMT_due") +"\n";
       if (certobj.moz.commonName != certobj.sql.commonName) {
         certobj.info += this.jdfUtils.getString("warn_commonName") +"\n";
 	certobj.threat += 2;
+	certobj.coloredWarnings.first = "cmcnn";
       }
       if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
         certobj.info += this.jdfUtils.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
+	certobj.coloredWarnings.second = "cmicnn";
       }
       // checking NEW certificate here..
       var td = this.timedelta(certobj.moz.notBeforeGMT);
       if (td > 0) {
         certobj.info += this.jdfUtils.getString("warn_notBeforeGMT") +"\n";
 	certobj.threat += 2;
+	certobj.coloredWarnings.third = "cmnbn";
       }
       // further checks done by firefox before we even get here
 
