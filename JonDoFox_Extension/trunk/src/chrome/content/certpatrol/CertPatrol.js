@@ -351,19 +351,32 @@ var CertPatrol = {
       // Try to make some sense out of the certificate changes
       var natd = this.timedelta(certobj.sql.notAfterGMT);
       if (natd <= 0) {
-        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") +"\n";
+        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") + 
+		"\n";
       } else if (natd > 10364400000) {
 	certobj.threat += 2;
-        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_notdue_atAll") +"\n";
+	// We add here and in the following the remaining days the old
+	// certificate is still valid. Maybe this is a useful information
+	// for the interested user which wouldn't be so easily available
+	// anymore: now, we only show the new certificate to the user as
+	// this one is far more important than the old one...
+        certobj.info += this.jdfUtils.
+		formatString("warn_notAfterGMT_notdue_atAll",
+		[Math.round(natd / 86400000)]) +"\n";
       } else if (natd > 5182200000) {
 	certobj.threat ++;
-        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_notdue") +"\n";
+        certobj.info += this.jdfUtils.formatString("warn_notAfterGMT_notdue", 
+			[Math.round(natd / 86400000)]) +"\n";
       } else if (natd > 0) {
-        certobj.info += this.jdfUtils.getString("warn_notAfterGMT_due") +"\n";
+        certobj.info += this.jdfUtils.formatString("warn_notAfterGMT_due", 
+			[Math.round(natd / 86400000)]) +"\n";
       }
       if (certobj.moz.commonName != certobj.sql.commonName) {
         certobj.info += this.jdfUtils.getString("warn_commonName") +"\n";
 	certobj.threat += 2;
+	// We use the coloredWarnings object to be later on able to render the
+	// problematic attributes in the appropriate color (i.e. orange or 
+	// firebrick[sic!]) in the change dialog.
 	certobj.coloredWarnings.first = "cmcnn";
       }
       if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
@@ -378,13 +391,21 @@ var CertPatrol = {
 	certobj.threat += 2;
 	certobj.coloredWarnings.third = "cmnbn";
       }
+      // The SHA1 checksum has probably changed, it should get some coloring as
+      // well if there are some threats...
+      certobj.coloredWarnings.fourth = "cmsha1n";
+
       // further checks done by firefox before we even get here
 
-      if (certobj.threat > 3) certobj.threat = 3;
-      certobj.lang.changeEvent += " "+ this.jdfUtils.getString("threatLevel_"+ certobj.threat);
+      if (certobj.threat > 3) {
+        certobj.threat = 3;
+      }
+      certobj.lang.changeEvent += " "+ this.jdfUtils.getString("threatLevel_" + 
+		      certobj.threat);
 
       certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
-				this.daysdelta(this.timedelta(certobj.sql.notBeforeGMT));
+				this.daysdelta(this.timedelta(certobj.
+							sql.notBeforeGMT));
       certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT) +
 				this.daysdelta(natd);
       certobj.moz.notBeforeGMT= this.isodate(certobj.moz.notBeforeGMT) +
