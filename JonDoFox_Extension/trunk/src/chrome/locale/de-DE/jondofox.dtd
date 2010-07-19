@@ -1,8 +1,8 @@
 <!-- JonDoFox Features -->
 <!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank dafür, 
-dass Sie das JonDoFox-Profil heruntergeladen und gestartet haben!</h3>Im 
-Folgenden werden die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her 
-erl&auml;utert, die ein sichereres Surfen im Internet erm&ouml;glichen:">
+dass Sie JonDoFox heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
+die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her erl&auml;utert, die 
+ein sichereres Surfen im Internet erm&ouml;glichen:">
 <!ENTITY jondofox.features.proxyswitcher.head "Flexibel bleiben und Proxies 
 wechseln">
 <!ENTITY jondofox.features.proxyswitcher.part1 "Wenn Sie mit einem anderen 
@@ -70,14 +70,26 @@ Hinweis darauf:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
 <!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
 gef&auml;lschten SSL-Zertifikaten">
-<!ENTITY jondofox.features.certpatrol "F&uuml;r einen besseren Schutz vor 
-gef&auml;lschten SSL-Zertifikaten wurde in den JonDoFox-Code die 
-Funktionalit&auml;t der Certificate Patrol-Extension aufgenommen. Dadurch wird 
+<!ENTITY jondofox.features.certpatrol1 "F&uuml;r einen besseren Schutz vor 
+gef&auml;lschten SSL-Zertifikaten wurde die Funktionalit&auml;t der Certificate 
+Patrol-Extension etwas erweitert und in die JonDoFox-Extension aufgenommen 
+(siehe JonDoFox Einstellungsmen&uuml;):">
+<!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_de.png">
+<!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_de.png">
+<!ENTITY jondofox.features.certpatrol2 "Dadurch wird 
 es f&uuml;r den Nutzer zum einen sehr komfortabel, die Fingerabdr&uuml;cke der 
 Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei 
-Zertfikats&auml;nderungen ein Dialog eingeblendet, der dem Nutzer das alte und 
-das neue Zertifikat gegen&uuml;berstellt und dabei auf eventuell vorhandene 
-Unregelm&auml;&szlig;igkeiten hinweist.">
+Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell 
+vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
+<a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
+Man-in-the-middle-Angriffen</a> sch&uuml;tzt.">
+<!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
+Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
+integriert, damit die Anonymität während des Surfens noch besser geschüzt ist. 
+Informationen zu diesen (CSLite, Adblock Plus, NoScript und DownloadHelper) 
+sind auf unserer Hilfeseite unter 
+<a href='http://anonymous-proxy-servers.net/de/help/jondofox2.html'>
+http://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 
 <!-- Certificate Patrol -->
 <!ENTITY _title		"Einstellungen für Certificate Patrol">
