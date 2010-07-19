@@ -77,8 +77,8 @@ Settings panel):">
 <!ENTITY jondofox.features.certpatrol2 "On the one hand, this allows users to 
 check the fingerprint of a certificate very easily. On the other hand a helpful 
 dialog is shown to the user indicating whether there could be something wrong 
-with a new certificate, thus supporting the user to avoid information leaks due 
-to faked certificates and 
+with an updated certificate, thus supporting the user to avoid information 
+leaks due to faked certificates and 
 <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
 man-in-the-middle-attacks</a>.">
 <!ENTITY jondofox.features.additionalAddons "Besides our self-designed 

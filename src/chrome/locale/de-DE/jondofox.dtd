@@ -21,11 +21,12 @@ aktivieren. &#xdc;ber den Men&#xfc;punkt ">
 <!ENTITY jondofox.features.proxyswitcher.list_alt "nicht vertrauensw&uuml;rdig">
 <!ENTITY jondofox.features.proxyswitcher.list_configure "Einstellungen">
 <!ENTITY jondofox.features.proxyswitcher.list2_2 "k&#xf6;nnen Sie eine solche 
-individuelle Proxykonfiguration erstellen. Dies wird aber nur Experten empfohlen.">
-<!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: Wenn Sie das Programm
- <a href='http://www.torproject.org/index.html.de'>Tor</a> installiert und 
-gestartet haben, k&#xf6;nnen Sie es mithilfe dieser Einstellung als Alternative 
-zu JonDo verwenden.">
+individuelle Proxykonfiguration erstellen. Dies wird aber nur Experten 
+empfohlen.">
+<!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: Wenn Sie das 
+Programm <a href='http://www.torproject.org/index.html.de'>Tor</a> installiert 
+und gestartet haben, k&#xf6;nnen Sie es mithilfe dieser Einstellung als 
+Alternative zu JonDo verwenden.">
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: Bei dieser 
 Einstellung schickt JonDoFox die Kommunikationsdaten des Browsers &#xfc;ber 
 JonDo. JonDo muss dazu separat
@@ -64,16 +65,16 @@ gewinnen, gibt es noch die M&ouml;glichkeit, den Cache des Browsers f&uuml;r
 Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
 Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
 installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
-SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung integriert.
- In den Einstellungen im Reiter Datenschutz findet sich ein entsprechender 
-Hinweis darauf:">
+SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung 
+integriert. In den Einstellungen im Reiter Datenschutz findet sich ein 
+entsprechender Hinweis darauf:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
 <!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
 gef&auml;lschten SSL-Zertifikaten">
 <!ENTITY jondofox.features.certpatrol1 "F&uuml;r einen besseren Schutz vor 
 gef&auml;lschten SSL-Zertifikaten wurde die Funktionalit&auml;t der Certificate 
 Patrol-Extension etwas erweitert und in die JonDoFox-Extension aufgenommen 
-(siehe JonDoFox Einstellungsmen&uuml;):">
+(siehe JonDoFox' Einstellungsmen&uuml;):">
 <!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_de.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_de.png">
 <!ENTITY jondofox.features.certpatrol2 "Dadurch wird 
