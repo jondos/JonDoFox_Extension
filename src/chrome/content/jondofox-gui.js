@@ -254,7 +254,7 @@ function openBrowserTabJondofox(update) {
     if (update) {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.download'), 'tab');
     } else {
-      win.openUILinkIn("chrome://jondofox/content/jondofox-features.xhtml", 'tab');
+      win.openUILinkIn("about:jondofox", 'tab');
     }
   } catch (e) {
     log("openBrowserTabJondofox(): " + e);
@@ -406,13 +406,74 @@ var overlayObserver = {
   }
 }
 
+/*var JondofoxAboutService = {
+  impl: {
+    ioService: null,
+    newChannel: function(uri) {
+      try {
+        if (!this.ioService) {
+          this.ioService = 
+	     Components.classes["@mozilla.org/network/io-service;1"].
+	     getService(Components.interfaces.nsIIOService);
+        }
+        return this.ioService.
+        newChannel("chrome://jondofox/content/jondofox-features.xhtml",null,uri);
+      } catch (e) {
+        log("Creating a new channel for about:jondofox went wrong: " + e);
+      }
+    },
+    QueryInterface: function(iid) {
+      try {
+	if (!iid.equals(Components.interfaces.nsISupports) &&
+		!iid.equals(Components.interfaces.nsIAboutModule)) {
+          throw Components.results.NS_ERROR_NO_INTERFACE;
+        }
+        return this;
+      } catch (e) {
+        log("QI stuff got wrong: " + e);
+      }
+    }
+  },
+  factory: {
+    createInstance: function(outer, iid) {
+      try {
+        if (outer != null) {
+          throw Components.results.NS_ERROR_NO_AGGREGATION;
+        }
+        if (!iid.equals(Components.interfaces.nsIAboutModule) &&
+		!iid.equals(Components.interfaces.nsISupports)) {
+          throw Components.results.NS_ERROR_INVALID_ARG;
+        }
+        return JondofoxAboutService.impl.QueryInterface(iid);
+      } catch (e) {
+        log("Something went wrong in the factory code: " + e); 
+      }
+    }
+  },
+  register: function() {
+    try {
+      var compman = Components.manager;
+      compman.QueryInterface(Components.interfaces.nsIComponentRegistrar);
+      var cid = Components.ID('{8294337b-0ff6-4dcc-a45f-59b549922932}');
+      var contractid = "@mozilla.org/network/protocol/about;1?what=jondofox";
+      if (!compman.isCIDRegistered(cid)) {
+        compman.registerFactory(cid, "JondofoxAboutService", 
+		      contractid, JondofoxAboutService.factory);
+      }
+    } catch (e) {
+      log("Something went wrong registering about:jondofox: " + e);
+    }
+  }
+}*/
+
+
 // Initialize a new browser window
 function initWindow() {
   log("New browser window ..");
   try {
     // Remove this listener
     window.removeEventListener("load", initWindow, true);
-
+  //  JondofoxAboutService.register();
     // FIXME: Due to bug #330458 subsequent calls to loadOverlay() do not work. 
     // Few other extensions (CuteMenus) also load overlays dynamically and can
     // therefore cause this call to fail. For further information, please see    
