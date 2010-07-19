@@ -8,6 +8,16 @@
 
 //Minor modifications made by Georg Koppen, JonDos GmbH 2010.
 
+//We could do the registration of the about:jondofox as well without using JS 
+//code modules solely within the content folder in order to increase the startup
+//time. (see the relevant code in Firesomething:
+//https://addons.mozilla.org/en-US/firefox/addon/31/ that has to be patched
+//(adding the getURIFlags function)) BUT: The huge disadvantage is that the 
+//user would not be able to set about:jondofox as a startup page if she would
+//want that because its load is triggered before the URL would be registered.
+
+//ToDo: Incorpotate the following code better in our components system during
+//the coming restructuring of this extension.
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 const Cc = Components.classes;
 const Ci = Components.interfaces;
