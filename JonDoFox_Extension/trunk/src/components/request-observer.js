@@ -1,6 +1,6 @@
 /******************************************************************************
- * Copyright 2008, 2009 JonDos GmbH
- * Author: Johannes Renner
+ * Copyright 2008-2010 JonDos GmbH
+ * Author: Johannes Renner, Georg Koppen
  *
  * This component is instanciated once on app-startup and does the following:
  *

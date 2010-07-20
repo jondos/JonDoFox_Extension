@@ -1,9 +1,13 @@
 Changes in version 0.2.6 - YYY
 
   New Feature:
-    * "extensions.jondofox.search_suggest_enabled" is set to "false" and disables
-      the search suggestion feature in the browser
-    * a JonDoFox feature page is shown during start-up of a new extension version
+    * "extensions.jondofox.search_suggest_enabled" is set to "false" and 
+      disables the search suggestion feature in the browser
+    * a JonDoFox feature page is shown during start-up of a new extension 
+      version; included an about:jondofox shortcut that is linked to our
+      feature page
+    * included a slightly enhanced version of Certificate Patrol to provide a
+      better detection of MITM attacks
 
   Minor improvement:
     * changes regarding network.http.accept.default are not ignored anymore

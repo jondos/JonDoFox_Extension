@@ -1,6 +1,6 @@
 /******************************************************************************
- * Copyright 2008-2009, JonDos GmbH
- * Author: Johannes Renner
+ * Copyright 2008-2010, JonDos GmbH
+ * Author: Johannes Renner, Georg Koppen
  *
  * JonDoFox extension management and compatibility tasks + utilities
  * TODO: Create another component containing the utils only
@@ -28,6 +28,7 @@ const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
 const CC = Components.classes;
 const CI = Components.interfaces;
+const CU = Components.utils;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
@@ -69,6 +70,10 @@ var JDFManager = {
   // Remove jondofox preferences branch on uninstall only
   uninstall: false,
 
+  // Do we have a FF4 or still a FF3?
+  ff4: true,
+
+  vers: null,
   // Incompatible extensions with their IDs
   extensions: { 
     'CuteMenus':'{63df8e21-711c-4074-a257-b065cadc28d8}',
@@ -197,6 +202,28 @@ var JDFManager = {
 	                       getService(CI.nsIHandlerService);
       this.windowWatcher = CC['@mozilla.org/embedcomp/window-watcher;1'].
                 getService(CI.nsIWindowWatcher);  
+      // Determine whether we use FF4 or still some FF3
+      this.isFirefox4();
+      // If we have Firefox 4 installed we must register a AddonListener in 
+      // order to get for instance notifyied if one of the add-ons in our 
+      // list containing incomatible add-ons is uninstalled. This is helpful 
+      // to restart the browser properly.
+      if (this.ff4) {
+       let JDFAddonListener = {
+          onUninstalling: function(addon) {
+	    var version = addon.version;
+	    log("Die Version " + version + " wurde soeben deinstalliert -> Neustart...");
+            this.restartBrowser();
+          }
+	}
+        try {
+          CU.import("resource://gre/modules/AddonManager.jsm");
+	  AddonManager.addAddonListener(JDFAddonListener);
+	} catch (e) {
+          log("There went something wrong in registering the AddonListener: " + 
+              e);
+	}
+      }
       // Determine version
       this.VERSION = this.getVersion();
       // Register the proxy filter
@@ -451,6 +478,9 @@ var JDFManager = {
       observers.removeObserver(this, "quit-application-granted");    
       observers.removeObserver(this, "xul-window-destroyed");
       observers.removeObserver(this, "domwindowopened");
+      if (this.ff4) {
+        AddonManager.removeAddonListener(this.JDFAddonListener);
+      }
     } catch (e) {
       log("unregisterObservers(): " + e);
     }
@@ -461,21 +491,27 @@ var JDFManager = {
    */
   getVersion: function() {
     try {
-      // Get the extension-manager and rdf-service
-      var extMgr = CC["@mozilla.org/extensions/manager;1"].
+      if (this.ff4) {
+        AddonManager.getAddonByID("{437be45a-4114-11dd-b9ab-71d256d89593}", 
+	  function(addon) {JDFManager.VERSION = addon.version;
+	                   log("Current version is: " + JDFManager.VERSION);});
+      } else { 
+        // Get the extension-manager and rdf-service
+        var extMgr = CC["@mozilla.org/extensions/manager;1"].
                       getService(CI.nsIExtensionManager);
-      // Our ID
-      var extID = "{437be45a-4114-11dd-b9ab-71d256d89593}";
-      var version = "";
-      // Init ingredients
-      var ds = extMgr.datasource;
-      var res = this.rdfService.GetResource("urn:mozilla:item:" + extID);
-      var prop = this.rdfService.
+        // Our ID
+        var extID = "{437be45a-4114-11dd-b9ab-71d256d89593}";
+        var version = "";
+        // Init ingredients
+        var ds = extMgr.datasource;
+        var res = this.rdfService.GetResource("urn:mozilla:item:" + extID);
+        var prop = this.rdfService.
                     GetResource("http://www.mozilla.org/2004/em-rdf#version");
-      // Get the target
-      var target = ds.GetTarget(res, prop, true);
-      if(target !== null) {
-        version = target.QueryInterface(CI.nsIRDFLiteral).Value;
+        // Get the target
+        var target = ds.GetTarget(res, prop, true);
+        if(target !== null) {
+          version = target.QueryInterface(CI.nsIRDFLiteral).Value;
+        }
       }
       log("Current version is " + version);
       return version;
@@ -540,11 +576,15 @@ var JDFManager = {
     log('Uninstalling ' + eID);
     var em;
     try {
-      // Get the extensions manager
-      em = CC['@mozilla.org/extensions/manager;1'].
+      if (this.ff4) {
+	AddonManager.getAddonById(eID, function(addon) {addon.uninstall();});
+      } else {
+        // Get the extensions manager
+        em = CC['@mozilla.org/extensions/manager;1'].
                   getService(CI.nsIExtensionManager);
-      // Try to get the install location
-      em.uninstallItem(eID);
+        // Try to get the install location
+        em.uninstallItem(eID);
+      }
     } catch (e) {
       log("uninstallExtension(): " + e);
     }
@@ -563,6 +603,21 @@ var JDFManager = {
       appStartup.quit(CI.nsIAppStartup.eAttemptQuit|CI.nsIAppStartup.eRestart);
     } catch (e) {
       log("restartBrowser(): " + e);
+    }
+  },
+
+  isFirefox4: function() {
+    // Due to some changes in Firefox 4 (notably the replacement of the
+    // nsIExtensionmanager by the AddonManager) we check the FF version now
+    // to ensure compatibility.
+    var appInfo = CC['@mozilla.org/xre/app-info;1'].
+	    getService(CI.nsIXULAppInfo);
+    var versComp = CC['@mozilla.org/xpcom/version-comparator;1'].
+	    getService(CI.nsIVersionComparator);
+    if (versComp.compare(appInfo.version, "4.0a1") >= 0) {
+      this.ff4 = true;
+    } else {
+      this.ff4 = false;
     }
   },
 
@@ -1230,7 +1285,7 @@ var JDFManager = {
           subject.QueryInterface(CI.nsIUpdateItem);
           if (subject.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
             log("Got topic --> " + topic + ", data --> " + data);
-            if (data === "item-uninstalled" || data == "item-disabled") {
+            if (data === "item-uninstalled" || data === "item-disabled") {
               // Uninstall or disable
               this.clean = true;
               // If we are going to uninstall .. remove jondofox pref branch
