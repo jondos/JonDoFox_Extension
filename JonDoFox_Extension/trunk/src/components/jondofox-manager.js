@@ -144,7 +144,6 @@ var JDFManager = {
 
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
-    'browser.history_expire_days':'extensions.jondofox.history_expire_days',
     'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior'
   },
 
@@ -204,23 +203,11 @@ var JDFManager = {
                 getService(CI.nsIWindowWatcher);  
       // Determine whether we use FF4 or still some FF3
       this.isFirefox4();
-      // If we have Firefox 4 installed we must register a AddonListener in 
-      // order to get for instance notifyied if one of the add-ons in our 
-      // list containing incomatible add-ons is uninstalled. This is helpful 
-      // to restart the browser properly.
       if (this.ff4) {
-       let JDFAddonListener = {
-          onUninstalling: function(addon) {
-	    var version = addon.version;
-	    log("Die Version " + version + " wurde soeben deinstalliert -> Neustart...");
-            this.restartBrowser();
-          }
-	}
         try {
           CU.import("resource://gre/modules/AddonManager.jsm");
-	  AddonManager.addAddonListener(JDFAddonListener);
 	} catch (e) {
-          log("There went something wrong in registering the AddonListener: " + 
+          log("There went something with importing the AddonManager module: " + 
               e);
 	}
       }
@@ -271,7 +258,6 @@ var JDFManager = {
    * Try to uninstall other extensions that are not compatible
    */ 
   checkExtensions: function() {
-    var restart = false;
     var extension;
     try {
       // Indicate a necessary restart
@@ -300,8 +286,7 @@ var JDFManager = {
               [extension]));
               // Uninstall and set restart to true
             this.uninstallExtension(this.extensions[extension]);
-            restart = true;
-
+            this.restart = true;
 	  } else {
             if (this.jdfUtils.showConfirm(this.jdfUtils.
                   getString('jondofox.dialog.attention'), this.jdfUtils.
@@ -309,7 +294,7 @@ var JDFManager = {
                   [extension]))) {
               // Uninstall and set restart to true
               this.uninstallExtension(this.extensions[extension]);
-              restart = true;
+              this.restart = true;
             }
           }
         } else {
@@ -320,7 +305,7 @@ var JDFManager = {
           }
         }
       }
-      if (restart) {
+      if (this.restart) {
         // Programmatically restart the browser
         this.restartBrowser();
       }
@@ -356,6 +341,38 @@ var JDFManager = {
     }
   },
 
+  /**
+   * Try to uninstall other extensions that are not compatible; FF4 code
+   */ 
+  checkExtensionsFF4: function() {
+    try {
+      var extension;
+      // Iterate
+      for (extension in this.extensions) {
+        log('Checking for ' + extension);
+	// We have to do this, otherwise we would always get the feedback 
+	// related to the latest checked extension. See:
+	// https://developer.mozilla.org/en/New_in_JavaScript_1.7 the section
+	// concerning the let statement.
+	let aExtension = extension;
+        AddonManager.getAddonByID(this.extensions[extension],
+	function(addon) {
+	  if (addon) {
+	    addon.uninstall();
+	    var addonName = addon.name;
+            JDFManager.jdfUtils.showAlert(JDFManager.jdfUtils.
+              getString('jondofox.dialog.attention'), JDFManager.jdfUtils.
+              formatString('jondofox.dialog.message.uninstallExtension',
+              [addonName]));
+	  } else {
+	    log(aExtension + " was not found!"); 
+	  }});
+      }
+    } catch (e) {
+      log("checkExtensionsFF4(): " + e);
+    }
+  }, 
+
   // Call this on 'final-ui-startup'
   onUIStartup: function() {
     var p;
@@ -364,9 +381,23 @@ var JDFManager = {
     try {
       // Call init() first
       this.init();
-      // Check for incompatible extensions and whether the necessary ones
-      // are installed and enabled.
-      this.checkExtensions();
+      if (this.ff4) {
+	// We add this pref just in case we have a FF4 as the old one 
+	// (brower.history_expire_days) is replaced by it.
+	this.boolPrefsMap['places.history.enabled'] = 
+		'extensions.jondofox.history.enabled';
+	// For clearity of code we implement a different method to check the
+	// installed extension in Firefox4
+        this.checkExtensionsFF4();
+      } else {
+        // In order to avoid unnecessary error messages we just add it to the
+	// prefs map if we have a FF3 as it does not exist anymore in FF4.
+	this.intPrefsMap['browser.history_expire_days'] =
+		'extensions.jondofox.history_expire_days';
+        // FF3-check for incompatible extensions and whether the necessary ones
+        // are installed and enabled.
+        this.checkExtensions();
+      }
       // Check whether we have some MIME-types which use external helper apps
       // automatically and if so correct this
       this.firstMimeTypeCheck();
@@ -414,11 +445,13 @@ var JDFManager = {
           this.setUserAgent('tor');
         }
       }
-      // Maybe the proposed UA has changed due to an update. Thus, we are on the
-      // safe side if we set it on startup.
-      if (this.VERSION !== 
+      if (!this.ff4) {
+        // Maybe the proposed UA has changed due to an update. Thus, we are on 
+	// the safe side if we set it on startup.
+        if (this.VERSION !== 
           this.prefsHandler.getStringPref('extensions.jondofox.last_version')) {
-        this.setUserAgent(this.getState());
+          this.setUserAgent(this.getState());
+        }
       }
     } catch (e) {
       log("onUIStartup(): " + e);
@@ -493,8 +526,16 @@ var JDFManager = {
     try {
       if (this.ff4) {
         AddonManager.getAddonByID("{437be45a-4114-11dd-b9ab-71d256d89593}", 
-	  function(addon) {JDFManager.VERSION = addon.version;
-	                   log("Current version is: " + JDFManager.VERSION);});
+	  function(addon) {
+	    JDFManager.VERSION = addon.version;
+	    log("Current version is: " + JDFManager.VERSION);
+	    // Maybe the proposed UA has changed due to an update. Thus, 
+	    // we are on the safe side if we set it on startup.
+            if (JDFManager.VERSION !== JDFManager.prefsHandler.
+		    getStringPref('extensions.jondofox.last_version')) {
+              JDFManager.setUserAgent(JDFManager.getState());
+            }
+          });
       } else { 
         // Get the extension-manager and rdf-service
         var extMgr = CC["@mozilla.org/extensions/manager;1"].
@@ -512,9 +553,9 @@ var JDFManager = {
         if(target !== null) {
           version = target.QueryInterface(CI.nsIRDFLiteral).Value;
         }
+        log("Current version is " + version);
+        return version;
       }
-      log("Current version is " + version);
-      return version;
     } catch (e) {
       log("getVersion(): " + e);
     }
@@ -1506,8 +1547,8 @@ var JDFManager = {
             log("Pref '" + data + "' is on the integer prefsmap!");
             // If the new value is not the recommended ..
             if (this.prefsHandler.getIntPref(data) !== this.prefsHandler.
-                     getIntPref(this.intPrefsMap[data]) && this.prefsHandler.
-                     getBoolPref('extensions.jondofox.preferences_warning')) {
+                   getIntPref(this.intPrefsMap[data]) && this.prefsHandler.
+                   getBoolPref('extensions.jondofox.preferences_warning')) {
               // ... warn the user
               this.jdfUtils.showAlertCheck(this.jdfUtils.
                 getString('jondofox.dialog.attention'), this.jdfUtils.
