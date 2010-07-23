@@ -1,6 +1,6 @@
 /******************************************************************************
- * Copyright (C) 2008, JonDos GmbH
- * Author: Johannes Renner
+ * Copyright (C) 2008-2010, JonDos GmbH
+ * Author: Johannes Renner, Georg Koppen
  *
  * This code is available on a per window basis.
  *****************************************************************************/

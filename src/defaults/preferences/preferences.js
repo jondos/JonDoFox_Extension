@@ -102,7 +102,10 @@ pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
 pref("extensions.jondofox.cookieBehavior", 2);
 pref("extensions.jondofox.socks_remote_dns", true);
+// Only vaild for FF3
 pref("extensions.jondofox.history_expire_days", 0);
+// places.history.enabled replaces browser.history_expire_days in FF4
+pref("extensions.jondofox.history.enabled", false);
 pref("extensions.jondofox.proxy_keep-alive", false);
 pref("extensions.jondofox.noscript_contentBlocker", true);
 pref("extensions.jondofox.noscript_showDomain", false);
