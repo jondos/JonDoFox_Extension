@@ -6,7 +6,6 @@
  *
  * - Replace RefControl functionality by simply forging every referrer
  * - Arbitrary HTTP request headers can be set from here as well
- * 
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,17 +15,14 @@
 m_debug = true;
 
 // Log method
-function log(message) {
+var log = function(message) {
   if (m_debug) dump("RequestObserver :: " + message + "\n");
-}
+};
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
-
-const CLASS_ID = Components.ID('{cd05fe5d-8815-4397-bcfd-ca3ae4029193}');
-const CLASS_NAME = 'Request-Observer'; 
-const CONTRACT_ID = '@jondos.de/request-observer;1';
 
 const CC = Components.classes;
 const CI = Components.interfaces;
@@ -36,7 +32,11 @@ const CU = Components.utils;
 // Observer for "http-on-modify-request"
 ///////////////////////////////////////////////////////////////////////////////
 
-var requestObserver = {
+var RequestObserver = function() {
+  this.wrappedJSObject = this
+};
+
+RequestObserver.prototype = {
 
   prefsHandler: null,
   jdfManager: null,
@@ -229,6 +229,9 @@ var requestObserver = {
       observers.removeObserver(this, "http-on-modify-request");
       observers.removeObserver(this, "http-on-examine-response");
       observers.removeObserver(this, "quit-application-granted");
+      if (!this.jdfManager.ff4) {
+        observers.removeObserver(this, "profile-after-change");
+      }
     } catch (ex) {
       log("Got exception: " + ex);
     }
@@ -238,12 +241,20 @@ var requestObserver = {
   observe: function(subject, topic, data) {
     try {
       switch (topic) {
-        case 'app-startup':
+        // Just for FF < 4 
+	case 'app-startup':
+	  log("Got topic --> " + topic);
+          var observers = CC['@mozilla.org/observer-service;1'].
+	                    getService(CI.nsIObserverService);
+          observers.addObserver(this, "profile-after-change", true);	  
+          break;	
+
+        case 'profile-after-change':
           log("Got topic --> " + topic);
           this.registerObservers();
 	  this.init();
           break;
-        
+
         case 'quit-application-granted':
           log("Got topic --> " + topic);
           this.unregisterObservers();
@@ -267,74 +278,28 @@ var requestObserver = {
     }
   },
 
-  // Implement nsISupports
-  QueryInterface: function(iid) {
-    if (!iid.equals(CI.nsISupports) &&
-        !iid.equals(CI.nsIObserver) &&
-        !iid.equals(CI.nsISupportsWeakReference))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    return this;
-  }
-}
+  classDescription: "Request-Observer",
+  classID:          Components.ID("{cd05fe5d-8815-4397-bcfd-ca3ae4029193}"),
+  contractID:       "@jondos.de/request-observer;1",
 
-///////////////////////////////////////////////////////////////////////////////
-// The actual component
-///////////////////////////////////////////////////////////////////////////////
+  // We need this category only for compatibility to versions < FF4 as the
+  // 'profile-after-change'-notification declared in this place does not 
+  // work.
+  _xpcom_categories: [{
+    category: "app-startup",
+    service: true
+  }],
 
-var RequestObserverModule = {
-  
-  // BEGIN nsIModule
-  registerSelf: function(compMgr, fileSpec, location, type) {
-    log("Registering '" + CLASS_NAME + "' ..");
-    compMgr.QueryInterface(CI.nsIComponentRegistrar);
-    compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
-               fileSpec, location, type);
-
-    var catMan = CC["@mozilla.org/categorymanager;1"].
-                    getService(CI.nsICategoryManager);
-    catMan.addCategoryEntry("app-startup", "RefForgery", CONTRACT_ID, true, 
-              true);
-  },
-
-  unregisterSelf: function(compMgr, fileSpec, location) {
-    log("Unregistering '" + CLASS_NAME + "' ..");
-    // Remove the auto-startup
-    compMgr.QueryInterface(CI.nsIComponentRegistrar);
-    compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
-
-    var catMan = CC["@mozilla.org/categorymanager;1"].
-                    getService(CI.nsICategoryManager);
-    catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);
-  },
-
-  getClassObject: function(compMgr, cid, iid) {
-    if (!cid.equals(CLASS_ID))
-      throw Components.results.NS_ERROR_FACTORY_NOT_REGISTERED;
-    if (!iid.equals(CI.nsIFactory))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    return this.classFactory;
-  },
-
-  canUnload: function(compMgr) { 
-    return true; 
-  },
-  // END nsIModule
-
-  // Implement nsIFactory
-  classFactory: {
-    createInstance: function(outer, iid) {
-      log("Creating instance");
-      if (outer !== null)
-        throw Components.results.NS_ERROR_NO_AGGREGATION;
-      return requestObserver.QueryInterface(iid);
-    }
-  }
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
+				  CI.nsISupportsWeakReference])
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// This function is called when the application registers the component
-///////////////////////////////////////////////////////////////////////////////
+// XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 
-function NSGetModule(comMgr, fileSpec) { 
-  return RequestObserverModule;
-}
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([RequestObserver]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([RequestObserver]);
+
+

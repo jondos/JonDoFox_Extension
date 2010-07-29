@@ -13,18 +13,14 @@
 var mDebug = true;
 
 // Log a message
-function log(message) {
+var log = function(message) {
   if (mDebug) dump("JDFManager :: " + message + "\n");
-}
+};
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
-
-// XPCOM constants
-const CLASS_ID = Components.ID('{b5eafe36-ff8c-47f0-9449-d0dada798e00}');
-const CLASS_NAME = 'JonDoFox-Manager'; 
-const CONTRACT_ID = '@jondos.de/jondofox-manager;1';
 
 const CC = Components.classes;
 const CI = Components.interfaces;
@@ -35,7 +31,11 @@ const CU = Components.utils;
 ///////////////////////////////////////////////////////////////////////////////
 
 // Singleton instance definition
-var JDFManager = {
+var JDFManager = function(){
+  this.wrappedJSObject = this;
+};
+
+JDFManager.prototype = {
   
   // Extension version
   VERSION: null,
@@ -513,6 +513,8 @@ var JDFManager = {
       observers.removeObserver(this, "domwindowopened");
       if (this.ff4) {
         AddonManager.removeAddonListener(this.JDFAddonListener);
+      } else {
+        observers.removeObserver(this, "profile-after-change");
       }
     } catch (e) {
       log("unregisterObservers(): " + e);
@@ -1298,9 +1300,16 @@ var JDFManager = {
   observe: function(subject, topic, data) {
     try {
       switch (topic) {        
-        case 'app-startup':
+        // Just for FF < 4 
+	case 'app-startup':
+	  log("Got topic --> " + topic);
+          var observers = CC['@mozilla.org/observer-service;1'].
+	                    getService(CI.nsIObserverService);
+          observers.addObserver(this, "profile-after-change", true);	  
+          break;	
+
+        case 'profile-after-change':
           log("Got topic --> " + topic);
-          // Register observers
           this.registerObservers();
           break;
         
@@ -1567,75 +1576,28 @@ var JDFManager = {
     }
   },
   
-  // Implement nsISupports
-  QueryInterface: function(iid) {
-    if (!iid.equals(CI.nsISupports) &&
-        !iid.equals(CI.nsIObserver))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    return this;
-  }
-}
+  classDescription: "JonDoFox-Manager",
+  classID:          Components.ID("{b5eafe36-ff8c-47f0-9449-d0dada798e00}"),
+  contractID:       "@jondos.de/jondofox-manager;1",
 
-///////////////////////////////////////////////////////////////////////////////
-// Implementations of nsIModule and nsIFactory
-///////////////////////////////////////////////////////////////////////////////
+  // We need this category only for compatibility to versions < FF4 as the
+  // 'profile-after-change'-notification declared in this place does not 
+  // work.
+  _xpcom_categories: [{
+    category: "app-startup",
+    service: true
+  }],
 
-var JDFManagerModule = {
-
-  // BEGIN nsIModule
-  registerSelf: function(compMgr, fileSpec, location, type) {
-    log("Registering '" + CLASS_NAME + "' ..");
-    compMgr.QueryInterface(CI.nsIComponentRegistrar);
-    compMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
-               fileSpec, location, type);
-    var catMan = CC["@mozilla.org/categorymanager;1"].
-                    getService(CI.nsICategoryManager);
-    catMan.addCategoryEntry("app-startup", "JDFManager", CONTRACT_ID, true, 
-              true);
-  },
-
-  unregisterSelf: function(compMgr, fileSpec, location) {
-    log("Unregistering '" + CLASS_NAME + "' ..");
-    compMgr.QueryInterface(CI.nsIComponentRegistrar);
-    compMgr.unregisterFactoryLocation(CLASS_ID, fileSpec);
-    var catMan = CC["@mozilla.org/categorymanager;1"].
-                    getService(CI.nsICategoryManager);
-    catMan.deleteCategoryEntry("app-startup", CONTRACT_ID, true);
-  },
-
-  getClassObject: function(compMgr, cid, iid) {
-    if (!cid.equals(CLASS_ID))
-      throw Components.results.NS_ERROR_FACTORY_NOT_REGISTERED;
-    if (!iid.equals(CI.nsIFactory))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    return this.classFactory;
-  },
-
-  canUnload: function(compMgr) { 
-    return true; 
-  },
-  // END nsIModule
-
-  // Implement nsIFactory
-  classFactory: {
-    createInstance: function(aOuter, aIID) {
-      //log("createInstance()");
-      if (aOuter !== null)
-        throw Components.results.NS_ERROR_NO_AGGREGATION;
-      // Set wrappedJSObject
-      if (!JDFManager.wrappedJSObject) {
-        log("Creating instance, setting wrappedJSObject ..");
-        JDFManager.wrappedJSObject = JDFManager;
-      }
-      return JDFManager.QueryInterface(aIID);
-    }
-  }
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
+				  CI.nsISupportsWeakReference])
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// This function is called when the application registers the component
-///////////////////////////////////////////////////////////////////////////////
+// XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 
-function NSGetModule(comMgr, fileSpec) {
-  return JDFManagerModule; 
-}
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([JDFManager]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([JDFManager]);
+
+ 
