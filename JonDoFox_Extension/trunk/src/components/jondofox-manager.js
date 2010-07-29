@@ -197,8 +197,6 @@ JDFManager.prototype = {
 	                      getService(CI.nsIRDFService);
       this.directoryService = CC['@mozilla.org/file/directory_service;1'].
 	                         getService(CI.nsIProperties);
-      this.handlerService = CC['@mozilla.org/uriloader/handler-service;1'].
-	                       getService(CI.nsIHandlerService);
       this.windowWatcher = CC['@mozilla.org/embedcomp/window-watcher;1'].
                 getService(CI.nsIWindowWatcher);  
       // Determine whether we use FF4 or still some FF3
@@ -360,8 +358,8 @@ JDFManager.prototype = {
 	  if (addon) {
 	    addon.uninstall();
 	    var addonName = addon.name;
-            JDFManager.jdfUtils.showAlert(JDFManager.jdfUtils.
-              getString('jondofox.dialog.attention'), JDFManager.jdfUtils.
+            JDFManager.prototype.jdfUtils.showAlert(JDFManager.prototype.jdfUtils.
+              getString('jondofox.dialog.attention'), JDFManager.prototype.jdfUtils.
               formatString('jondofox.dialog.message.uninstallExtension',
               [addonName]));
 	  } else {
@@ -529,13 +527,14 @@ JDFManager.prototype = {
       if (this.ff4) {
         AddonManager.getAddonByID("{437be45a-4114-11dd-b9ab-71d256d89593}", 
 	  function(addon) {
-	    JDFManager.VERSION = addon.version;
-	    log("Current version is: " + JDFManager.VERSION);
+	    JDFManager.prototype.VERSION = addon.version;
+	    log("Current version is: " + JDFManager.prototype.VERSION);
 	    // Maybe the proposed UA has changed due to an update. Thus, 
 	    // we are on the safe side if we set it on startup.
-            if (JDFManager.VERSION !== JDFManager.prefsHandler.
-		    getStringPref('extensions.jondofox.last_version')) {
-              JDFManager.setUserAgent(JDFManager.getState());
+	    var lastVersion = JDFManager.prototype.gettingPrefsHandler().
+		    getStringPref('extensions.jondofox.last_version');
+            if (JDFManager.prototype.VERSION !== lastVersion) {
+              JDFManager.prototype.setUserAgent(JDFManager.prototype.getState());
             }
           });
       } else { 
@@ -854,8 +853,8 @@ JDFManager.prototype = {
    
   getUnknownContentTypeDialog: function() {
     try {
-      this.removeEventListener("load", JDFManager.getUnknownContentTypeDialog,
-           false);
+      this.removeEventListener("load", JDFManager.prototype.
+		      getUnknownContentTypeDialog, false);
       var dialogParam; 
       var dialogMessage; 
       var checkbox = this.document.getElementById("rememberChoice");
@@ -869,7 +868,7 @@ JDFManager.prototype = {
           // MIME-/filetype via the filename gives null back if executed at 
           // once. But without getting the type we cannot discriminate between
           // showing the different overlays...
-	  this.setTimeout(JDFManager.showUnknownContentTypeWarnings, 5, 
+	  this.setTimeout(JDFManager.prototype.showUnknownContentTypeWarnings, 5, 
                           type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews) {
         // 10 arguments are passed to this external app window. We take the
@@ -931,11 +930,11 @@ JDFManager.prototype = {
       if (fileExtension === ".pdf") {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul",
                                     null);
-        window.setTimeout(JDFManager.showWarning, 200, window, false, false);
+        window.setTimeout(JDFManager.prototype.showWarning, 200, window, false, false);
       } else if (fileExtension === ".doc" || fileExtension === ".rtf") {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul",
                                     null);
-        window.setTimeout(JDFManager.showWarning, 50, window, false, false);
+        window.setTimeout(JDFManager.prototype.showWarning, 50, window, false, false);
       } else if (normalBox ||
                  fileExtension === ".tex") {
       //do nothing: we do not want any warning here because the user cannot
@@ -944,11 +943,11 @@ JDFManager.prototype = {
       } else {
         window.document.loadOverlay("chrome://jondofox/content/external-app.xul",
                                     null);
-        window.setTimeout(JDFManager.showWarning, 50, window, false, false);
+        window.setTimeout(JDFManager.prototype.showWarning, 50, window, false, false);
       }
-        checkbox.addEventListener("click",function() {JDFManager.
+        checkbox.addEventListener("click",function() {JDFManager.prototype.
 	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
-        radioOpen.addEventListener("click", function() {JDFManager.
+        radioOpen.addEventListener("click", function() {JDFManager.prototype.
 	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
     } catch (e) {
       log("showUnknownContentTypeWarnings(): " + e);
@@ -1005,8 +1004,8 @@ JDFManager.prototype = {
   checkboxChecked: function(radioOpen, checkbox, type, window) {
     var settingsChange = window.document.getElementById("settingsChange");
     if (checkbox.checked && radioOpen.selected) {
-      this.jdfUtils.showAlert(this.jdfUtils.
-        getString('jondofox.dialog.attention'), this.jdfUtils.
+      JDFManager.prototype.jdfUtils.showAlert(JDFManager.prototype.jdfUtils.
+        getString('jondofox.dialog.attention'), JDFManager.prototype.jdfUtils.
         formatString('jondofox.dialog.message.automaticAction', [type.value]));
       checkbox.checked = false;
       //If the settingschange element is still shown, hide it again in a way
@@ -1024,8 +1023,8 @@ JDFManager.prototype = {
 
   checkboxNewsChecked: function(checkboxNews, type) {
     if (checkboxNews.checked) {
-      this.jdfUtils.showAlert(this.jdfUtils.
-        getString('jondofox.dialog.attention'), this.jdfUtils.
+      JDFManager.prototype.jdfUtils.showAlert(JDFManager.prototype.jdfUtils.
+        getString('jondofox.dialog.attention'), JDFManager.prototype.jdfUtils.
         formatString('jondofox.dialog.message.automaticAction', [type]));
       checkboxNews.checked = false;
     }
@@ -1041,7 +1040,8 @@ JDFManager.prototype = {
 	  var newTargetValue = aNewTarget.QueryInterface(CI.nsIRDFLiteral).Value;
           if (aProp.Value === "http://home.netscape.com/NC-rdf#alwaysAsk" &&
               newTargetValue === "false") {
-	    correctedValue = JDFManager.correctExternalApplications(false);
+	    correctedValue = JDFManager.prototype.
+		    correctExternalApplications(false);
             if (correctedValue) {
 	      wm = CC['@mozilla.org/appshell/window-mediator;1']
 		          .getService(CI.nsIWindowMediator);
@@ -1049,7 +1049,7 @@ JDFManager.prototype = {
               // Is the recent window really the application pane?
               if (applicationPane.document.getElementById("handlersView")) {
                 applicationPane.addEventListener("unload", function()
-                           {JDFManager.appPaneReload(applicationPane);}, false);
+                    {JDFManager.prototype.appPaneReload(applicationPane);}, false);
                 applicationPane.close(); 
               }
             }
@@ -1084,13 +1084,15 @@ JDFManager.prototype = {
     applicationPane.openDialog(
 	      "chrome://browser/content/preferences/preferences.xul");
     applicationPane.removeEventListener("unload", function()
-                           {JDFManager.appPaneReload(applicationPane);}, false);
+                           {JDFManager.prototype.appPaneReload(applicationPane);}, false);
   },
 
   correctExternalApplications: function(firstProgramStart) {
     try {
       var changedValue = false;
-      var handledMimeTypes = this.handlerService.enumerate();
+      var handlerService = CC['@mozilla.org/uriloader/handler-service;1'].
+	                       getService(CI.nsIHandlerService);
+      var handledMimeTypes = handlerService.enumerate();
       while (handledMimeTypes.hasMoreElements()) {
         var handledMimeType = handledMimeTypes.getNext().
             QueryInterface(CI.nsIHandlerInfo);
@@ -1104,7 +1106,7 @@ JDFManager.prototype = {
               [mimeType]));
           }
           handledMimeType.alwaysAskBeforeHandling = true;
-          this.handlerService.store(handledMimeType);
+          handlerService.store(handledMimeType);
           changedValue = true;
         }        
       }
@@ -1167,7 +1169,7 @@ JDFManager.prototype = {
   noProxyListRemove: function(uri) {
     log("No proxy list remove: " + uri);
     try {
-      JDFManager.noProxyList.splice(JDFManager.noProxyList.indexOf(uri), 1);
+      this.noProxyList.splice(this.noProxyList.indexOf(uri), 1);
     } catch (ex) {
       log("noProxyListRemove(): " + ex);
     } 
@@ -1356,7 +1358,7 @@ JDFManager.prototype = {
         // to do it this way...
 
         case 'domwindowopened':
-	subject.addEventListener("load", JDFManager.getUnknownContentTypeDialog, false);
+	subject.addEventListener("load", JDFManager.prototype.getUnknownContentTypeDialog, false);
 	  break;
 
         case 'xul-window-destroyed':
