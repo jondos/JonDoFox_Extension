@@ -1,6 +1,6 @@
 /******************************************************************************
  * Copyright (c) 2008, JonDos GmbH
- * Author: Johannes Renner
+ * Author: Johannes Renner, Georg Koppen
  *
  * This component implements a proxy manager interface offering methods to set 
  * proxies for certain protocols, as well as enabling and disabling a proxy.
@@ -13,17 +13,14 @@
 var mDebug = true;
 
 // Log a message
-function log(message) {
+var log = function(message) {
   if (mDebug) dump("ProxyManager :: " + message + "\n");
-}
+};
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
-
-const CLASS_ID = Components.ID('{44b042a6-5e0b-4d62-b8ce-df7fc36eb8b6}');
-const CLASS_NAME = 'Proxy-Manager'; 
-const CONTRACT_ID = '@jondos.de/proxy-manager;1';
 
 const CC = Components.classes;
 const CI = Components.interfaces;
@@ -34,7 +31,7 @@ const CR = Components.results;
 ///////////////////////////////////////////////////////////////////////////////
 
 // Class constructor
-function ProxyManager() {
+var ProxyManager = function() {
   // Init the prefsHandler  
   this.ph = CC['@jondos.de/preferences-handler;1'].
                           getService().wrappedJSObject; 
@@ -178,69 +175,17 @@ ProxyManager.prototype = {
     }
   },
 
-  // Implement nsISupports
-  QueryInterface: function(aIID) {
-    if (!aIID.equals(CI.nsISupports))
-      throw CR.NS_ERROR_NO_INTERFACE;
-    return this;
-  }
+  classDescription: "Proxy-Manager",
+  classID:          Components.ID("{44b042a6-5e0b-4d62-b8ce-df7fc36eb8b6}"),
+  contractID:       "@jondos.de/proxy-manager;1",
+
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports]) 
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// Class factory
-///////////////////////////////////////////////////////////////////////////////
+// XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 
-var ProxyManagerInstance = null;
-
-var ProxyManagerFactory = {
-  createInstance: function (aOuter, aIID) {    
-    if (aOuter != null)
-      throw CR.NS_ERROR_NO_AGGREGATION;
-    if (!aIID.equals(CI.nsISupports))
-      throw CR.NS_ERROR_NO_INTERFACE;
-    // Singleton
-    if (ProxyManagerInstance === null)
-      log("Creating instance");
-      ProxyManagerInstance = new ProxyManager();
-    return ProxyManagerInstance;
-  }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// Module definition (XPCOM registration)
-///////////////////////////////////////////////////////////////////////////////
-
-var ProxyManagerModule = {
-  registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
-    log("Registering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
-    aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
-                aFileSpec, aLocation, aType);
-  },
-
-  unregisterSelf: function(aCompMgr, aLocation, aType) {
-    log("Unregistering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
-    aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
-  },
-  
-  getClassObject: function(aCompMgr, aCID, aIID) {
-    if (!aIID.equals(CI.nsIFactory))
-      throw CR.NS_ERROR_NOT_IMPLEMENTED;
-    if (aCID.equals(CLASS_ID))
-      return ProxyManagerFactory;
-    throw CR.NS_ERROR_NO_INTERFACE;
-  },
-
-  canUnload: function(aCompMgr) { 
-    return true; 
-  }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// This function is called when the application registers the component
-///////////////////////////////////////////////////////////////////////////////
-
-function NSGetModule(compMgr, fileSpec) {
-  return ProxyManagerModule;
-}
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([ProxyManager]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([ProxyManager]);

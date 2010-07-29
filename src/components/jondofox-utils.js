@@ -12,29 +12,24 @@
 var mDebug = true;
 
 // Log a message
-function log(message) {
+var log = function(message) {
   if (mDebug) dump("JonDoFoxUtils :: " + message + "\n");
-}
+};
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
 
-// XPCOM constants
-const CLASS_ID = Components.ID('{790237a4-17ae-4652-98c8-0dd6afde511b}');
-const CLASS_NAME = 'JonDoFox-Utils'; 
-const CONTRACT_ID = '@jondos.de/jondofox-utils;1';
-
 const CC = Components.classes;
 const CI = Components.interfaces;
-const CR = Components.results;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
 ///////////////////////////////////////////////////////////////////////////////
 
 // Class constructor
-function JonDoFoxUtils() {
+var JonDoFoxUtils = function() {
   this.bundleService = CC['@mozilla.org/intl/stringbundle;1'].
                           getService(CI.nsIStringBundleService);
   this.stringBundle = this.bundleService.
@@ -134,71 +129,17 @@ JonDoFoxUtils.prototype = {
     }  
   },
 
+  classDescription: "JonDoFox-Utils",
+  classID: Components.ID("{790237a4-17ae-4652-98c8-0dd6afde511b}"),
+  contractID: "@jondos.de/jondofox-utils;1",
 
-  // Implement nsISupports
-  QueryInterface: function(aIID) {
-    if (!aIID.equals(CI.nsISupports))
-      throw CR.NS_ERROR_NO_INTERFACE;
-    return this;
-  }
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports])
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// Class factory
-///////////////////////////////////////////////////////////////////////////////
+// XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 
-var JonDoFoxUtilsInstance = null;
-
-var JonDoFoxUtilsFactory = {
-  createInstance: function (aOuter, aIID) {    
-    if (aOuter !== null)
-      throw CR.NS_ERROR_NO_AGGREGATION;
-    if (!aIID.equals(CI.nsISupports))
-      throw CR.NS_ERROR_NO_INTERFACE;
-    // Singleton
-    if (JonDoFoxUtilsInstance === null) {
-      log("Creating instance");
-      JonDoFoxUtilsInstance = new JonDoFoxUtils();
-    }
-    return JonDoFoxUtilsInstance;
-  }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// Module definition (XPCOM registration)
-///////////////////////////////////////////////////////////////////////////////
-
-var JonDoFoxUtilsModule = {
-  registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
-    log("Registering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
-    aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
-                aFileSpec, aLocation, aType);
-  },
-
-  unregisterSelf: function(aCompMgr, aLocation, aType) {
-    log("Unregistering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
-    aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
-  },
-  
-  getClassObject: function(aCompMgr, aCID, aIID) {
-    if (!aIID.equals(CI.nsIFactory))
-      throw CR.NS_ERROR_NOT_IMPLEMENTED;
-    if (aCID.equals(CLASS_ID))
-      return JonDoFoxUtilsFactory;
-    throw CR.NS_ERROR_NO_INTERFACE;
-  },
-
-  canUnload: function(aCompMgr) { 
-    return true; 
-  }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// This function is called when the application registers the component
-///////////////////////////////////////////////////////////////////////////////
-
-function NSGetModule(compMgr, fileSpec) {
-  return JonDoFoxUtilsModule;
-}
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([JonDoFoxUtils]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([JonDoFoxUtils]);

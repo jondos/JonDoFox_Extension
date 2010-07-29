@@ -56,18 +56,14 @@
 var mDebug = true;
 
 // Log a message
-function log(message) {
+var log = function(message) {
   if (mDebug) dump("SafeCache :: " + message + "\n");
 }
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
-
-// XPCOM constants
-const CLASS_ID = Components.ID('{fd63cb38-479f-11df-ab87-001d92567994}');
-const CLASS_NAME = 'SafeCache'; 
-const CONTRACT_ID = '@jondos.de/safecache;1';
 
 const CC = Components.classes;
 const CI = Components.interfaces;
@@ -78,8 +74,8 @@ const CR = Components.results;
 ///////////////////////////////////////////////////////////////////////////////
 
 // Class constructor
-function SafeCache() {
-  
+var SafeCache = function() {
+
   // Set wrappedJSObject
   this.wrappedJSObject = this;
 };
@@ -408,72 +404,18 @@ SafeCache.prototype = {
     return intHash;
   },
 
-
+  classDescription: "SafeCache", 
+  classID:          Components.ID("{fd63cb38-479f-11df-ab87-001d92567994}"),
+  contractID:       "@jondos.de/safecache;1",
   // Implement nsISupports
-  QueryInterface: function(aIID) {
-    if (!aIID.equals(CI.nsISupports))
-      throw CR.NS_ERROR_NO_INTERFACE;
-    return this;
-  }
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports])
 };
 
-///////////////////////////////////////////////////////////////////////////////
-// Class factory
-///////////////////////////////////////////////////////////////////////////////
+// XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
 
-var SafeCacheInstance = null;
-
-var SafeCacheFactory = {
-  createInstance: function (aOuter, aIID) {    
-    if (aOuter !== null)
-      throw CR.NS_ERROR_NO_AGGREGATION;
-    if (!aIID.equals(CI.nsISupports))
-      throw CR.NS_ERROR_NO_INTERFACE;
-    // Singleton
-    if (SafeCacheInstance === null) {
-      log("Creating singleton");
-      SafeCacheInstance = new SafeCache();
-    }
-    return SafeCacheInstance;
-  }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// Module definition (XPCOM registration)
-///////////////////////////////////////////////////////////////////////////////
-
-var SafeCacheModule = {
-  registerSelf: function(aCompMgr, aFileSpec, aLocation, aType) {
-    log("Registering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
-    aCompMgr.registerFactoryLocation(CLASS_ID, CLASS_NAME, CONTRACT_ID, 
-                aFileSpec, aLocation, aType);
-  },
-
-  unregisterSelf: function(aCompMgr, aLocation, aType) {
-    log("Unregistering '" + CLASS_NAME + "' ..");
-    aCompMgr = aCompMgr.QueryInterface(CI.nsIComponentRegistrar);
-    aCompMgr.unregisterFactoryLocation(CLASS_ID, aLocation);        
-  },
-  
-  getClassObject: function(aCompMgr, aCID, aIID) {
-    if (!aIID.equals(CI.nsIFactory))
-      throw CR.NS_ERROR_NOT_IMPLEMENTED;
-    if (aCID.equals(CLASS_ID))
-      return SafeCacheFactory;
-    throw CR.NS_ERROR_NO_INTERFACE;
-  },
-
-  canUnload: function(aCompMgr) { 
-    return true; 
-  }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-// This function is called when the application registers the component
-///////////////////////////////////////////////////////////////////////////////
-
-function NSGetModule(compMgr, fileSpec) {
-  return SafeCacheModule;
-}
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([SafeCache]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([SafeCache]);
 
