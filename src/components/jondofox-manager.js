@@ -164,16 +164,6 @@ JDFManager.prototype = {
     'extensions.jondofox.network-protocol-handler.warn_external_default'
   },
 
-  // Different services
-  /*prefsHandler: null,
-  prefsMapper: null,
-  proxyManager: null,
-  jdfUtils: null,
-  promptService: null,
-  rdfService: null,
-  directoryService: null,
-  handlerService: null,*/
-  
   // We need the MIME-Type datasource to observe the always-ask property.
   //mimeTypesDs: null,
  
@@ -508,9 +498,7 @@ JDFManager.prototype = {
       observers.removeObserver(this, "quit-application-granted");    
       observers.removeObserver(this, "xul-window-destroyed");
       observers.removeObserver(this, "domwindowopened");
-      if (this.ff4) {
-        AddonManager.removeAddonListener(this.JDFAddonListener);
-      } else {
+      if (!this.ff4) {
         observers.removeObserver(this, "profile-after-change");
       }
     } catch (e) {
@@ -893,8 +881,10 @@ JDFManager.prototype = {
         if (dialogMessage.indexOf(".pdf") !== -1) {
           this.document.loadOverlay(
                "chrome://jondofox/content/external-pdfPlugin.xul", null);
-          this.setTimeout(JDFManager.showWarning, 200, this, true, false);
+          this.setTimeout(JDFManager.prototype.showWarning, 200, this, true, false);
         }
+      } else {
+        log("Nothing found...");
       } 
     } catch (e) {
        log("getUnknownContentTypeDialog(): " + e);
@@ -907,7 +897,8 @@ JDFManager.prototype = {
       var i;
       var normalBox;
       var fileTypeExists = false;
-      normalBox = window.document.getElementById("normalBox").getAttribute("collapsed");
+      normalBox = window.document.getElementById("normalBox").
+	      getAttribute("collapsed");
       var titleString = window.document.title.trim().toLowerCase();
       var fileExtension = titleString.substring(titleString.length - 4, 
                           titleString.length);
