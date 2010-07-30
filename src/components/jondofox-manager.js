@@ -165,17 +165,17 @@ JDFManager.prototype = {
   },
 
   // Different services
-  prefsHandler: null,
+  /*prefsHandler: null,
   prefsMapper: null,
   proxyManager: null,
   jdfUtils: null,
   promptService: null,
   rdfService: null,
   directoryService: null,
-  handlerService: null,
+  handlerService: null,*/
   
   // We need the MIME-Type datasource to observe the always-ask property.
-  mimeTypesDs: null,
+  //mimeTypesDs: null,
  
   fileTypes: [],
 
@@ -185,32 +185,31 @@ JDFManager.prototype = {
     log("Initialize JDFManager");
     try {
       // Init services
-      this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
+      JDFManager.prototype.prefsHandler = CC['@jondos.de/preferences-handler;1'].
                              getService().wrappedJSObject;
-      this.prefsMapper = CC['@jondos.de/preferences-mapper;1'].
+      JDFManager.prototype.prefsMapper = CC['@jondos.de/preferences-mapper;1'].
                             getService().wrappedJSObject;
-      this.proxyManager = CC['@jondos.de/proxy-manager;1'].
+      JDFManager.prototype.proxyManager = CC['@jondos.de/proxy-manager;1'].
                              getService().wrappedJSObject;
-      this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
+      JDFManager.prototype.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
                          getService().wrappedJSObject;
-      this.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].
+      JDFManager.prototype.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].
 	                      getService(CI.nsIRDFService);
-      this.directoryService = CC['@mozilla.org/file/directory_service;1'].
-	                         getService(CI.nsIProperties);
-      this.windowWatcher = CC['@mozilla.org/embedcomp/window-watcher;1'].
-                getService(CI.nsIWindowWatcher);  
+      JDFManager.prototype.directoryService = 
+	 CC['@mozilla.org/file/directory_service;1'].getService(CI.nsIProperties);
       // Determine whether we use FF4 or still some FF3
       this.isFirefox4();
       if (this.ff4) {
         try {
           CU.import("resource://gre/modules/AddonManager.jsm");
+	  this.getVersionFF4();
 	} catch (e) {
           log("There went something with importing the AddonManager module: " + 
               e);
 	}
+      } else {
+        JDFManager.prototype.VERSION = this.getVersion();
       }
-      // Determine version
-      this.VERSION = this.getVersion();
       // Register the proxy filter
       this.registerProxyFilter();
     } catch (e) {
@@ -518,45 +517,47 @@ JDFManager.prototype = {
       log("unregisterObservers(): " + e);
     }
   },
-  
-  /**
-   * Return the version string of this extension
-   */
-  getVersion: function() {
-    try {
-      if (this.ff4) {
-        AddonManager.getAddonByID("{437be45a-4114-11dd-b9ab-71d256d89593}", 
+ 
+  // Getting the extension version (FF >= 4)
+
+  getVersionFF4: function() {
+    AddonManager.getAddonByID("{437be45a-4114-11dd-b9ab-71d256d89593}", 
 	  function(addon) {
 	    JDFManager.prototype.VERSION = addon.version;
 	    log("Current version is: " + JDFManager.prototype.VERSION);
 	    // Maybe the proposed UA has changed due to an update. Thus, 
 	    // we are on the safe side if we set it on startup.
-	    var lastVersion = JDFManager.prototype.gettingPrefsHandler().
+	    var lastVersion = JDFManager.prototype.prefsHandler.
 		    getStringPref('extensions.jondofox.last_version');
             if (JDFManager.prototype.VERSION !== lastVersion) {
               JDFManager.prototype.setUserAgent(JDFManager.prototype.getState());
             }
           });
-      } else { 
-        // Get the extension-manager and rdf-service
-        var extMgr = CC["@mozilla.org/extensions/manager;1"].
-                      getService(CI.nsIExtensionManager);
-        // Our ID
-        var extID = "{437be45a-4114-11dd-b9ab-71d256d89593}";
-        var version = "";
-        // Init ingredients
-        var ds = extMgr.datasource;
-        var res = this.rdfService.GetResource("urn:mozilla:item:" + extID);
-        var prop = this.rdfService.
-                    GetResource("http://www.mozilla.org/2004/em-rdf#version");
-        // Get the target
-        var target = ds.GetTarget(res, prop, true);
-        if(target !== null) {
-          version = target.QueryInterface(CI.nsIRDFLiteral).Value;
-        }
-        log("Current version is " + version);
-        return version;
+  },
+
+  /**
+   * Return the version string of this extension (FF < 4)
+   */
+  getVersion: function() {
+    try {
+      // Get the extension-manager and rdf-service
+      var extMgr = CC["@mozilla.org/extensions/manager;1"].
+                    getService(CI.nsIExtensionManager);
+      // Our ID
+      var extID = "{437be45a-4114-11dd-b9ab-71d256d89593}";
+      var version = "";
+      // Init ingredients
+      var ds = extMgr.datasource;
+      var res = this.rdfService.GetResource("urn:mozilla:item:" + extID);
+      var prop = this.rdfService.
+                  GetResource("http://www.mozilla.org/2004/em-rdf#version");
+      // Get the target
+      var target = ds.GetTarget(res, prop, true);
+      if(target !== null) {
+        version = target.QueryInterface(CI.nsIRDFLiteral).Value;
       }
+      log("Current version is " + version);
+      return version;
     } catch (e) {
       log("getVersion(): " + e);
     }
@@ -883,7 +884,7 @@ JDFManager.prototype = {
           checkboxNews.addEventListener("click", function() {JDFManager.
 		    checkboxNewsChecked(checkboxNews, type);}, false);
         }
-      } else if (this.arguments[0].QueryInterface(CI.nsIDialogParamBlock)) {
+      } else if (this.arguments[0]) {
         log("We got probably a commonDialog...");
         dialogParam = this.arguments[0].QueryInterface(CI.nsIDialogParamBlock);
         log("Let's check whether we've got a NoScript pdf-dialog...");
@@ -1591,7 +1592,8 @@ JDFManager.prototype = {
   }],
 
   QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
-				  CI.nsISupportsWeakReference])
+				  CI.nsISupportsWeakReference, 
+				  CI.nsIDialogParamBlock])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
