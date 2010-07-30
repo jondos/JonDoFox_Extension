@@ -352,53 +352,56 @@ var overlayObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'xul-overlay-merged':
-        // 'subject' implements nsIURI
-        var uri = subject.QueryInterface(Components.interfaces.nsIURI);
-        //log("uri.spec is " + uri.spec);
-        if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
-          // Overlay is ready --> refresh the GUI
-	  refresh();
-          // Add observer to different preferences
-          prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
-          prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
-          prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
+        try {
+          // 'subject' implements nsIURI
+          var uri = subject.QueryInterface(Components.interfaces.nsIURI);
+          //log("uri.spec is " + uri.spec);
+          if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
+            // Overlay is ready --> refresh the GUI
+	    refresh();
+            // Add observer to different preferences
+            prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
+            prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
+            prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
 
-          //We need to obser ve this preference because otherwise there would be
-          //no refreshing of the status bar if we had already 'custom' as a
-          //our proxy state: the correct writing of 'custom' with either red
-          //or black letters would not work if we accepted or applied new
-          //settings.
+            //We need to obser ve this preference because otherwise there would be
+            //no refreshing of the status bar if we had already 'custom' as a
+            //our proxy state: the correct writing of 'custom' with either red
+            //or black letters would not work if we accepted or applied new
+            //settings.
 
-          prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
+            prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
                   
-          log("New window is ready");
-          //Let's test whether the user starts with appropriate proxy-settings..
-          isProxyDisabled();
+            log("New window is ready");
+            //Let's test whether the user starts with appropriate proxy-settings..
+            isProxyDisabled();
 
-          // Get the last version property
-          var last_version = prefsHandler.
+            // Get the last version property
+            var last_version = prefsHandler.
                  getStringPref('extensions.jondofox.last_version');
-          if (last_version != jdfManager.VERSION) {
-            log("New version detected, opening homepage ..");
-            openBrowserTabJondofox(false);
-            prefsHandler.setStringPref('extensions.jondofox.last_version',
+            if (last_version != jdfManager.VERSION) {
+              log("New version detected, opening homepage ..");
+              openBrowserTabJondofox(false);
+              prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
-            if (!prefsHandler.getBoolPref(
+              if (!prefsHandler.getBoolPref(
                 'extensions.jondofox.noscript_showDomain')) {
-              prefsHandler.setBoolPref('noscript.showDomain', false);
+                prefsHandler.setBoolPref('noscript.showDomain', false);
+              }
             }
+            // If the user should update the profile and has not disabled the 
+            // update warning, help her and show the JonDoFox homepage after 
+            // startup
+            if (jdfManager.checkProfileUpdate()) {
+	      openBrowserTabJondofox(true);
+            } 
+          } else {
+            log("!! Wrong uri: " + uri.spec);
           }
-          // If the user should update the profile and has not disabled the 
-          // update warning, help her and show the JonDoFox homepage after 
-          // startup
-          if (jdfManager.checkProfileUpdate()) {
-	    openBrowserTabJondofox(true);
-          } 
-        } else {
-          log("!! Wrong uri: " + uri.spec);
+          break;
+	} catch (e) {
+          log("There occurred an error within the overlayobserver: " + e);
         }
-        break;
-
       default:
         log("!! Unknown topic: " + topic);
         break;
