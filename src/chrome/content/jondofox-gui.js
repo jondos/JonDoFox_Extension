@@ -405,13 +405,13 @@ var overlayObserver = {
                       formatString('jondofox.dialog.message.uninstallExtension',
                       [exFound[i]]));
 	        } 
-	      }
-              appStart = Components.
+                appStart = Components.
 			     classes['@mozilla.org/toolkit/app-startup;1'].
 			     getService(Components.interfaces.nsIAppStartup);
-              appStart.quit(Components.interfaces.
+                appStart.quit(Components.interfaces.
 		             nsIAppStartup.eAttemptQuit|
 			     Components.interfaces.nsIAppStartup.eRestart);
+	      }
             }
             //Let's test whether the user starts with appropriate 
 	    //proxy-settings..
