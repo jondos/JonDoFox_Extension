@@ -128,7 +128,7 @@ PrefsMapper.prototype = {
         this.prefsHandler.deletePreference(p);
       }
       for (p in this.intPrefsMap) {
-	this.prefsHandler.deletePreference(P);
+	this.prefsHandler.deletePreference(p);
       }
     } catch (e) {
       log("unmap(): " + e);

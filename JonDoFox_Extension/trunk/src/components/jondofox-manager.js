@@ -63,8 +63,7 @@ JDFManager.prototype = {
   clean: false,
 
   // This is set to true if Certificate Patrol is found and our respective 
-  // checkbox not checked. It helps to optimize the incorporation of Certificate 
-  // Patrol code. 
+  // checkbox not checked. It helps to optimize the incorporation of Certificate  // Patrol code. 
   certPatrol: false,
 
   // Remove jondofox preferences branch on uninstall only
@@ -73,7 +72,19 @@ JDFManager.prototype = {
   // Do we have a FF4 or still a FF3?
   ff4: true,
 
-  vers: null,
+  // In FF4 the asynchronous AddOn-Manager leads to the problem that the found-
+  // extensions-dialog appears in the background of the browser window. Thus, 
+  // we avoid starting the dialog as early as in FF < 4 but save the found 
+  // extensions' names in an array that is checked after the browser window is
+  // loaded. If we have extensions that are incompatible we show them in one
+  // window and restarting the browser to uninstall them finally after the user
+  // clicked on "OK".
+  extensionsFound: [],
+
+  noscriptInstalled: true,
+
+  noscriptEnabled: true,
+
   // Incompatible extensions with their IDs
   extensions: { 
     'CuteMenus':'{63df8e21-711c-4074-a257-b065cadc28d8}',
@@ -164,9 +175,6 @@ JDFManager.prototype = {
     'extensions.jondofox.network-protocol-handler.warn_external_default'
   },
 
-  // We need the MIME-Type datasource to observe the always-ask property.
-  //mimeTypesDs: null,
- 
   fileTypes: [],
 
   // Inititalize services and stringBundle
@@ -175,8 +183,8 @@ JDFManager.prototype = {
     log("Initialize JDFManager");
     try {
       // Init services
-      JDFManager.prototype.prefsHandler = CC['@jondos.de/preferences-handler;1'].
-                             getService().wrappedJSObject;
+      JDFManager.prototype.prefsHandler = 
+	 CC['@jondos.de/preferences-handler;1'].getService().wrappedJSObject;
       JDFManager.prototype.prefsMapper = CC['@jondos.de/preferences-mapper;1'].
                             getService().wrappedJSObject;
       JDFManager.prototype.proxyManager = CC['@jondos.de/proxy-manager;1'].
@@ -186,7 +194,7 @@ JDFManager.prototype = {
       JDFManager.prototype.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].
 	                      getService(CI.nsIRDFService);
       JDFManager.prototype.directoryService = 
-	 CC['@mozilla.org/file/directory_service;1'].getService(CI.nsIProperties);
+       CC['@mozilla.org/file/directory_service;1'].getService(CI.nsIProperties);
       // Determine whether we use FF4 or still some FF3
       this.isFirefox4();
       if (this.ff4) {
@@ -300,7 +308,8 @@ JDFManager.prototype = {
       for (extension in this.necessaryExtensions) {
         log ('Checking for ' + extension);
         if (!this.isInstalled(this.necessaryExtensions[extension])) {
-	  if (this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
+	  if (this.prefsHandler.
+                 getBoolPref('extensions.jondofox.update_warning')) {
            this.jdfUtils.showAlertCheck(this.jdfUtils.
              getString('jondofox.dialog.attention'), this.jdfUtils.
              formatString('jondofox.dialog.message.necessaryExtension', [e]),
@@ -311,7 +320,8 @@ JDFManager.prototype = {
           log(extension + ' is installed');
           //... and if so whether they are enabled.
           if (this.isUserDisabled(this.necessaryExtensions[extension])) {
-            if (this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
+            if (this.prefsHandler.
+	             getBoolPref('extensions.jondofox.update_warning')) {
 	      this.jdfUtils.showAlertCheck(this.jdfUtils.
                 getString('jondofox.dialog.attention'), this.jdfUtils.
                 formatString('jondofox.dialog.message.enableExtension',
@@ -345,16 +355,41 @@ JDFManager.prototype = {
         AddonManager.getAddonByID(this.extensions[extension],
 	function(addon) {
 	  if (addon) {
-	    addon.uninstall();
-	    var addonName = addon.name;
-            JDFManager.prototype.jdfUtils.showAlert(JDFManager.prototype.jdfUtils.
-              getString('jondofox.dialog.attention'), JDFManager.prototype.jdfUtils.
-              formatString('jondofox.dialog.message.uninstallExtension',
-              [addonName]));
+	    log(aExtension  + " was found...");
+	    if ((aExtension === "Certificate Patrol") && 
+		 !JDFManager.prototype.prefsHandler.
+		   getBoolPref("extensions.jondofox.certpatrol_enabled")) {
+	      log("...but no problem, as our functionality is not activated."); 
+              JDFManager.prototype.certPatrol = true;
+            } else if ((aExtension === "RefControl") &&
+		 !JDFManager.prototype.prefsHandler.
+		   getBoolPref("extensions.jondofox.set_referrer")) {
+	      log("...but no problem, as our functionality is not activated."); 
+	    } else { 
+	      addon.uninstall();
+	      JDFManager.prototype.extensionsFound.push(aExtension);
+	    }
 	  } else {
 	    log(aExtension + " was not found!"); 
-	  }});
+	  }
+	});
       }
+      AddonManager.getAddonByID('{73a6fe31-595d-460b-a920-fcc0f8843232}', 
+      function(addon) { 
+        if (addon) {
+          log("Found NoScript, that's good." + 
+		    " Checking whether it is enabled...");
+          if (addon.isActive) {
+            log("NoScript is enabled as well.");
+          } else {
+            log("NoScript is not enabled!");
+            JDFManager.prototype.noscriptEnabled = false;
+          }
+        } else {
+          log("NoScript is missing...");
+          JDFManager.prototype.noscriptInstalled = false;
+        }
+      });
     } catch (e) {
       log("checkExtensionsFF4(): " + e);
     }
@@ -384,6 +419,12 @@ JDFManager.prototype = {
         // FF3-check for incompatible extensions and whether the necessary ones
         // are installed and enabled.
         this.checkExtensions();
+        // Maybe the proposed UA has changed due to an update. Thus, 
+        // we are on the safe side if we set it on startup.
+        if (this.VERSION !== 
+          this.prefsHandler.getStringPref('extensions.jondofox.last_version')) {
+          this.setUserAgent(this.getState());
+        }
       }
       // Check whether we have some MIME-types which use external helper apps
       // automatically and if so correct this
@@ -430,14 +471,6 @@ JDFManager.prototype = {
             'general.useragent.override') === this.prefsHandler.getStringPref(
             'extensions.jondofox.tor.useragent_override')) {
           this.setUserAgent('tor');
-        }
-      }
-      if (!this.ff4) {
-        // Maybe the proposed UA has changed due to an update. Thus, we are on 
-	// the safe side if we set it on startup.
-        if (this.VERSION !== 
-          this.prefsHandler.getStringPref('extensions.jondofox.last_version')) {
-          this.setUserAgent(this.getState());
         }
       }
     } catch (e) {
@@ -518,7 +551,8 @@ JDFManager.prototype = {
 	    var lastVersion = JDFManager.prototype.prefsHandler.
 		    getStringPref('extensions.jondofox.last_version');
             if (JDFManager.prototype.VERSION !== lastVersion) {
-              JDFManager.prototype.setUserAgent(JDFManager.prototype.getState());
+              JDFManager.prototype.setUserAgent(JDFManager.
+		      prototype.getState());
             }
           });
   },
@@ -607,15 +641,11 @@ JDFManager.prototype = {
     log('Uninstalling ' + eID);
     var em;
     try {
-      if (this.ff4) {
-	AddonManager.getAddonById(eID, function(addon) {addon.uninstall();});
-      } else {
-        // Get the extensions manager
-        em = CC['@mozilla.org/extensions/manager;1'].
-                  getService(CI.nsIExtensionManager);
-        // Try to get the install location
-        em.uninstallItem(eID);
-      }
+      // Get the extensions manager
+      em = CC['@mozilla.org/extensions/manager;1'].
+                 getService(CI.nsIExtensionManager);
+      // Try to get the install location
+      em.uninstallItem(eID);
     } catch (e) {
       log("uninstallExtension(): " + e);
     }
