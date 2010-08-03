@@ -350,6 +350,9 @@ var prefsObserver = {
 var overlayObserver = {
   // Implement nsIObserver
   observe: function(subject, topic, data) {
+    var exFound;
+    var appStart;
+    var restart;
     switch (topic) {
       case 'xul-overlay-merged':
         try {
@@ -364,16 +367,54 @@ var overlayObserver = {
             prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
 
-            //We need to obser ve this preference because otherwise there would be
-            //no refreshing of the status bar if we had already 'custom' as a
-            //our proxy state: the correct writing of 'custom' with either red
-            //or black letters would not work if we accepted or applied new
-            //settings.
+            //We need to obser ve this preference because otherwise there 
+	    //would be no refreshing of the status bar if we had already 
+	    //'custom' as a our proxy state: the correct writing of 'custom' 
+	    //with either red or black letters would not work if we accepted 
+	    //or applied new settings.
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
                   
             log("New window is ready");
-            //Let's test whether the user starts with appropriate proxy-settings..
+	    if (jdfManager.ff4) {
+	      // Let's check first if NoScript is installed and enabled. If not
+	      // remind the user of the importance to do so.
+              if (prefsHandler.
+                    getBoolPref('extensions.jondofox.update_warning')) {
+	        if (!jdfManager.noscriptInstalled) {
+                  jdfUtils.showAlertCheck(jdfUtils.
+		    getString('jondofox.dialog.attention'), jdfUtils.
+                    formatString('jondofox.dialog.message.necessaryExtension', 
+			   ['NoScript']), 'update');
+	        } else if (!jdfManager.noscriptEnabled) {
+                  jdfUtils.showAlertCheck(jdfUtils.
+		    getString('jondofox.dialog.attention'), jdfUtils.
+                    formatString('jondofox.dialog.message.enableExtension', 
+			   ['NoScript']), 'update');  
+	        }
+	      }
+	      // Second, if there are incompatible extensions we found
+	      // we iterate through the array containing them and we restart
+	      // the browser after showing a proper message dialog
+	      exFound = jdfManager.extensionsFound;
+              if (exFound.length > 0) {
+	        for (var i = 0; i < exFound.length; i++) {
+	          log("The array contains: " + exFound[i]);
+	          jdfUtils.showAlert(jdfUtils.
+	              getString('jondofox.dialog.attention'), jdfUtils.
+                      formatString('jondofox.dialog.message.uninstallExtension',
+                      [exFound[i]]));
+	        } 
+	      }
+              appStart = Components.
+			     classes['@mozilla.org/toolkit/app-startup;1'].
+			     getService(Components.interfaces.nsIAppStartup);
+              appStart.quit(Components.interfaces.
+		             nsIAppStartup.eAttemptQuit|
+			     Components.interfaces.nsIAppStartup.eRestart);
+            }
+            //Let's test whether the user starts with appropriate 
+	    //proxy-settings..
             isProxyDisabled();
 
             // Get the last version property
