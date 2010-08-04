@@ -413,10 +413,7 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
 
-      if (this.prefsHandler.
-          getBoolPref('extensions.jondofox.certpatrol_showChangedCert')) {
-        this.outchange(browser, certobj);
-      }
+      this.outchange(browser, certobj);
 
     // New certificate
     } else if (!found) {
@@ -463,10 +460,7 @@ var CertPatrol = {
       certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.
 				notAfterGMT));
-      if (this.prefsHandler.
-               getBoolPref('extensions.jondofox.certpatrol_showNewCert')) {
-        this.outnew(browser, certobj);
-      }
+      this.outnew(browser, certobj);
     }
   },
 
@@ -506,14 +500,53 @@ var CertPatrol = {
   },
 
   outnew: function(browser, certobj) {
-          window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
+    var notifyBox = gBrowser.getNotificationBox();
+    if (this.prefsHandler.
+	     getBoolPref("extensions.jondofox.certpatrol_showNewCert") ||
+	notifyBox === null) {
+      window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
                "_blank", "modal", certobj);
+      return;
+    }
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.newEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	certobj.host, null,
+	notifyBox.PRIORITY_INFO_HIGH, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
+		"_blank", "modal", certobj);
+	} },
+    ]);
   },
   
   
   outchange: function(browser, certobj) {
-	window.openDialog("chrome://jondofox/content/certpatrol/change.xul", 
+    var notifyBox = gBrowser.getNotificationBox();
+    if (this.prefsHandler.
+	     getBoolPref("extensions.jondofox.certpatrol_showChangedCert") ||
+	notifyBox === null || certobj.threat > 1) {
+      window.openDialog("chrome://jondofox/content/certpatrol/change.xul", 
                "_blank", "modal", certobj);
+      return;
+    }
+    notifyBox.appendNotification(
+	"(CertPatrol) "+ certobj.lang.newEvent
+	  +" "+ certobj.moz.commonName +". "+
+	  certobj.lang.issuedBy +" "+
+	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	certobj.host, null,
+	certobj.threat > 0 ? notifyBox.PRIORITY_WARNING_HIGH
+			    : notifyBox.PRIORITY_INFO_LOW, [
+	    { accessKey: "D", label: certobj.lang.viewDetails,
+	      callback: function(msg, btn) {
+	window.openDialog("chrome://jondofox/content/certpatrol/change.xul", 
+		"_blank", "modal", certobj);
+	} },
+    ]);
   },
   
   

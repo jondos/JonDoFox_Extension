@@ -199,10 +199,34 @@ JDFManager.prototype = {
       this.isFirefox4();
       if (this.ff4) {
         try {
+          var extensionListener = {
+	    onUninstalling: function(addon) {
+              if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
+		log("We got the onUninstalling notification...")
+                JDFManager.prototype.clean = true;
+		JDFManager.prototype.uninstall = true;
+	      }
+	    },
+            onDisabling: function(addon) {
+              if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
+		log("We got the onDisabling notification...");
+                JDFManager.prototype.clean = true;
+              }
+	    },
+	    onOperationCancelled: function(addon) {
+              if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
+		log("Operation got cancelled!");
+                JDFManager.prototype.clean = false;
+		JDFManager.prototype.uninstall = false;
+              }
+	    }
+	  }
+
           CU.import("resource://gre/modules/AddonManager.jsm");
 	  this.getVersionFF4();
+	  AddonManager.addAddonListener(extensionListener);
 	} catch (e) {
-          log("There went something with importing the AddonManager module: " + 
+          log("There went something with importing the AddonManager: " + 
               e);
 	}
       } else {
@@ -312,8 +336,8 @@ JDFManager.prototype = {
                  getBoolPref('extensions.jondofox.update_warning')) {
            this.jdfUtils.showAlertCheck(this.jdfUtils.
              getString('jondofox.dialog.attention'), this.jdfUtils.
-             formatString('jondofox.dialog.message.necessaryExtension', [e]),
-            'update');
+             formatString('jondofox.dialog.message.necessaryExtension', 
+	     [extension]), 'update');
 	  }
           log(extension + ' is missing');
         } else {
@@ -1253,12 +1277,19 @@ JDFManager.prototype = {
             break; 
  
           case this.STATE_TOR:
+	    var prefix = "extensions.jondofox.tor."
             // Ensure that share_proxy_settings is unset
             this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
-            // Set SOCKS proxy only
-            this.proxyManager.setProxySOCKS('127.0.0.1', 9050, 5);
-            this.proxyManager.setSocksRemoteDNS(true);
             this.proxyManager.setProxyAll('', 0);
+            // Set SOCKS or if the user wishes a HTTP/S-proxy additionally
+	    this.proxyManager.setProxyHTTP(
+                 this.prefsHandler.getStringPref(prefix + "http_host"),
+		 this.prefsHandler.getIntPref(prefix + "http_port"));
+	    this.proxyManager.setProxySSL(
+		 this.prefsHandler.getStringPref(prefix + "ssl_host"),
+		 this.prefsHandler.getIntPref(prefix + "ssl_port"));
+            this.proxyManager.setProxySOCKS("127.0.0.1", 9050, 5);
+            this.proxyManager.setSocksRemoteDNS(true);
             // Set default exceptions
             this.proxyManager.setExceptions(this.prefsHandler.
                                  getStringPref(this.NO_PROXIES));
@@ -1398,11 +1429,28 @@ JDFManager.prototype = {
           break;
 
         case 'nsPref:changed':
-          // Check if someone enables the history?
-          //   'browser.history_expire_days'
-          
+          // If someone wants to change the Tor prefs manually we have to 
+	  // reset the proxy accordingly
+          if (data === 'extensions.jondofox.tor.http_host' ||
+	      data === 'extensions.jondofox.tor.http_port') {
+            this.proxyManager.setProxyHTTP(
+	        this.prefsHandler.
+		     getStringPref("extensions.jondofox.tor.http_host"),
+                this.prefsHandler.
+		     getIntPref("extensions.jondofox.tor.http_port"));
+          }
+
+	  else if (data === 'extensions.jondofox.tor.ssl_host' ||
+                   data === 'extensions.jondofox.tor.ssl_port') {
+            this.proxyManager.setProxySSL(
+                this.prefsHandler.
+		     getStringPref("extensions.jondofox.tor.ssl_host"),
+                this.prefsHandler.
+		     getIntPref("extensions.jondofox.tor.ssl_port"));
+          }
+
           // Do not allow to accept ALL cookies
-          if (data === 'network.cookie.cookieBehavior') {
+          else if (data === 'network.cookie.cookieBehavior') {
 	    if (this.prefsHandler.getIntPref(data) === 0) {
 	      this.prefsHandler.setIntPref(data, 1);
               // Warn the user if she has not disabled preference warnings
