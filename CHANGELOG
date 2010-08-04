@@ -1,6 +1,7 @@
 Changes in version 0.2.6 - YYY
 
   New Feature:
+    * compatibility with FF4 (up to and including beta 2)
     * "extensions.jondofox.search_suggest_enabled" is set to "false" and 
       disables the search suggestion feature in the browser
     * a JonDoFox feature page is shown during start-up of a new extension 
@@ -11,9 +12,12 @@ Changes in version 0.2.6 - YYY
 
   Minor improvement:
     * changes regarding network.http.accept.default are not ignored anymore
+    * a HTTP/S-proxy is now configurable in the Tor proxy setting
+      via about:config
    
   Bug fixing:
     * adapted the text concerning the "referer-checkbox" 
+    * fixed a bug in the unmap() function of the preferences-mapper
 
 Changes in version 0.2.5 - 2010-05-19
 

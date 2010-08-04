@@ -45,6 +45,12 @@ pref("extensions.jondofox.custom.backup.socks_host", "");
 pref("extensions.jondofox.custom.backup.socks_port", 0);
 pref("extensions.jondofox.custom.backup.socks_version", 5);
 
+// Tor proxy settings
+pref("extensions.jondofox.tor.http_host", "");
+pref("extensions.jondofox.tor.http_port", 0);
+pref("extensions.jondofox.tor.ssl_host", "");
+pref("extensions.jondofox.tor.ssl_port", 0);
+
 // Useragent
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
@@ -117,5 +123,5 @@ pref("extensions.jondofox.stanford-safecache_enabled", true);
 
 //Certificate Patrol
 pref("extensions.jondofox.certpatrol_enabled", true);
-pref("extensions.jondofox.certpatrol_showNewCert", true);
-pref("extensions.jondofox.certpatrol_showChangedCert", true);
+pref("extensions.jondofox.certpatrol_showNewCert", false);
+pref("extensions.jondofox.certpatrol_showChangedCert", false);

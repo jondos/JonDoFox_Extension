@@ -7,19 +7,31 @@ function onLoad() {
         "("+window.arguments[0].host+")");
       document.getElementById("cmdiag").setAttribute("title", 
         window.arguments[0].lang.changeEvent);
+      // The following code block is responible for rendering the heading of
+      // the cert change dialog and the problematic attributes (if there are
+      // any) properly. If we have seemlingly no threat just render the 
+      // background of the heading green, signalling verything is okay.
+      // Otherwise, turn it into orange or red and show the user in addition
+      // to the written warning(s) the problematic attributes colored 
+      // respectively.
       coloredWarnings = window.arguments[0].coloredWarnings;
       if (threat === 0) {
-	settingColor("green", "cmdiag", "cmcnn");
+	document.getElementById("cmdiag").setAttribute("style", 
+		"color: black; background: forestgreen; border: none");
       } else if (threat === 1 || threat === 2) {
         for (warning in coloredWarnings) {
-          settingColor("yellow", coloredWarnings[warning]);
+          document.getElementById(coloredWarnings[warning]).
+		  setAttribute("style", "color: orange");
 	}
-	settingColor("yellow", "cmdiag", "cmsha1n");
+	document.getElementById("cmdiag").setAttribute("style", 
+		"color: black; background: orange; border: none");
       } else {
         for (warning in coloredWarnings) {
-          settingColor("red", coloredWarnings[warning]);
+          document.getElementById(coloredWarnings[warning]).
+		  setAttribute("style", "color: firebrick");
         }
-	settingColor("red", "cmdiag", "cmsha1n");
+        document.getElementById("cmdiag").setAttribute("style", 
+		"color: black; background: firebrick; border: none");
       }
       
       document.getElementById("cmissto").setAttribute("label",
@@ -90,19 +102,3 @@ function onLoad() {
       document.getElementById("cminfo").value = window.arguments[0].info;
 }
 
-function settingColor() {
-  var i;
-  var color = arguments[0];
-  if (arguments[0] === "yellow") {
-    for (i = 1; i < arguments.length; i += 1) {
-      document.getElementById(arguments[i]).
-       setAttribute("style", "background: " + 
-		    arguments[0] + "; color: black; border: none"); 
-    } 
-  } else {
-    for (i = 1; i < arguments.length; i += 1) {
-      document.getElementById(arguments[i]).
-       setAttribute("style", "background: " + arguments[0] + "; border: none");
-    }
-  }
-}
