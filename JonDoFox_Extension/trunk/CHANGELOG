@@ -9,11 +9,13 @@ Changes in version 0.2.6 - YYY
       feature page
     * included a slightly enhanced version of Certificate Patrol to provide a
       better detection of MITM attacks
+    * the search history is now deleted after every 5 minutes
 
   Minor improvement:
     * changes regarding network.http.accept.default are not ignored anymore
     * a HTTP/S-proxy is now configurable in the Tor proxy setting
       via about:config
+    * optimized our referer logic
    
   Bug fixing:
     * adapted the text concerning the "referer-checkbox" 

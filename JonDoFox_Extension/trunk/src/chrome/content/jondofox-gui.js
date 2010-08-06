@@ -312,6 +312,42 @@ function noProxyListRemove(uri) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// Deleting searchbar entries
+// ////////////////////////////////////////////////////////////////////////////
+
+/*function clearingSearchbar() {
+  try {
+    window.document.getElemenetById("searchbar").
+	    removeEventListener("TextEntered", clearingSearchbar, false);
+    log("60 sec are over, clearing the searchbar if we find entries...");
+    var searchbar = window.document.getElementById("searchbar");
+    if (searchbar && searchbar.value) {
+      log("We found same value to erase...");
+      searchbar.textbox.reset();
+    } else {
+      log("Nothing found inside the searchbar, waiting for another 60 sec...");
+    }
+  } catch (e) {
+    log("Something went wrong while clearing the searchbar: " + e);
+  }
+}*/
+
+function clearingSearchbarHistory() {
+  try {
+    var formHistSvc = Components.classes["@mozilla.org/satchel/form-history;1"].
+	    getService(Components.interfaces.nsIFormHistory2);
+    if (formHistSvc.nameExists("searchbar-history")) {
+      log("We found something to erase...");
+      formHistSvc.removeEntriesForName("searchbar-history");
+    } else {
+      log("No searchbar history entries found! Waiting for another 5 min...");
+    }
+  } catch (e) {
+    log("Something went wrong with deleting the searchbar history!");
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 // The method 'initWindow()' is called on the 'load' event + observers
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -435,7 +471,12 @@ var overlayObserver = {
             // startup
             if (jdfManager.checkProfileUpdate()) {
 	      openBrowserTabJondofox(true);
-            } 
+            }
+	    // We delete the search history after 5 minutes... 
+	    var intervalID = window.setInterval(clearingSearchbarHistory, 
+			    300000);
+	    //window.document.getElementById("searchbar").
+	//	    addEventListener("TextEntered", clearingSearchbar, false); 
           } else {
             log("!! Wrong uri: " + uri.spec);
           }
