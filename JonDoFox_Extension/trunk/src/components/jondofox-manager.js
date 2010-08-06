@@ -177,6 +177,8 @@ JDFManager.prototype = {
 
   fileTypes: [],
 
+  isClearingSearchhistoryEnabled: false,
+
   // Inititalize services and stringBundle
   init: function() {
     var bundleService;

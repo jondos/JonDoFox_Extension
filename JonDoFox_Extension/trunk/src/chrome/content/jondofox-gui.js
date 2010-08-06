@@ -472,9 +472,14 @@ var overlayObserver = {
             if (jdfManager.checkProfileUpdate()) {
 	      openBrowserTabJondofox(true);
             }
-	    // We delete the search history after 5 minutes... 
-	    var intervalID = window.setInterval(clearingSearchbarHistory, 
+	    // We delete the search history after 5 minutes... But only using
+	    // one setInterval as there is no search history per window but
+	    // per session. 
+	    if (!jdfManager.isClearingSearchhistoryEnabled) {
+	      jdfManager.isClearingSearchhistoryEnabled = true;
+	      var intervalID = window.setInterval(clearingSearchbarHistory, 
 			    300000);
+	    }
 	    //window.document.getElementById("searchbar").
 	//	    addEventListener("TextEntered", clearingSearchbar, false); 
           } else {
