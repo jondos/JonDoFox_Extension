@@ -106,11 +106,13 @@ RequestObserver.prototype = {
           oldRef = false;
         }
 
-        // Set the request header if the base domain is changing but only if
-        // if no 3rd party content is loaded but a new domain is requested.
-        // If no Referrer is set we imitate Firefox' behavior and do not set
-        // one as well. If we have a Referrer but do not get an originating
-        // URI we set the Referrer for security's sake to the requested domain.
+	// We leave the Referer if we found 3rd party content. Otherwise, 
+        // if no Referer is set we imitate Firefox' behavior and do not set
+        // one as well. If we have a Referer indicating the user came from a
+	// different domain and do not get an originating URI we set the 
+	// Referer for security's sake to null. The same holds for the case
+	// were the user came from a different domain and we got a originating
+	// URI but found no 3rd party content.
         if (baseDomain !== suffix && oldRef) {
           log ("URI is: " + baseDomain);
           try {
@@ -130,20 +132,25 @@ RequestObserver.prototype = {
           }
           log ("Originating URI is: " + originatingDomain);
           if (baseDomain === originatingDomain || !originatingDomain) {
-            var newRef = channel.URI.scheme + "://" + channel.URI.hostPort + "/";
-            channel.setRequestHeader("Referer", newRef, false);
-            // Set the referrer attribute to channel object (necessary?)
-            //channel.referrer.spec = newRef;
-            log("Referrer (modified): " + channel.getRequestHeader("Referer"));
+            channel.setRequestHeader("Referer", null, false);
+	    try {
+	      log("Referrer (modified): " + 
+			      channel.getRequestHeader("Referer"));
+	    } catch (e if e.name === "NS_ERROR_NOT_AVAILABLE") {
+              // The header is not set
+              log("Referer is not set!");
+	    }
           } else {
             if (originatingDomain !== "false") {
               log("3rd party content, Referrer not modified");
             } else {
-              log("We got a referrer but no originating URI! Modify the referrer, although it may be 3rd party content!");
+              log("We got a referer but no originating URI!\n" + 
+	          "Modify the referer, although it may be 3rd party content!");
+	      channel.setRequestHeader("Referer", null, false);
             }
           }
         } else {
-          log("Referrer not modified");
+          log("Referer not modified");
         }
       }
 
