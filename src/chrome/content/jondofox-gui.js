@@ -315,29 +315,33 @@ function noProxyListRemove(uri) {
 // Deleting searchbar entries
 // ////////////////////////////////////////////////////////////////////////////
 
-/*function clearingSearchbar() {
+function clearingSearchbar() {
   try {
-    window.document.getElemenetById("searchbar").
-	    removeEventListener("TextEntered", clearingSearchbar, false);
-    log("60 sec are over, clearing the searchbar if we find entries...");
     var searchbar = window.document.getElementById("searchbar");
-    if (searchbar && searchbar.value) {
-      log("We found same value to erase...");
-      searchbar.textbox.reset();
+    //see sanitize.js for the following if-clauses
+    if (searchbar) {
+      var transactionMgr = searchbar.textbox.editor.transactionManager;
+      if (searchbar.value || transactionMgr.numberOfUndoItems ||
+                transactionMgr.numberOfRedoItems) {
+        log("We found some searchbar value to erase...");
+        searchbar.textbox.reset();
+      } else {
+        log("Nothing found inside the searchbar, waiting for another 2 min...");
+      }
     } else {
-      log("Nothing found inside the searchbar, waiting for another 60 sec...");
+      log("We found no searchbar, waiting another 2 min...");
     }
   } catch (e) {
     log("Something went wrong while clearing the searchbar: " + e);
   }
-}*/
+}
 
 function clearingSearchbarHistory() {
   try {
     var formHistSvc = Components.classes["@mozilla.org/satchel/form-history;1"].
 	    getService(Components.interfaces.nsIFormHistory2);
     if (formHistSvc.nameExists("searchbar-history")) {
-      log("We found something to erase...");
+      log("We found search-history values to erase...");
       formHistSvc.removeEntriesForName("searchbar-history");
     } else {
       log("No searchbar history entries found! Waiting for another 5 min...");
@@ -472,12 +476,13 @@ var overlayObserver = {
             if (jdfManager.checkProfileUpdate()) {
 	      openBrowserTabJondofox(true);
             }
+	    var intervalSID = window.setInterval(clearingSearchbar, 120000);
 	    // We delete the search history after 5 minutes... But only using
 	    // one setInterval as there is no search history per window but
 	    // per session. 
 	    if (!jdfManager.isClearingSearchhistoryEnabled) {
 	      jdfManager.isClearingSearchhistoryEnabled = true;
-	      var intervalID = window.setInterval(clearingSearchbarHistory, 
+	      var intervalHID = window.setInterval(clearingSearchbarHistory, 
 			    300000);
 	    }
 	    //window.document.getElementById("searchbar").

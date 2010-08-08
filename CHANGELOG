@@ -9,7 +9,9 @@ Changes in version 0.2.6 - YYY
       feature page
     * included a slightly enhanced version of Certificate Patrol to provide a
       better detection of MITM attacks
-    * the search history is now deleted after every 5 minutes
+    * the search history is deleted after every 5 minutes now
+    * the searchbar value (as well as the "UnDo" and "ReDo" ones) is deleted
+      after every 2 minutes now
 
   Minor improvement:
     * changes regarding network.http.accept.default are not ignored anymore
