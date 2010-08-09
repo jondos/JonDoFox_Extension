@@ -509,13 +509,20 @@ var overlayObserver = {
 function shutdown() {
   try {
     log("Removing event listeners...");
+    window.removeEventListener("load", init, true);
     window.removeEventListener("load", initWindow, true);
     window.removeEventListener("unload", shutdown, false);
     window.removeEventListener("keypress", clearingSearchbar, false);
     window.removeEventListener("click", clearingSearchbar, false);
     window.removeEventListener("load", initTitleListener, false);
-    window.document.getElementById("content").
-	    removeEventListener("DOMTitleChanged", setTitleModifier, false);
+    window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); }, 
+           false); 
+    document.getElementById("content").removeEventListener("DOMTitleChanged", 
+		    setTitleModifier, false);
+    document.getElementById("content").removeEventListener("load",
+		    CertPatrol.onPageLoad, true);
+    document.getElementById("contentAreaContextMenu").
+	    removeEventListener("popupshowing", showMenuItem, false);
   } catch (e) {
     log("Error while removing event listeners: " + e);
   }

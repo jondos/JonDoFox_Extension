@@ -54,8 +54,6 @@ var CertPatrol = {
       this.dbinit();
       this.init();
     }
-    window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); }, 
-           false); 
   },
 
 
