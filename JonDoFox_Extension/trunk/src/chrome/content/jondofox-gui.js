@@ -315,22 +315,21 @@ function noProxyListRemove(uri) {
 // Deleting searchbar entries
 // ////////////////////////////////////////////////////////////////////////////
 
-function clearingSearchbar() {
+function clearingSearchbar(e) {
   try {
-    var searchbar = window.document.getElementById("searchbar");
-    //see sanitize.js for the following if-clauses
-    if (searchbar) {
-      var transactionMgr = searchbar.textbox.editor.transactionManager;
-      if (searchbar.value || transactionMgr.numberOfUndoItems ||
-                transactionMgr.numberOfRedoItems) {
+    //If the user searched something (either via pressing return or
+    //clicking on the search icon) we erase the searchbar value to protect
+    //against someone looking over the user's shoulder
+    if (e.keyCode === 13 || e.originalTarget.getAttribute("anonid") === 
+		    "search-go-button") {
+      var searchbar = window.document.getElementById("searchbar");
+      if (searchbar && searchbar.value) {
         log("We found some searchbar value to erase...");
-        searchbar.textbox.reset();
+        searchbar.value = "";
       } else {
-        log("Nothing found inside the searchbar, waiting for another 2 min...");
+        log("We found no searchbar(value), thus deleting nothing!");
       }
-    } else {
-      log("We found no searchbar, waiting another 2 min...");
-    }
+    } 
   } catch (e) {
     log("Something went wrong while clearing the searchbar: " + e);
   }
@@ -344,7 +343,7 @@ function clearingSearchbarHistory() {
       log("We found search-history values to erase...");
       formHistSvc.removeEntriesForName("searchbar-history");
     } else {
-      log("No searchbar history entries found! Waiting for another 5 min...");
+      log("No searchbar history entries found! Waiting for another 30 min...");
     }
   } catch (e) {
     log("Something went wrong with deleting the searchbar history!");
@@ -407,11 +406,11 @@ var overlayObserver = {
             prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
 
-            //We need to obser ve this preference because otherwise there 
-	    //would be no refreshing of the status bar if we had already 
-	    //'custom' as a our proxy state: the correct writing of 'custom' 
-	    //with either red or black letters would not work if we accepted 
-	    //or applied new settings.
+            // We need to obser ve this preference because otherwise there 
+	    // would be no refreshing of the status bar if we had already 
+	    // 'custom' as a our proxy state: the correct writing of 'custom' 
+	    // with either red or black letters would not work if we accepted 
+	    // or applied new settings.
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
                   
@@ -453,8 +452,8 @@ var overlayObserver = {
 			     Components.interfaces.nsIAppStartup.eRestart);
 	      }
             }
-            //Let's test whether the user starts with appropriate 
-	    //proxy-settings..
+            // Let's test whether the user starts with appropriate 
+	    // proxy-settings..
             isProxyDisabled();
 
             // Get the last version property
@@ -476,17 +475,23 @@ var overlayObserver = {
             if (jdfManager.checkProfileUpdate()) {
 	      openBrowserTabJondofox(true);
             }
-	    var intervalSID = window.setInterval(clearingSearchbar, 120000);
-	    // We delete the search history after 5 minutes... But only using
+	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but
 	    // per session. 
 	    if (!jdfManager.isClearingSearchhistoryEnabled) {
 	      jdfManager.isClearingSearchhistoryEnabled = true;
 	      var intervalHID = window.setInterval(clearingSearchbarHistory, 
-			    300000);
+			    1800000);
 	    }
-	    //window.document.getElementById("searchbar").
-	//	    addEventListener("TextEntered", clearingSearchbar, false); 
+	    // Setting listeners to the search bar text box as well as to 
+	    // the Go-Button to erase the search query immediately after
+	    // submitting
+	    var searchbar = document.getElementById("searchbar");
+	    searchbar.textbox.addEventListener("keypress", 
+			    clearingSearchbar, false); 
+	    document.getAnonymousElementByAttribute(searchbar,
+			    "anonid", "search-go-button").addEventListener(
+				    "click", clearingSearchbar, false);
           } else {
             log("!! Wrong uri: " + uri.spec);
           }
@@ -501,12 +506,26 @@ var overlayObserver = {
   }
 }
 
+function shutdown() {
+  try {
+    log("Removing event listeners...");
+    window.removeEventListener("load", initWindow, true);
+    window.removeEventListener("unload", shutdown, false);
+    window.removeEventListener("keypress", clearingSearchbar, false);
+    window.removeEventListener("click", clearingSearchbar, false);
+    window.removeEventListener("load", initTitleListener, false);
+    window.document.getElementById("content").
+	    removeEventListener("DOMTitleChanged", setTitleModifier, false);
+  } catch (e) {
+    log("Error while removing event listeners: " + e);
+  }
+}
+
 // Initialize a new browser window
 function initWindow() {
   log("New browser window ..");
   try {
-    // Remove this listener
-    window.removeEventListener("load", initWindow, true);
+    window.addEventListener("unload", shutdown, false);
     // FIXME: Due to bug #330458 subsequent calls to loadOverlay() do not work. 
     // Few other extensions (CuteMenus) also load overlays dynamically and can
     // therefore cause this call to fail. For further information, please see    
