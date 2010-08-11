@@ -320,8 +320,8 @@ function clearingSearchbar(e) {
     //If the user searched something (either via pressing return or
     //clicking on the search icon) we erase the searchbar value to protect
     //against someone looking over the user's shoulder
-    if (e.keyCode === 13 || e.originalTarget.getAttribute("anonid") === 
-		    "search-go-button") {
+    if (e.keyCode === 13 || (e.originalTarget.getAttribute("anonid") === 
+		    "search-go-button" && e.button !== 2) || e.type == "drop") {
       var searchbar = window.document.getElementById("searchbar");
       if (searchbar && searchbar.value) {
         log("We found some searchbar value to erase...");
@@ -487,11 +487,12 @@ var overlayObserver = {
 	    // the Go-Button to erase the search query immediately after
 	    // submitting
 	    var searchbar = document.getElementById("searchbar");
-	    searchbar.textbox.addEventListener("keypress", 
+	    searchbar.addEventListener("keypress", 
 			    clearingSearchbar, false); 
+	    searchbar.textbox.addEventListener("drop", clearingSearchbar, true);
 	    document.getAnonymousElementByAttribute(searchbar,
 			    "anonid", "search-go-button").addEventListener(
-				    "click", clearingSearchbar, false);
+				    "click", clearingSearchbar, true);
           } else {
             log("!! Wrong uri: " + uri.spec);
           }
