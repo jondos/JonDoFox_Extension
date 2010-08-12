@@ -487,8 +487,8 @@ var overlayObserver = {
 	    // the Go-Button to erase the search query immediately after
 	    // submitting
 	    var searchbar = document.getElementById("searchbar");
-	    searchbar.addEventListener("keypress", 
-			    clearingSearchbar, false); 
+	    searchbar.textbox.addEventListener("keypress", 
+			    clearingSearchbar, true); 
 	    searchbar.textbox.addEventListener("drop", clearingSearchbar, true);
 	    document.getAnonymousElementByAttribute(searchbar,
 			    "anonid", "search-go-button").addEventListener(
@@ -513,11 +513,16 @@ function shutdown() {
     window.removeEventListener("load", init, true);
     window.removeEventListener("load", initWindow, true);
     window.removeEventListener("unload", shutdown, false);
-    window.removeEventListener("keypress", clearingSearchbar, false);
-    window.removeEventListener("click", clearingSearchbar, false);
     window.removeEventListener("load", initTitleListener, false);
     window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); }, 
-           false); 
+           false);
+    document.getElementById("searchbar").textbox.
+	    removeEventListener("keypress", clearingSearchbar, true);
+    document.getElementById("searchbar").textbox.
+	    removeEventListener("drop", clearingSearchbar, true);
+    document.getAnonymousElementByAttribute(document.
+	getElementById("searchbar"), "anonid", "search-go-button").
+	    removeEventListener("click", clearingSearchbar, true);
     document.getElementById("content").removeEventListener("DOMTitleChanged", 
 		    setTitleModifier, false);
     document.getElementById("content").removeEventListener("load",
