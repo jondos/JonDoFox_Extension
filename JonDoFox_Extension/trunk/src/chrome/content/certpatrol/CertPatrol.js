@@ -117,10 +117,8 @@ var CertPatrol = {
   // helper functions for advanced patrol
   isodate: function(tim) {
     if (isNaN(tim)) {
-      // i think i saw some cert dates without time info appended..
       var iso = tim.replace(/^(\d\d)\/(\d\d)\/(\d+)/, "$3-$1-$2");
       // upcoming Y3K bug, but you must delete this line before 2020
-      // there will be no more two digit year certs in existence hopefully
       if (iso != tim) {
 	  if (iso[0] != '2') iso = "20"+ iso;
 	  return iso;
@@ -206,6 +204,7 @@ var CertPatrol = {
       lang:{
         newEvent:this.jdfUtils.getString("newEvent"),
         changeEvent:this.jdfUtils.getString("changeEvent"),
+	pbmEvent:this.jdfUtils.getString("pbmEvent"),
         newCert:this.jdfUtils.getString("newCert"),
         oldCert:this.jdfUtils.getString("oldCert"),
         issuedTo:this.jdfUtils.getString("issuedTo"),
@@ -279,12 +278,25 @@ var CertPatrol = {
     var found = false;
     var existingWildcardCert = false;
 
+   // memory cache of last seen SHA1 - useful for private browsing
+    if (this.last_sha1Fingerprint && 
+        this.last_sha1Fingerprint === certobj.moz.sha1Fingerprint) {
+      return;
+    } else {
+      this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
+    }
+
+    var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].
+	    getService(Components.interfaces.nsIPrivateBrowsingService);
+    this.pbm = pbs.privateBrowsingEnabled;
+ 
+
     // Get certificate
     var stmt = this.dbselect;
     try {
       stmt.bindUTF8StringParameter(0, certobj.host);
       if (stmt.executeStep()) {
-        found=true;
+        found = true;
         certobj.sql.commonName = stmt.getUTF8String(1);
         certobj.sql.organization = stmt.getUTF8String(2);
         certobj.sql.organizationalUnit = stmt.getUTF8String(3);
@@ -317,27 +329,29 @@ var CertPatrol = {
       // test fails...
       existingWildcardCert = this.wildcardCertCheck(certobj.moz.commonName,
 		      certobj.moz.sha1Fingerprint);
-      // DB update
-      stmt = this.dbupdate;
-      try {
-        stmt.bindUTF8StringParameter( 0, certobj.host);
-        stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
-        stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
-        stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
-        stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
-        stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-        stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
-        stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
-        stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
-        stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
-        stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
-        stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
-        stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
-        stmt.execute();
-      } catch(err) {
-        this.warn("Error trying to update certificate: "+ err);
-      } finally {
-        stmt.reset();
+      if (!this.pbm) {
+        // DB update
+        stmt = this.dbupdate;
+        try {
+          stmt.bindUTF8StringParameter( 0, certobj.host);
+          stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
+          stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
+          stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
+          stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
+          stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
+          stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
+          stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
+          stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
+          stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
+          stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
+          stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
+          stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
+          stmt.execute();
+        } catch(err) {
+          this.warn("Error trying to update certificate: "+ err);
+        } finally {
+          stmt.reset();
+        }
       }
 
       // If we found an already updated wildcard cert then do not show the 
@@ -393,14 +407,12 @@ var CertPatrol = {
       // well if there are some threats...
       certobj.coloredWarnings.fourth = "cmsha1n";
 
-      // further checks done by firefox before we even get here
 
       if (certobj.threat > 3) {
         certobj.threat = 3;
       }
-      certobj.lang.changeEvent += " "+ this.jdfUtils.getString("threatLevel_" + 
-		      certobj.threat);
-
+      certobj.lang.changeEvent += " " + this.jdfUtils.getString("threatLevel_" +
+		           certobj.threat);
       certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.
 							sql.notBeforeGMT));
@@ -415,43 +427,31 @@ var CertPatrol = {
 
     // New certificate
     } else if (!found) {
-      // Let's check whether we have a wildcard certificate and whether we 
-      // have the same certificare already stored...
-      // We have to do this here, before the new certificate is written.
-      // Otherwise, a wildcard certificate is always found: at least the one
-      // just written and the test fails...
-      existingWildcardCert = this.wildcardCertCheck(certobj.moz.commonName, 
-		      certobj.moz.sha1Fingerprint); 
-      // Now, store data
-      stmt = this.dbinsert;
-      try {
-        stmt.bindUTF8StringParameter( 0, certobj.host);
-        stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
-        stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
-        stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
-        stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
-        stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-        stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
-        stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
-        stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
-        stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
-        stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
-        stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
-        stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
-        stmt.execute();
-      } catch(err) {
-        this.warn("Error trying to insert certificate for "+certobj.host+
-                  ": "+err);
-      } finally {
-        stmt.reset();
+      if (!this.pbm) {
+        // Now, store data
+        stmt = this.dbinsert;
+        try {
+          stmt.bindUTF8StringParameter( 0, certobj.host);
+          stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
+          stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
+          stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
+          stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
+          stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
+          stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
+          stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
+          stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
+          stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
+          stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
+          stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
+          stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
+          stmt.execute();
+        } catch(err) {
+          this.warn("Error trying to insert certificate for " + certobj.host +
+                  ": " + err);
+        } finally {
+          stmt.reset();
+        }
       }
-      // If we found an already saved wildcard cert, do not show it
-      // again to the user, as it is not really a new certificate.
-      if (existingWildcardCert) {
-	return;
-      }
-      // checks are done by firefox before we even get here
-      // that's why we don't complain about host != common name etc.
       certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.moz.
 				notBeforeGMT));
@@ -487,8 +487,8 @@ var CertPatrol = {
           return false;
         }
       } catch (err) {
-        this.warn("Error trying to check wildcardcertificate "+commonName+
-                  ": "+err);
+        this.warn("Error trying to check wildcardcertificate "+ commonName +
+                  ": " + err);
       } finally {
         stmt.reset();
       }
@@ -499,6 +499,12 @@ var CertPatrol = {
 
   outnew: function(browser, certobj) {
     var notifyBox = gBrowser.getNotificationBox();
+    var certPatrolMessage;  
+    if (this.pbm) {
+      certPatrolMessage = certobj.lang.pbmEvent;
+    } else {
+      certPatrolMessage = certobj.lang.newEvent;
+    } 
     if (this.prefsHandler.
 	     getBoolPref("extensions.jondofox.certpatrol_showNewCert") ||
 	notifyBox === null) {
@@ -507,7 +513,7 @@ var CertPatrol = {
       return;
     }
     notifyBox.appendNotification(
-	"(CertPatrol) "+ certobj.lang.newEvent
+	"(CertPatrol) "+ certPatrolMessage
 	  +" "+ certobj.moz.commonName +". "+
 	  certobj.lang.issuedBy +" "+
 	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
@@ -524,6 +530,12 @@ var CertPatrol = {
   
   outchange: function(browser, certobj) {
     var notifyBox = gBrowser.getNotificationBox();
+    var certPatrolMessage;  
+    if (this.pbm) {
+      certPatrolMessage = certobj.lang.pbmEvent;
+    } else {
+      certPatrolMessage = certobj.lang.changeEvent;
+    } 
     if (this.prefsHandler.
 	     getBoolPref("extensions.jondofox.certpatrol_showChangedCert") ||
 	notifyBox === null || certobj.threat > 1) {
@@ -532,7 +544,7 @@ var CertPatrol = {
       return;
     }
     notifyBox.appendNotification(
-	"(CertPatrol) "+ certobj.lang.newEvent
+	"(CertPatrol) "+ certPatrolMessage
 	  +" "+ certobj.moz.commonName +". "+
 	  certobj.lang.issuedBy +" "+
 	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
