@@ -102,7 +102,7 @@ function setCustomProxy() {
   try {
     // Hide 'menupopup'
     document.getElementById('jondofox-proxy-list').hidePopup();
-    //Check whether one of the relevant preferences is zero
+    // Check whether one of the relevant preferences is zero
     
     if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
       if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
@@ -153,7 +153,7 @@ function isProxyDisabled() {
 // Map the current proxy status to a (localized) string label,
 // pass one of the jdfManager.STATE_XXXs here
 function getLabel(state) {
-  //log("Determine proxy status label for " + state);
+  // log("Determine proxy status label for " + state);
   try {
     switch (state) {
       case jdfManager.STATE_NONE:
@@ -223,7 +223,7 @@ function refresh() {
 // Return false if state is NONE or CUSTOM with no valid proxy
 // else true (called from jondofox-overlay.xul)
 function isProxyActive() {
-  //log("Checking if proxy is active");
+  // log("Checking if proxy is active");
     var customAndDisabled = jdfManager.getState() == jdfManager.STATE_CUSTOM &&
 	prefsHandler.getBoolPref(prefix + 'empty_proxy');
   return (jdfManager.getState() != jdfManager.STATE_NONE && !customAndDisabled);
@@ -317,11 +317,13 @@ function noProxyListRemove(uri) {
 
 function clearingSearchbar(e) {
   try {
-    //If the user searched something (either via pressing return or
-    //clicking on the search icon) we erase the searchbar value to protect
-    //against someone looking over the user's shoulder
-    if (e.keyCode === 13 || (e.originalTarget.getAttribute("anonid") === 
-		    "search-go-button" && e.button !== 2) || e.type == "drop") {
+    // If the user searched something (either via pressing return or
+    // clicking on the search icon or dragging something into the serachbar or
+    // choosing a value by mouseclick or return key out of her search history) 
+    // we erase the searchbar value to protect against someone looking over 
+    // the user's shoulder.
+    if (e.keyCode === 13 || e.type === "drop" ||
+       	(e.type === "click" && e.button !== 2)) {
       var searchbar = window.document.getElementById("searchbar");
       if (searchbar && searchbar.value) {
         log("We found some searchbar value to erase...");
@@ -360,7 +362,7 @@ var prefsObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'nsPref:changed':
-        //log(topic + " --> " + data);        
+        // log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
         if (data == PROXY_PREF) {
           if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
@@ -483,10 +485,12 @@ var overlayObserver = {
 	      var intervalHID = window.setInterval(clearingSearchbarHistory, 
 			    1800000);
 	    }
-	    // Setting listeners to the search bar text box as well as to 
-	    // the Go-Button to erase the search query immediately after
-	    // submitting
+	    // We set listeners to the search bar text box as well as to 
+	    // the Go-Button and the search history popup to erase the search 
+	    // query immediately after or during submitting...
 	    var searchbar = document.getElementById("searchbar");
+	    document.getElementById("PopupAutoComplete").
+		    addEventListener("click", clearingSearchbar, false);
 	    searchbar.textbox.addEventListener("keypress", 
 			    clearingSearchbar, true); 
 	    searchbar.textbox.addEventListener("drop", clearingSearchbar, true);
@@ -516,6 +520,8 @@ function shutdown() {
     window.removeEventListener("load", initTitleListener, false);
     window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); }, 
            false);
+    document.getElementById("PopupAutoComplete").
+            removeEventListener("click", clearingSearchbar, false);
     document.getElementById("searchbar").textbox.
 	    removeEventListener("keypress", clearingSearchbar, true);
     document.getElementById("searchbar").textbox.
@@ -548,9 +554,9 @@ function initWindow() {
     // supported. A polling approach is therefore not practicable.
 
     // Possible workaround: Dynamically load the GUI overlay using a timeout
-    //var code = 'document.loadOverlay(\"chrome://jondofox/content/' + 
+    // var code = 'document.loadOverlay(\"chrome://jondofox/content/' + 
     //           'jondofox-gui.xul\", overlayObserver)';
-    //setTimeout(code, 800);
+    // setTimeout(code, 800);
 
     // This should work unexceptionally if bug #330458 is fixed:
     document.loadOverlay('chrome://jondofox/content/jondofox-gui.xul', 
