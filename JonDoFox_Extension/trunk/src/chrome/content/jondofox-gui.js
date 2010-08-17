@@ -317,21 +317,23 @@ function noProxyListRemove(uri) {
 
 function clearingSearchbar(e) {
   try {
-    // If the user searched something (either via pressing return or
-    // clicking on the search icon or dragging something into the serachbar or
-    // choosing a value by mouseclick or return key out of her search history) 
-    // we erase the searchbar value to protect against someone looking over 
-    // the user's shoulder.
-    if (e.keyCode === 13 || e.type === "drop" ||
+    if (prefsHandler.getBoolPref('extensions.jondofox.delete_searchbar')) {
+      // If the user searched something (either via pressing return or
+      // clicking on the search icon or dragging something into the serachbar or
+      // choosing a value by mouseclick or return key out of her search history)
+      // we erase the searchbar value to protect against someone looking over 
+      // the user's shoulder.
+      if (e.keyCode === 13 || e.type === "drop" ||
        	(e.type === "click" && e.button !== 2)) {
-      var searchbar = window.document.getElementById("searchbar");
-      if (searchbar && searchbar.value) {
-        log("We found some searchbar value to erase...");
-        searchbar.value = "";
-      } else {
-        log("We found no searchbar(value), thus deleting nothing!");
-      }
-    } 
+        var searchbar = window.document.getElementById("searchbar");
+        if (searchbar && searchbar.value) {
+          log("We found some searchbar value to erase...");
+          searchbar.value = "";
+        } else {
+          log("We found no searchbar(value), thus deleting nothing!");
+        }
+      } 
+    }
   } catch (e) {
     log("Something went wrong while clearing the searchbar: " + e);
   }
