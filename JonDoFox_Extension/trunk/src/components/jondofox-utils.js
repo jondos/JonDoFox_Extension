@@ -132,7 +132,7 @@ JonDoFoxUtils.prototype = {
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
-// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.1/1.9.2 (FF 3.5/3.6).
 
 if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([JonDoFoxUtils]);
