@@ -236,9 +236,6 @@ RequestObserver.prototype = {
       observers.removeObserver(this, "http-on-modify-request");
       observers.removeObserver(this, "http-on-examine-response");
       observers.removeObserver(this, "quit-application-granted");
-      if (!this.jdfManager.ff4) {
-        observers.removeObserver(this, "profile-after-change");
-      }
     } catch (ex) {
       log("Got exception: " + ex);
     }
@@ -248,14 +245,6 @@ RequestObserver.prototype = {
   observe: function(subject, topic, data) {
     try {
       switch (topic) {
-        // Just for FF < 4 
-	case 'app-startup':
-	  log("Got topic --> " + topic);
-          var observers = CC['@mozilla.org/observer-service;1'].
-	                    getService(CI.nsIObserverService);
-          observers.addObserver(this, "profile-after-change", true);	  
-          break;	
-
         case 'profile-after-change':
           log("Got topic --> " + topic);
           this.registerObservers();
@@ -289,12 +278,11 @@ RequestObserver.prototype = {
   classID:          Components.ID("{cd05fe5d-8815-4397-bcfd-ca3ae4029193}"),
   contractID:       "@jondos.de/request-observer;1",
 
-  // We need this category only for compatibility to versions < FF4 as the
-  // 'profile-after-change'-notification declared in this place does not 
-  // work.
+  // No service flag here. Otherwise the registration for FF3.6.x would not work
+  // See: http://groups.google.com/group/mozilla.dev.extensions/browse_thread/
+  // thread/d9f7d1754ae43045/97e55977ecea7084?show_docid=97e55977ecea7084 
   _xpcom_categories: [{
-    category: "app-startup",
-    service: true
+    category: "profile-after-change",
   }],
 
   QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
@@ -302,7 +290,7 @@ RequestObserver.prototype = {
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
-// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
+// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.1/1.9.2 (FF 3.5/3.6).
 
 if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([RequestObserver]);
