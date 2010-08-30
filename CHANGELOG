@@ -1,23 +1,27 @@
 Changes in version 0.2.6 - YYY
 
   New Feature:
-    * compatibility with FF4 (up to and including beta 2)
+    * compatibility with FF4 (up to and including beta 4)
     * "extensions.jondofox.search_suggest_enabled" is set to "false" and 
       disables the search suggestion feature in the browser
     * a JonDoFox feature page is shown during start-up of a new extension 
-      version; included an about:jondofox shortcut that is linked to our
+      version and may be loaded if "Features" in the proxyswitcher menu is 
+      clicked; included an about:jondofox shortcut that is linked to our
       feature page
     * included a slightly enhanced version of Certificate Patrol to provide a
       better detection of MITM attacks
     * the search history is deleted after every 5 minutes now
     * the searchbar value (as well as the "UnDo" and "ReDo" ones) is deleted
-      after every 2 minutes now
+      as soon as the user starts a serach via the searchbar; this feature may
+      be disabled using the extensions.jondofox.delete_searchbar preference 
 
   Minor improvement:
     * changes regarding network.http.accept.default are not ignored anymore
     * a HTTP/S-proxy is now configurable in the Tor proxy setting
       via about:config
     * optimized our referer logic
+    * updated the proxyswitcher popup (got a tooltiptext, replaced "Anontest"
+      and the mouse cursor changes while it hovers over the proxyswitcher text
    
   Bug fixing:
     * adapted the text concerning the "referer-checkbox" 
