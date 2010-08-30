@@ -139,6 +139,8 @@ http://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 <!ENTITY jondofox.statusbar.noProxy "No Proxy">
 <!ENTITY jondofox.statusbar.custom "Custom Proxy">
 <!ENTITY jondofox.statusbar.preferences "Preferences">
+<!ENTITY jondofox.statusbar.anontest "Anonymity Test">
+<!ENTITY jondofox.statusbar.tooltiptext "JonDoFox Preferences">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
