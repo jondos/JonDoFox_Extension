@@ -38,7 +38,7 @@
       <menuitem id="jondofox-about"
                 class="menuitem-iconic"
                 image="chrome://jondofox/skin/icon-16x16.png"
-                label="JonDoFox Features"
+                label="Features"
 		oncommand="openBrowserTabJondofox(false);" />
       <menuseparator />
 
