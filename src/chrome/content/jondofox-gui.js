@@ -245,6 +245,17 @@ function openBrowserTabAnontest() {
   }
 }
 
+function openJondofoxHomepage() {
+  try {
+    var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Components.interfaces.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser');
+    win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
+  } catch (e) {
+    log("openBrowserTabAnontest(): " + e);
+  }
+}
+
 // Open up the jondofox homepage in a new tab of the current window
 function openBrowserTabJondofox(update) {
   try {
