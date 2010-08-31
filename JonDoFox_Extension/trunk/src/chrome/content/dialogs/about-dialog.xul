@@ -10,36 +10,52 @@
 	onload="sizeToContent()"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-<!-- Original template by Jed Brown -->
+  <script type="application/x-javascript" 
+          src="chrome://jondofox/content/jondofox-gui.js" />
+ 
+  <!-- Original template by Jed Brown -->
 
-<groupbox align="center" orient="horizontal">
-<vbox>
-  <text value="JonDoFox-Extension" style="font-weight: bold; font-size: x-large;"/>
-  <!-- Somehow get the version dynamically here -->
-  <!-- text value="Version 1234abc"/ -->
-  <separator class="thin"/>
-  <text value="&jondofox.about.createdBy;" style="font-weight: bold;"/>
-  <text value="JonDos GmbH"/>
-  <separator class="thin"/>
-  <text value="&jondofox.about.developers;" style="font-weight: bold;"/>
-  <text value="Johannes Renner"/>
-  <text value="Georg Koppen"/> 
-  <separator class="thin"/>
-  <text value="Artwork:" style="font-weight: bold;"/>
-  <text value="Philipp Kaplycz"/>
-  <separator class="thin"/>  <text value="Homepage:" style="font-weight: bold;"/>
-  <text value="&jondofox.about.homepageURL;"
+  <groupbox align="center" orient="horizontal">
+    <vbox>
+      <text value="JonDoFox-Extension" 
+            style="font-weight: bold; font-size: x-large;"/>
+      <!-- Somehow get the version dynamically here -->
+      <!-- text value="Version 1234abc"/ -->
+      <separator class="thin"/>
+      <text value="&jondofox.about.createdBy;" 
+	    style="font-weight: bold;"/>
+      <text value="JonDos GmbH"/>
+      <separator class="thin"/>
+      <text value="&jondofox.about.developers;" 
+	    style="font-weight: bold;"/>
+      <text value="Johannes Renner"/>
+      <text value="Georg Koppen"/> 
+      <separator class="thin"/>
+      <text value="Artwork:" 
+	    style="font-weight: bold;"/>
+      <text value="Philipp Kaplycz"/>
+      <separator class="thin"/>  
+      <text value="Features:" 
+	    style="font-weight: bold;"/>
+      <text value="about:jondofox"
+	style="color: blue; cursor: pointer;"
+	class="url"
+	onclick="openBrowserTabJondofox(false);"/>
+      <text value="Homepage:" 
+        style="font-weight: bold;"/>
+      <text value="&jondofox.about.homepageURL;"
+	style="color: blue; cursor: pointer"
         class="url"
-        onclick="window.open('&jondofox.about.homepageURL;');"/>
-  <separator class="thin"/>
-</vbox>
-<spring flex="1"/>
-<image src="chrome://jondofox/skin/icon-128x128.png"/>
-</groupbox>
+	onclick="openJondofoxHomepage();"/>
+      <separator class="thin"/>
+    </vbox>
+    <spring flex="1"/>
+    <image src="chrome://jondofox/skin/icon-128x128.png"/>
+  </groupbox>
 
-<hbox>
-  <spacer flex="1"/>
-  <button label="Close" oncommand="window.close();"/>
-</hbox>
+  <hbox>
+    <spacer flex="1"/>
+    <button label="Close" oncommand="window.close();"/>
+  </hbox>
 
 </window>

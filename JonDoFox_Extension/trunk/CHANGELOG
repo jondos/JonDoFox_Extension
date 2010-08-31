@@ -21,7 +21,10 @@ Changes in version 0.2.6 - YYY
       via about:config
     * optimized our referer logic
     * updated the proxyswitcher popup (got a tooltiptext, replaced "Anontest"
-      and the mouse cursor changes while it hovers over the proxyswitcher text
+      and the mouse cursor changes while it hovers over the proxyswitcher text)
+    * improved the about dialog (link to feature page included; links open in
+      tabs now and are marked as such; mouse cursor changes while hovering over
+      them)
    
   Bug fixing:
     * adapted the text concerning the "referer-checkbox" 

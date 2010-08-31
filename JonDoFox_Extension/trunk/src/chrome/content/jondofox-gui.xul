@@ -7,7 +7,8 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
   <!-- Include jondofox.js to the scope of the browser -->
-  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
+  <script type="application/x-javascript" 
+	  src="chrome://jondofox/content/jondofox-gui.js" />
    
   <!-- Statusbar -->
   <statusbar id="status-bar"> 
@@ -35,11 +36,6 @@
                 image="chrome://jondofox/skin/preferences-16x16.png"
                 label="&jondofox.statusbar.preferences;"
 		oncommand="openDialogPreferences();" />
-      <menuitem id="jondofox-about"
-                class="menuitem-iconic"
-                image="chrome://jondofox/skin/icon-16x16.png"
-                label="Features"
-		oncommand="openBrowserTabJondofox(false);" />
       <menuseparator />
 
       <!-- Use a radiogroup for the proxy list -->
