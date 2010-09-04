@@ -12,7 +12,7 @@ Changes in version 0.2.6 - YYY
       better detection of MITM attacks
     * the search history is deleted after every 5 minutes now
     * the searchbar value (as well as the "UnDo" and "ReDo" ones) is deleted
-      as soon as the user starts a serach via the searchbar; this feature may
+      as soon as the user starts a search via the searchbar; this feature may
       be disabled using the extensions.jondofox.delete_searchbar preference 
 
   Minor improvement:
