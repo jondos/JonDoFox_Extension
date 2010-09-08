@@ -85,7 +85,7 @@ vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
 <a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
 Man-in-the-middle-Angriffen</a> sch&uuml;tzt.">
 <!ENTITY jondofox.features.searchbar.head "Schutz der Suchanfragen vor Beoachtern am Rechner-Arbeitsplatz">
-<!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu schützen, entfernt JonDoFox diese nach jeder Eingabe. Außerdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gelöscht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage für jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die Möglichkeit, dass Einträge in der Suchistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalität ganz aufzugeben.">
+<!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoFox diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage für jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalität ganz aufzugeben.">
 <!ENTITY jondofox.features.additionalAddons.head "Weitere Features des JonDoFox-Profils">
 <!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
