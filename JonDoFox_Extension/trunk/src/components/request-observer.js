@@ -125,9 +125,15 @@ RequestObserver.prototype = {
             try {
               originatingDomain = this.tldService.
                                      getBaseDomain(originatingDomain, 0);
-            } catch (e if e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
-            // It's an IP address
-            originatingDomain = originatingDomain.hostPort;
+            } catch (e)  {
+	      if (e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
+                // It's an IP address
+                originatingDomain = originatingDomain.hostPort;
+	      } else {
+                originatingDomain = false;
+	        log("There occurred an error while trying to get the " + 
+		    "originatin Domain! " + e + " setting it to 'false'");	
+	      }
             }  
           }
           log ("Originating URI is: " + originatingDomain);

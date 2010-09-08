@@ -276,9 +276,10 @@ function openBrowserTabJondofox(update) {
 function openDialogPreferences() {
   log("Open dialog 'JonDoFox-Preferences'");
   try {
-    // No additional parameters needed
+    // No additional parameters needed WRONG: we need at least centerscreen
+    // otherwise the dialog is shown in the left upper corner using JDF porable
     window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
-              "prefs-dialog", "");
+              "prefs-dialog", "centerscreen");
   } catch (e) {
     log("openDialogPreferences(): " + e);
   }

@@ -81,12 +81,14 @@ with an updated certificate, thus supporting the user to avoid information
 leaks due to faked certificates and 
 <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
 man-in-the-middle-attacks</a>.">
+<!ENTITY jondofox.features.searchbar.head "Protecting the search queries">
+<!ENTITY jondofox.features.searchbar "In order to mitigate the risk that an outsider might get to know the queries entered into the browser's searchbar, JonDoFox erases them just after they were submitted. Furthermore, the search history gets deleted every thirty minutes. By this means it can on the one hand not happen anymore that the last search query is visible to everyone having access to the user's browser session. On the other hand JonDoFox minimizes the possibility that entries in the search history may compromise the user without loosing the search history feature completely.">
 <!ENTITY jondofox.features.additionalAddons "Besides our self-designed 
 extension we have incorporated a bunch of others in our profile that help the 
 user surfing the Web anonymously: CSLite, Adblock Plus, NoScript and 
-DownloadHelper. You will find information on how to use them on
-<a href='http://anonymous-proxy-servers.net/en/help/jondofox2.html'>
-http://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
+UnPlug. You will find information on how to use them on
+<a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
+https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 
 <!-- Certificate Patrol -->
 <!ENTITY _title		"Certificate Patrol Preferences">
@@ -174,5 +176,5 @@ http://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 <!-- about settings -->
 <!ENTITY jondofox.about.createdBy "Created by:">
 <!ENTITY jondofox.about.developers "Developers:">
-<!ENTITY jondofox.about.homepageURL "http://anonymous-proxy-servers.net/en/jondofox">
+<!ENTITY jondofox.about.homepageURL "https://anonymous-proxy-servers.net/en/jondofox">
 
