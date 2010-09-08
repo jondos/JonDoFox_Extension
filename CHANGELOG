@@ -29,6 +29,8 @@ Changes in version 0.2.6 - YYY
   Bug fixing:
     * adapted the text concerning the "referer-checkbox" 
     * fixed a bug in the unmap() function of the preferences-mapper
+    * the preference dialog is always shown using the flag "centerscreen" now
+    * fixed a possible exception in our referrer code
 
 Changes in version 0.2.5 - 2010-05-19
 

@@ -84,13 +84,15 @@ Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell
 vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
 <a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
 Man-in-the-middle-Angriffen</a> sch&uuml;tzt.">
+<!ENTITY jondofox.features.searchbar.head "Schutz der Suchanfragen vor Beoachtern">
+<!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu schützen, entfernt JonDoFox diese nach jeder Eingabe. Außerdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gelöscht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage für jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die Möglichkeit, dass Einträge in der Suchistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalität ganz aufzugeben.">
 <!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
-integriert, damit die Anonymität während des Surfens noch besser geschüzt ist. 
-Informationen zu diesen (CSLite, Adblock Plus, NoScript und DownloadHelper) 
+integriert, damit die Anonymität während des Surfens noch besser geschützt ist. 
+Informationen zu diesen (CSLite, Adblock Plus, NoScript und UnPlug) 
 sind auf unserer Hilfeseite unter 
-<a href='http://anonymous-proxy-servers.net/de/help/jondofox2.html'>
-http://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
+<a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
+https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 
 <!-- Certificate Patrol -->
 <!ENTITY _title		"Einstellungen für Certificate Patrol">
@@ -186,6 +188,6 @@ http://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!-- about settings -->
 <!ENTITY jondofox.about.createdBy "Erstellt von:">
 <!ENTITY jondofox.about.developers "Entwickler:">
-<!ENTITY jondofox.about.homepageURL "http://anonymous-proxy-servers.net/de/jondofox">
+<!ENTITY jondofox.about.homepageURL "https://anonymous-proxy-servers.net/de/jondofox">
 
 
