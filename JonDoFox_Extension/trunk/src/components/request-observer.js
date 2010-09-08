@@ -187,15 +187,22 @@ RequestObserver.prototype = {
 
   examineResponse: function(channel) {
     var URI;
+    var URIplain;
     try {
       // We are looking for URL's which are on the noProxyList first. The
       // reason is if there occurred a redirection to a different URL it is
-      // not set on the noProxyList as well. Thus it can happen that the user
+      // not set on the noProxyList as well. Thus, it can happen that the user
       // wants to avoid a download via a proxy but uses it nevertheless
-      // because a redirection occurred.
+      // because a redirection occurred. We also check whether the user allowed
+      // a proxy circumvention of a HTTP download but we got one using HTTPS.
+      // In this case we should allow circumvention as well but not vice versa.
+      if (channel.URI.scheme === "https") {
+        URIplain = "http".concat(channel.URI.spec.slice(5));
+      }
       URI = channel.URI.spec;
       // If it is on the list let's check whether we will be redirected.
-      if (this.jdfManager.noProxyListContains(URI)) {
+      if (this.jdfManager.noProxyListContains(URI) ||
+          this.jdfManager.noProxyListContains(URIplain)) {
         var location = channel.getResponseHeader("Location");
         if (location !== null) {
 	  //If so add the new location to the noProxyList as well.

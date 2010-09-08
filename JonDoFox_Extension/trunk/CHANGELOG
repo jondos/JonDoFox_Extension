@@ -10,7 +10,7 @@ Changes in version 0.2.6 - YYY
       feature page
     * included a slightly enhanced version of Certificate Patrol to provide a
       better detection of MITM attacks
-    * the search history is deleted after every 5 minutes now
+    * the search history is deleted after every 30 minutes now
     * the searchbar value (as well as the "UnDo" and "ReDo" ones) is deleted
       as soon as the user starts a search via the searchbar; this feature may
       be disabled using the extensions.jondofox.delete_searchbar preference 
@@ -31,6 +31,7 @@ Changes in version 0.2.6 - YYY
     * fixed a bug in the unmap() function of the preferences-mapper
     * the preference dialog is always shown using the flag "centerscreen" now
     * fixed a possible exception in our referrer code
+    * fixed a bug in the proxy circumvention code
 
 Changes in version 0.2.5 - 2010-05-19
 
