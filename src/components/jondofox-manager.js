@@ -54,11 +54,6 @@ JDFManager.prototype = {
   STATE_TOR: 'tor',
   STATE_CUSTOM: 'custom',
 
-  // We need this value to compare it to the profile version actually deployed.
-  // If there are differences we pop up a warning that the user has to update
-  // the profile (if she has not disabled this). 
-  JDF_VERSION: "2.4.0",
-
   // Set this to indicate that cleaning up is necessary
   clean: false,
 
@@ -714,7 +709,9 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== this.JDF_VERSION &&
+               'extensions.jondofox.profile_version') !== "2.4.0" &&
+          this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.3.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
