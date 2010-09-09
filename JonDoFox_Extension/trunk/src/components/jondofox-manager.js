@@ -973,13 +973,15 @@ JDFManager.prototype = {
         //open these files directly or they are not dangerous, thus we return
 	return;
       } else if (textboxContent.indexOf("Adobe Acrobat") !== -1 || 
-	       textboxContent.indexOf("PDF") !== -1) {
+	       textboxContent.indexOf("PDF") !== -1 ||
+	       textboxContent.indexOf("Preview") !== -1) {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul",
                                     null);
         window.setTimeout(JDFManager.prototype.showWarning, 200, window, false, false);
       } else if (textboxContent.indexOf("Word") !== -1 ||
 		 textboxContent.indexOf("Rich Text Format") !== -1 ||
-		 textboxContent.indexOf("RTF") !== -1) {
+		 textboxContent.indexOf("RTF") !== -1 ||
+		 textboxContent.indexOf("doc File") !== -1) {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul",
                                     null);
         window.setTimeout(JDFManager.prototype.showWarning, 50, window, false, false);
