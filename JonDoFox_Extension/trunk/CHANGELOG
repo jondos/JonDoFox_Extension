@@ -1,4 +1,4 @@
-Changes in version 0.2.6 - YYY
+Changes in version 0.2.6 - 2010-09-09 
 
   New Feature:
     * compatibility with FF4 (up to and including beta 4)
@@ -32,6 +32,8 @@ Changes in version 0.2.6 - YYY
     * the preference dialog is always shown using the flag "centerscreen" now
     * fixed a possible exception in our referrer code
     * fixed a bug in the proxy circumvention code
+    * fixed a bug concerning the MIME detection we need for showing the proper
+      warning overlay in the external helperapp dialog
 
 Changes in version 0.2.5 - 2010-05-19
 

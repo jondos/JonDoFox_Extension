@@ -903,6 +903,9 @@ JDFManager.prototype = {
       var type = this.document.getElementById("type");
       var handlerInfo;
       if (checkbox && radioOpen) {
+	  // FIXME: type.value does not work because it is not the holder of
+	  // the value!! See: textboxContent and rewrite the whole code here!
+	  
           // We need a Timeout here because type.value or getting the 
           // MIME-/filetype via the filename gives null back if executed at 
           // once. But without getting the type we cannot discriminate between
@@ -944,14 +947,11 @@ JDFManager.prototype = {
   showUnknownContentTypeWarnings: function(type, checkbox, radioOpen,
                                            radioSave, window) {
     try {
-      var i;
-      var normalBox;
-      var fileTypeExists = false;
-      normalBox = window.document.getElementById("normalBox").
+      var normalBox = window.document.getElementById("normalBox").
 	      getAttribute("collapsed");
-      var titleString = window.document.title.trim().toLowerCase();
-      var fileExtension = titleString.substring(titleString.length - 4, 
-                          titleString.length);
+      var textbox = window.document.getElementById("type");
+      var textboxContent = window.document.
+	      getAnonymousElementByAttribute(textbox, "anonid", "input").value;
 
       // We cannot just use the MIME-Type here because it is set according
       // to the delivered content-type header and some other sophisticated means
@@ -959,37 +959,38 @@ JDFManager.prototype = {
       // suck and deliver the wrong MIME-Type (e.g. application/octetstream)
       // but the file is a .pdf or a .doc, though. In this case checking the 
       // MIME-Type would not result in showing the proper warning dialog. 
-      // It is, therefore, safer to use the title of the window which contains
-      // the filename and its extension.
+      // It is, therefore, safer to use the file type found by Firefox itself.
       // If the XUL-window is collapsed then we only see a "Save file" and a
       // "Cancel"-Button. This happens e.g. if the file is a binary or a DOS-
       // executable. Hence, we do not need to show the warning. Besides checking
-      // whether the normalBox is collapsed we check in the first else if 
+      // whether the normalBox is collapsed we check in the first else-if- 
       // clause other file extensions. These are part of a whitelist whose 
       // members are not dangerous if one opens them directly. Thus, again,
       // no sign of a warning.
-
-      if (fileExtension === ".pdf") {
+      
+      if (normalBox || textboxContent.indexOf("TeX") !== -1) {
+        //do nothing: we do not want any warning here because the user cannot
+        //open these files directly or they are not dangerous, thus we return
+	return;
+      } else if (textboxContent.indexOf("Adobe Acrobat") !== -1 || 
+	       textboxContent.indexOf("PDF") !== -1) {
         window.document.loadOverlay("chrome://jondofox/content/external-pdf.xul",
                                     null);
         window.setTimeout(JDFManager.prototype.showWarning, 200, window, false, false);
-      } else if (fileExtension === ".doc" || fileExtension === ".rtf") {
+      } else if (textboxContent.indexOf("Word") !== -1 ||
+		 textboxContent.indexOf("Rich Text Format") !== -1 ||
+		 textboxContent.indexOf("RTF") !== -1) {
         window.document.loadOverlay("chrome://jondofox/content/external-doc.xul",
                                     null);
         window.setTimeout(JDFManager.prototype.showWarning, 50, window, false, false);
-      } else if (normalBox ||
-                 fileExtension === ".tex") {
-      //do nothing: we do not want any warning here because the user cannot
-      //open these files directly or they are not dangerous, thus we return
-	return;
       } else {
         window.document.loadOverlay("chrome://jondofox/content/external-app.xul",
                                     null);
         window.setTimeout(JDFManager.prototype.showWarning, 50, window, false, false);
       }
-        checkbox.addEventListener("click",function() {JDFManager.prototype.
+      checkbox.addEventListener("click",function() {JDFManager.prototype.
 	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
-        radioOpen.addEventListener("click", function() {JDFManager.prototype.
+      radioOpen.addEventListener("click", function() {JDFManager.prototype.
 	     checkboxChecked(radioOpen, checkbox, type, window);}, false);
     } catch (e) {
       log("showUnknownContentTypeWarnings(): " + e);
