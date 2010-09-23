@@ -23,12 +23,11 @@ function log(msg) {
 ///////////////////////////////////////////////////////////////////////////////
 
 // Get the preferences handler
-var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
-                                 getService().wrappedJSObject;
+var prefsHandler = Cc['@jondos.de/preferences-handler;1'].
+                     getService().wrappedJSObject;
 
 // Get the appInfo service
-var appInfo = Components.classes['@mozilla.org/xre/app-info;1'].
-                            getService(Components.interfaces.nsIXULAppInfo);
+var appInfo = Cc['@mozilla.org/xre/app-info;1'].getService(Ci.nsIXULAppInfo);
 
 // Get both of the version strings and the application's name
 var versionPref = "extensions.jondofox.profile_version";

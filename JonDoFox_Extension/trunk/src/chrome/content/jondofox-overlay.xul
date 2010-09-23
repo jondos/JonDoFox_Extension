@@ -13,6 +13,13 @@
   <script type="application/x-javascript"><![CDATA[
 
     try {
+      // We want to spoof the locale but as well give the user a proper
+      // loaclized menu. Thus, if we open a second, third or ... window
+      // we first have to deactivate the language spoofing and it will
+      // be enabled as soon as the overlays are merged. Note: This trick is 
+      // at least necessary on Windows. On Linux the spoofing works out of
+      // the box.
+      prefsHandler.deletePreference('general.useragent.locale');
       window.addEventListener("load", initWindow, true);
       window.addEventListener("load", init, true);
     } catch(e) {

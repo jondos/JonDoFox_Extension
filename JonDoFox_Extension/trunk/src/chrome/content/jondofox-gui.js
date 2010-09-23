@@ -23,15 +23,15 @@ function log(msg) {
 ///////////////////////////////////////////////////////////////////////////////
 
 // Get the preferences handler
-var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+var prefsHandler = Cc['@jondos.de/preferences-handler;1'].
                                  getService().wrappedJSObject;
     
 // Get the JDFManager
-var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+var jdfManager = Cc['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
 // Get the utility Object
-var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
+var jdfUtils = Cc['@jondos.de/jondofox-utils;1'].
                                getService().wrappedJSObject;
 
 var prefix = "extensions.jondofox.custom.";
@@ -236,8 +236,8 @@ function isProxyActive() {
 // Open up the anontest in a new tab of the current window
 function openBrowserTabAnontest() {
   try {
-    var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
-                 getService(Components.interfaces.nsIWindowMediator).
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
     win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab');
   } catch (e) {
@@ -247,8 +247,8 @@ function openBrowserTabAnontest() {
 
 function openJondofoxHomepage() {
   try {
-    var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
-                 getService(Components.interfaces.nsIWindowMediator).
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
     win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
   } catch (e) {
@@ -259,8 +259,8 @@ function openJondofoxHomepage() {
 // Open up the jondofox homepage in a new tab of the current window
 function openBrowserTabJondofox(update) {
   try {
-    var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
-                 getService(Components.interfaces.nsIWindowMediator).
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
     if (update) {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.download'), 'tab');
@@ -276,13 +276,25 @@ function openBrowserTabJondofox(update) {
 function openDialogPreferences() {
   log("Open dialog 'JonDoFox-Preferences'");
   try {
+    //language spoofing down...
+    prefsHandler.deletePreference('general.useragent.locale');
     // No additional parameters needed WRONG: we need at least centerscreen
     // otherwise the dialog is shown in the left upper corner using JDF porable
-    window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
-              "prefs-dialog", "centerscreen");
+    var prefWin = window.
+      openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
+      "prefs-dialog", "centerscreen");
+    prefWin.addEventListener("DOMContentLoaded", function(event){
+	prefWinListener(event);}, false);
   } catch (e) {
     log("openDialogPreferences(): " + e);
   }
+}
+
+function prefWinListener(event) {
+  //and up again...
+  prefsHandler.setStringPref('general.useragent.locale', 'en-US');
+  prefWin.removeEventListener("DOMContentLoaded", function(event) {
+      prefWinListener(event);}, false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -353,8 +365,8 @@ function clearingSearchbar(e) {
 
 function clearingSearchbarHistory() {
   try {
-    var formHistSvc = Components.classes["@mozilla.org/satchel/form-history;1"].
-	    getService(Components.interfaces.nsIFormHistory2);
+    var formHistSvc = Cc["@mozilla.org/satchel/form-history;1"].
+	    getService(Ci.nsIFormHistory2);
     if (formHistSvc.nameExists("searchbar-history")) {
       log("We found search-history values to erase...");
       formHistSvc.removeEntriesForName("searchbar-history");
@@ -412,7 +424,7 @@ var overlayObserver = {
       case 'xul-overlay-merged':
         try {
           // 'subject' implements nsIURI
-          var uri = subject.QueryInterface(Components.interfaces.nsIURI);
+          var uri = subject.QueryInterface(Ci.nsIURI);
           //log("uri.spec is " + uri.spec);
           if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
             // Overlay is ready --> refresh the GUI
@@ -429,7 +441,10 @@ var overlayObserver = {
 	    // or applied new settings.
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
-                  
+	    // We should not do this here. Alas, otherwise it would not be
+	    // possible to spoof this language and let the user deploy her
+	    // original (extension) language pack.
+            prefsHandler.setStringPref("general.useragent.locale", "en-US");
             log("New window is ready");
 	    if (jdfManager.ff4) {
 	      // Let's check first if NoScript is installed and enabled. If not
@@ -460,12 +475,11 @@ var overlayObserver = {
                       formatString('jondofox.dialog.message.uninstallExtension',
                       [exFound[i]]));
 	        } 
-                appStart = Components.
-			     classes['@mozilla.org/toolkit/app-startup;1'].
-			     getService(Components.interfaces.nsIAppStartup);
-                appStart.quit(Components.interfaces.
-		             nsIAppStartup.eAttemptQuit|
-			     Components.interfaces.nsIAppStartup.eRestart);
+                appStart = 
+		   Components.classes['@mozilla.org/toolkit/app-startup;1'].
+			      getService(Ci.nsIAppStartup);
+                appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
+			     Ci.nsIAppStartup.eRestart);
 	      }
             }
             // Let's test whether the user starts with appropriate 

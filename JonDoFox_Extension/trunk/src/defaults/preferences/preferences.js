@@ -54,11 +54,11 @@ pref("extensions.jondofox.tor.ssl_port", 0);
 // Useragent
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
-pref("extensions.jondofox.jondo.appversion_override", "5.0 (Windows; en-us)");
+pref("extensions.jondofox.jondo.appversion_override", "5.0 (en-US)");
 pref("extensions.jondofox.jondo.buildID_override", "0");
-pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 5.1");
-pref("extensions.jondofox.jondo.platform_override", "Win32");
-pref("extensions.jondofox.jondo.productsub_override", "2009021910");
+pref("extensions.jondofox.jondo.oscpu_override", "");
+pref("extensions.jondofox.jondo.platform_override", "");
+pref("extensions.jondofox.jondo.productsub_override", "20090729");
 pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
@@ -102,13 +102,23 @@ pref("extensions.jondofox.security.default_personal_cert", "Ask Every Time");
 pref("extensions.jondofox.security.remember_cert_checkbox_default_setting", false);
 
 // Miscellaneous
+// Just in case someone has enabled it...
+pref("extensions.jondofox.browser_send_pings", false);
+// Do not let them know the full plugin path...
+pref("extensions.jondofox.plugin.expose_full_path", false);
+// Do not track users via their site specific zoom [sic!]
+pref("extensions.jondofox.browser.zoom.siteSpecific", false);
+// UA locale spoofing
+pref("extensions.jondofox.useragent_locale", "en-US");
 pref("extensions.jondofox.source_editor_external", false);
 pref("extensions.jondofox.dom_storage_enabled", false);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
 pref("extensions.jondofox.cookieBehavior", 2);
 pref("extensions.jondofox.socks_remote_dns", true);
-// Only vaild for FF3
+// Only valid for FF4
+pref("extensions.jondofox.websocket.enabled", false);
+// Only valid for FF3
 pref("extensions.jondofox.history_expire_days", 0);
 // places.history.enabled replaces browser.history_expire_days in FF4
 pref("extensions.jondofox.history.enabled", false);

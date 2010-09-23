@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009, Johannes Renner
+ * Copyright (c) 2009-2010, Johannes Renner, Georg Koppen
  *
  * Preferences dialog javascript code
  *****************************************************************************/
@@ -50,6 +50,10 @@ function loadPrefsGeneral() {
     // 'set_referrer' is a checkbox
     document.getElementById('checkbox_set_referrer').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.set_referrer');
+    // SafeCache's setting
+    document.getElementById('checkbox_set_safecache').checked =
+        prefsHandler.
+	getBoolPref('extensions.jondofox.stanford-safecache_enabled');
     // Certificate Patrol setting
     document.getElementById('checkbox_set_certpatrol').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
@@ -74,6 +78,8 @@ function writePrefsGeneral() {
   try {
     prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
         document.getElementById('checkbox_set_referrer').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.stanford-safecache_enabled',
+        document.getElementById('checkbox_set_safecache').checked); 
     prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
         document.getElementById('checkbox_set_certpatrol').checked);
     // Now the settings concerning different warnings
