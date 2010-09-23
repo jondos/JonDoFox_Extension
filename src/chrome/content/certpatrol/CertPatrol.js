@@ -39,7 +39,7 @@ var CertPatrol = {
   // Main
   onLoad: function() {
     this.initialized = true;
-    this.jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
+    this.jdfManager = Cc['@jondos.de/jondofox-manager;1'].
 	            getService().wrappedJSObject;
     // We check whether the original Certificate Patrol extension should be 
     // used. If so, we avoid using as much of our adapted CertPatrol code as 
@@ -47,9 +47,9 @@ var CertPatrol = {
     // (those in our init() code additionally to the ones in the CertPatrol 
     // init() code).
     if (!jdfManager.certPatrol) {
-      this.jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
+      this.jdfUtils = Cc['@jondos.de/jondofox-utils;1'].
                     getService().wrappedJSObject;
-      this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
+      this.prefsHandler = Cc['@jondos.de/preferences-handler;1'].
                     getService().wrappedJSObject;
       this.dbinit();
       this.init();
@@ -65,11 +65,10 @@ var CertPatrol = {
     this.dbupdate = null;
 
     try {
-      var file = Components.classes["@mozilla.org/file/directory_service;1"]
-                 .getService(Components.interfaces.nsIProperties)
-                 .get("ProfD", Components.interfaces.nsIFile);
-      var storage = Components.classes["@mozilla.org/storage/service;1"]
-                    .getService(Components.interfaces.mozIStorageService);
+      var file = Cc["@mozilla.org/file/directory_service;1"]
+                 .getService(Ci.nsIProperties).get("ProfD", Ci.nsIFile);
+      var storage = Cc["@mozilla.org/storage/service;1"]
+                    .getService(Ci.mozIStorageService);
       file.append("CertPatrol.sqlite");
 
       // Must be checked before openDatabase()
@@ -159,7 +158,6 @@ var CertPatrol = {
 
   // SSL trigger
   onSecurePageLoad: function(doc) {
-    const ci = Components.interfaces;
     var thiscert;
     var validity;
 
@@ -228,7 +226,7 @@ var CertPatrol = {
     if (!ui)
       return;
     
-    var sp = ui.QueryInterface(ci.nsISSLStatusProvider);
+    var sp = ui.QueryInterface(Ci.nsISSLStatusProvider);
     if (!sp)
       return;
 
@@ -238,7 +236,7 @@ var CertPatrol = {
     if (!stats)
       return;
     
-    var stati = stats.QueryInterface(ci.nsISSLStatus);
+    var stati = stats.QueryInterface(Ci.nsISSLStatus);
     if (!stati)
       return;
 
@@ -246,7 +244,7 @@ var CertPatrol = {
     if (!thiscert)
       return;
 
-    validity = thiscert.validity.QueryInterface(ci.nsIX509CertValidity);
+    validity = thiscert.validity.QueryInterface(Ci.nsIX509CertValidity);
     if (!validity)
       return;
 
@@ -286,8 +284,8 @@ var CertPatrol = {
       this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
     }
 
-    var pbs = Components.classes["@mozilla.org/privatebrowsing;1"].
-	    getService(Components.interfaces.nsIPrivateBrowsingService);
+    var pbs = Cc["@mozilla.org/privatebrowsing;1"].
+	    getService(Ci.nsIPrivateBrowsingService);
     this.pbm = pbs.privateBrowsingEnabled;
  
 

@@ -105,9 +105,6 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!ENTITY _home		"Homepage">
 <!ENTITY _close		"Passt">
 
-<!-- SafeCache -->
-<!ENTITY jondofox.safecache.label "SafeCache zum Schutz vor Cache-Cookies von Drittseiten benutzen.">
-
 <!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Haben Sie das Programm JonDo gestartet?">
 <!ENTITY jondofox.instructions.titleText "JonDoFox benötigt <b>zusätzlich</b> das Programm JonDo, 
@@ -171,6 +168,8 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.referrer "Aktiviere Referer-Management">
+<!ENTITY jondofox.dialogtab.options.cache "Cache-Einstellungen">
+<!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.warnings "Warnungen">

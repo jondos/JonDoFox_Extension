@@ -102,7 +102,7 @@ JDFManager.prototype = {
     'general.buildID.override':'extensions.jondofox.jondo.buildID_override',
     'general.oscpu.override':'extensions.jondofox.jondo.oscpu_override',
     'general.platform.override':'extensions.jondofox.jondo.platform_override',
-    'general.productsub.override':'extensions.jondofox.jondo.productsub_override',
+    'general.productSub.override':'extensions.jondofox.jondo.productsub_override',
     'general.useragent.override':'extensions.jondofox.jondo.useragent_override',
     'general.useragent.vendor':'extensions.jondofox.jondo.useragent_vendor',
     'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub'  
@@ -115,7 +115,7 @@ JDFManager.prototype = {
     'general.buildID.override':'extensions.jondofox.tor.buildID_override',
     'general.oscpu.override':'extensions.jondofox.tor.oscpu_override',
     'general.platform.override':'extensions.jondofox.tor.platform_override',
-    'general.productsub.override':'extensions.jondofox.tor.productsub_override',
+    'general.productSub.override':'extensions.jondofox.tor.productsub_override',
     'general.useragent.override':'extensions.jondofox.tor.useragent_override',
     'general.useragent.vendor':'extensions.jondofox.tor.useragent_vendor',
     'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub'
@@ -132,8 +132,10 @@ JDFManager.prototype = {
   },
 
   // This map of boolean preferences is given to the prefsMapper
-  // XXX What about 'network.http.keep_alive'?
   boolPrefsMap: {
+    'browser.zoom.siteSpecific':'extensions.jondofox.browser.zoom.siteSpecific',
+    'plugin.expose_full_path':'extensions.jondofox.plugin.expose_full_path',
+    'browser.send_pings':'extensions.jondofox.browser_send_pings',
     'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
@@ -141,7 +143,6 @@ JDFManager.prototype = {
     'network.http.proxy.keep-alive':'extensions.jondofox.proxy_keep-alive',
     'view_source.editor.external': 'extensions.jondofox.source_editor_external',
     'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
-    'stanford-safecache.enabled':'extensions.jondofox.stanford-safecache_enabled',
     'security.remember_cert_checkbox_default_setting':
     'extensions.jondofox.security.remember_cert_checkbox_default_setting',
     'browser.search.suggest.enabled':
@@ -429,6 +430,10 @@ JDFManager.prototype = {
 	// (brower.history_expire_days) is replaced by it.
 	this.boolPrefsMap['places.history.enabled'] = 
 		'extensions.jondofox.history.enabled';
+	// The same holds for the websockets pref until we decided whether this
+	// feature is harnmless.
+	this.boolPrefsMap['network.websocket.enabled'] = 
+	        'extensions.jondofox.websocket.enabled';
 	// For clearity of code we implement a different method to check the
 	// installed extension in Firefox4
         this.checkExtensionsFF4();
@@ -1365,6 +1370,10 @@ JDFManager.prototype = {
           if (this.clean) {
             this.cleanup();
           }
+	  // We need this here to get the proper language packs loaded during
+	  // the next startup. But we have to set it to 'en-US' to make the
+	  // user less fingerprintable.
+	  this.prefsHandler.deletePreference('general.useragent.locale');
           // Unregister observers
           this.unregisterObservers();
           break;
@@ -1402,7 +1411,8 @@ JDFManager.prototype = {
         // to do it this way...
 
         case 'domwindowopened':
-	subject.addEventListener("load", JDFManager.prototype.getUnknownContentTypeDialog, false);
+	  subject.addEventListener("load", JDFManager.prototype.
+	    getUnknownContentTypeDialog(), false);
 	  break;
 
         case 'xul-window-destroyed':
@@ -1450,20 +1460,6 @@ JDFManager.prototype = {
                 this.jdfUtils.showAlertCheck(this.jdfUtils.
                   getString('jondofox.dialog.attention'), this.jdfUtils.
                   getString('jondofox.dialog.message.cookies'), 'preferences');
-              }
-            } 
-	  }
-	  // Do not allow to disable Safecache function
-	  else if (data === 'stanford-safecache.enabled') {
-	    if (!this.prefsHandler.getBoolPref(data)) {
-	      this.prefsHandler.setBoolPref(data, true);
-              // Warn the user if she has not disabled preference warnings
-              if (this.prefsHandler.
-                    getBoolPref('extensions.jondofox.preferences_warning')) {
-                this.jdfUtils.showAlertCheck(this.jdfUtils.
-                  getString('jondofox.dialog.attention'), this.jdfUtils.
-                  getString('jondofox.dialog.message.safecache'), 
-                  'preferences');
               }
             } 
 	  }

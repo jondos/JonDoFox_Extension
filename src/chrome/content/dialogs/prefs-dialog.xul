@@ -57,7 +57,19 @@
               </groupbox>
             </row>
 
-           <!-- SSL preferences -->
+           <!-- SafeCache preference -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.cache;:"/>
+		<!-- Checkbox to activate/deactivate cache protection  -->
+                <checkbox id="checkbox_set_safecache" 
+                          label="&jondofox.dialogtab.options.safecache;"
+                          accesskey="S"/>
+              </groupbox>
+            </row>
+  
+
+            <!-- SSL preferences -->
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.SSL;:"/>
