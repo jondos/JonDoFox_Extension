@@ -445,12 +445,6 @@ JDFManager.prototype = {
         // FF3-check for incompatible extensions and whether the necessary ones
         // are installed and enabled.
         this.checkExtensions();
-        // Maybe the proposed UA has changed due to an update. Thus, 
-        // we are on the safe side if we set it on startup.
-        if (this.VERSION !== 
-          this.prefsHandler.getStringPref('extensions.jondofox.last_version')) {
-          this.setUserAgent(this.getState());
-        }
       }
       // Check whether we have some MIME-types which use external helper apps
       // automatically and if so correct this
@@ -484,8 +478,8 @@ JDFManager.prototype = {
       // from using external applications automatically.
       this.observeMimeTypes();
       log("Setting initial proxy state ..");
-      //If somebody wants to have always JonDo as a proxy she gets it and the 
-      //corresponding User Agent setting. Otherwise the last used proxy will be
+      // If somebody wants to have always JonDo as a proxy she gets it and the 
+      // corresponding User Agent setting. Otherwise the last used proxy will be
       // set.
       if (this.prefsHandler.getBoolPref('extensions.jondofox.alwaysUseJonDo')) {
 	this.setProxy('jondo');
@@ -1370,10 +1364,6 @@ JDFManager.prototype = {
           if (this.clean) {
             this.cleanup();
           }
-	  // We need this here to get the proper language packs loaded during
-	  // the next startup. But we have to set it to 'en-US' to make the
-	  // user less fingerprintable.
-	  this.prefsHandler.deletePreference('general.useragent.locale');
           // Unregister observers
           this.unregisterObservers();
           break;
@@ -1412,7 +1402,7 @@ JDFManager.prototype = {
 
         case 'domwindowopened':
 	  subject.addEventListener("load", JDFManager.prototype.
-	    getUnknownContentTypeDialog(), false);
+	    getUnknownContentTypeDialog, false);
 	  break;
 
         case 'xul-window-destroyed':

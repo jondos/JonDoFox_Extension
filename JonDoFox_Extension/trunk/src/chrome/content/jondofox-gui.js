@@ -276,25 +276,14 @@ function openBrowserTabJondofox(update) {
 function openDialogPreferences() {
   log("Open dialog 'JonDoFox-Preferences'");
   try {
-    //language spoofing down...
     prefsHandler.deletePreference('general.useragent.locale');
     // No additional parameters needed WRONG: we need at least centerscreen
     // otherwise the dialog is shown in the left upper corner using JDF porable
-    var prefWin = window.
-      openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
+    window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
       "prefs-dialog", "centerscreen");
-    prefWin.addEventListener("DOMContentLoaded", function(event){
-	prefWinListener(event);}, false);
   } catch (e) {
     log("openDialogPreferences(): " + e);
   }
-}
-
-function prefWinListener(event) {
-  //and up again...
-  prefsHandler.setStringPref('general.useragent.locale', 'en-US');
-  prefWin.removeEventListener("DOMContentLoaded", function(event) {
-      prefWinListener(event);}, false);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -441,10 +430,6 @@ var overlayObserver = {
 	    // or applied new settings.
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
-	    // We should not do this here. Alas, otherwise it would not be
-	    // possible to spoof this language and let the user deploy her
-	    // original (extension) language pack.
-            prefsHandler.setStringPref("general.useragent.locale", "en-US");
             log("New window is ready");
 	    if (jdfManager.ff4) {
 	      // Let's check first if NoScript is installed and enabled. If not
@@ -490,6 +475,9 @@ var overlayObserver = {
             var last_version = prefsHandler.
                  getStringPref('extensions.jondofox.last_version');
             if (last_version != jdfManager.VERSION) {
+              // Maybe the proposed UA has changed due to an update. Thus, 
+              // we are on the safe side if we set it on startup.
+              jdfManager.setUserAgent(jdfManager.getState());
               log("New version detected, opening homepage ..");
               openBrowserTabJondofox(false);
               prefsHandler.setStringPref('extensions.jondofox.last_version',
