@@ -5,7 +5,6 @@ Changes in version 0.2.7 - 2010-XX-XX
       surfs to a new domain
 
   Minor improvement
-    * proper spoofing of 'general.useragent.locale'
     * set browser.send_pings to false just in case a user enables it (by 
       accident or whathever)
     * set plugin.expose_full_path to false to prevent the attacker from
@@ -20,6 +19,9 @@ Changes in version 0.2.7 - 2010-XX-XX
   Bug fixing:
     * corrected general.productsub.override to general.productSub.override
     * corrected "en-us" in general.appversion.override to "en-US"
+    * corrected user agent update mechanism for JDF + FF 4 (now, updates of
+      default UA prefs result in a update of the UA in the browser in any
+      case if JDF is updated)
 
 
 Changes in version 0.2.6 - 2010-09-09 

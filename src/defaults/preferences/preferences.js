@@ -1,7 +1,6 @@
 // General prefs
 pref("extensions.jondofox.last_version", "");
 pref("extensions.jondofox.new_profile", true);
-
 // Proxy state 
 pref("extensions.jondofox.proxy.state", "jondo");
 pref("extensions.jondofox.alwaysUseJonDo", false);
