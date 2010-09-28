@@ -1,4 +1,4 @@
-Changes in version 0.2.7 - 2010-XX-XX
+Changes in version 0.2.7 - 2010-9-30
 
   New Feature:
     * if someone sets a TabID (to track the user) it is deleted if the user
