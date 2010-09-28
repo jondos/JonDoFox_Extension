@@ -11,7 +11,7 @@ Changes in version 0.2.7 - 2010-9-30
       extracting the plugins' absolute path in the file system
     * set browser.zoom.siteSpecific to false to prevent an attacker from
       tracking users via their specific zoom settings
-    * simplyfied the SafeCache code (got rid of the MD5-code and use now
+    * simplified the SafeCache code (got rid of the MD5-code and use now
       nsICryptoHash)
     * set network.websocket.enabled to false until we can reliably say
       whether this pref is harmless
