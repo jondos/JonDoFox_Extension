@@ -30,7 +30,7 @@ Alternative zu JonDo verwenden.">
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: Bei dieser 
 Einstellung schickt JonDoFox die Kommunikationsdaten des Browsers &#xfc;ber 
 JonDo. JonDo muss dazu separat
-<a href='http://anonymous-proxy-servers.net/de/download'>installiert und 
+<a href='https://anonymous-proxy-servers.net/de/software.html'>installiert und 
 gestartet</a> sein."> 
 <!ENTITY jondofox.features.proxyswitcher.contextmenu "Wenn Sie eine Datei am 
 Proxy vorbei herunterladen m&#xf6;chten, ohne den Proxy dabei zu deaktivieren 
@@ -116,7 +116,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!ENTITY jondofox.instructions.proxyOffImage 
    "<img src='chrome://jondofox/content/error/proxy-off-de.png'></img>">
 <!ENTITY jondofox.instructions.downloadLink 
-   "<a href='https://anonymous-proxy-servers.net/de/jondo/download' target='_blank'>Klicken Sie nun hier, um die 
+   "<a href='https://anonymous-proxy-servers.net/de/software.html' target='_blank'>Klicken Sie nun hier, um die 
    JonDos-Webseite zu besuchen und das Programm JonDo herunterzuladen.</a>">
 <!ENTITY jondofox.instructions.proxyOnText "Nachdem Sie das Programm JonDo auf ihrem System 
    installiert und gestartet haben, müssen Sie die Proxy-Einstellungen auf &quot;JonDo&quot; 
@@ -128,7 +128,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 
 <!ENTITY jondofox.instructions.testTitle "Abschließender Test:">
 <!ENTITY jondofox.instructions.testLink 
-   "<a href='https://anonymous-proxy-servers.net/de/anontest' target='_blank'>Klicken Sie 
+   "<a href='http://what-is-my-ip-address.anonymous-proxy-servers.net/?lang=de' target='_blank'>Klicken Sie 
    hier, um Ihre Installation mit dem JonDonym-Anonymitätstest zu 
    überprüfen.</a>">
 <!ENTITY jondofox.instructions.testDesc "Falls eines der Felder im 
@@ -188,6 +188,6 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!-- about settings -->
 <!ENTITY jondofox.about.createdBy "Erstellt von:">
 <!ENTITY jondofox.about.developers "Entwickler:">
-<!ENTITY jondofox.about.homepageURL "https://anonymous-proxy-servers.net/de/jondofox">
+<!ENTITY jondofox.about.homepageURL "https://anonymous-proxy-servers.net/de/software.html">
 
 

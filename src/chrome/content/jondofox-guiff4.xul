@@ -10,18 +10,22 @@
   <script type="application/x-javascript" 
 	  src="chrome://jondofox/content/jondofox-gui.js" />
    
-  <!-- Statusbar -->
-  <statusbar id="status-bar"> 
+  <!-- Since ff4.0b7pre there is aa addon-bar instead of the old statusbar -->
+  <toolbar id="addon-bar" mode="text"> 
     <!-- Indicate current status in the statusbar -->
-    <statusbarpanel id="jondofox-proxy-status" 
+    <!--    <statusbarpanel id="jondofox-proxy-status" 
 	            style="cursor: pointer"
                     insertbefore="statusbar-updates"
                     label=""
                     class="statusbarpanel-iconic-text"        
                     popup="jondofox-proxy-list"
 		    context="jondofox-proxy-list"
-		    tooltiptext="&jondofox.statusbar.tooltiptext;" />
-    
+		    tooltiptext="&jondofox.statusbar.tooltiptext;" />-->
+    <toolbarbutton id="jondofox-proxy-status"
+                   label=""
+		   popup="jondofox-proxy-list"
+		   context="jondofox-proxy-list"
+		   tooltiptext="&jondofox.statusbar.tooltiptext;"/>
     <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list">
       
@@ -56,7 +60,7 @@
       </radiogroup>
 
     </menupopup>
-  </statusbar>
+  </toolbar>
 
   <!-- Context menu entry for bypassing the proxy -->
   <popup id="contentAreaContextMenu">

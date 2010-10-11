@@ -12,6 +12,8 @@
 
   <script type="application/x-javascript" 
           src="chrome://jondofox/content/jondofox-gui.js" />
+  <script type="application/x-javascript"
+          src="chrome://browser/content/browser.js" />
  
   <!-- Original template by Jed Brown -->
 
@@ -46,7 +48,7 @@
       <text value="&jondofox.about.homepageURL;"
 	style="color: blue; cursor: pointer"
         class="url"
-	onclick="openJondofoxHomepage();"/>
+	onclick="openBrowserTabJondofox(true);"/>
       <separator class="thin"/>
     </vbox>
     <spring flex="1"/>
