@@ -1,4 +1,15 @@
-Changes in version 0.2.7 - 2010-9-30
+Changes in version 0.2.8 - XXXX-XX-XX
+
+  Minor improvement
+    * developed new overlay for FF >= 4.0b7pre as the statusbar is deprecated
+      now
+    * updated the links to our new homepage and cleaned code in jondofox-gui.js
+
+  Bug fixing
+    * repaired broken links in about-dialog.xul
+
+
+Changes in version 0.2.7 - 2010-09-30
 
   New Feature:
     * if someone sets a TabID (to track the user) it is deleted if the user

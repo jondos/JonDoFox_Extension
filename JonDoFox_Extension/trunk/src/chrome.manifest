@@ -16,7 +16,7 @@ overlay chrome://browser/content/browser.xul chrome://jondofox/content/jondofox-
 # Overrides
 override chrome://global/content/netError.xhtml chrome://jondofox/content/error/netError-ff3.xhtml appversion>=3.0
 
-# Components registratioin necessary for Firefox 4
+# Components registration necessary for Firefox 4
 # jondofox-about
 component {8294337b-0ff6-4dcc-a45f-59b549922932} components/jondofox-about.js
 contract @mozilla.org/network/protocol/about;1?what=jondofox {8294337b-0ff6-4dcc-a45f-59b549922932} 

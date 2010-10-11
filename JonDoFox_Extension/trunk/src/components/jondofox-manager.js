@@ -67,6 +67,9 @@ JDFManager.prototype = {
   // Do we have a FF4 or still a FF3?
   ff4: true,
 
+  // If FF4, which version (the add-on bar exists since 4.0b7pre)
+  ff4Version: "",
+
   // In FF4 the asynchronous AddOn-Manager leads to the problem that the found-
   // extensions-dialog appears in the background of the browser window. Thus, 
   // we avoid starting the dialog as early as in FF < 4 but save the found 
@@ -693,6 +696,7 @@ JDFManager.prototype = {
     var versComp = CC['@mozilla.org/xpcom/version-comparator;1'].
 	    getService(CI.nsIVersionComparator);
     if (versComp.compare(appInfo.version, "4.0a1") >= 0) {
+      this.ff4Version = appInfo.version;
       this.ff4 = true;
     } else {
       this.ff4 = false;

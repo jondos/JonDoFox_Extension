@@ -18,6 +18,15 @@ function log(msg) {
   if (mDebug) dump("JonDoFoxGUI :: " + msg + "\n");
 }
 
+
+// We need that here as our about-dialog would not work without it as 'Cc' and
+// 'Ci' are just declared in browser.js and hence in the main window...
+//
+if (typeof(Cc) == 'undefined') {
+  var Cc = Components.classes;
+  var Ci = Components.interfaces;
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -192,6 +201,7 @@ function refresh() {
     var state = jdfManager.getState();
     var label = getLabel(state);
     var statusbar = document.getElementById('jondofox-proxy-status');
+    dump("Statusbar is: " + statusbar + "\n");
     var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
     // Set the text color; if we have proxy state custom and an empty proxy
     // then change the text color as well...
@@ -233,7 +243,7 @@ function isProxyActive() {
 // Utility functions
 ///////////////////////////////////////////////////////////////////////////////
 
-// Open up the anontest in a new tab of the current window
+// Opens the anontest in a new tab of the current window
 function openBrowserTabAnontest() {
   try {
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
@@ -245,25 +255,15 @@ function openBrowserTabAnontest() {
   }
 }
 
-function openJondofoxHomepage() {
+// Opens the jondofox download or feature page in a new tab of the current 
+// window
+function openBrowserTabJondofox(homepage) {
   try {
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
-    win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
-  } catch (e) {
-    log("openBrowserTabAnontest(): " + e);
-  }
-}
-
-// Open up the jondofox homepage in a new tab of the current window
-function openBrowserTabJondofox(update) {
-  try {
-    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
-                 getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser');
-    if (update) {
-      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.download'), 'tab');
+    if (homepage) {
+      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
     } else {
       win.openUILinkIn("about:jondofox", 'tab');
     }
@@ -415,7 +415,8 @@ var overlayObserver = {
           // 'subject' implements nsIURI
           var uri = subject.QueryInterface(Ci.nsIURI);
           //log("uri.spec is " + uri.spec);
-          if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {          
+          if (uri.spec == "chrome://jondofox/content/jondofox-guiff3.xul" || 
+	      uri.spec == "chrome://jondofox/content/jondofox-guiff4.xul" ) {          
             // Overlay is ready --> refresh the GUI
 	    refresh();
             // Add observer to different preferences
@@ -461,7 +462,7 @@ var overlayObserver = {
                       [exFound[i]]));
 	        } 
                 appStart = 
-		   Components.classes['@mozilla.org/toolkit/app-startup;1'].
+		   Cc['@mozilla.org/toolkit/app-startup;1'].
 			      getService(Ci.nsIAppStartup);
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
@@ -516,6 +517,12 @@ var overlayObserver = {
           } else {
             log("!! Wrong uri: " + uri.spec);
           }
+	  // We have to make sure that the Addon bar is acivated (it is 
+	  // deactivated by default).
+	  if (uri.spec == "chrome://jondofox/content/jondofox-guiff4.xul") {
+	    dump("The new addon-bar is coming!");
+            document.getElementById("addon-bar").collapsed = false; 
+	  }
           break;
 	} catch (e) {
           log("There occurred an error within the overlayobserver: " + e);
@@ -575,8 +582,17 @@ function initWindow() {
     // setTimeout(code, 800);
 
     // This should work unexceptionally if bug #330458 is fixed:
-    document.loadOverlay('chrome://jondofox/content/jondofox-gui.xul', 
+    var versComp = Cc['@mozilla.org/xpcom/version-comparator;1'].
+	             getService(Ci.nsIVersionComparator);
+    // We have to load different overlays here as there is no statusbar anymore
+    // since FF 4.0b7pre.
+    if (versComp.compare(jdfManager.ff4Version, "4.0b7pre") >= 0) {
+      document.loadOverlay('chrome://jondofox/content/jondofox-guiff4.xul',
                 overlayObserver);
+    } else {
+      document.loadOverlay('chrome://jondofox/content/jondofox-guiff3.xul', 
+                overlayObserver);
+    }
   } catch (e) {
     log("initWindow(): " + e);
   }
