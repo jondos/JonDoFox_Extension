@@ -437,6 +437,10 @@ JDFManager.prototype = {
 	// feature is harnmless.
 	this.boolPrefsMap['network.websocket.enabled'] = 
 	        'extensions.jondofox.websocket.enabled';
+        // Firefox 4 has a whitespace bewteen the "," and "deflate". We need to 
+	// avoid that in order not to reduce our anonymity set.	
+	this.stringPrefsMap['network.http.accept-encoding'] = 
+	        'extensions.jondofox.http.accept_encoding';
 	// For clearity of code we implement a different method to check the
 	// installed extension in Firefox4
         this.checkExtensionsFF4();

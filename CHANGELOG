@@ -5,6 +5,7 @@ Changes in version 0.2.8 - XXXX-XX-XX
       now
     * updated the links to our new homepage and cleaned code in jondofox-gui.js
     * fixed Firefox 4 issues with our netError.xhtml override
+    * set network.http.accept-encoding in FF4 to "gzip,default"
 
   Bug fixing
     * repaired broken links in about-dialog.xul
