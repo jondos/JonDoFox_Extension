@@ -124,7 +124,7 @@ var CertPatrol = {
       }
     }
     var d = new Date(tim / 1000);
-    return d.toLocaleFormat("%Y-%m-%d %H:%M"); 
+    return d.toLocaleFormat("%Y-%m-%d %H:%M:%S"); 
   },
 
   timedelta: function(tim) {
@@ -142,7 +142,6 @@ var CertPatrol = {
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
 
-
   // Event trigger
   onPageLoad: function(aEvent) {
     if (!CertPatrol.prefsHandler.
@@ -154,7 +153,6 @@ var CertPatrol = {
       CertPatrol.onSecurePageLoad(doc);
     }
   },
-
 
   // SSL trigger
   onSecurePageLoad: function(doc) {
