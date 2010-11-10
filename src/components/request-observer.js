@@ -196,9 +196,9 @@ RequestObserver.prototype = {
       // It is not enough to have the values only in the about:config! But in
       // order to use them for all requests we must use setRequestHeader() and
       // give them as an argument...
-      //acceptHeader = this.prefsHandler.
-       //                   getStringPref("network.http.accept.default");
-      //channel.setRequestHeader("Accept", acceptHeader, false);
+      acceptHeader = this.prefsHandler.
+                         getStringPref("network.http.accept.default");
+      channel.setRequestHeader("Accept", acceptHeader, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!");
