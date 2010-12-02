@@ -581,7 +581,7 @@ function initWindow() {
     //           'jondofox-gui.xul\", overlayObserver)';
     // setTimeout(code, 800);
 
-    // This should work unexceptionally if bug #330458 is fixed:
+    // This should work unexceptionally if bug #330458 is fixed.
     var versComp = Cc['@mozilla.org/xpcom/version-comparator;1'].
 	             getService(Ci.nsIVersionComparator);
     // We have to load different overlays here as there is no statusbar anymore

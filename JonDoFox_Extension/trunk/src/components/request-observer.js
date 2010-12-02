@@ -33,7 +33,7 @@ const CU = Components.utils;
 ///////////////////////////////////////////////////////////////////////////////
 
 var RequestObserver = function() {
-  this.wrappedJSObject = this
+  this.wrappedJSObject = this;
 };
 
 RequestObserver.prototype = {
@@ -199,6 +199,9 @@ RequestObserver.prototype = {
       acceptHeader = this.prefsHandler.
                          getStringPref("network.http.accept.default");
       channel.setRequestHeader("Accept", acceptHeader, false);
+      // The Do Not Track header. Maybe it helps in some scenarios...
+      // See: http://donottrack.us
+      channel.setRequestHeader("X-Do-Not-Track", 1, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!");
