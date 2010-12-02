@@ -1,6 +1,9 @@
 Changes in version 0.2.8 - XXXX-XX-XX
 
-  Minor improvement
+  New Feature:
+    * included the X-Do-Not-Track header
+
+  Minor improvement:
     * developed new overlay for FF >= 4.0b7pre as the statusbar is deprecated
       now
     * updated the links to our new homepage and cleaned code in jondofox-gui.js
@@ -8,7 +11,7 @@ Changes in version 0.2.8 - XXXX-XX-XX
     * set network.http.accept-encoding in FF4 to "gzip,default"
     * There was no need to exclude FF 3.0 users. Lowering the minVersion to 3.0
 
-  Bug fixing
+  Bug fixing:
     * repaired broken links in about-dialog.xul
 
 
@@ -18,7 +21,7 @@ Changes in version 0.2.7 - 2010-09-30
     * if someone sets a TabID (to track the user) it is deleted if the user
       surfs to a new domain
 
-  Minor improvement
+  Minor improvement:
     * set browser.send_pings to false just in case a user enables it (by 
       accident or whathever)
     * set plugin.expose_full_path to false to prevent the attacker from
