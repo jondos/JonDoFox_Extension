@@ -10,9 +10,12 @@ Changes in version 0.2.8 - XXXX-XX-XX
     * fixed Firefox 4 issues with our netError.xhtml override
     * set network.http.accept-encoding in FF4 to "gzip,default"
     * There was no need to exclude FF 3.0 users. Lowering the minVersion to 3.0
+    * if one prefs dialog is open and a new one shall be opened: focus the old
+      one instead of doing nothing
 
   Bug fixing:
     * repaired broken links in about-dialog.xul
+    * give a warning popup in all cases a custom proxy is misconfigured
 
 
 Changes in version 0.2.7 - 2010-09-30

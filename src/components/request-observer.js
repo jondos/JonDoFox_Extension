@@ -260,7 +260,7 @@ RequestObserver.prototype = {
     }
   },
 
-  // This is called once on 'app-startup'
+  // This is called once on 'profile-after-change'
   registerObservers: function() {
     log("Register observers");
     try {
