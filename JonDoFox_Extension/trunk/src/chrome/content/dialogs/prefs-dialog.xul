@@ -51,10 +51,12 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.header;:"/>
-                <!-- Checkbox to toggle 'set referrer' -->
-                <checkbox id="checkbox_set_referrer" 
+		<hbox>
+                  <!-- Checkbox to toggle 'set referrer' -->
+                  <checkbox id="checkbox_set_referrer" 
                           label="&jondofox.dialogtab.options.referrer;"
                           accesskey="r"/>
+		</hbox>
               </groupbox>
             </row>
 
@@ -62,10 +64,12 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.cache;:"/>
-		<!-- Checkbox to activate/deactivate cache protection  -->
-                <checkbox id="checkbox_set_safecache" 
+		<hbox>
+		  <!-- Checkbox to activate/deactivate cache protection  -->
+                  <checkbox id="checkbox_set_safecache" 
                           label="&jondofox.dialogtab.options.safecache;"
                           accesskey="S"/>
+		</hbox>
               </groupbox>
             </row>
   
@@ -74,27 +78,59 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.SSL;:"/>
-                <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
-                <checkbox id="checkbox_set_certpatrol" 
+		<hbox align="center">
+                  <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
+                  <checkbox id="checkbox_set_certpatrol" 
                           label="&jondofox.dialogtab.options.certpatrol;"
                           accesskey="C"/>
+                </hbox>
               </groupbox>
             </row>
+
+	    <!-- Adblocking preferences -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.adBlocking;:"/>
+                <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
+		<box>
+		  <hbox align="center">
+                    <checkbox id="checkbox_set_certpatrol" 
+                          label="&jondofox.dialogtab.options.adBlocker;"
+                          accesskey="A"/>
+		  </hbox>
+		  <hbox>
+			<button label="Filterlist" 
+			        align="center"
+			        onclick="openFilterList();">
+			  <description>&jondofox.dialogtab.options.filtertext;
+			  </description>
+			</button>
+		  </hbox>
+		</box>
+              </groupbox>
+            </row>
+ 
  
             <!-- Warning preferences -->
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.warnings;:"/>
                  <!-- Checkboxes to toggle the different types of warnings -->
-                <checkbox id="checkbox_update_warning"
+                <hbox>
+                  <checkbox id="checkbox_update_warning"
                           label="&jondofox.dialogtab.options.warnings.update;"
                           accesskey="u"/>
-                <checkbox id="checkbox_preferences_warning"
+		</hbox>
+		<hbox>
+                  <checkbox id="checkbox_preferences_warning"
                           label="&jondofox.dialogtab.options.warnings.prefs;"
                           accesskey="e"/>
-                <checkbox id="checkbox_proxy_warning"
+		</hbox>
+		<hbox>
+                  <checkbox id="checkbox_proxy_warning"
                           label="&jondofox.dialogtab.options.warnings.proxy;"
                           accesskey="p"/>
+		</hbox>
               </groupbox>
             </row> 
 

@@ -172,6 +172,9 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
+<!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
+<!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
+<!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">
 <!ENTITY jondofox.dialogtab.options.warnings "Warnungen">
 <!ENTITY jondofox.dialogtab.options.warnings.update "Zeige Warnung bei notwendigem Profil-Update">
 <!ENTITY jondofox.dialogtab.options.warnings.prefs "Zeige Warnung bei Veränderung wichtiger Einstellungen">
