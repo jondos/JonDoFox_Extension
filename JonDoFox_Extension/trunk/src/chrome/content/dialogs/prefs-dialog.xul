@@ -5,6 +5,7 @@
 
 <dialog id="prefs-dialog" 
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	windowtype="jondofox:prefs-dialog"
         title="&jondofox.dialog.preferences.title;"
         buttons="accept,cancel,extra1"
         buttonlabelaccept="&jondofox.dialog.save;"

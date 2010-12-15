@@ -276,11 +276,19 @@ function openBrowserTabJondofox(homepage) {
 function openDialogPreferences() {
   log("Open dialog 'JonDoFox-Preferences'");
   try {
-    prefsHandler.deletePreference('general.useragent.locale');
-    // No additional parameters needed WRONG: we need at least centerscreen
-    // otherwise the dialog is shown in the left upper corner using JDF porable
-    window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
-      "prefs-dialog", "centerscreen");
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
+                 getMostRecentWindow('jondofox:prefs-dialog'); 
+    if (!win) {
+      // No additional parameters needed WRONG: we need at least centerscreen
+      // otherwise the dialog is shown in the left upper corner using JDF 
+      // portable
+      window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
+        "prefs-dialog", "centerscreen");
+    } else {
+      // We have already one window open, focus it!
+      win.focus();
+    }
   } catch (e) {
     log("openDialogPreferences(): " + e);
   }
@@ -424,7 +432,7 @@ var overlayObserver = {
             prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
 
-            // We need to obser ve this preference because otherwise there 
+            // We need to observe this preference because otherwise there 
 	    // would be no refreshing of the status bar if we had already 
 	    // 'custom' as a our proxy state: the correct writing of 'custom' 
 	    // with either red or black letters would not work if we accepted 

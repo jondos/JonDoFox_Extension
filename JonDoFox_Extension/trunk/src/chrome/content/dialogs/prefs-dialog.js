@@ -222,16 +222,21 @@ function writePrefsCustomProxy() {
       prefsHandler.setIntPref(prefix + 'backup.socks_version', 
         document.getElementById('socks_version').selectedItem.value);
     }
-    // Check if the relevant values are okay for using JonDo, i.e. not
+      // Check if the relevant values are okay for using JonDo, i.e. not
       // empty; the 'empty_proxy' preference will be observed in jondofox-gui.js
       // in order to set the text color of 'custom' properly
-    if (!(prefsHandler.getStringPref(prefix + 'http_host') &&
-          prefsHandler.getIntPref(prefix + 'http_port')) &&
-        !(prefsHandler.getStringPref(prefix + 'socks_host') &&
-          prefsHandler.getIntPref(prefix + 'socks_port'))) {
-      prefsHandler.setBoolPref(prefix + 'empty_proxy', true);
-    } else {
+    if ((prefsHandler.getStringPref(prefix + 'http_host') &&
+          prefsHandler.getIntPref(prefix + 'http_port') &&
+	 prefsHandler.getStringPref(prefix + 'ssl_host') &&
+          prefsHandler.getIntPref(prefix + 'ssl_port') &&
+         prefsHandler.getStringPref(prefix + 'ftp_host') &&
+          prefsHandler.getIntPref(prefix + 'ftp_port')) ||
+	(prefsHandler.getStringPref(prefix + 'socks_host') &&
+	  prefsHandler.getIntPref(prefix + 'socks_port') && 
+	  prefsHandler.getIntPref(prefix + 'socks_version') === 5)) {
       prefsHandler.setBoolPref(prefix + 'empty_proxy', false);
+    } else {
+      prefsHandler.setBoolPref(prefix + 'empty_proxy', true);
     }
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);
@@ -339,7 +344,7 @@ function onAccept() {
     // If the current state is 'custom': reset it
     if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 
         'custom') {
-      setProxyCustom();
+      window.opener.setCustomProxy();
     }
   } catch (e) {
     log("onAccept(): " + e);
@@ -361,7 +366,7 @@ function onApply() {
           'extensions.jondofox.no_proxies_on'));
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
-      setProxyCustom();
+      window.opener.setCustomProxy();
     } else {
       // Should not happen
       log("Crazy index: " + index);
@@ -369,38 +374,4 @@ function onApply() {
   } catch (e) {
     log("onApply(): " + e);
   }
-}
-
-// Set the proxy state to 'custom'
-function setProxyCustom() {
-  try {
-    // Enable the custom proxy using jdfManager and if we changed the proxy
-    // state then we should clear all cookies as well
-    if (jdfManager.setProxy('custom')) {
-      jdfManager.clearAllCookies();
-    }
-    // Set the user agent because maybe the user changed the proxy (and thus 
-    // possibly the UA) with the help of the apply-button or she did not
-    // change the proxy at all but only the UA. 
-    jdfManager.setUserAgent(jdfManager.STATE_CUSTOM);
-  } catch (e) {
-    log("setProxyCustom(): " + e);
-  }
-}
-
-// Enable/disable certain dialog elements
-// XXX: Currently not needed
-function enableOptions() {
-  log("Enable/disable elements");
-  // Get the type of configuration
-  var type = document.getElementById("proxy-configuration-type");
-  // Disable is true iff automatic configuration is enabled
-  var disable = !(type.value == "1");
-  // Set the radio button
-  if (disable) {
-    type.selectedItem = document.getElementById("auto-configuration");
-  } else {
-    type.selectedItem = document.getElementById("manual-configuration");
-  }
-  // TODO: Disable textfields
 }
