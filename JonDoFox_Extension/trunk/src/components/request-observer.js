@@ -202,6 +202,8 @@ RequestObserver.prototype = {
       // The Do Not Track header. Maybe it helps in some scenarios...
       // See: http://donottrack.us
       channel.setRequestHeader("X-Do-Not-Track", 1, false);
+      // And we set X-Behavioral-Ad-Opt-Out as well...
+      channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!");

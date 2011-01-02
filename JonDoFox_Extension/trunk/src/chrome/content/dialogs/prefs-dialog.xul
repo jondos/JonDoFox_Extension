@@ -51,12 +51,12 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.header;:"/>
-		<hbox>
+		<box>
                   <!-- Checkbox to toggle 'set referrer' -->
                   <checkbox id="checkbox_set_referrer" 
                           label="&jondofox.dialogtab.options.referrer;"
                           accesskey="r"/>
-		</hbox>
+		</box>
               </groupbox>
             </row>
 
@@ -64,12 +64,12 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.cache;:"/>
-		<hbox>
+		<box>
 		  <!-- Checkbox to activate/deactivate cache protection  -->
                   <checkbox id="checkbox_set_safecache" 
                           label="&jondofox.dialogtab.options.safecache;"
                           accesskey="S"/>
-		</hbox>
+		</box>
               </groupbox>
             </row>
   
@@ -78,12 +78,12 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.SSL;:"/>
-		<hbox align="center">
+		<box align="center">
                   <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
                   <checkbox id="checkbox_set_certpatrol" 
                           label="&jondofox.dialogtab.options.certpatrol;"
                           accesskey="C"/>
-                </hbox>
+                </box>
               </groupbox>
             </row>
 
@@ -93,19 +93,19 @@
                 <caption label="&jondofox.dialogtab.options.adBlocking;:"/>
                 <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
 		<box>
-		  <hbox align="center">
+		  <box align="center">
                     <checkbox id="checkbox_set_certpatrol" 
                           label="&jondofox.dialogtab.options.adBlocker;"
                           accesskey="A"/>
-		  </hbox>
-		  <hbox>
+		  </box>
+		  <box>
 			<button label="Filterlist" 
 			        align="center"
-			        onclick="openFilterList();">
+			        onclick="openFilterListWindow();">
 			  <description>&jondofox.dialogtab.options.filtertext;
 			  </description>
 			</button>
-		  </hbox>
+		  </box>
 		</box>
               </groupbox>
             </row>
@@ -116,21 +116,21 @@
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.warnings;:"/>
                  <!-- Checkboxes to toggle the different types of warnings -->
-                <hbox>
+                <box>
                   <checkbox id="checkbox_update_warning"
                           label="&jondofox.dialogtab.options.warnings.update;"
                           accesskey="u"/>
-		</hbox>
-		<hbox>
+		</box>
+		<box>
                   <checkbox id="checkbox_preferences_warning"
                           label="&jondofox.dialogtab.options.warnings.prefs;"
                           accesskey="e"/>
-		</hbox>
-		<hbox>
+		</box>
+		<box>
                   <checkbox id="checkbox_proxy_warning"
                           label="&jondofox.dialogtab.options.warnings.proxy;"
                           accesskey="p"/>
-		</hbox>
+		</box>
               </groupbox>
             </row> 
 
@@ -169,18 +169,18 @@
               <!-- Label and proxies for different protocols -->
               <rows>
                 <row align="center">
-                  <hbox pack="end">
+                  <box pack="end">
                     <label value="&jondofox.dialogtab.custom.label;:"/>
-                  </hbox>
-                  <hbox>
+                  </box>
+                  <box>
                     <textbox id="textbox_custom_label" flex="1"/>          
-                  </hbox>            
+                  </box>            
                 </row>
 
                 <row>
-                  <hbox align="center" pack="end">
+                  <box align="center" pack="end">
                     <label value="User Agent:" />
-                  </hbox>
+                  </box>
                   <radiogroup id="user_agent" orient="horizontal">
                     <radio id="normalUA" value="normal"
                            label="&jondofox.dialogtab.custom.useragent.normal;"/>
@@ -190,69 +190,69 @@
                 </row>
 
                 <row align="center">
-                  <hbox align="center" pack="end">
+                  <box align="center" pack="end">
                     <label value="HTTP Proxy:" />
-                  </hbox>
-                  <hbox align="center">
+                  </box>
+                  <box align="center">
                     <textbox id="http_host" flex="1" oninput="shareProxySettings(true);"/>
                     <label value="Port:" />
                     <textbox id="http_port" size="5" oninput="shareProxySettings(true);"/>
-                  </hbox>
+                  </box>
                 </row>
 
                 <row align="center">
-                  <hbox align="center" pack="end"/>
-                  <hbox align="center">
+                  <box align="center" pack="end"/>
+                  <box align="center">
                     <!-- Checkbox to toggle 'all protocols' -->
                     <checkbox id="checkbox_all_protocols" 
                               label="&jondofox.dialogtab.custom.allprotocols;"
                               command="share_proxy_settings" 
                               accesskey="a"/>
-                  </hbox>
+                  </box>
                 </row>
 
                 <row align="center">
-                  <hbox align="center" pack="end">
+                  <box align="center" pack="end">
                     <label value="SSL Proxy:" />
-                  </hbox>
-                  <hbox align="center">
+                  </box>
+                  <box align="center">
                     <textbox id="ssl_host" flex="1"/>
                     <label value="Port:" />
                     <textbox id="ssl_port" size="5"/>
-                  </hbox>
+                  </box>
                 </row>
 
                 <row align="center" id="ftp_row">
-                  <hbox align="center" pack="end">
+                  <box align="center" pack="end">
                     <label value="FTP Proxy:" />
-                  </hbox>
-                  <hbox align="center">
+                  </box>
+                  <box align="center">
                     <textbox id="ftp_host" flex="1"/>
                     <label value="Port:" />
                     <textbox id="ftp_port" size="5"/>
-                  </hbox>
+                  </box>
                 </row>
 
                 <row align="center" id="gopher_row">
-                  <hbox align="center" pack="end">
+                  <box align="center" pack="end">
                     <label value="Gopher Proxy:" />
-                  </hbox>
-                  <hbox align="center">
+                  </box>
+                  <box align="center">
                     <textbox id="gopher_host" flex="1"/>
                     <label value="Port:" />
                     <textbox id="gopher_port" size="5"/>
-                  </hbox>
+                  </box>
                 </row>
 
                 <row align="center">
-                  <hbox align="center" pack="end">
+                  <box align="center" pack="end">
                     <label value="SOCKS Proxy:" />
-                  </hbox>
-                  <hbox align="center">
+                  </box>
+                  <box align="center">
                     <textbox id="socks_host" flex="1"/>
                     <label value="Port:" />
                     <textbox id="socks_port" size="5"/>
-                  </hbox>
+                  </box>
                 </row>
 
                 <!-- SOCKS version -->
