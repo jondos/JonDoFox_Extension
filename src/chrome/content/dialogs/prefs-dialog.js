@@ -375,3 +375,19 @@ function onApply() {
     log("onApply(): " + e);
   }
 }
+
+var openFilterListWindow = function() {
+  var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Components.interfaces.nsIWindowMediator).
+                 getMostRecentWindow('jondofox:filter-window'); 
+  if (!win) {
+    // No additional parameters needed WRONG: we need at least centerscreen
+    // otherwise the dialog is shown in the left upper corner using JDF 
+    // portable
+    window.open("chrome://jondofox/content/dialogs/adBlocking.xul",
+      "filter-window", "centerscreen");
+  } else {
+    // We have already one window open, focus it!
+    win.focus(); 
+  }
+}

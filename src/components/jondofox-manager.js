@@ -79,6 +79,8 @@ JDFManager.prototype = {
   // clicked on "OK".
   extensionsFound: [],
 
+  filterList: [],
+
   noscriptInstalled: true,
 
   noscriptEnabled: true,
@@ -235,8 +237,40 @@ JDFManager.prototype = {
       }
       // Register the proxy filter
       this.registerProxyFilter();
+      // Load the adblocking filterlist
+      this.loadFilterList();
     } catch (e) {
       log('init(): ' + e);
+    }
+  },
+
+  loadFilterList: function() {
+    var line = {};
+    var hasmore;
+    var componentFile = __LOCATION__;
+    var extDir = componentFile.parent.parent;
+    extDir.append("easylistgermany+easylist.txt");
+    if (!extDir.exists() || !extDir.isFile()) {
+      log("Could not find and import the filterlist"); 
+    } else {
+      var istream = CC["@mozilla.org/network/file-input-stream;1"].
+                  createInstance(CI.nsIFileInputStream);
+      // -1 has the same effect as 0444.
+      istream.init(extDir, 0x01, -1, 0);
+      var conStream = CC["@mozilla.org/intl/converter-input-stream;1"].
+                  createInstance(CI.nsIConverterInputStream);
+      conStream.init(istream, "UTF-8", 16384, CI.nsIConverterInputStream.
+  	DEFAULT_REPLACEMENT_CHARACTER);
+      conStream.QueryInterface(CI.nsIUnicharLineInputStream);
+      do {
+        hasmore = conStream.readLine(line); 
+        if (line.value && line.value.indexOf("!") < 0 && 
+	    line.value.indexOf("[") < 0) {
+	this.filterList.push(line.value);
+        }
+      } while(hasmore);
+      conStream.close();
+      log("Loaded the filter list!");
     }
   },
 
