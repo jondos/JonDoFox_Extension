@@ -384,8 +384,8 @@ var openFilterListWindow = function() {
     // No additional parameters needed WRONG: we need at least centerscreen
     // otherwise the dialog is shown in the left upper corner using JDF 
     // portable
-    window.open("chrome://jondofox/content/dialogs/adBlocking.xul",
-      "filter-window", "centerscreen");
+    window.openDialog("chrome://jondofox/content/dialogs/adBlocking.xul",
+      "filter-window", "centerscreen,width=640,height=480");
   } else {
     // We have already one window open, focus it!
     win.focus(); 
