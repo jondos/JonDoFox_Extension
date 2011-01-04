@@ -181,3 +181,5 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 <!ENTITY jondofox.about.developers "Developers:">
 <!ENTITY jondofox.about.homepageURL "https://anonymous-proxy-servers.net/en/software.html">
 
+<!-- adblock strings -->
+<!ENTITY jondofox.adblock.label "Filter rules">
