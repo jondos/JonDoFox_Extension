@@ -13,6 +13,14 @@ jondofox.adblock = {
     return this.jdfManager.filterList[row];
   },
   setTree: function(treebox){ this.treebox = treebox; },
+  getColumnProperties: function(col, elem, prop){},
+  isSorted: function(){},
+  isContainer: function(index){return false},
+  isSeparator: function(index){return false},
+  getRowProperties: function(index, prop){},
+  getCellProperties: function(row, col, prop){},
+  getImageSrc: function(row, col){},
+  cycleHeader: function(col){},
 
   // Called from adBlocking.xul
   setView : function() {
