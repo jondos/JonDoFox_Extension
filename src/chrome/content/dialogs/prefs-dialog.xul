@@ -94,7 +94,7 @@
                 <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
 		<box>
 		  <box align="center">
-                    <checkbox id="checkbox_set_certpatrol" 
+                    <checkbox id="checkbox_set_adblock" 
                           label="&jondofox.dialogtab.options.adBlocker;"
                           accesskey="A"/>
 		  </box>
