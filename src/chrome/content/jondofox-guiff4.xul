@@ -10,7 +10,7 @@
   <script type="application/x-javascript" 
 	  src="chrome://jondofox/content/jondofox-gui.js" />
    
-  <!-- Since ff4.0b7pre there is aa addon-bar instead of the old statusbar -->
+  <!-- Since ff4.0b7pre there is an addon-bar instead of the old statusbar -->
   <toolbar id="addon-bar" mode="text"> 
     <!-- Indicate current status in the statusbar -->
     <!--    <statusbarpanel id="jondofox-proxy-status" 

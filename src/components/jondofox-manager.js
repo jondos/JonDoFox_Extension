@@ -33,6 +33,10 @@ const CU = Components.utils;
 // Singleton instance definition
 var JDFManager = function(){
   this.wrappedJSObject = this;
+  // That CU call has to be here, otherwise it would not work. See:
+  // https://developer.mozilla.org/en/JavaScript/Code_modules/Using section
+  // "Custom modules and XPCOM components" 
+  Components.utils.import("resource://jondofox/adblockModule.js", this);
 };
 
 JDFManager.prototype = {
@@ -237,8 +241,9 @@ JDFManager.prototype = {
       }
       // Register the proxy filter
       this.registerProxyFilter();
-      // Load the adblocking filterlist
+      // Loading the adblocking filterlist and initializing that component.
       this.loadFilterList();
+      this.adBlock.init();
     } catch (e) {
       log('init(): ' + e);
     }
@@ -1666,7 +1671,7 @@ JDFManager.prototype = {
       log("observe: " + ex);
     }
   },
-  
+
   classDescription: "JonDoFox-Manager",
   classID:          Components.ID("{b5eafe36-ff8c-47f0-9449-d0dada798e00}"),
   contractID:       "@jondos.de/jondofox-manager;1",
@@ -1674,13 +1679,14 @@ JDFManager.prototype = {
   // No service flag here. Otherwise the registration for FF3.6.x would not work
   // See: http://groups.google.com/group/mozilla.dev.extensions/browse_thread/
   // thread/d9f7d1754ae43045/97e55977ecea7084?show_docid=97e55977ecea7084 
-  _xpcom_categories: [{
-    category: "profile-after-change",
-  }],
+  _xpcom_categories: [{category: "profile-after-change"}, 
+                      {category: "content-policy"}],
+//	              {category: "net-channel-event-sinks"}],
 
   QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
 				  CI.nsISupportsWeakReference, 
-				  CI.nsIDialogParamBlock])
+				  CI.nsIDialogParamBlock, CI.nsIContentPolicy])
+				  //CI.nsIChannelEventSink])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
@@ -1690,5 +1696,3 @@ if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([JDFManager]);
 else
     var NSGetModule = XPCOMUtils.generateNSGetModule([JDFManager]);
-
- 
