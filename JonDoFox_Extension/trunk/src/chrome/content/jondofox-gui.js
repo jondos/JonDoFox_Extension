@@ -201,7 +201,6 @@ function refresh() {
     var state = jdfManager.getState();
     var label = getLabel(state);
     var statusbar = document.getElementById('jondofox-proxy-status');
-    dump("Statusbar is: " + statusbar + "\n");
     var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
     // Set the text color; if we have proxy state custom and an empty proxy
     // then change the text color as well...
