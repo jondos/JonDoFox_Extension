@@ -14,6 +14,8 @@ Changes in version 0.2.8 - XXXX-XX-XX
       one instead of doing nothing
 
   Bug fixing:
+    * reset language pref to default value if user has no proxy or custom one
+      with no faked UA
     * repaired broken links in about-dialog.xul
     * give a warning popup in all cases a custom proxy is misconfigured
 
