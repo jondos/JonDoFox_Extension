@@ -60,6 +60,11 @@ function setProxy(state) {
     if (!jdfManager.setProxy(state)) {
       // If the state didn't change, call refresh() by hand
       log("NOT a state change, calling refresh() ..");
+      // Maybe somone configured her proxy not to use a fake UA anymore. We
+      // should therefore check the User Agent here as well.
+      if (state === jdfManager.STATE_CUSTOM) {
+	jdfManager.setUserAgent(state)
+      }
       refresh();
     } else {
       // The state has changed --> set the user agent and clear cookies

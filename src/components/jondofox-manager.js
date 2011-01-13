@@ -37,6 +37,8 @@ var JDFManager = function(){
   // https://developer.mozilla.org/en/JavaScript/Code_modules/Using section
   // "Custom modules and XPCOM components" 
   Components.utils.import("resource://jondofox/adblockModule.js", this);
+  Components.utils.import("resource://jondofox/adblockFilter.js", this);
+  Components.utils.import("resource://jondofox/adblockMatcher.js", this);  
 };
 
 JDFManager.prototype = {
@@ -242,8 +244,8 @@ JDFManager.prototype = {
       // Register the proxy filter
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
-      this.loadFilterList();
-      this.adBlock.init();
+      //this.loadFilterList();
+      //this.adBlock.init();
     } catch (e) {
       log('init(): ' + e);
     }
@@ -529,16 +531,20 @@ JDFManager.prototype = {
       // set.
       if (this.prefsHandler.getBoolPref('extensions.jondofox.alwaysUseJonDo')) {
 	this.setProxy('jondo');
-        this.setUserAgent('jondo');
       } else {
         this.setProxy(this.getState());
         // Setting Tor values...
         if (this.prefsHandler.getStringPref(
             'general.useragent.override') === this.prefsHandler.getStringPref(
             'extensions.jondofox.tor.useragent_override')) {
-          this.setUserAgent('tor');
         }
       }
+      // A convenient method to set user prefs that change from proxy to proxy.
+      // We should nevertheless make the settings of userprefs in broader way
+      // dependant on the chosen proxy. This would include the call to 
+      // prefsMapper.map() in this function and should be more flexible and
+      // transparent.
+      this.setUserAgent(this.getState());
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -770,6 +776,8 @@ JDFManager.prototype = {
     }
   },
 
+  // TODO: Transfor this function in a more general prefs setting function
+  // depending on the proxy state.
   // Setting the user agent for the different proxy states
   setUserAgent: function(state) {
     var p;
@@ -823,11 +831,13 @@ JDFManager.prototype = {
           this.settingLocationNeutrality("tor.");
           }
         } else {
-	  this.clearUAPrefs();
+	  // We use the opportunity to set other user prefs back to their
+	  // default values as well.
+	  this.clearPrefs();
         }
 	break;
       case (this.STATE_NONE):
-	this.clearUAPrefs();
+	this.clearPrefs();
 	break;
       default:
 	log("We should not be here!");
@@ -836,9 +846,9 @@ JDFManager.prototype = {
   },
 
   // We get the original values (needed for proxy = none and if the user 
-  // chooses the unfaked UA for her custom proxy) if we clear the relevant
+  // chooses the unfaked custom proxy) if we clear the relevant
   // preferences.
-  clearUAPrefs: function() {
+  clearPrefs: function() {
     var branch;
     try {
       // We only have to reset the values if this has not yet been done.
@@ -846,24 +856,19 @@ JDFManager.prototype = {
       // user uses a not well configured custom one, the values are already set.
       if (this.prefsHandler.getStringPref('general.useragent.override') !==
           null) {
-        branch = CC['@mozilla.org/preferences-service;1']
-                   .getService(CI.nsIPrefBranch);
-        branch.clearUserPref('general.useragent.override');
-        branch.clearUserPref('general.appname.override');
-        branch.clearUserPref('general.appversion.override');
-        branch.clearUserPref('general.useragent.vendor');
-        branch.clearUserPref('general.useragent.vendorSub');
-        branch.clearUserPref('general.platform.override');
-        branch.clearUserPref('general.oscpu.override');
-        branch.clearUserPref('general.buildID.override');
-        branch.clearUserPref('general.productsub.override');
-        if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
-            "en-us") {
-          this.settingLocationNeutrality("");
-        }
+        this.prefsHandler.deletePreference('general.useragent.override');
+        this.prefsHandler.deletePreference('general.appname.override');
+        this.prefsHandler.deletePreference('general.appversion.override');
+        this.prefsHandler.deletePreference('general.useragent.vendor');
+        this.prefsHandler.deletePreference('general.useragent.vendorSub');
+        this.prefsHandler.deletePreference('general.platform.override');
+        this.prefsHandler.deletePreference('general.oscpu.override');
+        this.prefsHandler.deletePreference('general.buildID.override');
+        this.prefsHandler.deletePreference('general.productsub.override');
       }
+      this.prefsHandler.deletePreference("intl.accept_languages"); 
     } catch (e) {
-      log("clearUAPrefs(): " + e);
+      log("clearPrefs(): " + e);
     }
   },
 
@@ -1594,11 +1599,20 @@ JDFManager.prototype = {
           
           else if ((data === 'intl.accept_languages' || 
             data === 'intl.accept_charsets') && this.prefsHandler.
-            getStringPref('general.useragent.override') === this.prefsHandler.
-            getStringPref('extensions.jondofox.tor.useragent_override')) {
+	    isPreferenceSet('general.useragent.override') && 
+	     this.prefsHandler.getStringPref('general.useragent.override') === 
+	     this.prefsHandler.
+	     getStringPref('extensions.jondofox.tor.useragent_override')) {
             // Do nothing here because the pref changed but it was for 
             // imitating Tor properly after the Tor UA has been activated.
           }
+
+          else if (data === 'intl.accept_languages' && (this.getState() ===
+		'none' || (this.getState() === 'custom' && !this.prefsHandler.
+		  isPreferenceSet('general.useragent.override')))) {
+            // Do nothing as the user resets her proxy and we just erase the
+	    // pref values JonDoFox set in order to get the default ones back.
+	  }
 
           // Check if the changed preference is on the stringprefsmap...
           else if (data in this.stringPrefsMap) {

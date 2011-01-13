@@ -162,8 +162,9 @@ RequestObserver.prototype = {
 	      // was successful!
               log("Referer is not set!");
 	      if (domWin && domWin.content.name !== "") {
+		log("window.name was set to: " + domWin.content.name + "!");
                 domWin.content.name = "";
-		log("window.name was set! Set it back to default ('')...");
+		log("Set it back to default ('')...");
 	      }
 	    }
           } else {
