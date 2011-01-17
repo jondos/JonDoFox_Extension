@@ -216,7 +216,7 @@ function refresh() {
       statusbar.style.color = "#000";
     }
     // Set the label to the statusbar
-    statusbar.setAttribute('label', label);
+    statusbar.setAttribute('label', "Proxy: " + label);
 
     // Set the custom proxy label in the popup menu
     document.getElementById('custom-radio').label = getLabel(jdfManager.

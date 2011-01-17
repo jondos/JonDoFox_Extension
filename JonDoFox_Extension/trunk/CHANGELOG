@@ -12,6 +12,7 @@ Changes in version 0.2.8 - XXXX-XX-XX
     * There was no need to exclude FF 3.0 users. Lowering the minVersion to 3.0
     * if one prefs dialog is open and a new one shall be opened: focus the old
       one instead of doing nothing
+    * Added "Proxy: " to the proxy label in the statusbar
 
   Bug fixing:
     * reset language pref to default value if user has no proxy or custom one
