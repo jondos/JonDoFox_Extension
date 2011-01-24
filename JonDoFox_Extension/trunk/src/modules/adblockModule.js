@@ -106,7 +106,6 @@ var adBlock = {
     }
     this.blacklistMatcher = new this.Matcher();
     this.whitelistMatcher = new this.Matcher();
-    this.Matcher.log();
   },
 
   processNode : function(wnd, aContext, aContentType, location, collapse) {
@@ -181,6 +180,7 @@ var adBlock = {
     },
 
     normalizeFilter: function(text) {
+    try{
       if (!text) {
         return text;
       }
@@ -191,7 +191,7 @@ var adBlock = {
         // Don't remove spaces inside comments
         return text.replace(/^\s+/, "").replace(/\s+$/, "");
       }
-      else if (adblock.Filter.elemhideRegExp.test(text)) {
+      else if (adBlock.Filter.elemhideRegExp.test(text)) {
         // Special treatment for element hiding filters, 
 	// right side is allowed to contain spaces
 	// .split(..., 2) will cut off the end of the string
@@ -205,6 +205,9 @@ var adBlock = {
       else {
         return text.replace(/\s/g, "");
       }
+    } catch (e) {
+      dump("Got an Exception in utils object: " + e);
+    }
     }
 
   }

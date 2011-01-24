@@ -170,7 +170,7 @@ PreferencesHandler.prototype = {
   classID:          Components.ID("{0fa6df5b-815d-413b-ad76-edd44ab30b74}"),
   contractID:       "@jondos.de/preferences-handler;1",
 
-  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports])
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports]) 
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).

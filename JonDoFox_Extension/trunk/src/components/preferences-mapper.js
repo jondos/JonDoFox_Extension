@@ -149,4 +149,3 @@ if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([PrefsMapper]);
 else
     var NSGetModule = XPCOMUtils.generateNSGetModule([PrefsMapper]);
-

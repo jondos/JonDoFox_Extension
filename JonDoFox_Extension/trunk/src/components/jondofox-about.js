@@ -47,7 +47,7 @@ AboutJondofox.prototype = {
   classID: Components.ID("{8294337b-0ff6-4dcc-a45f-59b549922932}"),
   contractID: "@mozilla.org/network/protocol/about;1?what=jondofox",
 
-  QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule])
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsISupports, Ci.nsIAboutModule])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
