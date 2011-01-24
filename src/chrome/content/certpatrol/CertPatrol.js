@@ -216,7 +216,7 @@ var CertPatrol = {
         notAfterGMT:this.jdfUtils.getString("notAfterGMT"),
         md5Fingerprint:this.jdfUtils.getString("md5Fingerprint"),
         sha1Fingerprint:this.jdfUtils.getString("sha1Fingerprint"),
-        viewDetails:this.jdfUtils.getString("viewDetails")  // no comma
+        viewDetails:this.jdfUtils.getString("viewDetails")  
       }
     };
 
@@ -247,25 +247,22 @@ var CertPatrol = {
       return;
 
     // The interesting part
-    if (thiscert && validity)
-    {
-      certobj.host = doc.location.host;
+    certobj.host = doc.location.host;
 
-      certobj.moz.commonName = thiscert.commonName;
-      certobj.moz.organization = thiscert.organization;
-      certobj.moz.organizationalUnit = thiscert.organizationalUnit;
-      certobj.moz.serialNumber = thiscert.serialNumber;
-      certobj.moz.emailAddress = thiscert.emailAddress;
-      certobj.moz.notBeforeGMT = validity.notBefore;
-      certobj.moz.notAfterGMT = validity.notAfter;
-      certobj.moz.issuerCommonName = thiscert.issuerCommonName;
-      certobj.moz.issuerOrganization = thiscert.issuerOrganization;
-      certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
-      certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
-      certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
+    certobj.moz.commonName = thiscert.commonName;
+    certobj.moz.organization = thiscert.organization;
+    certobj.moz.organizationalUnit = thiscert.organizationalUnit;
+    certobj.moz.serialNumber = thiscert.serialNumber;
+    certobj.moz.emailAddress = thiscert.emailAddress;
+    certobj.moz.notBeforeGMT = validity.notBefore;
+    certobj.moz.notAfterGMT = validity.notAfter;
+    certobj.moz.issuerCommonName = thiscert.issuerCommonName;
+    certobj.moz.issuerOrganization = thiscert.issuerOrganization;
+    certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
+    certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
+    certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
 
-      this.certCheck(browser, certobj);
-    }
+    this.certCheck(browser, certobj);
   },
 
 

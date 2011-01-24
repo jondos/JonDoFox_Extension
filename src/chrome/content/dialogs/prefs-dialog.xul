@@ -88,11 +88,11 @@
             </row>
 
 	    <!-- Adblocking preferences -->
-            <row align="center">
+	    <!--<row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.adBlocking;:"/>
-                <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
-		<box>
+		<caption label="&jondofox.dialogtab.options.adBlocking;:"/>-->
+                <!-- Checkbox to activate/deactivate the Adblocker -->
+		<!--<box>
 		  <box align="center">
                     <checkbox id="checkbox_set_adblock" 
                           label="&jondofox.dialogtab.options.adBlocker;"
@@ -109,7 +109,7 @@
 		  </box>
 		</box>
               </groupbox>
-            </row>
+	    </row>-->
  
  
             <!-- Warning preferences -->
