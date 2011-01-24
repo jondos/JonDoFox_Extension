@@ -203,8 +203,9 @@ RequestObserver.prototype = {
       // The Do Not Track header. Maybe it helps in some scenarios...
       // See: http://donottrack.us
       channel.setRequestHeader("X-Do-Not-Track", 1, false);
-      // And we set X-Behavioral-Ad-Opt-Out as well...
-      channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
+      // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
+      // actors like NoScript or AdBlock are supporting it.
+      // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!");
@@ -235,6 +236,8 @@ RequestObserver.prototype = {
       // because a redirection occurred. We also check whether the user allowed
       // a proxy circumvention of a HTTP download but we got one using HTTPS.
       // In this case we should allow circumvention as well but not vice versa.
+      // TODO: To get all redirects it is probably better to implement
+      // nsIChannelEventSink
       if (channel.URI.scheme === "https") {
         URIplain = "http".concat(channel.URI.spec.slice(5));
       }
@@ -337,8 +340,7 @@ RequestObserver.prototype = {
     category: "profile-after-change",
   }],
 
-  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
-				  CI.nsISupportsWeakReference])
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).

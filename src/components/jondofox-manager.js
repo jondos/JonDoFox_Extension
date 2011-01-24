@@ -244,14 +244,15 @@ JDFManager.prototype = {
       // Register the proxy filter
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
-      //this.loadFilterList();
-      //this.adBlock.init();
+      this.adBlock.init();
+      this.loadFilterList(); 
     } catch (e) {
       log('init(): ' + e);
     }
   },
 
   loadFilterList: function() {
+    var filterHelper;
     var line = {};
     var hasmore;
     var componentFile = __LOCATION__;
@@ -273,7 +274,11 @@ JDFManager.prototype = {
         hasmore = conStream.readLine(line); 
         if (line.value && line.value.indexOf("!") < 0 && 
 	    line.value.indexOf("[") < 0) {
-	this.filterList.push(line.value);
+          filterHelper = this.adBlock.Filter.fromText(this.adBlock.utils.
+	    normalizeFilter(line.value.replace(/\s+$/, "")));
+	  this.filterList.push(filterHelper); 
+	  log("Length is: " + this.filterList.length + " Text is: " + 
+	      filterHelper.text);
         }
       } while(hasmore);
       conStream.close();
@@ -1695,12 +1700,9 @@ JDFManager.prototype = {
   // thread/d9f7d1754ae43045/97e55977ecea7084?show_docid=97e55977ecea7084 
   _xpcom_categories: [{category: "profile-after-change"}, 
                       {category: "content-policy"}],
-//	              {category: "net-channel-event-sinks"}],
 
   QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
-				  CI.nsISupportsWeakReference, 
-				  CI.nsIDialogParamBlock, CI.nsIContentPolicy])
-				  //CI.nsIChannelEventSink])
+				         CI.nsIContentPolicy])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
