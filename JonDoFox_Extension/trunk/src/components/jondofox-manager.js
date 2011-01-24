@@ -244,8 +244,8 @@ JDFManager.prototype = {
       // Register the proxy filter
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
-      this.adBlock.init();
-      this.loadFilterList(); 
+      //this.adBlock.init();
+      //this.loadFilterList(); 
     } catch (e) {
       log('init(): ' + e);
     }
@@ -766,6 +766,8 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.0" &&
+	  this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== "2.4.0" &&
           this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== "2.3.0" &&
@@ -896,6 +898,7 @@ JDFManager.prototype = {
   // warning in order to not confuse the user.
 
   firstMimeTypeCheck: function() {
+    var i;
     try {
       var feedType =  [this.jdfUtils.getString('jondofox.feed'),
                        this.jdfUtils.getString('jondofox.audiofeed'),
