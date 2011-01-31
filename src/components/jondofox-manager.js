@@ -36,9 +36,9 @@ var JDFManager = function(){
   // That CU call has to be here, otherwise it would not work. See:
   // https://developer.mozilla.org/en/JavaScript/Code_modules/Using section
   // "Custom modules and XPCOM components" 
-  Components.utils.import("resource://jondofox/adblockModule.js", this);
-  Components.utils.import("resource://jondofox/adblockFilter.js", this);
-  Components.utils.import("resource://jondofox/adblockMatcher.js", this);  
+  //Components.utils.import("resource://jondofox/adblockModule.js", this);
+  //Components.utils.import("resource://jondofox/adblockFilter.js", this);
+  //Components.utils.import("resource://jondofox/adblockMatcher.js", this);  
 };
 
 JDFManager.prototype = {
@@ -1701,11 +1701,11 @@ JDFManager.prototype = {
   // No service flag here. Otherwise the registration for FF3.6.x would not work
   // See: http://groups.google.com/group/mozilla.dev.extensions/browse_thread/
   // thread/d9f7d1754ae43045/97e55977ecea7084?show_docid=97e55977ecea7084 
-  _xpcom_categories: [{category: "profile-after-change"}, 
-                      {category: "content-policy"}],
+  _xpcom_categories: [{category: "profile-after-change"}],
+                      //{category: "content-policy"}],
 
-  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver,
-				         CI.nsIContentPolicy])
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports, CI.nsIObserver])
+				         //CI.nsIContentPolicy])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).

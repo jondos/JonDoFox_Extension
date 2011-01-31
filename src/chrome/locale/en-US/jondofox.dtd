@@ -13,7 +13,7 @@ right) in order to switch between different proxy configurations: ">
 <!ENTITY jondofox.features.proxyswitcher.list1 "<b>No Proxy</b>: If no proxy is 
 set, JonDoFox directly connects to the Internet. <strong>Attention: Your IP 
 address will be sent in plain and is not hidden!</strong>">
-<!ENTITY jondofox.features.proxyswitcher.list2_1 "Using this setting, you may 
+<!ENTITY jondofox.features.proxyswitcher.list2_1 "<b>Custom</b>: Using this setting, you may 
 use your own proxy configuration. Choose ">
 <!ENTITY jondofox.features.proxyswitcher.list_alt "not trustworthy">
 <!ENTITY jondofox.features.proxyswitcher.list_configure "Preferences">
@@ -141,6 +141,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 <!ENTITY jondofox.statusbar.preferences "Preferences">
 <!ENTITY jondofox.statusbar.anontest "Test Anonymity">
 <!ENTITY jondofox.statusbar.tooltiptext "JonDoFox Preferences">
+<!ENTITY jondofox.statusbar.about "About JonDoFox">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">

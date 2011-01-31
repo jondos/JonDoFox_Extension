@@ -200,9 +200,9 @@ RequestObserver.prototype = {
       acceptHeader = this.prefsHandler.
                          getStringPref("network.http.accept.default");
       channel.setRequestHeader("Accept", acceptHeader, false);
-      // The Do Not Track header. Maybe it helps in some scenarios...
+      // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
       // See: http://donottrack.us
-      channel.setRequestHeader("X-Do-Not-Track", 1, false);
+      channel.setRequestHeader("DNT", 1, false);
       // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
       // actors like NoScript or AdBlock are supporting it.
       // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);

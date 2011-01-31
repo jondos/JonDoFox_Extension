@@ -35,6 +35,11 @@
                 image="chrome://jondofox/skin/preferences-16x16.png"
                 label="&jondofox.statusbar.preferences;"
 		oncommand="openDialogPreferences();" />
+      <menuitem id="jondofox-about"
+	        class="menuitem-iconic"
+		image="chrome://jondofox/skin/about-16x16.png"
+		label="&jondofox.statusbar.about;"
+		oncommand="openBrowserTabJondofox(false);" />
       <menuseparator />
 
       <!-- Use a radiogroup for the proxy list -->
