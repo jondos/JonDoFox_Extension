@@ -17,7 +17,7 @@ overlay chrome://browser/content/browser.xul chrome://jondofox/content/jondofox-
 override chrome://global/content/netError.xhtml chrome://jondofox/content/error/netError.xhtml 
 
 # Modules
-resource jondofox modules/
+#resource jondofox modules/
 
 # Components registration necessary for Firefox 4
 # jondofox-about
@@ -28,7 +28,7 @@ contract @mozilla.org/network/protocol/about;1?what=jondofox {8294337b-0ff6-4dcc
 component {b5eafe36-ff8c-47f0-9449-d0dada798e00} components/jondofox-manager.js
 contract @jondos.de/jondofox-manager;1 {b5eafe36-ff8c-47f0-9449-d0dada798e00} 
 category profile-after-change JDFManager @jondos.de/jondofox-manager;1
-category content-policy JDFManager @jondos.de/jondofox-manager;1
+#category content-policy JDFManager @jondos.de/jondofox-manager;1
 #category net-channel-event-sinks JDFManager @jondos.de/jondofox-manager;1
 
 # jondofox-utils

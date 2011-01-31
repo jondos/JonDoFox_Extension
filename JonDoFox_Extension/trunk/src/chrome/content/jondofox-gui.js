@@ -491,7 +491,7 @@ var overlayObserver = {
               // Maybe the proposed UA has changed due to an update. Thus, 
               // we are on the safe side if we set it on startup.
               jdfManager.setUserAgent(jdfManager.getState());
-              log("New version detected, opening homepage ..");
+              log("New version detected, opening feature page ..");
               openBrowserTabJondofox(false);
               prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
@@ -532,7 +532,6 @@ var overlayObserver = {
 	  // We have to make sure that the Addon bar is acivated (it is 
 	  // deactivated by default).
 	  if (uri.spec == "chrome://jondofox/content/jondofox-guiff4.xul") {
-	    dump("The new addon-bar is coming!");
             document.getElementById("addon-bar").collapsed = false; 
 	  }
           break;

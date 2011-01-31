@@ -153,6 +153,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!ENTITY jondofox.statusbar.preferences "Einstellungen">
 <!ENTITY jondofox.statusbar.anontest "Anonymität testen">
 <!ENTITY jondofox.statusbar.tooltiptext "JonDoFox Einstellungen">
+<!ENTITY jondofox.statusbar.about "Über JonDoFox">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">

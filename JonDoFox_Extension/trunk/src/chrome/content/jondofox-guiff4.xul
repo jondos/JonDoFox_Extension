@@ -11,7 +11,7 @@
 	  src="chrome://jondofox/content/jondofox-gui.js" />
    
   <!-- Since ff4.0b7pre there is an addon-bar instead of the old statusbar -->
-  <toolbar id="addon-bar" mode="text"> 
+  <toolbar id="addon-bar" mode="full"> 
     <!-- Indicate current status in the statusbar -->
     <!--    <statusbarpanel id="jondofox-proxy-status" 
 	            style="cursor: pointer"
@@ -40,6 +40,11 @@
                 image="chrome://jondofox/skin/preferences-16x16.png"
                 label="&jondofox.statusbar.preferences;"
 		oncommand="openDialogPreferences();" />
+      <menuitem id="jondofox-about"
+	        class="menuitem-iconic"
+		image="chrome://jondofox/skin/about-16x16.png"
+		label="&jondofox.statusbar.about;"
+		oncommand="openBrowserTabJondofox(false);" />
       <menuseparator />
 
       <!-- Use a radiogroup for the proxy list -->

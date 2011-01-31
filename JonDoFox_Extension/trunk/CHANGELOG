@@ -13,6 +13,8 @@ Changes in version 0.2.8 - XXXX-XX-XX
     * if one prefs dialog is open and a new one shall be opened: focus the old
       one instead of doing nothing
     * Added "Proxy: " to the proxy label in the statusbar
+    * created an a about JonDoFox (i.e. about:jondofox) entry in the settings 
+      menu
 
   Bug fixing:
     * reset language pref to default value if user has no proxy or custom one
