@@ -42,13 +42,13 @@
       <text value="about:jondofox"
 	style="color: blue; cursor: pointer;"
 	class="url"
-	onclick="openBrowserTabJondofox(false);"/>
+	onclick="openPageNewTab('about');"/>
       <text value="Homepage:" 
         style="font-weight: bold;"/>
       <text value="&jondofox.about.homepageURL;"
 	style="color: blue; cursor: pointer"
         class="url"
-	onclick="openBrowserTabJondofox(true);"/>
+	onclick="openPageNewTab('homepage');"/>
       <separator class="thin"/>
     </vbox>
     <spring flex="1"/>

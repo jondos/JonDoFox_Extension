@@ -19,6 +19,7 @@ pref("extensions.jondofox.no_proxies_on", "localhost, 127.0.0.1");
 // Custom proxy
 pref("extensions.jondofox.custom.label", "");
 pref("extensions.jondofox.custom.user_agent", "normal");
+pref("extensions.jondofox.custom.proxyKeepAlive", true);
 pref("extensions.jondofox.custom.http_host", "");
 pref("extensions.jondofox.custom.http_port", 0);
 pref("extensions.jondofox.custom.ssl_host", "");
@@ -122,7 +123,6 @@ pref("extensions.jondofox.history_expire_days", 0);
 // places.history.enabled replaces browser.history_expire_days in FF4
 pref("extensions.jondofox.history.enabled", false);
 pref("extensions.jondofox.http.accept_encoding", "gzip,deflate");
-pref("extensions.jondofox.proxy_keep-alive", false);
 pref("extensions.jondofox.noscript_contentBlocker", true);
 pref("extensions.jondofox.noscript_showDomain", false);
 //pref("extensions.jondofox.showAnontestNoProxy", true);

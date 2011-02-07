@@ -151,7 +151,6 @@ JDFManager.prototype = {
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
-    'network.http.proxy.keep-alive':'extensions.jondofox.proxy_keep-alive',
     'view_source.editor.external': 'extensions.jondofox.source_editor_external',
     'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
     'security.remember_cert_checkbox_default_setting':
@@ -789,6 +788,9 @@ JDFManager.prototype = {
   setUserAgent: function(state) {
     var p;
     var userAgent;
+    var proxyKeepAlive = this.prefsHandler.
+      getBoolPref("network.http.proxy.keep-alive");
+    var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
     log("Setting user agent for: " + state);
     switch(state) {
       case (this.STATE_JONDO): 
@@ -801,20 +803,26 @@ JDFManager.prototype = {
         //course, this does not mean that we really had a Tor UA before, maybe
         //the user changed the pref manually (and got a warning). But we can
         //safely ignore this case. 
-        if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
-            "en-us") {
+        if (acceptLang !== "en-us") {
           this.settingLocationNeutrality("");
         }
+	// Check whether we had network.http.proxy.keep-alive on before. If so
+	// we switch it off.
+	if (proxyKeepAlive) {
+          this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", false);
+	}
 	break;
       case (this.STATE_TOR):
         for (p in this.torUAMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
         }
-        if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
-            "en-us, en") {
+        if (acceptLang !== "en-us, en") {
           this.settingLocationNeutrality("tor.");
         }
+	if (!proxyKeepAlive) {
+          this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
+	}
         break;
       case (this.STATE_CUSTOM):
 	userAgent = this.prefsHandler.getStringPref(
@@ -824,8 +832,7 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
              this.prefsHandler.getStringPref(this.jondoUAMap[p]));
           }
-          if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
-            "en-us") {
+          if (acceptLang !== "en-us") {
           this.settingLocationNeutrality("");
           }
         } else if (userAgent === 'tor') {
@@ -833,8 +840,7 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
 	  }
-          if (this.prefsHandler.getStringPref("intl.accept_languages") !== 
-            "en-us, en") {
+          if (acceptLang !== "en-us, en") {
           this.settingLocationNeutrality("tor.");
           }
         } else {
@@ -842,9 +848,15 @@ JDFManager.prototype = {
 	  // default values as well.
 	  this.clearPrefs();
         }
-	break;
+	this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
+	    this.prefsHandler.
+	    getBoolPref("extensions.jondofox.custom.proxyKeepAlive"));
+        break;
       case (this.STATE_NONE):
 	this.clearPrefs();
+	if (!proxyKeepAlive) {
+	  this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
+	}
 	break;
       default:
 	log("We should not be here!");

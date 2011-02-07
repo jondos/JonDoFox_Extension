@@ -1,9 +1,10 @@
 Changes in version 0.2.8 - XXXX-XX-XX
 
   New Feature:
-    * included the X-Do-Not-Track header
+    * included the DNT header
 
   Minor improvement:
+    * allowed to enable/disable proxy keep-alive for custom proxies 
     * developed new overlay for FF >= 4.0b7pre as the statusbar is deprecated
       now
     * updated the links to our new homepage and cleaned code in jondofox-gui.js
