@@ -196,3 +196,23 @@ body[dir="rtl"] #brand {
 :root.blacklist #errorTryAgain {
   display: none;
 }
+
+.jondofox-ref {
+  list-style-image: url("chrome://jondofox/skin/help-browser.png");
+}
+
+/* Thanks to FoxyProxy for the context help idea */
+
+.jondofox-help {
+  min-height: 10em;
+  width: 20em; 
+  text-align: justify;
+  padding: .4em; 
+  border: thin black solid; 
+}
+
+.link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

@@ -165,6 +165,10 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!-- Preferences dialog -->
 <!ENTITY jondofox.dialog.preferences.title "JonDoFox-Einstellungen">
 
+<!-- Context help -->
+<!ENTITY jondofox.contextHelp "Kontexthilfe">
+<!ENTITY jondofox.here.label "hier">
+
 <!-- General configuration tab -->
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
@@ -185,8 +189,14 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 
 <!-- Edit custom proxy tab -->
 <!ENTITY jondofox.dialogtab.custom.title "Benutzerdefinierte Proxy-Konfiguration">
-<!ENTITY jondofox.dialogtab.custom.label "Bezeichner">
+<!ENTITY jondofox.dialogtab.custom.name "Name">
 <!ENTITY jondofox.dialogtab.custom.useragent.normal "Unverändert">
+<!ENTITY jondofox.dialogtab.custom.connection "Verbindungsart">
+<!ENTITY jondofox.dialogtab.proxy.keepAlive.help "HTTP Keep-Alive-Verbindungen
+können für mehrere Anfragen an Webserver benutzt werden. Das erhöht die 
+Geschwindikeit beim Surfen, da nicht bei jeder Anfrage eine neue Verbindung
+aufgebaut werden muss. Die nebenstehende Checkbox steuert dieses Verhalten für 
+die Verbindungen zum Proxy Server. Für weitere Informationen dazu siehe ">
 <!ENTITY jondofox.dialogtab.custom.allprotocols "Verwende diesen Proxy für alle Protokolle">
 
 <!-- about settings -->

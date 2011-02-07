@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009-2010, Johannes Renner, Georg Koppen
+ * Copyright (c) 2009-2011, Johannes Renner, Georg Koppen
  *
  * Preferences dialog javascript code
  *****************************************************************************/
@@ -126,6 +126,9 @@ function loadPrefsCustomProxy(onLoad) {
       document.getElementById('user_agent').selectedItem =
           document.getElementById('normalUA');
     }
+    // Get the proxy keep-alive status
+    document.getElementById('proxyKeepAlive').checked = 
+        prefsHandler.getBoolPref(prefix + 'proxyKeepAlive');
     // Get host and port settings for different protocols
     document.getElementById('http_host').value =
         prefsHandler.getStringPref(prefix + 'http_host');
@@ -175,6 +178,9 @@ function writePrefsCustomProxy() {
     // Set the user agent
     prefsHandler.setStringPref(prefix + 'user_agent', 
         document.getElementById('user_agent').selectedItem.value);
+    // Set proxy.keep-alive
+    prefsHandler.setBoolPref(prefix + 'proxyKeepAlive',
+	document.getElementById('proxyKeepAlive').checked);
     // Set single proxies
     prefsHandler.setStringPref(prefix + 'http_host', 
         document.getElementById('http_host').value);
@@ -396,3 +402,7 @@ var openFilterListWindow = function() {
     win.focus(); 
   }
 }
+
+var contextHelp = function(aString) {
+  window.opener.openPageNewTab(aString);
+} 

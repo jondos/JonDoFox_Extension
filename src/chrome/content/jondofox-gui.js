@@ -247,32 +247,24 @@ function isProxyActive() {
 // Utility functions
 ///////////////////////////////////////////////////////////////////////////////
 
-// Opens the anontest in a new tab of the current window
-function openBrowserTabAnontest() {
-  try {
-    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
-                 getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser');
-    win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab');
-  } catch (e) {
-    log("openBrowserTabAnontest(): " + e);
-  }
-}
+// Opens a website in a new Tab
 
-// Opens the jondofox download or feature page in a new tab of the current 
-// window
-function openBrowserTabJondofox(homepage) {
+function openPageNewTab(aString) {
   try {
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser');
-    if (homepage) {
-      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
-    } else {
-      win.openUILinkIn("about:jondofox", 'tab');
+    if (aString === "keepAlive") {
+      win.openUILinkIn(jdfUtils.getString('jondofox.keepAliveHelp.url'), 'tab');
+    } else if (aString === "anontest") {
+      win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab'); 
+    } else if (aString === "homepage") {
+      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab'); 
+    } else if (aString === "about") {
+      win.openUILinkIn("about:jondofox", 'tab'); 
     }
   } catch (e) {
-    log("openBrowserTabJondofox(): " + e);
+    log("openPageNewTab(): " + e);
   }
 }
 
@@ -492,7 +484,7 @@ var overlayObserver = {
               // we are on the safe side if we set it on startup.
               jdfManager.setUserAgent(jdfManager.getState());
               log("New version detected, opening feature page ..");
-              openBrowserTabJondofox(false);
+              openPageNewTab("about");
               prefsHandler.setStringPref('extensions.jondofox.last_version',
                  jdfManager.VERSION);
               if (!prefsHandler.getBoolPref(
@@ -504,7 +496,7 @@ var overlayObserver = {
             // update warning, help her and show the JonDoFox homepage after 
             // startup
             if (jdfManager.checkProfileUpdate()) {
-	      openBrowserTabJondofox(true);
+	      openPageNewTab("homepage");
             }
 	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but

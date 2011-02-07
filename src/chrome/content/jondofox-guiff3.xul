@@ -29,7 +29,7 @@
                 class="menuitem-iconic"
                 image="chrome://jondofox/skin/anontest-16x16.png"
                 label="&jondofox.statusbar.anontest;"
-                oncommand="openBrowserTabAnontest();" />
+                oncommand="openPageNewTab('anontest');" />
       <menuitem id="jondofox-editcustom"
                 class="menuitem-iconic"
                 image="chrome://jondofox/skin/preferences-16x16.png"
@@ -39,7 +39,7 @@
 	        class="menuitem-iconic"
 		image="chrome://jondofox/skin/about-16x16.png"
 		label="&jondofox.statusbar.about;"
-		oncommand="openBrowserTabJondofox(false);" />
+		oncommand="openPageNewTab('about');" />
       <menuseparator />
 
       <!-- Use a radiogroup for the proxy list -->
