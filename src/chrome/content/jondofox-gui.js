@@ -50,6 +50,7 @@ var STATE_PREF = jdfManager.STATE_PREF;
 var PROXY_PREF = 'network.proxy.type';
 var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
 var EMPTY_PROXY = 'extensions.jondofox.custom.empty_proxy';
+var VERSION_PREF = 'extensions.jondofox.last_version';
 
 // Set the extension into a certain state, 
 // pass one of the jdfManager.STATE_XXXs
@@ -383,7 +384,7 @@ var prefsObserver = {
       case 'nsPref:changed':
         // log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
-        if (data == PROXY_PREF) {
+        if (data === PROXY_PREF) {
           if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
                  jdfManager.getState() != jdfManager.STATE_NONE) {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
@@ -392,6 +393,15 @@ var prefsObserver = {
             jdfManager.setUserAgent(jdfManager.STATE_NONE);
           }
         } 
+        else if (data === VERSION_PREF && jdfManager.ff4) {
+            log("Detected last version change in FF4.")
+	    openPageNewTab('about');
+            if (!prefsHandler.getBoolPref(
+                'extensions.jondofox.noscript_showDomain')) {
+                prefsHandler.
+		  setBoolPref('noscript.showDomain', false);
+            } 
+	  } 
         else {
           // STATE_PREF or CUSTOM_LABEL or EMPTY_PROXY has changed,
           // just refresh the statusbar
@@ -424,6 +434,7 @@ var overlayObserver = {
             // Overlay is ready --> refresh the GUI
 	    refresh();
             // Add observer to different preferences
+	    prefsHandler.prefs.addObserver(VERSION_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(STATE_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
@@ -476,22 +487,6 @@ var overlayObserver = {
 	    // proxy-settings..
             isProxyDisabled();
 
-            // Get the last version property
-            var last_version = prefsHandler.
-                 getStringPref('extensions.jondofox.last_version');
-            if (last_version != jdfManager.VERSION) {
-              // Maybe the proposed UA has changed due to an update. Thus, 
-              // we are on the safe side if we set it on startup.
-              jdfManager.setUserAgent(jdfManager.getState());
-              log("New version detected, opening feature page ..");
-              openPageNewTab("about");
-              prefsHandler.setStringPref('extensions.jondofox.last_version',
-                 jdfManager.VERSION);
-              if (!prefsHandler.getBoolPref(
-                'extensions.jondofox.noscript_showDomain')) {
-                prefsHandler.setBoolPref('noscript.showDomain', false);
-              }
-            }
             // If the user should update the profile and has not disabled the 
             // update warning, help her and show the JonDoFox homepage after 
             // startup
@@ -532,6 +527,32 @@ var overlayObserver = {
 	  // deactivated by default).
 	  if (uri.spec == "chrome://jondofox/content/jondofox-guiff4.xul") {
             document.getElementById("addon-bar").collapsed = false; 
+	  }
+	  // We have to tweak the code here as it is not working reliable for
+	  // FF 4. The funny thing is that the version check works well for
+	  // the first times of a FF4 start. But afterwards the async method is
+	  // always returning too late. Thus, the pref check returns NULL and
+	  // the feature page is always shown. Thus, we set the correct pref
+	  // directly in the jondofox-manager but the call to open a new tab is
+	  // done here. Once using the prefObserver (if the async method is
+	  // returning later, after the overlayobserver-code was processed) and
+	  // once on the following code if the aysnc-method is returning 
+	  // earlier using a variable set by the Addon-Manager call. Fun.
+	  if (!jdfManager.ff4 || jdfManager.newVersionDetected) {
+	    // Get the last version property
+            var last_version = prefsHandler.
+                 getStringPref('extensions.jondofox.last_version');
+            if (last_version !== jdfManager.VERSION || jdfManager.
+		newVersionDetected) {
+              log("New version detected, opening feature page ..");
+              openPageNewTab("about");
+              prefsHandler.setStringPref('extensions.jondofox.last_version',
+                 jdfManager.VERSION);
+              if (!prefsHandler.getBoolPref(
+                'extensions.jondofox.noscript_showDomain')) {
+                prefsHandler.setBoolPref('noscript.showDomain', false);
+              }
+            } 
 	  }
           break;
 	} catch (e) {
