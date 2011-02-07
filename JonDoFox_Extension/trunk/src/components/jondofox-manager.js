@@ -76,6 +76,10 @@ JDFManager.prototype = {
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
+  // Part of a hack to show reliable the about:jondofox page in FF4 after a new
+  // version was detected.
+  newVersionDetected: false,
+
   // In FF4 the asynchronous AddOn-Manager leads to the problem that the found-
   // extensions-dialog appears in the background of the browser window. Thus, 
   // we avoid starting the dialog as early as in FF < 4 but save the found 
@@ -624,8 +628,13 @@ JDFManager.prototype = {
 	    var lastVersion = JDFManager.prototype.prefsHandler.
 		    getStringPref('extensions.jondofox.last_version');
             if (JDFManager.prototype.VERSION !== lastVersion) {
-              JDFManager.prototype.setUserAgent(JDFManager.
-		      prototype.getState());
+	      // Start of a hack as the reliable detection of a difference
+	      // bewtween old and new version does not work in JDF-overlay
+	      // observer code.
+	      JDFManager.prototype.newVersionDetected = true;
+	      JDFManager.prototype.prefsHandler.
+	        setStringPref('extensions.jondofox.last_version', JDFManager.
+		  prototype.VERSION);
             }
           });
   },
