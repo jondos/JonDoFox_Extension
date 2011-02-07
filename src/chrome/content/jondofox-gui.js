@@ -514,7 +514,14 @@ var overlayObserver = {
 		    addEventListener("click", clearingSearchbar, false);
 	    searchbar.textbox.addEventListener("keypress", 
 			    clearingSearchbar, true); 
-	    searchbar.textbox.addEventListener("drop", clearingSearchbar, true);
+	    // Yes, seems "bubble-sensitiv" across FF3/4... But just this one.
+	    if (jdfManager.ff4) {
+	      searchbar.textbox.
+		addEventListener("drop", clearingSearchbar, false);
+	    } else {
+              searchbar.textbox.
+		addEventListener("drop", clearingSearchbar, true); 
+	    }
 	    document.getAnonymousElementByAttribute(searchbar,
 			    "anonid", "search-go-button").addEventListener(
 				    "click", clearingSearchbar, true);
@@ -550,8 +557,13 @@ function shutdown() {
             removeEventListener("click", clearingSearchbar, false);
     document.getElementById("searchbar").textbox.
 	    removeEventListener("keypress", clearingSearchbar, true);
-    document.getElementById("searchbar").textbox.
-	    removeEventListener("drop", clearingSearchbar, true);
+    if (jdfManager.ff4) {
+      document.getElementById("searchbar").textbox.
+	    removeEventListener("drop", clearingSearchbar, false);
+    } else {
+      document.getElementById("searchbar").textbox.
+	    removeEventListener("drop", clearingSearchbar, true); 
+    }
     document.getAnonymousElementByAttribute(document.
 	getElementById("searchbar"), "anonid", "search-go-button").
 	    removeEventListener("click", clearingSearchbar, true);

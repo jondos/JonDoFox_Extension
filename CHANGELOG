@@ -18,6 +18,7 @@ Changes in version 0.2.8 - XXXX-XX-XX
       menu
 
   Bug fixing:
+    * fixed an issue concerning our searchbar deletion functionality in FF4
     * reset language pref to default value if user has no proxy or custom one
       with no faked UA
     * repaired broken links in about-dialog.xul
