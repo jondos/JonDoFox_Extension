@@ -553,6 +553,14 @@ JDFManager.prototype = {
       // prefsMapper.map() in this function and should be more flexible and
       // transparent.
       this.setUserAgent(this.getState());
+
+      // Check "Clear browsing data on shutdown" in order to delete Flash 
+      // Cookies (<FF4). We have to test what happens with plugins disabled as
+      // those are, according to bug 290456, responsible for deleting the
+      // cookies.
+      this.prefsHandler.setBoolPref('privacy.sanitize.sanitizeOnShutdown',
+        this.prefsHandler.
+	     getBoolPref('extensions.jondofox.sanitize.sanitizeOnShutdown'));
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -1485,20 +1493,6 @@ JDFManager.prototype = {
 	  subject.addEventListener("load", JDFManager.prototype.
 	    getUnknownContentTypeDialog, false);
 	  break;
-
-        case 'xul-window-destroyed':
-          // Get the index of the closed window
-          //var i = this.getWindowCount();
-          //log("Window " + i + " --> " + topic);
-          
-          // Not necessary since closing the last window will also cause
-          // 'quit-application-granted' .. let the code stay here though:
-          //   http://forums.mozillazine.org/viewtopic.php?t=308369
-          /* if (i == 0 && this.clean) { 
-            this.cleanup(); 
-            this.unregisterObservers()
-          } */
-          break;
 
         case 'nsPref:changed':
           // If someone wants to change the Tor prefs manually we have to 
