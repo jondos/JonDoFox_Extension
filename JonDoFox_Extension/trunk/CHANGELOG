@@ -4,6 +4,8 @@ Changes in version 0.2.8 - XXXX-XX-XX
     * included the DNT header
 
   Minor improvement:
+    * changed english anontest homepage to ip-check.info
+    * updated UA to match english FF 3.6.13
     * allowed to enable/disable proxy keep-alive for custom proxies 
     * developed new overlay for FF >= 4.0b7pre as the statusbar is deprecated
       now
