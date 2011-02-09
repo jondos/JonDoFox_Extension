@@ -262,7 +262,9 @@ function openPageNewTab(aString) {
     } else if (aString === "homepage") {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab'); 
     } else if (aString === "about") {
-      win.openUILinkIn("about:jondofox", 'tab'); 
+      win.openUILinkIn('about:jondofox', 'tab'); 
+    } else if (aString === "noScript") {
+      win.openUILinkIn('http://noscript.net', 'tab');
     }
   } catch (e) {
     log("openPageNewTab(): " + e);
@@ -447,22 +449,28 @@ var overlayObserver = {
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
             log("New window is ready");
-	    if (jdfManager.ff4) {
-	      // Let's check first if NoScript is installed and enabled. If not
-	      // remind the user of the importance to do so.
-              if (prefsHandler.
-                    getBoolPref('extensions.jondofox.update_warning')) {
-	        if (!jdfManager.noscriptInstalled) {
-                  jdfUtils.showAlertCheck(jdfUtils.
-		    getString('jondofox.dialog.attention'), jdfUtils.
-                    formatString('jondofox.dialog.message.necessaryExtension', 
-			   ['NoScript']), 'update');
-	        } else if (!jdfManager.noscriptEnabled) {
-                  jdfUtils.showAlertCheck(jdfUtils.
-		    getString('jondofox.dialog.attention'), jdfUtils.
-                    formatString('jondofox.dialog.message.enableExtension', 
-			   ['NoScript']), 'update');  
-	        }
+	    
+	    // Let's check first if NoScript is installed. If not remind the 
+            // user of the importance to do so and load the NoScript homepage 
+            // if it is missing. We do this here using a flag because either
+	    // (FF3) the window is not ready when we check it or (FF4) the
+	    // callback return so late.
+            if (prefsHandler.
+                  getBoolPref('extensions.jondofox.update_warning')) {
+	      if (!jdfManager.isNoScriptInstalled) {
+                jdfUtils.showAlertCheck(jdfUtils.
+                  getString('jondofox.dialog.attention'), jdfUtils.
+                  formatString('jondofox.dialog.message.necessaryExtension', 
+                  ['NoScript']), 'update');
+                openPageNewTab("noScript");
+              }
+            }
+	    if (jdfManager.ff4) { 
+	      if (!jdfManager.noscriptEnabled) {
+                jdfUtils.showAlertCheck(jdfUtils.
+                  getString('jondofox.dialog.attention'), jdfUtils.
+                  formatString('jondofox.dialog.message.enableExtension', 
+                  ['NoScript']), 'update');  
 	      }
 	      // Second, if there are incompatible extensions we found
 	      // we iterate through the array containing them and we restart

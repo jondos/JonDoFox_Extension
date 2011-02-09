@@ -91,7 +91,7 @@ JDFManager.prototype = {
 
   filterList: [],
 
-  noscriptInstalled: true,
+  isNoScriptInstalled: true,
 
   noscriptEnabled: true,
 
@@ -382,12 +382,19 @@ JDFManager.prototype = {
       for (extension in this.necessaryExtensions) {
         log ('Checking for ' + extension);
         if (!this.isInstalled(this.necessaryExtensions[extension])) {
-	  if (this.prefsHandler.
+	  // We just set the flag here as we want to load the NoScript-URL
+	  // in the browser window in order to help the user installing it.
+	  // But the browser window is not ready yet, thus resorting to a 
+	  // flag read later.
+	  if (extension === "NoScript") {
+             this.isNoScriptInstalled = false;
+	     log("NSInstalled is: " + this.isNoScriptInstalled);
+	  } else if (this.prefsHandler.
                  getBoolPref('extensions.jondofox.update_warning')) {
-           this.jdfUtils.showAlertCheck(this.jdfUtils.
-             getString('jondofox.dialog.attention'), this.jdfUtils.
-             formatString('jondofox.dialog.message.necessaryExtension', 
-	     [extension]), 'update');
+            this.jdfUtils.showAlertCheck(this.jdfUtils.
+              getString('jondofox.dialog.attention'), this.jdfUtils.
+              formatString('jondofox.dialog.message.necessaryExtension', 
+	      [extension]), 'update');
 	  }
           log(extension + ' is missing');
         } else {
@@ -461,7 +468,7 @@ JDFManager.prototype = {
           }
         } else {
           log("NoScript is missing...");
-          JDFManager.prototype.noscriptInstalled = false;
+          JDFManager.prototype.isNoScriptInstalled = false;
         }
       });
     } catch (e) {
@@ -599,7 +606,6 @@ JDFManager.prototype = {
       observers.addObserver(this, "final-ui-startup", false);
       observers.addObserver(this, "em-action-requested", false);
       observers.addObserver(this, "quit-application-granted", false);
-      observers.addObserver(this, "xul-window-destroyed", false);
       observers.addObserver(this, "domwindowopened", false);
     } catch (e) {
       log("registerObservers(): " + e);
@@ -617,7 +623,6 @@ JDFManager.prototype = {
       observers.removeObserver(this, "final-ui-startup");
       observers.removeObserver(this, "em-action-requested");
       observers.removeObserver(this, "quit-application-granted");    
-      observers.removeObserver(this, "xul-window-destroyed");
       observers.removeObserver(this, "domwindowopened");
     } catch (e) {
       log("unregisterObservers(): " + e);

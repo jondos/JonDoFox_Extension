@@ -58,8 +58,8 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_set_certpatrol').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
     // Adblock setting
-    document.getElementById('checkbox_set_adblock').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.adblock_enabled');
+    //document.getElementById('checkbox_set_adblock').checked =
+    //    prefsHandler.getBoolPref('extensions.jondofox.adblock_enabled');
     // the warnings are checkboxes as well
     document.getElementById('checkbox_update_warning').checked =
         prefsHandler.getBoolPref('extensions.jondofox.update_warning');
@@ -85,8 +85,8 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_set_safecache').checked); 
     prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
         document.getElementById('checkbox_set_certpatrol').checked);
-    prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
-	document.getElementById('checkbox_set_adblock').checked);
+    //prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
+//	document.getElementById('checkbox_set_adblock').checked);
     // Now the settings concerning different warnings
     prefsHandler.setBoolPref('extensions.jondofox.update_warning',
         document.getElementById('checkbox_update_warning').checked);
