@@ -16,6 +16,8 @@ Changes in version 0.2.8 - XXXX-XX-XX
     * Added "Proxy: " to the proxy label in the statusbar
     * created an a about JonDoFox (i.e. about:jondofox) entry in the settings 
       menu
+    * set privacy.sanitize.sanitizeOnShutdown to true in oder to delete Flash
+      cookies on shutdown in FF4 (see: bug 290456) 
 
   Bug fixing:
     * fixed an issue concerning our searchbar deletion functionality in FF4
