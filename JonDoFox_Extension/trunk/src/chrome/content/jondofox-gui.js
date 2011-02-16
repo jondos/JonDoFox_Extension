@@ -531,11 +531,6 @@ var overlayObserver = {
           } else {
             log("!! Wrong uri: " + uri.spec);
           }
-	  // We have to make sure that the Addon bar is acivated (it is 
-	  // deactivated by default).
-	  if (uri.spec == "chrome://jondofox/content/jondofox-guiff4.xul") {
-            document.getElementById("addon-bar").collapsed = false; 
-	  }
 	  // We have to tweak the code here as it is not working reliable for
 	  // FF 4. The funny thing is that the version check works well for
 	  // the first times of a FF4 start. But afterwards the async method is

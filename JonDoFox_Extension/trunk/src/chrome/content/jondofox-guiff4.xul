@@ -11,21 +11,21 @@
 	  src="chrome://jondofox/content/jondofox-gui.js" />
    
   <!-- Since ff4.0b7pre there is an addon-bar instead of the old statusbar -->
-  <toolbar id="addon-bar" mode="full"> 
+  <!-- Nevertheless we use the statusbar element as there is otherwise the 
+       difficulty to get our Text in the right corner as used (Cookie Monster)
+       was using the statusbar further and landed on the right-most position -->
+  <!-- Thus, we could avoid one file but I leave it for now as the splitting of
+       statusbar and addon-bar is definitely coming in the furture... -->
+  <statusbar id="status-bar"> 
     <!-- Indicate current status in the statusbar -->
-    <!--    <statusbarpanel id="jondofox-proxy-status" 
+    <statusbarpanel id="jondofox-proxy-status" 
 	            style="cursor: pointer"
                     insertbefore="statusbar-updates"
                     label=""
                     class="statusbarpanel-iconic-text"        
                     popup="jondofox-proxy-list"
 		    context="jondofox-proxy-list"
-		    tooltiptext="&jondofox.statusbar.tooltiptext;" />-->
-    <toolbarbutton id="jondofox-proxy-status"
-                   label=""
-		   popup="jondofox-proxy-list"
-		   context="jondofox-proxy-list"
-		   tooltiptext="&jondofox.statusbar.tooltiptext;"/>
+		    tooltiptext="&jondofox.statusbar.tooltiptext;" />
     <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list">
       
@@ -44,7 +44,7 @@
 	        class="menuitem-iconic"
 		image="chrome://jondofox/skin/about-16x16.png"
 		label="&jondofox.statusbar.about;"
-		oncommand="openPageNewTav('about');" />
+		oncommand="openPageNewTab('about');" />
       <menuseparator />
 
       <!-- Use a radiogroup for the proxy list -->
@@ -65,7 +65,7 @@
       </radiogroup>
 
     </menupopup>
-  </toolbar>
+  </statusbar>
 
   <!-- Context menu entry for bypassing the proxy -->
   <popup id="contentAreaContextMenu">
