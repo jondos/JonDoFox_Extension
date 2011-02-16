@@ -106,7 +106,8 @@ JDFManager.prototype = {
 
   // Necessary security extensions with their IDs
   necessaryExtensions: {
-    'NoScript':'{73a6fe31-595d-460b-a920-fcc0f8843232}'    
+    'NoScript':'{73a6fe31-595d-460b-a920-fcc0f8843232}',    
+    'Cookie Monster':'{45d8ff86-d909-11db-9705-005056c00008}'
   },
   
   // The user agent maps...
@@ -500,6 +501,11 @@ JDFManager.prototype = {
 	// For clearity of code we implement a different method to check the
 	// installed extension in Firefox4
         this.checkExtensionsFF4();
+	// We do not want to ping Mozilla once per day for different updates
+	// of Add-On Metadata and other stuff (duration of last startup...).
+	this.prefsHandler.setBoolPref('extensions.update.autoUpdateDefault',
+        this.prefsHandler.
+	     getBoolPref('extensions.jondofox.update.autoUpdateDefault')); 
       } else {
         // In order to avoid unnecessary error messages we just add it to the
 	// prefs map if we have a FF3 as it does not exist anymore in FF4.
@@ -548,11 +554,6 @@ JDFManager.prototype = {
 	this.setProxy('jondo');
       } else {
         this.setProxy(this.getState());
-        // Setting Tor values...
-        if (this.prefsHandler.getStringPref(
-            'general.useragent.override') === this.prefsHandler.getStringPref(
-            'extensions.jondofox.tor.useragent_override')) {
-        }
       }
       // A convenient method to set user prefs that change from proxy to proxy.
       // We should nevertheless make the settings of userprefs in broader way
