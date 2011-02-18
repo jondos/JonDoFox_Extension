@@ -25,7 +25,7 @@ you may use it as an alternative to JonDo with this setting.">
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: When this setting 
 is active, JonDoFox sends the browser's communication data to JonDo. JonDo 
 needs to be separately 
-<a href='https://anonymous-proxy-servers.net/en/software.html'> installed and 
+<a href='https://anonymous-proxy-servers.net/en/jondo.html'> installed and 
 started</a>.">
 <!ENTITY jondofox.features.proxyswitcher.contextmenu "Whenever you like to 
 bypass the proxy without completely deactivating it (e.g. when downloading 
@@ -64,14 +64,14 @@ web pages saved in the cache are loaded faster than the same, non-cached ones.
 Or she might try to set so-called cache cookies to identify a particular user 
 across different domains. In order to better protect our users against this 
 kind of attack we included the slightly modified code of the SafeCache 
-extension into JonDoFox. In the preferences panel (within the privacy tab) you 
+extension into JonDoFox. In the JonDoFox settings panel you 
 will find a corresponding hint:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_en.png">
 <!ENTITY jondofox.features.certpatrol.head "Detecting faked SSL-Certificates">
 <!ENTITY jondofox.features.certpatrol1 "In order to provide a better protection 
 against faked SSL-certificates we enhanced the functionality of the Certificate 
 Patrol extension and included it into JonDoFox (as can be seen in the JonDoFox 
-Settings panel):"> 
+settings panel):"> 
 <!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_en.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_en.png">
 <!ENTITY jondofox.features.certpatrol2 "On the one hand, this allows users to 
@@ -86,7 +86,7 @@ man-in-the-middle-attacks</a>.">
 <!ENTITY jondofox.features.additionalAddons.head "Additional features of the JonDoFox profile">
 <!ENTITY jondofox.features.additionalAddons "Besides our self-designed 
 extension we have incorporated a bunch of others in our profile that help the 
-user surfing the Web anonymously: CSLite, Adblock Plus, NoScript and 
+user surfing the Web anonymously: Cookie Monster, Adblock Plus, NoScript and 
 UnPlug. You will find information on how to use them on
 <a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">

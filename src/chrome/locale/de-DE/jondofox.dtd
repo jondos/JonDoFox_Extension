@@ -1,5 +1,5 @@
 <!-- JonDoFox Features -->
-<!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank dafür, 
+<!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank daf&uuml;r, 
 dass Sie JonDoFox heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
 die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her erl&auml;utert, die 
 ein sichereres Surfen im Internet erm&ouml;glichen.">
@@ -30,7 +30,7 @@ Alternative zu JonDo verwenden.">
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: Bei dieser 
 Einstellung schickt JonDoFox die Kommunikationsdaten des Browsers &#xfc;ber 
 JonDo. JonDo muss dazu separat
-<a href='https://anonymous-proxy-servers.net/de/software.html'>installiert und 
+<a href='http://anonym-surfen.de/jondo.html'>installiert und 
 gestartet</a> sein."> 
 <!ENTITY jondofox.features.proxyswitcher.contextmenu "Wenn Sie eine Datei am 
 Proxy vorbei herunterladen m&#xf6;chten, ohne den Proxy dabei zu deaktivieren 
@@ -66,8 +66,8 @@ Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von
 Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
 installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
 SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung 
-integriert. In den Einstellungen im Reiter Datenschutz findet sich ein 
-entsprechender Hinweis darauf:">
+integriert. Im JonDoFox-Einstellungsmen&uuml; findet sich ein entsprechender 
+Hinweis darauf:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
 <!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
 gef&auml;lschten SSL-Zertifikaten">
@@ -90,7 +90,7 @@ Man-in-the-middle-Angriffen</a> sch&uuml;tzt.">
 <!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
 integriert, damit die Anonymität während des Surfens noch besser geschützt ist. 
-Informationen zu diesen (CSLite, Adblock Plus, NoScript und UnPlug) 
+Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript und UnPlug) 
 sind auf unserer Hilfeseite unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
