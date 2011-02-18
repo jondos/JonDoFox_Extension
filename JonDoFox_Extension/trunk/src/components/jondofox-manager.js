@@ -491,13 +491,17 @@ JDFManager.prototype = {
 	this.boolPrefsMap['places.history.enabled'] = 
 		'extensions.jondofox.history.enabled';
 	// The same holds for the websockets pref until we decided whether this
-	// feature is harnmless.
+	// feature is harmless.
 	this.boolPrefsMap['network.websocket.enabled'] = 
 	        'extensions.jondofox.websocket.enabled';
-        // Firefox 4 has a whitespace bewteen the "," and "deflate". We need to 
+        // Firefox 4 has a whitespace between the "," and "deflate". We need to 
 	// avoid that in order not to reduce our anonymity set.	
 	this.stringPrefsMap['network.http.accept-encoding'] = 
 	        'extensions.jondofox.http.accept_encoding';
+	// We just send the DNT header ourselves (otherwise the header order
+	// between FF4 and FF3 woudl differ).
+	this.boolPrefsMap['privacy.donottrackheader.enabled'] = 
+	  'extensions.jondofox.donottrackheader.enabled';
 	// For clearity of code we implement a different method to check the
 	// installed extension in Firefox4
         this.checkExtensionsFF4();
