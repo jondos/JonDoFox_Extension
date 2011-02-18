@@ -134,10 +134,7 @@ pref("extensions.jondofox.sanitize.sanitizeOnShutdown", true);
 // No pinging of Mozilla once a day for Metadata updates or whatever
 // See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time 
 pref("extensions.jondofox.update.autoUpdateDefault", false);
-// We do not want to have the DNT checkbox checked in the browser as in this
-// case the header order in FF4 would be a different one from FF3.x with DNT
-// header set by JDF. Therefore, we set this option to false.
-pref("extensions.jondofox.donottrackheader.enabled", false);
+pref("extensions.jondofox.donottrackheader.enabled", true);
 
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
