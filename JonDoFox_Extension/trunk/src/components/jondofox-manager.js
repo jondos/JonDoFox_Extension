@@ -498,8 +498,6 @@ JDFManager.prototype = {
 	// avoid that in order not to reduce our anonymity set.	
 	this.stringPrefsMap['network.http.accept-encoding'] = 
 	        'extensions.jondofox.http.accept_encoding';
-	// We just send the DNT header ourselves (otherwise the header order
-	// between FF4 and FF3 woudl differ).
 	this.boolPrefsMap['privacy.donottrackheader.enabled'] = 
 	  'extensions.jondofox.donottrackheader.enabled';
 	// For clearity of code we implement a different method to check the
