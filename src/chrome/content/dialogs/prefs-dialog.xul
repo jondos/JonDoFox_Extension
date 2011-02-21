@@ -31,6 +31,7 @@
     <tabs>
       <tab label="&jondofox.dialogtab.options.title;"/>
       <tab label="&jondofox.dialogtab.custom.title;"/>
+      <tab label="&jondofox.temp.email.title;"/>
     </tabs>
  
     <!-- Re-define the single tabs --> 
@@ -284,6 +285,19 @@
             </row>
           </rows>
         </grid>
+      </tabpanel>
+
+      <!-- Third tabpanel -->
+      <tabpanel>
+        <groupbox>
+          <caption label="&jondofox.temp.email.serviceLabel;"/>
+          <hbox>
+            <radiogroup id="selectedService"/>
+            <spacer flex="1"/>
+          </hbox>
+	  <label value="* &jondofox.temp.email.recommended;" 
+	    class="bloodyvikingsRecommended" style="margin-top:6px;"/>
+        </groupbox> 
       </tabpanel>
     </tabpanels>
   </tabbox>

@@ -17,7 +17,7 @@ overlay chrome://browser/content/browser.xul chrome://jondofox/content/jondofox-
 override chrome://global/content/netError.xhtml chrome://jondofox/content/error/netError.xhtml 
 
 # Modules
-#resource jondofox modules/
+resource jondofox modules/
 
 # Components registration necessary for Firefox 4
 # jondofox-about

@@ -216,3 +216,8 @@ body[dir="rtl"] #brand {
   text-decoration: underline;
   cursor: pointer;
 }
+
+/*Bloody Vikings*/
+.bloodyvikingsRecommended {
+    color: #008000;
+}

@@ -27,6 +27,78 @@ if (typeof(Cc) == 'undefined') {
   var Ci = Components.interfaces;
 };
 
+if (!jondofox) var jondofox = {};
+if (!jondofox.bloodyVikings) jondofox.bloodyVikings = {};
+
+jondofox = {
+  updateContextMenuEntry : function() {
+    try {
+      if (gContextMenu != null) {
+        if (gContextMenu.onLink && isProxyActive()) {
+	  // Hide temp email
+          document.getElementById("bypass-proxy").hidden = false;
+	  document.getElementById("bloodyvikingsContext").hidden = true; 
+        } else if (gContextMenu.onTextInput) {
+           // Hide proxy
+          document.getElementById("bypass-proxy").hidden = true;
+	  document.getElementById("bloodyvikingsContext").hidden = false; 
+        } else {
+	  // Hide both
+          document.getElementById("bypass-proxy").hidden = true;
+	  document.getElementById("bloodyvikingsContext").hidden = true; 
+	} 
+      } else {
+        log("gContextMenu is null!");
+      } 
+    } catch (e) {
+      log("showMenuItem(): " + e);
+    }
+  }
+};
+
+jondofox.bloodyVikings = {
+  insertAddress: function(field) {
+    try {
+      log("Trying to get an temp email-address...");
+      Cu.import("resource://jondofox/bloodyVikingsUtils.jsm", this);
+      Cu.import("resource://jondofox/bloodyVikingsServices.jsm", this);
+
+      let serviceId = prefsHandler.
+        getStringPref("extensions.jondofox.temp.email.selected");
+      let service = this.BloodyVikings.Services.getService(serviceId);
+
+      if (!service) {
+	jdfUtils.showAlert(jdfUtils.
+	    getString("jondofox.temp.email.invalidId.title"), jdfUtils.
+	    getString("jondofox.temp.email.invalidID.message"));
+        prefsHandler.
+          setStringPref("extensions.jondofox.temp.email.selected", null);
+        return;
+      }
+
+      service.getAddress(
+        gBrowser,
+        function(address, inboxUrl, cookies) {
+          if (field.localName.toLowerCase() === "textarea") {
+            field.value = field.value.substr(0, field.selectionStart) + 
+	                  address + field.value.substr(field.selectionEnd);
+          } else {
+            field.value = address;
+	  }
+        },
+        function(name, e) {
+	  jdfUtils.showAlert(jdfUtils.
+	    getString("jondofox.temp.email.incompatibility.title"), jdfUtils.
+	    formatString("jondofox.temp.email.incompatibility.message", 
+	      [name, e.name, e.message])); 
+        }
+      );
+    } catch(e) {
+      log("Error while fetching temporary a Email-Address: " + e);
+    }
+  }
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 // Proxy stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -571,7 +643,6 @@ var overlayObserver = {
 function shutdown() {
   try {
     log("Removing event listeners...");
-    window.removeEventListener("load", init, true);
     window.removeEventListener("load", initWindow, true);
     window.removeEventListener("unload", shutdown, false);
     window.removeEventListener("load", initTitleListener, false);
@@ -596,7 +667,8 @@ function shutdown() {
     document.getElementById("content").removeEventListener("load",
 		    CertPatrol.onPageLoad, true);
     document.getElementById("contentAreaContextMenu").
-	    removeEventListener("popupshowing", showMenuItem, false);
+	    removeEventListener("popupshowing", 
+		jondofox.updateContextMenuEntry, false);
   } catch (e) {
     log("Error while removing event listeners: " + e);
   }
@@ -631,6 +703,11 @@ function initWindow() {
     } else {
       document.loadOverlay('chrome://jondofox/content/jondofox-guiff3.xul', 
                 overlayObserver);
+    }
+    var contextMenu = document.getElementById("contentAreaContextMenu");
+    if (contextMenu) {
+      contextMenu.addEventListener("popupshowing", 
+	jondofox.updateContextMenuEntry, false);
     }
   } catch (e) {
     log("initWindow(): " + e);

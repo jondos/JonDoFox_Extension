@@ -64,6 +64,13 @@
 
   <!-- Context menu entry for bypassing the proxy -->
   <popup id="contentAreaContextMenu">
+    <menuitem id="bloodyvikingsContext"
+              label="&jondofox.temp.email;"
+	      class="menuitem-iconic"
+	      image="chrome://jondofox/skin/bloodyvikings_16.png"
+              insertafter="context-delete"
+              oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
+              hidden="true" /> 
     <menuitem id="bypass-proxy"
               label=""
               oncommand="bypassProxyAndSave(gContextMenu.linkURL);"

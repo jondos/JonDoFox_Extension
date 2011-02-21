@@ -146,3 +146,6 @@ pref("extensions.jondofox.certpatrol_showChangedCert", false);
 
 //AdBlocking
 pref("extensions.jondofox.adblock_enabled", true);
+
+//Bloody Vkings
+pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
