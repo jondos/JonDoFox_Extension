@@ -38,6 +38,7 @@ function onLoad() {
   try {
     loadPrefsGeneral();
     loadPrefsCustomProxy(true);
+    loadPrefsTempEmail();
   } catch (e) {
     log("onLoad(): " + e);    
   }
@@ -343,12 +344,78 @@ function shareProxySettings(onLoad) {
   } 
 }
 
+function loadPrefsTempEmail() {
+  Components.utils.import("resource://jondofox/bloodyVikingsServices.jsm");
+  let aboutText = jdfUtils.getString("jondofox.about.label");
+  let langText = jdfUtils.getString("jondofox.supported.languages.label");
+  let serviceGroup = document.getElementById("selectedService"); 
+
+  for (let id in BloodyVikings.Services.serviceList) {
+        let service = BloodyVikings.Services.getService(id);
+        let name    = service.name;
+        let infoUrl = service.infoUrl;
+
+        let hbox    = document.createElement("hbox");
+        let radio   = document.createElement("radio");
+        let spacer  = document.createElement("spacer");
+        let link    = document.createElement("label");
+
+        hbox.setAttribute("align", "baseline");
+
+        radio.setAttribute("value", name);
+        radio.setAttribute("label", name + ((service.recommended)?" *":""));
+        
+        if (service.recommended) {
+            radio.setAttribute("class", "bloodyvikingsRecommended");
+        }
+        
+        let tooltip = "";
+        if (service.languages) {
+            for (let lang in service.languages) {
+                if (tooltip)
+                    tooltip += ",";
+
+		tooltip += " ";
+                tooltip += lang;
+            }
+        } else {
+            tooltip = " " + service.defaultLanguage;
+        }
+        
+        radio.setAttribute("tooltiptext", langText + tooltip);
+
+        spacer.setAttribute("flex", 1);
+
+        link.setAttribute("class", "text-link");
+        link.setAttribute("href", infoUrl);
+        link.setAttribute("tooltiptext", infoUrl);
+        link.setAttribute("value", aboutText);
+
+        hbox.appendChild(radio);
+        hbox.appendChild(spacer);
+        hbox.appendChild(link);
+
+        serviceGroup.appendChild(hbox);
+    }
+
+    serviceGroup.value = 
+      prefsHandler.getStringPref("extensions.jondofox.temp.email.selected"); 
+
+}
+
+function writePrefsTempEmail() {
+  var serviceGroup = document.getElementById("selectedService"); 
+  prefsHandler.setStringPref("extensions.jondofox.temp.email.selected", 
+      serviceGroup.value);
+}
+
 // This is called on clicking the 'accept'-button
 function onAccept() {
   try {
     // Store all preferences
     writePrefsGeneral();
     writePrefsCustomProxy();
+    writePrefsTempEmail();
     // Set proxy exceptions to FF
     proxyManager.setExceptions(prefsHandler.getStringPref(
         'extensions.jondofox.no_proxies_on'));
@@ -379,8 +446,8 @@ function onApply() {
       writePrefsCustomProxy();
       window.opener.setCustomProxy();
     } else {
-      // Should not happen
-      log("Crazy index: " + index);
+      // Temporary Emails
+      writePrefsTempEmail();
     }
   } catch (e) {
     log("onApply(): " + e);

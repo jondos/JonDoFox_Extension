@@ -1,8 +1,10 @@
-Changes in version 0.2.8 - XXXX-XX-XX
+Changes in version 0.2.8 - 2011-02-23
 
   New Feature:
     * full Firefox 4 compatibility
     * included the DNT header
+    * included core Bloody Vikings functionality (getting a temporary email
+      address easily)
 
   Minor improvement:
     * set extensions.update.autoUpdateDefault to false to stop unnecessary 

@@ -101,6 +101,12 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 
+<!-- Bloody Vikings -->
+<!ENTITY jondofox.temp.email "Request a temporary email address">
+<!ENTITY jondofox.temp.email.title "Temporary Emails">
+<!ENTITY jondofox.temp.email.serviceLabel "E-mail service:">
+<!ENTITY jondofox.temp.email.recommended "Recommended">
+
 <!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
 <!ENTITY jondofox.instructions.titleText "JonDoFox <b>additionally</b> needs the JonDo client program to be able to connect to the JonDonym service.">
