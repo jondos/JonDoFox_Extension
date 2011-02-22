@@ -296,7 +296,7 @@
             <radiogroup flex="1" id="selectedService"/>
           </hbox>
 	  <label value="* &jondofox.temp.email.recommended;" 
-	    class="bloodyvikingsRecommended"/>
+	    class="bloodyvikingsRecommended" style="margin-top: 6px;"/>
         </vbox> 
       </tabpanel>
     </tabpanels>
