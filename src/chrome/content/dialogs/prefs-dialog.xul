@@ -289,15 +289,15 @@
 
       <!-- Third tabpanel -->
       <tabpanel>
-        <groupbox>
-          <caption label="&jondofox.temp.email.serviceLabel;"/>
+	<vbox flex="1"> 
+	  <label value="&jondofox.temp.email.serviceLabel;"
+	    class="bloodyVikingsHead"/>
           <hbox>
-            <radiogroup id="selectedService"/>
-            <spacer flex="1"/>
+            <radiogroup flex="1" id="selectedService"/>
           </hbox>
 	  <label value="* &jondofox.temp.email.recommended;" 
-	    class="bloodyvikingsRecommended" style="margin-top:6px;"/>
-        </groupbox> 
+	    class="bloodyvikingsRecommended"/>
+        </vbox> 
       </tabpanel>
     </tabpanels>
   </tabbox>

@@ -218,6 +218,11 @@ body[dir="rtl"] #brand {
 }
 
 /*Bloody Vikings*/
+.bloodyVikingsHead {
+  font-weight: bold; 
+}
+
 .bloodyvikingsRecommended {
     color: #008000;
+    margin-top: 6px;
 }

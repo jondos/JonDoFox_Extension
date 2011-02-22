@@ -351,9 +351,11 @@ function loadPrefsTempEmail() {
   let serviceGroup = document.getElementById("selectedService"); 
 
   for (let id in BloodyVikings.Services.serviceList) {
+        let linkLabel = "";
         let service = BloodyVikings.Services.getService(id);
         let name    = service.name;
         let infoUrl = service.infoUrl;
+	linkLabel = aboutText + " " + name;
 
         let hbox    = document.createElement("hbox");
         let radio   = document.createElement("radio");
@@ -389,7 +391,7 @@ function loadPrefsTempEmail() {
         link.setAttribute("class", "text-link");
         link.setAttribute("href", infoUrl);
         link.setAttribute("tooltiptext", infoUrl);
-        link.setAttribute("value", aboutText);
+        link.setAttribute("value", linkLabel);
 
         hbox.appendChild(radio);
         hbox.appendChild(spacer);
