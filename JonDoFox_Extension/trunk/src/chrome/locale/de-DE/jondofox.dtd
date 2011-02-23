@@ -84,6 +84,11 @@ Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell
 vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
 <a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
 Man-in-the-middle-Angriffen</a> sch&uuml;tzt.">
+<!ENTITY jondofox.features.temp.email.head "Tempor&auml;re E-Mail-Adressen benutzen">
+<!ENTITY jondofox.features.temp.email1 "Mit dem JonDoFox haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und wählen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
+<!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_de.png">
+<!ENTITY jondofox.features.temp.email2 "Danach wird die angeforderte E-Mail-Adresse in das Textfeld eingef&uuml;gt und Ihr Account in einem neuen Tab geöffnet. Wenn Sie selbst bestimmen m&ouml;chten, welchen Anbieter tempor&auml;rer E-Mail-Adressen Sie verwenden wollen, dann k&ouml;nnen Sie die entsprechenden Anpassungen in dem JonDoFox-Einstellungsmen&uuml; vornehmen:">
+<!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_de.png">
 <!ENTITY jondofox.features.searchbar.head "Schutz der Suchanfragen vor Beoachtern am Rechner-Arbeitsplatz">
 <!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoFox diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage f&uuml;r jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalit&auml;t ganz aufzugeben.">
 <!ENTITY jondofox.features.additionalAddons.head "Weitere Features des JonDoFox-Profils">
@@ -93,7 +98,7 @@ integriert, damit die Anonymität während des Surfens noch besser geschützt is
 Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript und UnPlug) 
 sind auf unserer Hilfeseite unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
-https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
+https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">
 
 <!-- Certificate Patrol -->
 <!ENTITY _title		"Einstellungen für Certificate Patrol">
@@ -106,8 +111,8 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden.">
 <!ENTITY _close		"Passt">
 
 <!-- Bloody Vikings -->
-<!ENTITY jondofox.temp.email "Eine temporäre Email-Adresse anfordern">
-<!ENTITY jondofox.temp.email.title "Temporäre Emails">
+<!ENTITY jondofox.temp.email "Eine temporäre E-Mail-Adresse anfordern">
+<!ENTITY jondofox.temp.email.title "Temporäre E-Mails">
 <!ENTITY jondofox.temp.email.serviceLabel "E-Mail-Service:">
 <!ENTITY jondofox.temp.email.recommended "Empfohlen">
 

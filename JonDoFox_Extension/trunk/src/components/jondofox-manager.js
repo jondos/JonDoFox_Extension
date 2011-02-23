@@ -486,11 +486,7 @@ JDFManager.prototype = {
       // Call init() first
       this.init();
       if (this.ff4) {
-	// We add this pref just in case we have a FF4 as the old one 
-	// (brower.history_expire_days) is replaced by it.
-	this.boolPrefsMap['places.history.enabled'] = 
-		'extensions.jondofox.history.enabled';
-	// The same holds for the websockets pref until we decided whether this
+	// Adding the websockets pref until we decided whether this
 	// feature is harmless.
 	this.boolPrefsMap['network.websocket.enabled'] = 
 	        'extensions.jondofox.websocket.enabled';

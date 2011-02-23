@@ -81,6 +81,11 @@ with an updated certificate, thus supporting the user to avoid information
 leaks due to faked certificates and 
 <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
 man-in-the-middle-attacks</a>.">
+<!ENTITY jondofox.features.temp.email.head "Getting temporary E-Mail addresses">
+<!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity to use temporary E-mail addresses conveniently. In order to do so right-click on a text field in which you want to get the E-mail address and choose the following entry out of the menu popping up:"> 
+<!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_en.png">
+<!ENTITY jondofox.features.temp.email2 "Thereafter, the requested E-mail address will get inserted into the text field and your account gets opened in a new tab. If you want to decide by yourself which provider of temporary E-mail addresses you want to use then you may do this in the JonDoFox settings menu in the Temporary E-mails tab:"> 
+<!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_en.png">
 <!ENTITY jondofox.features.searchbar.head "Protecting search queries at your workplace">
 <!ENTITY jondofox.features.searchbar "In order to mitigate the risk that an outsider might get to know the queries entered into the browser's searchbar, JonDoFox erases them just after they were submitted. Furthermore, the search history gets deleted every thirty minutes. By this means it can on the one hand not happen anymore that the last search query is visible to everyone having access to the user's browser session. On the other hand JonDoFox minimizes the possibility that entries in the search history may compromise the user without loosing the search history feature completely.">
 <!ENTITY jondofox.features.additionalAddons.head "Additional features of the JonDoFox profile">
@@ -89,7 +94,7 @@ extension we have incorporated a bunch of others in our profile that help the
 user surfing the Web anonymously: Cookie Monster, Adblock Plus, NoScript and 
 UnPlug. You will find information on how to use them on
 <a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
-https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
+https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional helpis provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
 
 <!-- Certificate Patrol -->
 <!ENTITY _title		"Certificate Patrol Preferences">
@@ -102,8 +107,8 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>">
 <!ENTITY _close		"Done">
 
 <!-- Bloody Vikings -->
-<!ENTITY jondofox.temp.email "Request a temporary email address">
-<!ENTITY jondofox.temp.email.title "Temporary Emails">
+<!ENTITY jondofox.temp.email "Request a temporary E-mail address">
+<!ENTITY jondofox.temp.email.title "Temporary E-mails">
 <!ENTITY jondofox.temp.email.serviceLabel "E-mail service:">
 <!ENTITY jondofox.temp.email.recommended "Recommended">
 

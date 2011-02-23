@@ -185,7 +185,7 @@ RequestObserver.prototype = {
 	  // window.name identifier and not a referrer, well in this case 
 	  // she has bad luck :-) All those people having their JavaScript
 	  // disabled are not able to use her services and the JonDoFox users
-	  // either...
+	  // neither...
           if (domWin && domWin.content.name !== "" && !suffix) {
             domWin.content.name = "";
             log("window.name was set! Set it back to default ('')...");
