@@ -82,7 +82,7 @@ leaks due to faked certificates and
 <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
 man-in-the-middle-attacks</a>.">
 <!ENTITY jondofox.features.temp.email.head "Getting temporary E-Mail addresses">
-<!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity to use temporary E-mail addresses conveniently. In order to do so right-click on a text field in which you want to get the E-mail address and choose the following entry out of the menu popping up:"> 
+<!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity to get temporary E-mail addresses conveniently. In order to do so right-click on a text field in which you want to get the E-mail address and choose the following entry out of the menu popping up:"> 
 <!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_en.png">
 <!ENTITY jondofox.features.temp.email2 "Thereafter, the requested E-mail address will get inserted into the text field and your account gets opened in a new tab. If you want to decide by yourself which provider of temporary E-mail addresses you want to use then you may do this in the JonDoFox settings menu in the Temporary E-mails tab:"> 
 <!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_en.png">
