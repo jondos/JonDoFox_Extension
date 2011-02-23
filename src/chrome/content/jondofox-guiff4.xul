@@ -76,7 +76,7 @@
     <menuitem id="bloodyvikingsContext"
               label="&jondofox.temp.email;"
 	      class="menuitem-iconic"
-	      image="chrome://jondofox/skin/bloodyvikings_16.png" 
+	      image="chrome://jondofox/skin/mail-16x16.png" 
               insertafter="context-delete"
               oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
               hidden="true" />

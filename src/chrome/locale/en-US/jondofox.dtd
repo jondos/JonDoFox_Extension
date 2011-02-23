@@ -20,7 +20,7 @@ use your own proxy configuration. Choose ">
 <!ENTITY jondofox.features.proxyswitcher.list2_2 "in order to create an 
 individual proxy configuration. However, this is only recommended for experts.">
 <!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: If you have 
-installed and started the program <a href='http://www.torproject.org'>Tor</a> 
+installed and started the program <a href='https://www.torproject.org'>Tor</a> 
 you may use it as an alternative to JonDo with this setting."> 
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: When this setting 
 is active, JonDoFox sends the browser's communication data to JonDo. JonDo 
