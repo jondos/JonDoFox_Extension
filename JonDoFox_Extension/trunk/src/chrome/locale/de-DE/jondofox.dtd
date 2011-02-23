@@ -24,7 +24,7 @@ aktivieren. &#xdc;ber den Men&#xfc;punkt ">
 individuelle Proxykonfiguration erstellen. Dies wird aber nur Experten 
 empfohlen.">
 <!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: Wenn Sie das 
-Programm <a href='http://www.torproject.org/index.html.de'>Tor</a> installiert 
+Programm <a href='https://www.torproject.org'>Tor</a> installiert 
 und gestartet haben, k&#xf6;nnen Sie es mithilfe dieser Einstellung als 
 Alternative zu JonDo verwenden.">
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: Bei dieser 
@@ -111,7 +111,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY _close		"Passt">
 
 <!-- Bloody Vikings -->
-<!ENTITY jondofox.temp.email "Eine temporäre E-Mail-Adresse anfordern">
+<!ENTITY jondofox.temp.email "E-Mail-Adresse generieren (temporär)">
 <!ENTITY jondofox.temp.email.title "Temporäre E-Mails">
 <!ENTITY jondofox.temp.email.serviceLabel "E-Mail-Service:">
 <!ENTITY jondofox.temp.email.recommended "Empfohlen">
