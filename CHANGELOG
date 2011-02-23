@@ -1,4 +1,4 @@
-Changes in version 0.2.8 - 2011-02-23
+Changes in version 0.2.8 - 2011-02-24
 
   New Feature:
     * full Firefox 4 compatibility
@@ -7,6 +7,8 @@ Changes in version 0.2.8 - 2011-02-23
       address easily)
 
   Minor improvement:
+    * activated browser history again (in FF4) as the :visited bug got fixed 
+      by Mozilla
     * set extensions.update.autoUpdateDefault to false to stop unnecessary 
       pings to Mozilla (FF4)
     * changed english anontest homepage to ip-check.info
