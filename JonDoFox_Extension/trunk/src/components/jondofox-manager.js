@@ -504,6 +504,9 @@ JDFManager.prototype = {
 	this.prefsHandler.setBoolPref('extensions.update.autoUpdateDefault',
         this.prefsHandler.
 	     getBoolPref('extensions.jondofox.update.autoUpdateDefault')); 
+        this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
+        this.prefsHandler.
+	     getBoolPref('extensions.jondofox.getAddons.cache.enabled')); 
       } else {
         // In order to avoid unnecessary error messages we just add it to the
 	// prefs map if we have a FF3 as it does not exist anymore in FF4.
@@ -787,10 +790,6 @@ JDFManager.prototype = {
     try {
       if (this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== "2.5.0" &&
-	  this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.4.0" &&
-          this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.3.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
