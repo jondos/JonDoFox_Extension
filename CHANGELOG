@@ -23,14 +23,14 @@ Changes in version 0.2.8 - 2011-02-24
     * if one prefs dialog is open and a new one shall be opened: focus the old
       one instead of doing nothing
     * Added "Proxy: " to the proxy label in the statusbar
-    * created an a about JonDoFox (i.e. about:jondofox) entry in the settings 
+    * created an about-JonDoFox (i.e. about:jondofox) entry in the settings 
       menu
     * set privacy.sanitize.sanitizeOnShutdown to true in oder to delete Flash
       cookies on shutdown in FF4 (see: bug 290456) 
 
   Bug fixing:
     * fixed an issue concerning our searchbar deletion functionality in FF4
-    * reset language pref to default value if user has no proxy or custom one
+    * reset intl.accept_languages pref to default value if user has no proxy or custom one
       with no faked UA
     * repaired broken links in about-dialog.xul
     * give a warning popup in all cases a custom proxy is misconfigured
@@ -44,7 +44,7 @@ Changes in version 0.2.7 - 2010-09-30
 
   Minor improvement:
     * set browser.send_pings to false just in case a user enables it (by 
-      accident or whathever)
+      accident or whatever)
     * set plugin.expose_full_path to false to prevent the attacker from
       extracting the plugins' absolute path in the file system
     * set browser.zoom.siteSpecific to false to prevent an attacker from
