@@ -205,7 +205,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.custom.connection "Verbindungsart">
 <!ENTITY jondofox.dialogtab.proxy.keepAlive.help "HTTP Keep-Alive-Verbindungen
 können für mehrere Anfragen an Webserver benutzt werden. Das erhöht die 
-Geschwindikeit beim Surfen, da nicht bei jeder Anfrage eine neue Verbindung
+Geschwindigkeit beim Surfen, da nicht bei jeder Anfrage eine neue Verbindung
 aufgebaut werden muss. Die nebenstehende Checkbox steuert dieses Verhalten für 
 die Verbindungen zum Proxy Server. Für weitere Informationen dazu siehe ">
 <!ENTITY jondofox.dialogtab.custom.allprotocols "Verwende diesen Proxy für alle Protokolle">
