@@ -562,14 +562,6 @@ JDFManager.prototype = {
       // prefsMapper.map() in this function and should be more flexible and
       // transparent.
       this.setUserAgent(this.getState());
-
-      // Check "Clear browsing data on shutdown" in order to delete Flash 
-      // Cookies (<FF4). We have to test what happens with plugins disabled as
-      // those are, according to bug 290456, responsible for deleting the
-      // cookies.
-      this.prefsHandler.setBoolPref('privacy.sanitize.sanitizeOnShutdown',
-        this.prefsHandler.
-	     getBoolPref('extensions.jondofox.sanitize.sanitizeOnShutdown'));
     } catch (e) {
       log("onUIStartup(): " + e);
     }

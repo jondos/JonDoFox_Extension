@@ -35,7 +35,7 @@
  */
 
 // These functions are slightly adapted by Georg Koppen, JonDos GmbH.
-// The oder code was written by Georg Koppen, JonDos GmbH 2010.
+// The other code was written by Georg Koppen, JonDos GmbH 2010.
 
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff

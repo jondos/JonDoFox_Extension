@@ -1,6 +1,13 @@
+Changes in version 0.2.8.2 - XXXX-XX-XX
+
+  Bug fixing:
+    * set privacy.sanitize.sanitizeOnShutdown to false again due to 
+      compatibility issues with NoScript's STS implementation. Flash cookies
+      are cleared on shutdown manually now
+
 Changes in version 0.2.8.1 - 2011-02-25
 
-  Bug fixing
+  Bug fixing:
     * reverted UA to old one due to compatibility issues with stable JonDo
 
 Changes in version 0.2.8 - 2011-02-24

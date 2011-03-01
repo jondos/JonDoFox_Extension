@@ -126,8 +126,6 @@ pref("extensions.jondofox.noscript_showDomain", false);
 //pref("extensions.jondofox.showAnontestNoProxy", true);
 pref("extensions.jondofox.search_suggest_enabled", false);
 pref("extensions.jondofox.delete_searchbar", true);
-//In order to delete Flash cookies as well, see bug 290456 
-pref("extensions.jondofox.sanitize.sanitizeOnShutdown", true);
 // Only valid for FF4
 // No pinging of Mozilla once a day for Metadata updates or whatever
 // See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time 
