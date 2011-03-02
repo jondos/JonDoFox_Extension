@@ -718,8 +718,8 @@ function initWindow() {
                 overlayObserver);
       // To be on the safe side...
       var addonBar = document.getElementById("addon-bar");
-      if (addonBar.disabled) {
-	addonBar.disabled = false;
+      if (addonBar && addonBar.collapsed) {
+	addonBar.collapsed = false;
       }
     } else {
       document.loadOverlay('chrome://jondofox/content/jondofox-guiff3.xul', 
