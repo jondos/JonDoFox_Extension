@@ -716,6 +716,11 @@ function initWindow() {
     if (versComp.compare(jdfManager.ff4Version, "4.0b7pre") >= 0) {
       document.loadOverlay('chrome://jondofox/content/jondofox-guiff4.xul',
                 overlayObserver);
+      // To be on the safe side...
+      var addonBar = document.getElementById("addon-bar");
+      if (addonBar.disabled) {
+	addonBar.disabled = false;
+      }
     } else {
       document.loadOverlay('chrome://jondofox/content/jondofox-guiff3.xul', 
                 overlayObserver);
