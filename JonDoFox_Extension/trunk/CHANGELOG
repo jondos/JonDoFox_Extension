@@ -6,8 +6,7 @@ Changes in version 0.2.8.2 - 2011-03-02
 
   Bug fixing:
     * set privacy.sanitize.sanitizeOnShutdown back to false due to 
-      compatibility issues with NoScript's STS implementation. Flash cookies
-      are cleared on shutdown manually now
+      compatibility issues with NoScript's STS implementation. 
     * a warning is shown in FF4 now as well, if NoScript is disabled
 
 Changes in version 0.2.8.1 - 2011-02-25
