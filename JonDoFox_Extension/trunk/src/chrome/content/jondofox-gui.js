@@ -337,6 +337,8 @@ function openPageNewTab(aString) {
       win.openUILinkIn('about:jondofox', 'tab'); 
     } else if (aString === "noScript") {
       win.openUILinkIn('http://noscript.net', 'tab');
+    } else if (aString === "cookieMonster") {
+      win.openUILinkIn('https://addons.mozilla.org/en-US/firefox/addon/cookie-monster/', 'tab'); 
     }
   } catch (e) {
     log("openPageNewTab(): " + e);
@@ -522,11 +524,12 @@ var overlayObserver = {
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
             log("New window is ready");
 	    
-	    // Let's check first if NoScript is installed. If not remind the 
-            // user of the importance to do so and load the NoScript homepage 
+            // Let's check first if NoScript and Cookie Monster are installed
+            // and enabled. If not remind the user of the importance to do so 
+            // and load the NoScript (or Cookie Monster) homepage 
             // if it is missing. We do this here using a flag because either
 	    // (FF3) the window is not ready when we check it or (FF4) the
-	    // callback return so late.
+	    // callback returns so late.
             if (prefsHandler.
                   getBoolPref('extensions.jondofox.update_warning')) {
 	      if (!jdfManager.isNoScriptInstalled) {
@@ -536,14 +539,27 @@ var overlayObserver = {
                   ['NoScript']), 'update');
                 openPageNewTab("noScript");
               }
-            }
-	    if (jdfManager.ff4) { 
-	      if (!jdfManager.noscriptEnabled) {
+	      if (!jdfManager.isNoScriptEnabled) {
+	        jdfUtils.showAlertCheck(jdfUtils.
+                  getString('jondofox.dialog.attention'), jdfUtils.
+                  formatString('jondofox.dialog.message.enableExtension',
+                  ['NoScript']), 'update');
+              } 
+	      if (!jdfManager.isCMInstalled) {
                 jdfUtils.showAlertCheck(jdfUtils.
                   getString('jondofox.dialog.attention'), jdfUtils.
-                  formatString('jondofox.dialog.message.enableExtension', 
-                  ['NoScript']), 'update');  
-	      }
+                  formatString('jondofox.dialog.message.necessaryExtension', 
+                  ['Cookie Monster']), 'update');
+                openPageNewTab("cookieMonster"); 
+              }
+	      if (!jdfManager.isCMEnabled) {
+	        jdfUtils.showAlertCheck(jdfUtils.
+                  getString('jondofox.dialog.attention'), jdfUtils.
+                  formatString('jondofox.dialog.message.enableExtension',
+                  ['Cookie Monster']), 'update');
+              }
+            }
+	    if (jdfManager.ff4) { 
 	      // Second, if there are incompatible extensions we found
 	      // we iterate through the array containing them and we restart
 	      // the browser after showing a proper message dialog

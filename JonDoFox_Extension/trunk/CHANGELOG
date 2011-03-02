@@ -1,9 +1,14 @@
-Changes in version 0.2.8.2 - XXXX-XX-XX
+Changes in version 0.2.8.2 - 2011-03-02
+
+  Minor improvement:
+    * if Cookie Monster is missing, a tab opens the correct add-on to 
+      install (unfortunately there are two with the same name)
 
   Bug fixing:
-    * set privacy.sanitize.sanitizeOnShutdown to false again due to 
+    * set privacy.sanitize.sanitizeOnShutdown back to false due to 
       compatibility issues with NoScript's STS implementation. Flash cookies
       are cleared on shutdown manually now
+    * a warning is shown in FF4 now as well, if NoScript is disabled
 
 Changes in version 0.2.8.1 - 2011-02-25
 
