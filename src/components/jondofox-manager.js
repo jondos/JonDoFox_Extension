@@ -92,8 +92,12 @@ JDFManager.prototype = {
   filterList: [],
 
   isNoScriptInstalled: true,
+  
+  isCMInstalled: true,
 
-  noscriptEnabled: true,
+  isCMEnabled: true,
+
+  isNoScriptEnabled: true,
 
   // Incompatible extensions with their IDs
   extensions: { 
@@ -389,26 +393,19 @@ JDFManager.prototype = {
 	  // flag read later.
 	  if (extension === "NoScript") {
              this.isNoScriptInstalled = false;
-	     log("NSInstalled is: " + this.isNoScriptInstalled);
-	  } else if (this.prefsHandler.
-                 getBoolPref('extensions.jondofox.update_warning')) {
-            this.jdfUtils.showAlertCheck(this.jdfUtils.
-              getString('jondofox.dialog.attention'), this.jdfUtils.
-              formatString('jondofox.dialog.message.necessaryExtension', 
-	      [extension]), 'update');
+	  } else if (extension === "Cookie Monster") {
+	     this.isCMInstalled = false;
 	  }
           log(extension + ' is missing');
         } else {
           log(extension + ' is installed');
           //... and if so whether they are enabled.
           if (this.isUserDisabled(this.necessaryExtensions[extension])) {
-            if (this.prefsHandler.
-	             getBoolPref('extensions.jondofox.update_warning')) {
-	      this.jdfUtils.showAlertCheck(this.jdfUtils.
-                getString('jondofox.dialog.attention'), this.jdfUtils.
-                formatString('jondofox.dialog.message.enableExtension',
-                [extension]), 'update');
-            }
+            if (extension === "NoScript") {
+              this.isNoScriptEnabled = false;
+	    } else if (extension === "Cookie Monster") {
+              this.isCMEnabled = false;
+	    }
 	    log(extension + ' is disabled by user');
           } else {
 	    log(extension + ' is enabled by user');
@@ -465,13 +462,29 @@ JDFManager.prototype = {
             log("NoScript is enabled as well.");
           } else {
             log("NoScript is not enabled!");
-            JDFManager.prototype.noscriptEnabled = false;
+            JDFManager.prototype.isNoScriptEnabled = false;
           }
         } else {
           log("NoScript is missing...");
           JDFManager.prototype.isNoScriptInstalled = false;
         }
       });
+      AddonManager.getAddonByID('{45d8ff86-d909-11db-9705-005056c00008}', 
+      function(addon) { 
+        if (addon) {
+          log("Found Cookie Monster, that's good." + 
+		    " Checking whether it is enabled...");
+          if (addon.isActive) {
+            log("Cookie Monster is enabled as well.");
+          } else {
+            log("Cookie Monster is not enabled! That's bad.");
+            JDFManager.prototype.isCMEnabled = false;
+          }
+        } else {
+          log("Cookie Monster is missing...");
+          JDFManager.prototype.isCMInstalled = false;
+        }
+      }); 
     } catch (e) {
       log("checkExtensionsFF4(): " + e);
     }
