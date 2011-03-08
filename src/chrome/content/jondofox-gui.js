@@ -578,6 +578,11 @@ var overlayObserver = {
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
 	      }
+	      // To be on the safe side...
+              var addonBar = document.getElementById("addon-bar");
+              if (addonBar && addonBar.collapsed) {
+	        addonBar.collapsed = false;
+              }
             }
             // Let's test whether the user starts with appropriate 
 	    // proxy-settings..
@@ -716,11 +721,6 @@ function initWindow() {
     if (versComp.compare(jdfManager.ff4Version, "4.0b7pre") >= 0) {
       document.loadOverlay('chrome://jondofox/content/jondofox-guiff4.xul',
                 overlayObserver);
-      // To be on the safe side...
-      var addonBar = document.getElementById("addon-bar");
-      if (addonBar && addonBar.collapsed) {
-	addonBar.collapsed = false;
-      }
     } else {
       document.loadOverlay('chrome://jondofox/content/jondofox-guiff3.xul', 
                 overlayObserver);
