@@ -1,5 +1,10 @@
 Changes in version 0.2.8.3 - XXXX-XX-XX
 
+  Minor improvement:
+    * set privacy.sanitize.sanitizeOnShutdown back to true again but excluded
+      visited page history (due to NoScript's STS feature) and included 
+      passwords and offline apps
+
   Bug fixing:
     * if no add-on is activating the addon bar JDF was not displayed; now
       activating it ourselves if necessary

@@ -165,7 +165,15 @@ JDFManager.prototype = {
     'security.remember_cert_checkbox_default_setting':
     'extensions.jondofox.security.remember_cert_checkbox_default_setting',
     'browser.search.suggest.enabled':
-    'extensions.jondofox.search_suggest_enabled'
+    'extensions.jondofox.search_suggest_enabled',
+    'privacy.sanitize.sanitizeOnShutdown':
+    'extensions.jondofox.sanitize_onShutdown',
+    'privacy.clearOnShutdown.history':
+    'extensions.jondofox.clearOnShutdown_history',
+    'privacy.clearOnShutdown.passwords':
+    'extensions.jondofox.clearOnShutdown_passwords',
+    'privacy.clearOnShutdown.offlineApps':
+    'extensions.jondofox.clearOnShutdown_offlineApps'
   },
 
   //This map of integer preferences is given to the prefsMapper
