@@ -161,7 +161,6 @@ JDFManager.prototype = {
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
     'view_source.editor.external': 'extensions.jondofox.source_editor_external',
-    'noscript.contentBlocker':'extensions.jondofox.noscript_contentBlocker',
     'security.remember_cert_checkbox_default_setting':
     'extensions.jondofox.security.remember_cert_checkbox_default_setting',
     'browser.search.suggest.enabled':

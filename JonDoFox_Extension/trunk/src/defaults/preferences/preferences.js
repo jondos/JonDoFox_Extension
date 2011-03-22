@@ -126,8 +126,6 @@ pref("extensions.jondofox.websocket.enabled", false);
 // Only valid for FF3
 pref("extensions.jondofox.history_expire_days", 0);
 pref("extensions.jondofox.http.accept_encoding", "gzip,deflate");
-pref("extensions.jondofox.noscript_contentBlocker", true);
-pref("extensions.jondofox.noscript_showDomain", false);
 //pref("extensions.jondofox.showAnontestNoProxy", true);
 pref("extensions.jondofox.search_suggest_enabled", false);
 pref("extensions.jondofox.delete_searchbar", true);
