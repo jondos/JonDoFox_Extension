@@ -4,7 +4,9 @@ Changes in version 0.2.8.3 - XXXX-XX-XX
     * set privacy.sanitize.sanitizeOnShutdown back to true again but excluded
       visited page history (due to NoScript's STS feature) and included 
       passwords and offline apps
-    * updated english JonDoFox profile update message
+    * collapsed Gopher row in prefs-dialog if FF4 is used
+    * updated JonDoFox profile update message
+    * changed anontest and german profile update URL
 
   Bug fixing:
     * if no add-on is activating the addon bar JDF is not displayed; now we are
