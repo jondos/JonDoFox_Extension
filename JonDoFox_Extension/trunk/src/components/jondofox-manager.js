@@ -802,7 +802,9 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.0" &&
+               'extensions.jondofox.profile_version') !== "2.5.0" && 
+	   this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.1" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
@@ -1412,9 +1414,12 @@ JDFManager.prototype = {
             this.proxyManager.setProxyFTP(
                 this.prefsHandler.getStringPref(prefix + "ftp_host"),
                 this.prefsHandler.getIntPref(prefix + "ftp_port"));
-            this.proxyManager.setProxyGopher(
+	    // No native Gopher protocol anymore in FF4.
+	    if (!this.ff4) {
+              this.proxyManager.setProxyGopher(
                 this.prefsHandler.getStringPref(prefix + "gopher_host"),
                 this.prefsHandler.getIntPref(prefix + "gopher_port"));
+	    }
             this.proxyManager.setProxySOCKS(
                 this.prefsHandler.getStringPref(prefix + "socks_host"),
                 this.prefsHandler.getIntPref(prefix + "socks_port"),

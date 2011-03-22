@@ -143,10 +143,16 @@ function loadPrefsCustomProxy(onLoad) {
         prefsHandler.getStringPref(prefix + 'ftp_host');
     document.getElementById('ftp_port').value = 
         prefsHandler.getIntPref(prefix + 'ftp_port');
-    document.getElementById('gopher_host').value = 
+    // The proxy dialog in FF4 has no Gopher settings anymore. Thus,
+    // we remove (i.e. hide) them as well in this case.
+    if (jdfManager.ff4) {
+      document.getElementById('gopher_row').collapsed = true;
+    } else {
+      document.getElementById('gopher_host').value = 
         prefsHandler.getStringPref(prefix + 'gopher_host');
-    document.getElementById('gopher_port').value = 
+      document.getElementById('gopher_port').value = 
         prefsHandler.getIntPref(prefix + 'gopher_port'); 
+    }
     document.getElementById('socks_host').value = 
         prefsHandler.getStringPref(prefix + 'socks_host');
     document.getElementById('socks_port').value = 
