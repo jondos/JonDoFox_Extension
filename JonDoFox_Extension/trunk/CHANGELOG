@@ -1,4 +1,4 @@
-Changes in version 0.2.8.3 - XXXX-XX-XX
+Changes in version 0.2.8.3 - 2011-03-23
 
   Minor improvement:
     * set privacy.sanitize.sanitizeOnShutdown back to true again but excluded
