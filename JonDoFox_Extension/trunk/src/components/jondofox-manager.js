@@ -169,8 +169,6 @@ JDFManager.prototype = {
     'extensions.jondofox.sanitize_onShutdown',
     'privacy.clearOnShutdown.history':
     'extensions.jondofox.clearOnShutdown_history',
-    'privacy.clearOnShutdown.passwords':
-    'extensions.jondofox.clearOnShutdown_passwords',
     'privacy.clearOnShutdown.offlineApps':
     'extensions.jondofox.clearOnShutdown_offlineApps'
   },

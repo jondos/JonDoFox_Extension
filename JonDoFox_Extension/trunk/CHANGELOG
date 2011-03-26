@@ -1,3 +1,9 @@
+Changes in version 0.2.8.4 - 2011-03-28
+
+  Bug fixing:
+    * exclude passwords while deleting browser history related data via
+      privacy.sanitize.sanitizeOnShutdown
+
 Changes in version 0.2.8.3 - 2011-03-23
 
   Minor improvement:
