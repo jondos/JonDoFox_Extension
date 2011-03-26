@@ -119,7 +119,6 @@ pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.sanitize_onShutdown", true);
 // In order to be able to use NoScript's STS feature...
 pref("extensions.jondofox.clearOnShutdown_history", false);
-pref("extensions.jondofox.clearOnShutdown_passwords", true);
 pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
 // Only valid for FF4
 pref("extensions.jondofox.websocket.enabled", false);
