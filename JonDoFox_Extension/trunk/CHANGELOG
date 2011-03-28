@@ -1,3 +1,9 @@
+Changes in version X.X.X - 2011-xx-xx
+
+  Minor improvement:
+    * no emtpy tab anymore while displaying about:jondofox or pages of missing
+      or diabled add-ons
+
 Changes in version 0.2.8.4 - 2011-03-28
 
   Bug fixing:

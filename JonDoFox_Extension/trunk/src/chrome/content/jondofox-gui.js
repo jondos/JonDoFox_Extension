@@ -333,8 +333,6 @@ function openPageNewTab(aString) {
       win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab'); 
     } else if (aString === "homepage") {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab'); 
-    } else if (aString === "about") {
-      win.openUILinkIn('about:jondofox', 'tab'); 
     } else if (aString === "noScript") {
       win.openUILinkIn('http://noscript.net', 'tab');
     } else if (aString === "cookieMonster") {
@@ -448,6 +446,23 @@ function clearingSearchbarHistory() {
   }
 }
 
+function openJDFFeaturePage() {
+  var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser'); 
+  var firstTab = win.gBrowser.getBrowserAtIndex(0); 
+  if (prefsHandler.getIntPref("browser.startup.page") === 0 ||
+      (prefsHandler.getIntPref("browser.startup.page") === 1 && prefsHandler.
+       getStringPref("browser.startup.homepage") === "about:blank")) {
+    win.openUILinkIn('about:jondofox', 'current'); 
+  } else {
+    // We know that the user had an other page as her default start page.
+    // We therefore load the feature page in a new tab to not get  blamed for 
+    // overwriting the default one.
+    win.openUILinkIn('about:jondofox', 'tab'); 
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // The method 'initWindow()' is called on the 'load' event + observers
 ///////////////////////////////////////////////////////////////////////////////
@@ -471,7 +486,7 @@ var prefsObserver = {
         } 
         else if (data === VERSION_PREF && jdfManager.ff4) {
             log("Detected last version change in FF4.")
-	    openPageNewTab('about');
+	    openJDFFeaturePage();
             if (!prefsHandler.getBoolPref(
                 'extensions.jondofox.noscript_showDomain')) {
                 prefsHandler.
@@ -523,8 +538,38 @@ var overlayObserver = {
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
             log("New window is ready");
+
+            // We have to tweak the code here as it is not working reliable for
+	    // FF 4. The funny thing is that the version check works well for
+	    // the first times of a FF4 start. But afterwards the async method 
+	    // is always returning too late. Thus, the pref check returns NULL 
+	    // and the feature page is always shown. Thus, we set the correct 
+	    // pref directly in the jondofox-manager but the call to open a new 
+	    // tab is done here. Once using the prefObserver (if the async 
+	    // method is returning later, after the overlayobserver-code was 
+	    // processed) and once on the following code if the aysnc-method is 
+	    // returning earlier using a variable set by the Addon-Manager call. 
+	    // Fun.
+	    if (!jdfManager.ff4 || jdfManager.newVersionDetected) {
+	      // Get the last version property
+              var last_version = prefsHandler.
+                getStringPref('extensions.jondofox.last_version');
+              if (last_version !== jdfManager.VERSION || jdfManager.
+		newVersionDetected) {
+                log("New version detected, opening feature page ..");
+	        // Checking whether we have to open a new tab for about:jondofox
+                // and opening it.
+	        openJDFFeaturePage();
+                prefsHandler.setStringPref('extensions.jondofox.last_version',
+                  jdfManager.VERSION);
+                if (!prefsHandler.getBoolPref(
+                  'extensions.jondofox.noscript_showDomain')) {
+                  prefsHandler.setBoolPref('noscript.showDomain', false);
+                }
+              } 
+	    } 
 	    
-            // Let's check first if NoScript and Cookie Monster are installed
+            // Let's check if NoScript and Cookie Monster are installed
             // and enabled. If not remind the user of the importance to do so 
             // and load the NoScript (or Cookie Monster) homepage 
             // if it is missing. We do this here using a flag because either
@@ -624,32 +669,6 @@ var overlayObserver = {
           } else {
             log("!! Wrong uri: " + uri.spec);
           }
-	  // We have to tweak the code here as it is not working reliable for
-	  // FF 4. The funny thing is that the version check works well for
-	  // the first times of a FF4 start. But afterwards the async method is
-	  // always returning too late. Thus, the pref check returns NULL and
-	  // the feature page is always shown. Thus, we set the correct pref
-	  // directly in the jondofox-manager but the call to open a new tab is
-	  // done here. Once using the prefObserver (if the async method is
-	  // returning later, after the overlayobserver-code was processed) and
-	  // once on the following code if the aysnc-method is returning 
-	  // earlier using a variable set by the Addon-Manager call. Fun.
-	  if (!jdfManager.ff4 || jdfManager.newVersionDetected) {
-	    // Get the last version property
-            var last_version = prefsHandler.
-                 getStringPref('extensions.jondofox.last_version');
-            if (last_version !== jdfManager.VERSION || jdfManager.
-		newVersionDetected) {
-              log("New version detected, opening feature page ..");
-              openPageNewTab("about");
-              prefsHandler.setStringPref('extensions.jondofox.last_version',
-                 jdfManager.VERSION);
-              if (!prefsHandler.getBoolPref(
-                'extensions.jondofox.noscript_showDomain')) {
-                prefsHandler.setBoolPref('noscript.showDomain', false);
-              }
-            } 
-	  }
           break;
 	} catch (e) {
           log("There occurred an error within the overlayobserver: " + e);
