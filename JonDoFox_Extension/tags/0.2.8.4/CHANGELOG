@@ -1,0 +1,319 @@
+Changes in version 0.2.8.4 - 2011-03-28
+
+  Bug fixing:
+    * exclude passwords while deleting browser history related data via
+      privacy.sanitize.sanitizeOnShutdown
+
+Changes in version 0.2.8.3 - 2011-03-23
+
+  Minor improvement:
+    * set privacy.sanitize.sanitizeOnShutdown back to true again but excluded
+      visited page history (due to NoScript's STS feature) and included 
+      passwords and offline apps
+    * collapsed Gopher row in prefs-dialog if FF4 is used
+    * updated JonDoFox profile update message
+    * changed anontest and german profile update URL
+
+  Bug fixing:
+    * if no add-on is activating the addon bar JDF is not displayed; now we are
+      activating it ourselves if necessary
+
+Changes in version 0.2.8.2 - 2011-03-02
+
+  Minor improvement:
+    * if Cookie Monster is missing, a tab opens the correct add-on to 
+      install (unfortunately there are two with the same name)
+
+  Bug fixing:
+    * set privacy.sanitize.sanitizeOnShutdown back to false due to 
+      compatibility issues with NoScript's STS implementation. 
+    * a warning is shown in FF4 now as well, if NoScript is disabled
+
+Changes in version 0.2.8.1 - 2011-02-25
+
+  Bug fixing:
+    * reverted UA to old one due to compatibility issues with stable JonDo
+
+Changes in version 0.2.8 - 2011-02-24
+
+  New Feature:
+    * full Firefox 4 compatibility
+    * included the DNT header
+    * included core Bloody Vikings functionality (getting a temporary email
+      address easily)
+
+  Minor improvement:
+    * activated browser history again (in FF4) as the :visited bug got fixed 
+      by Mozilla
+    * set extensions.update.autoUpdateDefault and 
+      extensions.getAddons.cache.enabled to false to stop unnecessary 
+      pings to Mozilla (FF4)
+    * changed english anontest homepage to ip-check.info
+    * updated UA to match english FF 3.6.13
+    * allowed to enable/disable proxy keep-alive for custom proxies 
+    * developed new overlay for FF >= 4.0b7pre as the statusbar is deprecated
+      now (but the addon-bar is not used yet)
+    * updated the links to our new homepage and cleaned code in jondofox-gui.js
+    * fixed Firefox 4 issues with our netError.xhtml override
+    * set network.http.accept-encoding in FF4 to "gzip,default"
+    * There was no need to exclude FF 3.0 users. Lowering the minVersion to 3.0
+    * if one prefs dialog is open and a new one shall be opened: focus the old
+      one instead of doing nothing
+    * Added "Proxy: " to the proxy label in the statusbar
+    * created an about-JonDoFox (i.e. about:jondofox) entry in the settings 
+      menu
+    * set privacy.sanitize.sanitizeOnShutdown to true in oder to delete Flash
+      cookies on shutdown in FF4 (see: bug 290456) 
+
+  Bug fixing:
+    * fixed an issue concerning our searchbar deletion functionality in FF4
+    * reset intl.accept_languages pref to default value if user has no proxy or custom one
+      with no faked UA
+    * repaired broken links in about-dialog.xul
+    * give a warning popup in all cases a custom proxy is misconfigured
+
+
+Changes in version 0.2.7 - 2010-09-30
+
+  New Feature:
+    * if someone sets a TabID (to track the user) it is deleted if the user
+      surfs to a new domain
+
+  Minor improvement:
+    * set browser.send_pings to false just in case a user enables it (by 
+      accident or whatever)
+    * set plugin.expose_full_path to false to prevent the attacker from
+      extracting the plugins' absolute path in the file system
+    * set browser.zoom.siteSpecific to false to prevent an attacker from
+      tracking users via their specific zoom settings
+    * simplified the SafeCache code (got rid of the MD5-code and use now
+      nsICryptoHash)
+    * set network.websocket.enabled to false until we can reliably say
+      whether this pref is harmless
+
+  Bug fixing:
+    * corrected general.productsub.override to general.productSub.override
+    * corrected "en-us" in general.appversion.override to "en-US"
+    * corrected user agent update mechanism for JDF + FF 4 (now, updates of
+      default UA prefs result in a update of the UA in the browser in any
+      case if JDF is updated)
+
+
+Changes in version 0.2.6 - 2010-09-09 
+
+  New Feature:
+    * compatibility with FF4 (up to and including beta 4)
+    * "extensions.jondofox.search_suggest_enabled" is set to "false" and 
+      disables the search suggestion feature in the browser
+    * a JonDoFox feature page is shown during start-up of a new extension 
+      version and may be loaded if the link below "Features" in the 
+      about-dialog is clicked; included an about:jondofox shortcut that is 
+      linked to our feature page
+    * included a slightly enhanced version of Certificate Patrol to provide a
+      better detection of MITM attacks
+    * the search history is deleted after every 30 minutes now
+    * the searchbar value (as well as the "UnDo" and "ReDo" ones) is deleted
+      as soon as the user starts a search via the searchbar; this feature may
+      be disabled using the extensions.jondofox.delete_searchbar preference 
+
+  Minor improvement:
+    * changes regarding network.http.accept.default are not ignored anymore
+    * a HTTP/S-proxy is now configurable in the Tor proxy setting
+      via about:config
+    * optimized our referer logic
+    * updated the proxyswitcher popup (got a tooltiptext, replaced "Anontest"
+      and the mouse cursor changes while it hovers over the proxyswitcher text)
+    * improved the about dialog (link to feature page included; links open in
+      tabs now and are marked as such; mouse cursor changes while hovering over
+      them)
+   
+  Bug fixing:
+    * adapted the text concerning the "referer-checkbox" 
+    * fixed a bug in the unmap() function of the preferences-mapper
+    * the preference dialog is always shown using the flag "centerscreen" now
+    * fixed a possible exception in our referrer code
+    * fixed a bug in the proxy circumvention code
+    * fixed a bug concerning the MIME detection we need for showing the proper
+      warning overlay in the external helperapp dialog
+
+Changes in version 0.2.5 - 2010-05-19
+
+  New Feature:
+    * included a 'pdf-warning' if a pdf-plugin is enabled; and added a help-button
+      which opens a new Tab with the 'harden Adobe' text in our Wiki
+    * show the JonDoFox download page if the user should update the profile and
+      has not disabled the update warning
+    * improved referrer logic: if 3rd party content is loaded the referrer is 
+      not modified
+    * "extensions.jondofox.security.default_personal_cert" is set to 
+      "Ask Every Time" and makes thus sure that user certificates are not
+      sent automatically to the server
+    * "extensions.jondofox.security.remember_cert_checkbox_default_setting"
+      is set to "false" and makes thus sure that the user is not sending
+      a user certificate automatically during a session if she just clicks
+      through the dialog once
+
+  Minor Improvement:
+    * show only second-level domains in the NoScript menu (once a new version of
+      the JonDoFox extension is found "extensions.jondofox.noscript_showDomain"
+      is checked and if it is set to "false" only the second-level domains are
+      shown)
+    * updated the Tor User Agent and corrected Accept Headers while faking Tor
+    * moved relevant functions to jondofox-utils
+
+  New XPCOM-Component:
+    * safecache.js: moved SafeCache's functionality to an own component
+
+  Bug fixing:
+    * fixed localization issues in about dialog
+    * fixed leaking Accept Header
+    * corrected a problem concerning rendering the external helperapp dialog
+  
+Changes in version 0.2.4.1 - 2010-01-25
+
+  Minor improvement:
+    * removed loading of anontest automatically during startup if the user is 
+      trying to surf without a proxy
+
+Changes in version 0.2.4 - 2010-01-21 
+
+  New Feature:
+    * new referrer logic
+    * included SafeCache's functionality
+    * show anontest page on startup if no (proper) proxy is configured
+    * there is now a new preference, extensions.jondofox.alwaysUseJonDo, which,
+      if set to true, ignores the proxy used in the last session and lets the 
+      browser start always with JonDo; default is "false"
+    * added a special overlay which is shown to the user if she wants to
+      download a .doc or a .rtf file: OpenOffice.org shall be used for
+      security's sake
+  
+  New XPCOM component:
+    * jondofox-utils.js: all the utility functions needed shall be stored here
+
+  Minor improvements:
+    * excluded the warning regarding opening mailto-links
+    * the modified unknowncontenttype dialog behaves more like the unmodified
+      one; i.e. the settingschange element is hidden again if the Open-button is
+      selected after the Save-button and the checkbox have been selected
+
+Changes in verison 0.2.3 - 2009-11-10
+
+  New Feature:
+    * Minimized the need for updating the whole profile if there are
+      changes in the extension
+    * included several new warnings which may be disabled by the user:
+      -update warnings (if the user has to update/enable the profile or some 
+       other extensions (NoScript, SafeCache))
+      -preference warnings (in case the user modifies the recommended prefs and
+       thus is not surfing securely anymore)
+      -proxy warnings (if the user is not using a proper configured proxy or 
+       no proxy at all for her surfing)
+    * 'Benutzerdefiniert' or 'Custom Proxy' is now shown in red letters as well
+       if there is, despite its appearance, no properly configured proxy in use
+    * The user may change the UA if she configures a custom proxy (not faked,
+      the Tor-UA, JonDo-UA). If there is no proxy in use, the unfaked UA is sent
+      if Tor the Tor one and if JonDo the JonDo UA
+    * Improvement of the downlaod of files without using a proxy (via the 
+      context menu). Now the user can be redirected to an other location and 
+      the download is not done using the Mix-cascades.
+    * Warnings if the downloads files which may be opened by external apps
+    * Prohibiting the option of opening files automatically with an external app
+    * Improved the Custom Proxy dialog. It works now like the proxy settings
+      panel in Firefox (remembering old values if the box 'Use settings
+      for all protocols' is checked...)
+    * If there is no appropriate Custom Proxy set but nevertheless used
+      it is not possible to download files via the context menu: 
+      the bypassing proxy option is deactivated
+
+  Location Neutrality:
+    * Preference for setting 'accept charsets' to 
+      'text/html,application/xml,*/*'; this was necessary due to some yahoo
+      pages which do not work with '*/*' anymore 
+
+  Minor improvements:
+    * Copied a icon in the root directory of the extension (icon.png) thus the
+      JonDoFox icon is still shown even if the extension is disabled (Feature of
+      Firefox 3.6)
+    * modified a misleading log message in jondofox-gui.js
+
+Changes in version 0.2.0 - 2009-05-xx:
+
+  New Features:
+    * New Multi-Tabbed Configuration GUI
+    * Updated User Agent Headers
+    * Do not use proxy keep-alive connections
+
+  New Setting:
+    * Boolean 'extensions.jondofox.disable_history': If the value is true, set
+      'browser.history_expire_days' to 0 on startup
+
+  Location Neutrality:
+    * Override the default charset, but not to UTF-8
+    * Replaced 'en' by 'en-us'
+    * Equally accept all charsets by setting 'accept_charsets' to '*'
+
+Changes in version 0.2b3 - 2008-10-24:
+
+  Compatibility:
+    * Allowing RefControl if 'set_referrer' is set to false
+
+Changes in version 0.2b2 - 2008-10-23:
+
+  New features:
+    * Add an internal property for toggling referrer headers
+    * Show JonDoFox homepage after extension upgrades
+
+Changes in version 0.2b1 - 2008-10-20:
+  
+  New features:
+    * Clearing all cookies on every state change
+    * Added a customizable proxy configuration to the proxy switcher
+    * Set the 'Accept'-header of every request to '*/*'
+    * Using different colors for different proxy states (red/black)
+    * Added icons to the statusbar popup
+    * Automatically restarting the browser after uninstalling other extensions
+
+Changes in version 0.2a1 - 2008-09-16:
+  
+  Major features:
+    * Integrated a self-implemented proxy switcher
+
+  New XPCOM components:
+    * preferences-observer.js: unify certain browser prefs for all users
+    * referrer-forgery.js: always set the 'Referer' header to the current page
+    * proxy-manager.js: transparent API for handling proxy settings    
+    * preferences-handler.js: transparent API for handling preferences
+  
+  Minor new features:
+    * Setting a customized JonDoFox title string to each window
+    * Enforce certain cookie preferences
+    * Disable the history on startup by default
+
+  Minor modifications:
+    * Distributing the chrome folder as a .jar-archive now
+    * Integrated compatibility for Firefox up to version 3.1a2
+    * New license: modified BSD license
+
+Changes in version 0.1a3 - 2008-08-05:
+  
+  Minor modifications:
+    * Modified instruction text
+    * Optimized png's in file sizes
+
+Changes in version 0.1a2 - 2008-08-01:
+  
+  Major improvements:    
+    * Replaced jpg's used in instructions by png's with transparent background
+    * Making use of locales (until now only de-DE and en-US is supported)
+    * Compatibility to Firefox 2 by providing different versions of the file
+      netError.xhtml and defining 'appversion' in chrome.manifest
+  
+  Minor improvements:
+    * Catching an uncaught exception that was thrown on 'view source code'
+    * Removed 'contents.rdf' files since these are needed for backwards
+      compatibility (to Firefox < 1.5) only
+
+Changes in version 0.1a1 - 2008-07-29:
+
+  This is the initial version of the JonDoFox-Extension
