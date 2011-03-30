@@ -54,7 +54,7 @@ pref("extensions.jondofox.tor.ssl_port", 0);
 // Useragent
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
-pref("extensions.jondofox.jondo.appversion_override", "5.0 (Windows; en-US)");
+pref("extensions.jondofox.jondo.appversion_override", "5.0 (en-US)");
 pref("extensions.jondofox.jondo.buildID_override", "0");
 pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 5.1");
 pref("extensions.jondofox.jondo.platform_override", "Win32");
