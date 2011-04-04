@@ -158,17 +158,18 @@ function setProxyNone() {
     // Hide 'menupopup'
     document.getElementById('jondofox-proxy-list').hidePopup();
     // Request user confirmation if she has not disabled the warning
-    var disable;
+    var keepProxyEnabled;
     if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
-      disable = true; 
+      keepProxyEnabled = false; 
     }
     else {  
       log("Asking for confirmation ..");
-      disable = jdfUtils.showConfirmCheck(jdfUtils.
+      keepProxyEnabled = jdfUtils.showConfirmEx(jdfUtils.
                   getString('jondofox.dialog.warning'), jdfUtils.
-                  getString('jondofox.dialog.message.proxyoff'), 'proxy');
+                  getString('jondofox.dialog.message.proxyoff'), 'proxy',
+                  false);
     }
-    if (disable) {
+    if (!keepProxyEnabled) {
       // Call the method above
       setProxy(jdfManager.STATE_NONE);
     } else {
@@ -184,7 +185,7 @@ function setProxyNone() {
 // If not, ask the user whether she really wants to surf without proxy.
 
 function setCustomProxy() {
-  var disable;
+  var keepProxyEnabled;
   log("Check whether there is a proxy set at all ..");
   try {
     // Hide 'menupopup'
@@ -193,21 +194,22 @@ function setCustomProxy() {
     
     if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
       if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
-        disable = true; 
+        keepProxyEnabled = false; 
       }
       else {
         // Request user confirmation
-        disable = jdfUtils.showConfirmCheck(jdfUtils.
+        keepProxyEnabled = jdfUtils.showConfirmEx(jdfUtils.
           getString('jondofox.dialog.warning'), jdfUtils.
-          getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
+          getString('jondofox.dialog.message.nocustomproxy'), 'proxy',
+	  false);
       }
-      if (disable) {
+      if (!keepProxyEnabled) {
         // Call the setProxy-method
 	setProxy(jdfManager.STATE_CUSTOM);
       } else {
           // Refresh the statusbar 
 	  refresh();
-        }
+      }
     } else {
 	setProxy(jdfManager.STATE_CUSTOM);
     }
@@ -218,21 +220,26 @@ function setCustomProxy() {
 
 // We are showing a warning if the user wants to start surfing either without
 // any proxy at all or without a valid custom one. Maybe she has just forgotten 
-// to activate it...
+// to activate it. The true flag indicates that we have a dialog shown on
+// startup leading to an other default button.
 
 function isProxyDisabled() {
+  var disableJonDo;
   if (prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
     if (jdfManager.getState() == jdfManager.STATE_NONE) {
-      jdfUtils.showAlertCheck(jdfUtils.
+      disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
         getString('jondofox.dialog.attention'), jdfUtils.
-        getString('jondofox.dialog.message.proxyoff'), 'proxy');
+        getString('jondofox.dialog.message.proxyoff'), 'proxy', true);
     }
     else if (jdfManager.getState() == jdfManager.STATE_CUSTOM) {
       if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
-        jdfUtils.showAlertCheck(jdfUtils.
+        disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
           getString('jondofox.dialog.attention'), jdfUtils.
           getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
       }
+    }
+    if (!disableJonDo) {
+      setProxy('jondo');
     }
   }
 }

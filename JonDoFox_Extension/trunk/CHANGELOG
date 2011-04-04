@@ -1,8 +1,12 @@
 Changes in version X.X.X - 2011-xx-xx
 
   Minor improvement:
-    * no emtpy tab anymore while displaying about:jondofox or pages of missing
-      or diabled add-ons
+    * improved warning dialog if a user starts without a valid proxy or
+      is trying to choose one later
+    * no empty tab anymore while displaying about:jondofox or pages of missing
+      or disabled add-ons
+    * set feed handler to "bookmarks" if the respective handler is set to 
+      "reader" and the respective default handler to "client"
 
 Changes in version 0.2.8.4 - 2011-03-28
 

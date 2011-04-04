@@ -956,7 +956,7 @@ JDFManager.prototype = {
 	      this.prefsHandler.getStringPref(
               'browser.' + feedArray[i] + '.handler.default') === "client") {
             this.prefsHandler.setStringPref(
-              'browser.'+ feedArray[i] + '.handler', "ask");
+              'browser.'+ feedArray[i] + '.handler', "bookmarks");
 	  }
         }
         this.prefsHandler.setBoolPref('extensions.jondofox.new_profile', false);
@@ -968,7 +968,7 @@ JDFManager.prototype = {
 	      this.prefsHandler.getStringPref(
               'browser.' + feedArray[i] + '.handler.default') === "client") {
             this.prefsHandler.setStringPref(
-                'browser.'+ feedArray[i] + '.handler', "ask");
+                'browser.'+ feedArray[i] + '.handler', "bookmarks");
             if (this.prefsHandler.getBoolPref(
                               'extensions.jondofox.preferences_warning')) {
               this.jdfUtils.showAlert(this.jdfUtils.
