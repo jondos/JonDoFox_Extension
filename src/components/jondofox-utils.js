@@ -84,24 +84,36 @@ JonDoFoxUtils.prototype = {
     }
   },
   
-  // Show a confirm dialog with a checkbox using the prompt service
-  showConfirmCheck: function(title, text, type) {
+  // Show a confirm dialog with a checkbox and custom buttons 
+  // using the prompt service.
+  showConfirmEx: function(title, text, type, bIsStartup) {
     var checkboxMessage;
     var check;
     var result;
+    var flags;
     try {
-      checkboxMessage = this.getString('jondofox.dialog.checkbox.' + type + '.warning');
+      checkboxMessage = this.getString('jondofox.dialog.checkbox.' + type + 
+        '.warning');
       check = {value: false};
-      result = this.promptService.confirmCheck(null, title, text, checkboxMessage, check);
-      if(check.value) {
-        this.prefsHandler.setBoolPref('extensions.jondofox.' + type + '_warning', false);
+      if (bIsStartup) {
+        flags = this.promptService.STD_YES_NO_BUTTONS;
+        text = text + "\r\n" + this.
+          getString('jondofox.dialog.message.enableJonDo');
+      } else {
+        flags = this.promptService.BUTTON_POS_1_DEFAULT;
       }
-      //log("checked = " + check.value);
+      result = this.promptService.confirmEx(null, title, text, flags, "", "", 
+        "", checkboxMessage, check);
+      if(check.value) {
+        this.prefsHandler.setBoolPref('extensions.jondofox.' + type + 
+          '_warning', false);
+      }
       return result;
     } catch (e) {
-      log("showConfirm(): " + e);
-    }
+      log("showConfirmEx(): " + e);
+    } 
   },
+
 
   // Return a properties string
   getString: function(name) {
