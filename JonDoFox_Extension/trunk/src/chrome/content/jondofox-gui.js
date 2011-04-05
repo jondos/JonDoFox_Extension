@@ -235,7 +235,7 @@ function isProxyDisabled() {
       if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
         disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
           getString('jondofox.dialog.attention'), jdfUtils.
-          getString('jondofox.dialog.message.nocustomproxy'), 'proxy');
+          getString('jondofox.dialog.message.nocustomproxy'), 'proxy', true);
       }
     }
     if (!disableJonDo) {
