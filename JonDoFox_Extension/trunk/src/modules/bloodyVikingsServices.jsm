@@ -281,20 +281,22 @@ function initServices() {
   );
 
   new BloodyVikings.Service (
-    "dispostable.com",
-    "http://www.dispostable.com/inbox/${alias}/",
-    "http://www.dispostable.com/",
-    null,
+    "mailforspam.com",
+    "http://www.mailforspam.com/mail/${alias}",
+    "http://www.mailforspam.com/lang/${lang}",
+    {en: 'en', de: 'de', ru: 'ru', uk: 'uk'},
     'en',
-    null
+    function(gBrowser, callbackSuccess, callbackError) {
+      this.simpleGetAddress(gBrowser, callbackSuccess, callbackError);
+    }
   );
 
   new BloodyVikings.Service (
-    "trash-mail.com",
-    "http://trash-mail.com/index.php?mail=${alias}",
-    "http://trash-mail.com/",
+    "spamavert.com",
+    "http://spamavert.com/mail/${alias}",
+    "http://spamavert.com/static/privacy",
     null,
-    'de',
+    'en',
     null
   );
 }
