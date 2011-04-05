@@ -100,7 +100,8 @@ JonDoFoxUtils.prototype = {
         text = text + "\r\n" + this.
           getString('jondofox.dialog.message.enableJonDo');
       } else {
-        flags = this.promptService.BUTTON_POS_1_DEFAULT;
+        flags = this.promptService.STD_OK_CANCEL_BUTTONS + 
+          this.promptService.BUTTON_POS_1_DEFAULT;
       }
       result = this.promptService.confirmEx(null, title, text, flags, "", "", 
         "", checkboxMessage, check);
