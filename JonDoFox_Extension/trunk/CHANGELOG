@@ -1,6 +1,7 @@
 Changes in version X.X.X - 2011-xx-xx
 
   Minor improvement:
+    * it is now possible to deactivate the temporary e-mail feature.
     * replaced two temporary E-mail services (trash-mail.com and 
       dispostable.com) with mailforspam.com and spamavert.com
     * improved warning dialog if a user starts without a valid proxy or

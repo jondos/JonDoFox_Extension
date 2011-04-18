@@ -351,10 +351,17 @@ function shareProxySettings(onLoad) {
 }
 
 function loadPrefsTempEmail() {
+  try {
+  log("Loading temporary E-mail preferences");
+  var serviceActivated = prefsHandler.
+    getBoolPref("extensions.jondofox.temp.email.activated");
+  document.getElementById("tempEmailService").checked = serviceActivated;
   Components.utils.import("resource://jondofox/bloodyVikingsServices.jsm");
   let aboutText = jdfUtils.getString("jondofox.about.label");
   let langText = jdfUtils.getString("jondofox.supported.languages.label");
   let serviceGroup = document.getElementById("selectedService"); 
+
+  var i = 1;
 
   for (let id in BloodyVikings.Services.serviceList) {
         let linkLabel = "";
@@ -372,10 +379,13 @@ function loadPrefsTempEmail() {
 
         radio.setAttribute("value", name);
         radio.setAttribute("label", name + ((service.recommended)?" *":""));
+	radio.setAttribute("id", "radio" + i);
         
-        if (service.recommended) {
-            radio.setAttribute("class", "bloodyvikingsRecommended");
-        }
+        if (service.recommended && serviceActivated) {
+          radio.setAttribute("class", "bloodyvikingsRecommended");
+        } else if (service.recommended && !serviceActivated) {
+          radio.setAttribute("class", "bloodyvikingsRecDeactivated");
+	}
         
         let tooltip = "";
         if (service.languages) {
@@ -391,6 +401,9 @@ function loadPrefsTempEmail() {
         }
         
         radio.setAttribute("tooltiptext", langText + tooltip);
+        // radio.disabled does not work here, why?
+        radio.setAttribute("disabled", 
+	    !document.getElementById("tempEmailService").checked); 
 
         spacer.setAttribute("flex", 1);
 
@@ -404,17 +417,36 @@ function loadPrefsTempEmail() {
         hbox.appendChild(link);
 
         serviceGroup.appendChild(hbox);
+
+	i = i + 1;
     }
 
     serviceGroup.value = 
-      prefsHandler.getStringPref("extensions.jondofox.temp.email.selected"); 
-
+      prefsHandler.getStringPref("extensions.jondofox.temp.email.selected");
+  } catch (e) {
+    dump("Error: " + e + "\n");
+  } 
 }
 
 function writePrefsTempEmail() {
+  var radioElement;
   var serviceGroup = document.getElementById("selectedService"); 
+  var serviceActivated = document.getElementById("tempEmailService").checked;
   prefsHandler.setStringPref("extensions.jondofox.temp.email.selected", 
-      serviceGroup.value);
+    serviceGroup.value);
+  prefsHandler.setBoolPref("extensions.jondofox.temp.email.activated", 
+    serviceActivated);
+  for (var i = 1; i <= 5; i++) {
+    radioElement = document.getElementById("radio" + i);
+    radioElement.disabled = !serviceActivated;
+    if (radioElement.getAttribute("class") === "bloodyvikingsRecommended" &&
+	!serviceActivated) {
+      radioElement.setAttribute("class", "bloodyvikingsRecDeactivated");
+    } else if (radioElement.getAttribute("class") === 
+      "bloodyvikingsRecDeactivated" && serviceActivated) {
+      radioElement.setAttribute("class", "bloodyvikingsRecommended");  
+    } 
+  }
 }
 
 // This is called on clicking the 'accept'-button

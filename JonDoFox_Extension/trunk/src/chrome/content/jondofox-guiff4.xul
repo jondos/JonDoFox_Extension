@@ -73,7 +73,7 @@
               label=""
               oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
               insertafter="context-savelink" />
-    <menuitem id="bloodyvikingsContext"
+    <menuitem id="tempEmailContext"
               label="&jondofox.temp.email;"
 	      class="menuitem-iconic"
 	      image="chrome://jondofox/skin/mail-16x16.png" 

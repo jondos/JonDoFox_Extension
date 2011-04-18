@@ -225,3 +225,7 @@ body[dir="rtl"] #brand {
 .bloodyvikingsRecommended {
   color: #008000;
 }
+
+.bloodyvikingsRecDeactivated {
+  color: #99CC99; 
+}

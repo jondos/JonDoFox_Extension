@@ -106,10 +106,11 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional help 
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
 
-<!-- Bloody Vikings -->
+<!-- Bloody Vikings functionaliyt-->
 <!ENTITY jondofox.temp.email "Request a temporary E-mail address">
+<!ENTITY jondofox.temp.email.activated "Activate temporary E-mail services">
 <!ENTITY jondofox.temp.email.title "Temporary E-mails">
-<!ENTITY jondofox.temp.email.serviceLabel "E-mail service:">
+<!ENTITY jondofox.temp.email.serviceLabel "E-mail services:">
 <!ENTITY jondofox.temp.email.recommended "Recommended">
 
 <!-- Instructions text -->

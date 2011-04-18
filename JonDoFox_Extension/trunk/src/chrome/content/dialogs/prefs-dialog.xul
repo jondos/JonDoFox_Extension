@@ -290,13 +290,20 @@
       <!-- Third tabpanel -->
       <tabpanel>
 	<vbox flex="1"> 
+	  <box>
+	    <checkbox id="tempEmailService" 
+                      label="&jondofox.temp.email.activated;" />
+          </box>
+	  <spacer flex="1" />
+	  <vbox flex="8">
 	  <label value="&jondofox.temp.email.serviceLabel;"
 	    class="bloodyVikingsHead"/>
-          <hbox>
-            <radiogroup flex="1" id="selectedService"/>
-          </hbox>
+          <box>
+            <radiogroup id="selectedService"/>
+          </box>
 	  <label value="* &jondofox.temp.email.recommended;" 
 	    class="bloodyvikingsRecommended" style="margin-top: 6px;"/>
+          </vbox>
         </vbox> 
       </tabpanel>
     </tabpanels>

@@ -22,7 +22,7 @@ function log(msg) {
 // We need that here as our about-dialog would not work without it as 'Cc' and
 // 'Ci' are just declared in browser.js and hence in the main window...
 //
-if (typeof(Cc) == 'undefined') {
+if (typeof(Cc) === 'undefined') {
   var Cc = Components.classes;
   var Ci = Components.interfaces;
 };
@@ -37,15 +37,20 @@ jondofox = {
         if (gContextMenu.onLink && isProxyActive()) {
 	  // Hide temp email
           document.getElementById("bypass-proxy").hidden = false;
-	  document.getElementById("bloodyvikingsContext").hidden = true; 
+	  document.getElementById("tempEmailContext").hidden = true; 
         } else if (gContextMenu.onTextInput) {
            // Hide proxy
           document.getElementById("bypass-proxy").hidden = true;
-	  document.getElementById("bloodyvikingsContext").hidden = false; 
+	  if (prefsHandler.
+              getBoolPref("extensions.jondofox.temp.email.activated")) {
+            document.getElementById("tempEmailContext").hidden = false; 
+	  } else {
+            document.getElementById("tempEmailContext").hidden = true; 
+	  }
         } else {
 	  // Hide both
           document.getElementById("bypass-proxy").hidden = true;
-	  document.getElementById("bloodyvikingsContext").hidden = true; 
+	  document.getElementById("tempEmailContext").hidden = true; 
 	} 
       } else {
         log("gContextMenu is null!");
@@ -344,6 +349,13 @@ function openPageNewTab(aString) {
       win.openUILinkIn('http://noscript.net', 'tab');
     } else if (aString === "cookieMonster") {
       win.openUILinkIn('https://addons.mozilla.org/en-US/firefox/addon/cookie-monster/', 'tab'); 
+    } else if (aString === "about") {
+      if (win.gBrowser.getBrowserForTab(win.gBrowser.selectedTab).
+	  currentURI.spec === 'about:blank') {
+        win.openUILinkIn('about:jondofox', 'current'); 
+      } else {
+        win.openUILinkIn('about:jondofox', 'tab');
+      }
     }
   } catch (e) {
     log("openPageNewTab(): " + e);
@@ -457,14 +469,13 @@ function openJDFFeaturePage() {
   var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser'); 
-  var firstTab = win.gBrowser.getBrowserAtIndex(0); 
   if (prefsHandler.getIntPref("browser.startup.page") === 0 ||
       (prefsHandler.getIntPref("browser.startup.page") === 1 && prefsHandler.
        getStringPref("browser.startup.homepage") === "about:blank")) {
     win.openUILinkIn('about:jondofox', 'current'); 
   } else {
     // We know that the user had an other page as her default start page.
-    // We therefore load the feature page in a new tab to not get  blamed for 
+    // We therefore load the feature page in a new tab to not get blamed for 
     // overwriting the default one.
     win.openUILinkIn('about:jondofox', 'tab'); 
   }

@@ -112,8 +112,9 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 
 <!-- Bloody Vikings -->
 <!ENTITY jondofox.temp.email "E-Mail-Adresse generieren (temporär)">
+<!ENTITY jondofox.temp.email.activated "Aktiviere temporäre E-Mail-Dienste">
 <!ENTITY jondofox.temp.email.title "Temporäre E-Mails">
-<!ENTITY jondofox.temp.email.serviceLabel "E-Mail-Service:">
+<!ENTITY jondofox.temp.email.serviceLabel "E-Mail-Dienste:">
 <!ENTITY jondofox.temp.email.recommended "Empfohlen">
 
 <!-- Instructions text -->
