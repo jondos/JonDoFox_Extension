@@ -574,6 +574,20 @@ JDFManager.prototype = {
       } else {
         this.setProxy(this.getState());
       }
+      // Now we are starting JonDo if it was not already started...
+      var jondoProcess = CC["@mozilla.org/process/util;1"].
+                         createInstance(CI.nsIProcess);
+      var jondoPath = this.getJonDoPath();
+      if (jondoPath) {
+        log("Starting JonDo...");
+        var jondoExecFile = CC["@mozilla.org/file/local;1"].
+                            createInstance(CI.nsILocalFile);
+        jondoExecFile.initWithPath(jondoPath);
+        jondoProcess.init(jondoExecFile);
+        var args = ["--try"];
+        jondoProcess.run(false, args, args.length);
+      }
+ 
       // A convenient method to set user prefs that change from proxy to proxy.
       // We should nevertheless make the settings of userprefs in broader way
       // dependant on the chosen proxy. This would include the call to 
@@ -583,6 +597,40 @@ JDFManager.prototype = {
     } catch (e) {
       log("onUIStartup(): " + e);
     }
+  },
+
+  getJonDoPath: function() {
+    var jondoPath;
+    //Getting the OS first...
+    var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.
+                     nsIXULRuntime); 
+    if (xulRuntime.OS === "WINNT") {
+      // We are trying to find the JRE using the registry
+      var wrk = CC["@mozilla.org/windows-registry-key;1"].
+                createInstance(CI.nsIWindowsRegKey);
+      wrk.open(wrk.ROOT_KEY_LOCAL_MACHINE, "SOFTWARE", 
+        wrk.ACCESS_READ);
+      if (wrk.hasChild("JonDo")) {
+	var subKey = wrk.openChild("JonDo", wrk.ACCESS_READ);
+        jondoPath = subKey.readStringValue("Path");
+	subKey.close();
+	if (jondoPath) {
+            jondoPath = jondoPath + "\\JonDo.exe";
+	} else {
+          log("Missing JonDo path.");
+        }
+      } else {
+        log("Missing JonDo Registry key.");
+      }
+      wrk.close();
+      return jondoPath;
+    } else if (xulRuntime.OS === "Linux") {
+      
+    } else if (xulRuntime.OS === "Darwin") {
+
+    } else {
+      log("Found an unhandled operating system: " + xulRuntime.OS);
+    } 
   },
 
   // General cleanup function for deinstallation etc.
