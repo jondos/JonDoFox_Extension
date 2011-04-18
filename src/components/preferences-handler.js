@@ -157,6 +157,7 @@ PreferencesHandler.prototype = {
   getBoolPref: function(preference) {
     // If preference is not null
     if(preference) {
+      log("Getting '" + preference); 
       try {
         return this.prefs.getBoolPref(preference);
       } catch(exception) {

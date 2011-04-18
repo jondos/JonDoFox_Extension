@@ -5,7 +5,7 @@ pref("extensions.jondofox.new_profile", true);
 pref("extensions.jondofox.proxy.state", "jondo");
 pref("extensions.jondofox.alwaysUseJonDo", false);
 
-// Set the 'Referer' header to the current domain
+// Set the 'Referer' header according our smart spoof functionality
 pref("extensions.jondofox.set_referrer", true);
 
 // Show different warnings in the beginning
@@ -147,4 +147,5 @@ pref("extensions.jondofox.certpatrol_showChangedCert", false);
 pref("extensions.jondofox.adblock_enabled", true);
 
 //Bloody Vkings
+pref("extensions.jondofox.temp.email.activated", true);
 pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
