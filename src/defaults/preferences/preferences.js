@@ -5,6 +5,9 @@ pref("extensions.jondofox.new_profile", true);
 pref("extensions.jondofox.proxy.state", "jondo");
 pref("extensions.jondofox.alwaysUseJonDo", false);
 
+// Autostart of JonDo
+pref("extensions.jondofox.autostartJonDo", true);
+
 // Set the 'Referer' header according our smart spoof functionality
 pref("extensions.jondofox.set_referrer", true);
 

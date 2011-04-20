@@ -268,6 +268,7 @@ JDFManager.prototype = {
     var filterHelper;
     var line = {};
     var hasmore;
+    /* TODO: Does not work in FF4 anymore, see below */
     var componentFile = __LOCATION__;
     var extDir = componentFile.parent.parent;
     extDir.append("easylistgermany+easylist.txt");
@@ -499,6 +500,7 @@ JDFManager.prototype = {
   onUIStartup: function() {
     var p;
     var prefs;
+    var args;
     log("Starting up, checking conditions ..");
     try {
       // Call init() first
@@ -574,20 +576,42 @@ JDFManager.prototype = {
       } else {
         this.setProxy(this.getState());
       }
-      // Now we are starting JonDo if it was not already started...
-      var jondoProcess = CC["@mozilla.org/process/util;1"].
-                         createInstance(CI.nsIProcess);
-      var jondoPath = this.getJonDoPath();
-      if (jondoPath) {
-        log("Starting JonDo...");
-        var jondoExecFile = CC["@mozilla.org/file/local;1"].
-                            createInstance(CI.nsILocalFile);
-        jondoExecFile.initWithPath(jondoPath);
-        jondoProcess.init(jondoExecFile);
-        var args = ["--try"];
-        jondoProcess.run(false, args, args.length);
+      // Now we are starting JonDo if it was not already started and the user
+      // wants it to get started.
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.autostartJonDo')) {
+        var jondoProcess = CC["@mozilla.org/process/util;1"].
+                           createInstance(CI.nsIProcess);
+        var jondoExecFile = this.getJonDoPath();
+        if (jondoExecFile) {
+          log("Starting JonDo...");
+	  jondoProcess.init(jondoExecFile); 
+	  if (jondoExecFile.path !== "/usr/bin/java") {
+	    args = ["--try"];
+	  } else {
+            // Checking for a JAP.jar in the home directory. If we find it we 
+            // start JonDo if not then just the browser starts up. 
+	    var dirService = CC["@mozilla.org/file/directory_service;1"].
+                 getService(CI.nsIProperties); 
+            var homeDirFile = dirService.get("Home", CI.nsIFile);
+	    homeDirFile.append("JAP.jar");
+            if (homeDirFile.exists() && homeDirFile.isFile()) {
+	      var JAPPath = homeDirFile.path;
+              args = ["-jar", JAPPath, "--try"];
+	    } else {
+              args = [];
+            }
+          }
+	  if (!this.ff4) {
+            jondoProcess.run(false, args, args.length);
+          } else {
+            // There were problems with unicode filenames and path's that got
+            // fixed in FF4. See: 
+            // https://bugzilla.mozilla.org/show_bug.cgi?id=411511. If somebody
+            // with FF < 4 got hit by this bug she has to upgrade. 
+	    jondoProcess.runw(false, args, args.length); 
+	  }
+        }
       }
- 
       // A convenient method to set user prefs that change from proxy to proxy.
       // We should nevertheless make the settings of userprefs in broader way
       // dependant on the chosen proxy. This would include the call to 
@@ -600,32 +624,92 @@ JDFManager.prototype = {
   },
 
   getJonDoPath: function() {
+    var subKey;
     var jondoPath;
+    var component;
+    var jondoExecFile = CC["@mozilla.org/file/local;1"].
+                            createInstance(CI.nsILocalFile);
     //Getting the OS first...
     var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.
                      nsIXULRuntime); 
     if (xulRuntime.OS === "WINNT") {
-      // We are trying to find the JRE using the registry
+      // We are trying to find the JRE using the registry. First, JonDo
+      // and second JAP, sigh.
       var wrk = CC["@mozilla.org/windows-registry-key;1"].
                 createInstance(CI.nsIWindowsRegKey);
       wrk.open(wrk.ROOT_KEY_LOCAL_MACHINE, "SOFTWARE", 
         wrk.ACCESS_READ);
       if (wrk.hasChild("JonDo")) {
-	var subKey = wrk.openChild("JonDo", wrk.ACCESS_READ);
-        jondoPath = subKey.readStringValue("Path");
+	subKey = wrk.openChild("JonDo", wrk.ACCESS_READ);
+        jondoPath = subKey.readStringValue("LinkPath");
 	subKey.close();
-	if (jondoPath) {
-            jondoPath = jondoPath + "\\JonDo.exe";
-	} else {
+	if (!jondoPath) {
           log("Missing JonDo path.");
         }
+      } else if (wrk.hasChild("JAP")) {
+        log("Missing JonDo Registry key. Checking whether there is a JAP key.");
+        subKey = wrk.openChild("JAP", wrk.ACCESS_READ);
+        jondoPath = subKey.readStringValue("LinkPath");
+	subKey.close();
+	if (!jondoPath) {
+          log("Missing JAP path.");
+        }  
       } else {
-        log("Missing JonDo Registry key.");
+        log("Found neither a JonDo nor a JAP key... Checking for a portable " +
+          "version...");
+        // We need to check that here as __LOCATION__ is undefined in FF4.
+	if (typeof(__LOCATION__) !== "undefined") {
+	  component = __LOCATION__;
+	} else {
+          // Thanks to FoxyProxy for this idea...
+	  var componentFilename = Components.Exception().filename; 
+	  // Just in case we have the file path starting with "jar:" we replace 
+	  // it.
+	  componentFilename = componentFilename.replace(/^jar:/, "");
+          var fileProtHand = CC["@mozilla.org/network/protocol;1?name=file"].
+            getService(CI.nsIFileProtocolHandler); 
+          component = fileProtHand.getFileFromURLSpec(componentFilename);
+	}
+        var rootDir = component.parent.parent.parent.parent.parent.parent.parent;
+	rootDir.append("JonDoPortable");
+	try {
+	  if (rootDir.isDirectory() && rootDir.exists()) {
+            rootDir.append("JonDoPortable.exe"); 
+	    if (rootDir.isFile() && rootDir.exists()) {
+              jondoPath = rootDir.path;
+	    } else {
+              log("Found no JonDoPortable.exe");
+	    }
+	  } 
+	} catch (e) {
+          log("No JonDoPortable found either. Thus, no JonDo starting here...");
+        }
       }
       wrk.close();
-      return jondoPath;
+      if (jondoPath) {
+	// Why does 'return jondoExecFile.initWithPath(jondoPath);' not work=
+        jondoExecFile.initWithPath(jondoPath); 
+	return jondoExecFile;
+      } else {
+	return null;
+      }
     } else if (xulRuntime.OS === "Linux") {
-      
+      jondoExecFile.initWithPath("/usr/bin");
+      jondoExecFile.append("jondo");
+      if (jondoExecFile.exists() && jondoExecFile.isFile()) {
+	return jondoExecFile;
+      } else {
+        jondoExecFile.initWithPath("/usr/bin");
+        jondoExecFile.append("java"); 
+        if (jondoExecFile.exists() && jondoExecFile.isFile()) {
+          // Found a java executable returning it and we check the path of
+          // the JAP.jar in the callee (that seems the easiest way...
+          return jondoExecFile;
+        } else {
+          log("No 'java' or 'jondo' file found.");
+	  return null;
+	}  
+      }
     } else if (xulRuntime.OS === "Darwin") {
 
     } else {
