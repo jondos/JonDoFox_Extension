@@ -481,6 +481,37 @@ function openJDFFeaturePage() {
   }
 }
 
+function errorPageCheck() {
+  var contDoc = window.content.document;
+  var longContentElem = contDoc.getElementById("errorLongContent"); 
+  if (longContentElem && jdfManager.isJondoInstalled && 
+      !jdfManager.jondoProcess.isRunning) {
+    var button = contDoc.createElement("button");
+    var text = contDoc.createTextNode(jdfUtils.
+      getString("jondofox.jondo.startbutton.value"));
+    button.setAttribute("id", "jondoButton");
+    button.setAttribute("type", "button");
+    button.setAttribute("title", jdfUtils.
+      getString("jondofox.jondo.startbutton.value"));
+    button.appendChild(text);
+    longContentElem.appendChild(button);
+    button.addEventListener("click", startJondoAgain, false);
+  } else {
+    log("No Errorpage found");
+  }
+}
+
+function startJondoAgain(e) {
+  // Seems to be a sane assumption that we can allow just one click on the
+  // button as the surfing should be possible afterwards again. And if a new
+  // error page is popping up later on there is a new button element included
+  // there as well (with a new click listener).
+  e.target.removeEventListener("click", startJondoAgain, false);
+  if (e.button !== 2) {
+    jdfManager.startJondo(); 
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // The method 'initWindow()' is called on the 'load' event + observers
 ///////////////////////////////////////////////////////////////////////////////
@@ -556,6 +587,9 @@ var overlayObserver = {
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
             log("New window is ready");
+
+            gBrowser.addEventListener("DOMContentLoaded", errorPageCheck, 
+              false);
 
             // We have to tweak the code here as it is not working reliable for
 	    // FF 4. The funny thing is that the version check works well for
@@ -727,6 +761,7 @@ function shutdown() {
     document.getElementById("contentAreaContextMenu").
 	    removeEventListener("popupshowing", 
 		jondofox.updateContextMenuEntry, false);
+    gBrowser.removeEventListener("DOMContentLoaded", errorPageCheck, false);
   } catch (e) {
     log("Error while removing event listeners: " + e);
   }
