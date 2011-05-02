@@ -11,7 +11,7 @@ do
     v) JDF_VERSION="${OPTARG}";;
     a) ALPHA_VERSION="${OPTARG}";; 
     h) echo '' 
-       echo 'JonDoDox Extension Packaging Script 1.0 (2008 Copyright (c) JonDos GmbH)'
+       echo 'JonDoDox Extension Packaging Script 1.0 (2011 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
        echo 'Possible options are:'
        echo '-v [version]'

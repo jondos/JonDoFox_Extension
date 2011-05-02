@@ -229,3 +229,10 @@ body[dir="rtl"] #brand {
 .bloodyvikingsRecDeactivated {
   color: #99CC99; 
 }
+
+#jondoButton {
+  position: relative;
+  left: 300px;
+  width: 150px;
+  height: 50px;
+}

@@ -99,6 +99,14 @@ JDFManager.prototype = {
 
   isNoScriptEnabled: true,
 
+  jondoProcess: null,
+
+  isJondoInstalled: false,
+
+  jondoExecutable: null,
+
+  jondoArgs: [],
+
   // Incompatible extensions with their IDs
   extensions: { 
     'CuteMenus':'{63df8e21-711c-4074-a257-b065cadc28d8}',
@@ -500,7 +508,6 @@ JDFManager.prototype = {
   onUIStartup: function() {
     var p;
     var prefs;
-    var args;
     log("Starting up, checking conditions ..");
     try {
       // Call init() first
@@ -510,6 +517,8 @@ JDFManager.prototype = {
 	// feature is harmless.
 	this.boolPrefsMap['network.websocket.enabled'] = 
 	        'extensions.jondofox.websocket.enabled';
+        this.boolPrefsMap['dom.indexedDB.enabled'] = 
+                'extensions.jondofox.indexedDB.enabled';
         // Firefox 4 has a whitespace between the "," and "deflate". We need to 
 	// avoid that in order not to reduce our anonymity set.	
 	this.stringPrefsMap['network.http.accept-encoding'] = 
@@ -576,40 +585,20 @@ JDFManager.prototype = {
       } else {
         this.setProxy(this.getState());
       }
-      // Now we are starting JonDo if it was not already started and the user
-      // wants it to get started.
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.autostartJonDo')) {
-        var jondoProcess = CC["@mozilla.org/process/util;1"].
-                           createInstance(CI.nsIProcess);
-        var jondoExecFile = this.getJonDoPath();
-        if (jondoExecFile) {
+      // We need to estimate the JonDo path anyway in order to show the user
+      // later on the proper help if she accidentally shut JonDo down.
+      // Therefore, we are doing it right now...
+      this.jondoExecutable = this.getJonDoPath();
+      if (this.jondoExecutable) {
+        this.jondoProcess = CC["@mozilla.org/process/util;1"].
+                           createInstance(CI.nsIProcess); 
+        this.isJondoInstalled = true; 
+        // Now we are starting JonDo if it was not already started and the user
+        // wants it to get started.
+        if (this.prefsHandler.
+            getBoolPref('extensions.jondofox.autostartJonDo')) {
           log("Starting JonDo...");
-	  jondoProcess.init(jondoExecFile); 
-	  if (jondoExecFile.path !== "/usr/bin/java") {
-	    args = ["--try"];
-	  } else {
-            // Checking for a JAP.jar in the home directory. If we find it we 
-            // start JonDo if not then just the browser starts up. 
-	    var dirService = CC["@mozilla.org/file/directory_service;1"].
-                 getService(CI.nsIProperties); 
-            var homeDirFile = dirService.get("Home", CI.nsIFile);
-	    homeDirFile.append("JAP.jar");
-            if (homeDirFile.exists() && homeDirFile.isFile()) {
-	      var JAPPath = homeDirFile.path;
-              args = ["-jar", JAPPath, "--try"];
-	    } else {
-              args = [];
-            }
-          }
-	  if (!this.ff4) {
-            jondoProcess.run(false, args, args.length);
-          } else {
-            // There were problems with unicode filenames and path's that got
-            // fixed in FF4. See: 
-            // https://bugzilla.mozilla.org/show_bug.cgi?id=411511. If somebody
-            // with FF < 4 got hit by this bug she has to upgrade. 
-	    jondoProcess.runw(false, args, args.length); 
-	  }
+          this.startJondo();
         }
       }
       // A convenient method to set user prefs that change from proxy to proxy.
@@ -715,6 +704,40 @@ JDFManager.prototype = {
     } else {
       log("Found an unhandled operating system: " + xulRuntime.OS);
     } 
+  },
+
+  startJondo : function() {
+    try {
+      this.jondoProcess.init(this.jondoExecutable); 
+      if (this.jondoExecutable.path !== "/usr/bin/java") {
+        this.jondosArgs = ["--try"];
+      } else {
+        // Checking for a JAP.jar in the home directory. If we find it we 
+        // start JonDo if not then just the browser starts up. 
+        var dirService = CC["@mozilla.org/file/directory_service;1"].
+          getService(CI.nsIProperties); 
+        var homeDirFile = dirService.get("Home", CI.nsIFile);
+          homeDirFile.append("JAP.jar");
+        if (homeDirFile.exists() && homeDirFile.isFile()) {
+          var JAPPath = homeDirFile.path;
+          this.jondoArgs = ["-jar", JAPPath, "--try"];
+        } 
+      }
+    } catch (e if e.name === "NS_ERROR_ALREADY_INITIALIZED") {
+      log("Process as already initialized. Just restarting...");
+    }
+    // We do not need to start the process twice.
+    if (!jondoProcess.isRunning) {
+      if (!this.ff4) {
+        this.jondoProcess.run(false, this.jondoArgs, this.jondoArgs.length);
+      } else {
+        // There were problems with unicode filenames and path's that got
+        // fixed in FF4. See: 
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=411511. If somebody
+        // with FF < 4 got hit by this bug she has to upgrade. 
+        this.jondoProcess.runw(false, this.jondoArgs, this.jondoArgs.length); 
+      } 
+    }
   },
 
   // General cleanup function for deinstallation etc.
