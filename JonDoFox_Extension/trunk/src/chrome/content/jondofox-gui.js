@@ -116,9 +116,15 @@ var prefsHandler = Cc['@jondos.de/preferences-handler;1'].
 var jdfManager = Cc['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
 
+var reqObs = Cc['@jondos.de/request-observer;1'].
+             getService().wrappedJSObject;
+
 // Get the utility Object
 var jdfUtils = Cc['@jondos.de/jondofox-utils;1'].
                                getService().wrappedJSObject;
+
+var iOService = Cc["@mozilla.org/network/io-service;1"]
+                .getService(Ci.nsIIOService);
 
 var prefix = "extensions.jondofox.custom.";
 
@@ -481,23 +487,76 @@ function openJDFFeaturePage() {
   }
 }
 
-function errorPageCheck() {
+function errorPageCheck(e) {
   var contDoc = window.content.document;
-  var longContentElem = contDoc.getElementById("errorLongContent"); 
-  if (longContentElem && jdfManager.isJondoInstalled && 
-      !jdfManager.jondoProcess.isRunning) {
-    var button = contDoc.createElement("button");
-    var text = contDoc.createTextNode(jdfUtils.
-      getString("jondofox.jondo.startbutton.value"));
-    button.setAttribute("id", "jondoButton");
-    button.setAttribute("type", "button");
-    button.setAttribute("title", jdfUtils.
-      getString("jondofox.jondo.startbutton.value"));
-    button.appendChild(text);
-    longContentElem.appendChild(button);
-    button.addEventListener("click", startJondoAgain, false);
+  if (contDoc.documentURI.indexOf("about:neterror?e=proxyConnectFailure") > 
+      -1) {
+    var longContentElem = contDoc.getElementById("errorLongContent"); 
+    if (jdfManager.isJondoInstalled) { 
+      if (!jdfManager.jondoProcess.isRunning) {
+        var buttonShortDesc = contDoc.createElement("div");
+        buttonShortDesc.setAttribute("id", "errorShortDesc");
+        var button = contDoc.createElement("button");
+        var text = contDoc.createTextNode(jdfUtils.
+          getString("jondofox.jondo.startbutton.value"));
+        button.setAttribute("id", "jondoButton");
+        button.setAttribute("type", "button");
+        button.setAttribute("title", jdfUtils.
+          getString("jondofox.jondo.startbutton.value"));
+        button.appendChild(text);
+        buttonShortDesc.appendChild(button);
+        longContentElem.appendChild(buttonShortDesc);
+        button.addEventListener("click", startJondoAgain, false);
+      } else {
+        // JonDo is probably already starting...
+        contDoc.getElementById("errorTitleText").hidden = true;
+        var jondoIsStarting = contDoc.createElement("div");
+        jondoIsStarting.setAttribute("id", "errorShortDesc");
+        var pNode = contDoc.createElement("p");
+        pNode.setAttribute("id", "errorShortDescText");
+        var textNode = contDoc.createTextNode(jdfUtils.
+          getString("jondofox.jondo.isStarting")); 
+        pNode.appendChild(textNode);
+        jondoIsStarting.appendChild(pNode);
+        longContentElem.appendChild(jondoIsStarting);
+      }
+    } else {
+      // We found the error page but no JonDo we could start therefore 
+      // checking if we can safely whitelist and display the download links...
+      var textNode;
+      var refNode;
+      var jondoURI;
+      var downloadLink = contDoc.createElement("div");
+      downloadLink.setAttribute("id", "errorShortDesc");
+      var pNode = contDoc.createElement("p");
+      refNode = contDoc.createElement("a");
+      pNode.setAttribute("id", "errorShortDescText");
+      if (jdfManager.os === "windows") {
+        jondoURI = jdfUtils.
+          getString("jondofox.jondo.windows"); 
+      } else if (jdfManager.os === "linux") {
+        jondoURI = jdfUtils.
+          getString("jondofox.jondo.linux"); 
+      } else if (jdfManager.os === "darwin") {
+        jondoURI = jdfUtils.
+          getString("jondofox.jondo.darwin"); 
+      } else {
+        jondoURI = jdfUtils.
+          getString("jondofox.jondo.unsupported"); 
+      }
+      refNode.setAttribute("href", jondoURI); 
+      textNode = contDoc.createTextNode(jondoURI);
+      refNode.appendChild(textNode); 
+      pNode.appendChild(refNode);
+      downloadLink.appendChild(pNode);
+      longContentElem.appendChild(downloadLink); 
+
+      if (reqObs.firstRequest) {
+        noProxyListAdd(jondoURI);
+      }
+    }
   } else {
-    log("No Errorpage found");
+    //log("No Errorpage found");
   }
 }
 
