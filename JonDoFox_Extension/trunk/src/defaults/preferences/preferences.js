@@ -77,6 +77,28 @@ pref("extensions.jondofox.tor.buildID_override","0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 
+// SafeBrowsing provider
+pref("extensions.jondofox.safebrowsing.provider","1");
+pref("extensions.jondofox.safebrowsing.provider.1.name", "Google");
+pref("extensions.jondofox.safebrowsing.provider.1.gethashURL", 
+    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=3.5.2&pver=2.2");
+pref("extensions.jondofox.safebrowsing.provider.1.keyURL", 
+    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=3.5.2&pver=2.2");
+pref("extensions.jondofox.safebrowsing.provider.1.reportErrorURL", 
+    "http://en-US.phish-error.mozilla.com/?hl=en-US");
+pref("extensions.jondofox.safebrowsing.provider.1.reportGenericURL", 
+    "http://en-US.phish-generic.mozilla.com/?hl=en-US");
+pref("extensions.jondofox.safebrowsing.provider.1.reportMalwareErrorURL", 
+    "http://en-US.malware-error.mozilla.com/?hl=en-US");
+pref("extensions.jondofox.safebrowsing.provider.1.reportMalwareURL", 
+    "http://en-US.malware-report.mozilla.com/?hl=en-US");
+pref("extensions.jondofox.safebrowsing.provider.1.reportPhishURL", 
+    "http://en-US.phish-report.mozilla.com/?hl=en-US");
+pref("extensions.jondofox.safebrowsing.provider.1.reportURL", 
+    "http://safebrowsing.clients.google.com/safebrowsing/report?"); 
+
+pref("browser.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
+
 // Location neutrality
 pref("extensions.jondofox.accept_languages", "en-us");
 pref("extensions.jondofox.accept_charsets", "*");

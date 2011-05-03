@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2008-2010, JonDos GmbH
+ * Copyright (C) 2008-2011, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
  * This code is available on a per window basis.
@@ -553,6 +553,7 @@ function errorPageCheck(e) {
 
       if (reqObs.firstRequest) {
         noProxyListAdd(jondoURI);
+        noProxyListAdd("http://ocsp.godaddy.com/");
       }
     }
   } else {
