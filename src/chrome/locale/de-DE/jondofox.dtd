@@ -120,27 +120,11 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Haben Sie das Programm JonDo gestartet?">
 <!ENTITY jondofox.instructions.titleText "JonDoFox benötigt <b>zusätzlich</b> das Programm JonDo, 
-   um eine Verbindung zum JonDonym-Dienst herzustellen. Sie finden es hier:">
-
-<!ENTITY jondofox.instructions.instrTitle "Bitte installieren und starten Sie das Programm JonDo:">
-<!ENTITY jondofox.instructions.proxyOffText "Deaktivieren Sie hierzu vorübergehend die 
-   JonDo-Schnittstelle durch Auswahl von &quot;Kein Proxy&quot; im Proxy-Menü:">
-<!ENTITY jondofox.instructions.proxyOffImage 
-   "<img src='chrome://jondofox/content/error/proxy-off-de.png'></img>">
-<!ENTITY jondofox.instructions.downloadLink 
-   "<a href='https://anonymous-proxy-servers.net/de/software.html' target='_blank'>Klicken Sie nun hier, um die 
-   JonDos-Webseite zu besuchen und das Programm JonDo herunterzuladen.</a>">
-<!ENTITY jondofox.instructions.proxyOnText "Nachdem Sie das Programm JonDo auf ihrem System 
-   installiert und gestartet haben, müssen Sie die Proxy-Einstellungen auf &quot;JonDo&quot; 
-   zurücksetzen:">
-<!ENTITY jondofox.instructions.proxyOnImage 
-   "<img src='chrome://jondofox/content/error/proxy-on-de.png'></img>">
-<!ENTITY jondofox.instructions.instrWarning "ACHTUNG: Falls Sie die Proxy-Einstellungen nicht auf
-   &quot;JonDo&quot; zurücksetzen, surfen Sie ohne Anonymitätsschutz im Internet!">
+   um eine Verbindung zum JonDonym-Dienst herzustellen.">
 
 <!ENTITY jondofox.instructions.testTitle "Abschließender Test:">
 <!ENTITY jondofox.instructions.testLink 
-   "<a href='http://what-is-my-ip-address.anonymous-proxy-servers.net/?lang=de' target='_blank'>Klicken Sie 
+   "<a href='http://ip-check.info/?lang=de' target='_blank'>Klicken Sie 
    hier, um Ihre Installation mit dem JonDonym-Anonymitätstest zu 
    überprüfen.</a>">
 <!ENTITY jondofox.instructions.testDesc "Falls eines der Felder im 
