@@ -267,6 +267,7 @@ RequestObserver.prototype = {
         log("Die URL " + testURL + " wird wieder entfernt");
         if (this.jdfManager.noProxyListContains(testURL)) {
           this.jdfManager.noProxyListRemove(testURL);
+          this.jdfManager.noProxyListRemove("http://ocsp.godaddy.com/"); 
         }
       }
       httpChannel.QueryInterface(CI.nsIChannel);
