@@ -509,7 +509,8 @@ function errorPageCheck(e) {
         button.addEventListener("click", startJondoAgain, false);
       } else {
         // JonDo is probably already starting...
-        contDoc.getElementById("errorTitleText").hidden = true;
+        
+        contDoc.getElementById("errorTitleText").style.display = "none";
         var jondoIsStarting = contDoc.createElement("div");
         jondoIsStarting.setAttribute("id", "errorShortDesc");
         var pNode = contDoc.createElement("p");
@@ -524,6 +525,8 @@ function errorPageCheck(e) {
       // We found the error page but no JonDo we could start therefore 
       // checking if we can safely whitelist and display the download links...
       var textNode;
+      var phintNode;
+      var hintTextNode;
       var refNode;
       var jondoURI;
       var downloadLink = contDoc.createElement("div");
@@ -548,6 +551,12 @@ function errorPageCheck(e) {
       textNode = contDoc.createTextNode(jondoURI);
       refNode.appendChild(textNode); 
       pNode.appendChild(refNode);
+      pHintNode = contDoc.createElement("p");
+      pHintNode.setAttribute("id", "errorShortDescText");
+      hintTextNode = contDoc.createTextNode(jdfUtils.
+        getString("jondofox.jondo.hint"));
+      pHintNode.appendChild(hintTextNode); 
+      downloadLink.appendChild(pHintNode); 
       downloadLink.appendChild(pNode);
       longContentElem.appendChild(downloadLink); 
 

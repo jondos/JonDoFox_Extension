@@ -96,6 +96,8 @@ pref("extensions.jondofox.safebrowsing.provider.1.reportPhishURL",
     "http://en-US.phish-report.mozilla.com/?hl=en-US");
 pref("extensions.jondofox.safebrowsing.provider.1.reportURL", 
     "http://safebrowsing.clients.google.com/safebrowsing/report?"); 
+pref("extensions.jondofox.browser.safebrowsing.provider.1.updateURL", 
+    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=3.5.2&pver=2.2");
 
 pref("browser.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
 
