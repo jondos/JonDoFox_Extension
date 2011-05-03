@@ -99,6 +99,8 @@ JDFManager.prototype = {
 
   isNoScriptEnabled: true,
 
+  os: "unsupported",
+
   jondoProcess: null,
 
   isJondoInstalled: false,
@@ -622,6 +624,7 @@ JDFManager.prototype = {
     var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.
                      nsIXULRuntime); 
     if (xulRuntime.OS === "WINNT") {
+      this.os = "windows";
       // We are trying to find the JRE using the registry. First, JonDo
       // and second JAP, sigh.
       var wrk = CC["@mozilla.org/windows-registry-key;1"].
@@ -683,6 +686,7 @@ JDFManager.prototype = {
 	return null;
       }
     } else if (xulRuntime.OS === "Linux") {
+      this.os = "linux";
       jondoExecFile.initWithPath("/usr/bin");
       jondoExecFile.append("jondo");
       if (jondoExecFile.exists() && jondoExecFile.isFile()) {
@@ -700,6 +704,7 @@ JDFManager.prototype = {
 	}  
       }
     } else if (xulRuntime.OS === "Darwin") {
+      this.os = "darwin";
 
     } else {
       log("Found an unhandled operating system: " + xulRuntime.OS);
@@ -710,7 +715,7 @@ JDFManager.prototype = {
     try {
       this.jondoProcess.init(this.jondoExecutable); 
       if (this.jondoExecutable.path !== "/usr/bin/java") {
-        this.jondosArgs = ["--try"];
+        this.jondoArgs = ["--try"];
       } else {
         // Checking for a JAP.jar in the home directory. If we find it we 
         // start JonDo if not then just the browser starts up. 
@@ -727,7 +732,7 @@ JDFManager.prototype = {
       log("Process as already initialized. Just restarting...");
     }
     // We do not need to start the process twice.
-    if (!jondoProcess.isRunning) {
+    if (!this.jondoProcess.isRunning) {
       if (!this.ff4) {
         this.jondoProcess.run(false, this.jondoArgs, this.jondoArgs.length);
       } else {

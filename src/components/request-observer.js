@@ -43,6 +43,8 @@ RequestObserver.prototype = {
   safeCache: null,
   tldService: null,
   cookiePerm: null,
+
+  firstRequest: true,
   
   init: function() {
     try {
@@ -258,6 +260,15 @@ RequestObserver.prototype = {
 
   onExamineResponse: function(httpChannel) {
     try {                        
+      if (this.firstRequest) {
+        this.firstRequest = false;
+        let testURL = this.jdfManager.jdfUtils.
+          getString("jondofox.jondo." + this.jdfManager.os); 
+        log("Die URL " + testURL + " wird wieder entfernt");
+        if (this.jdfManager.noProxyListContains(testURL)) {
+          this.jdfManager.noProxyListRemove(testURL);
+        }
+      }
       httpChannel.QueryInterface(CI.nsIChannel);
       this.examineResponse(httpChannel);
     } catch (ex) {

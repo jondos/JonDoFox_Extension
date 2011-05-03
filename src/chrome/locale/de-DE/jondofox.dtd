@@ -120,7 +120,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Haben Sie das Programm JonDo gestartet?">
 <!ENTITY jondofox.instructions.titleText "JonDoFox benötigt <b>zusätzlich</b> das Programm JonDo, 
-   um eine Verbindung zum JonDonym-Dienst herzustellen.">
+   um eine Verbindung zum JonDonym-Dienst herzustellen. Sie finden es hier:">
 
 <!ENTITY jondofox.instructions.instrTitle "Bitte installieren und starten Sie das Programm JonDo:">
 <!ENTITY jondofox.instructions.proxyOffText "Deaktivieren Sie hierzu vorübergehend die 
