@@ -150,6 +150,37 @@ JDFManager.prototype = {
     'general.useragent.vendor':'extensions.jondofox.tor.useragent_vendor',
     'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub'
   },
+
+  // Adding a uniform URLs concerning safebrowsing functionality to not 
+  // leak information.
+  safebrowseMap: {
+    'browser.safebrowsing.provider.0.gethashURL': 
+      'extensions.jondofox.safebrowsing.provider.0.gethashURL',
+    'browser.safebrowsing.provider.0.keyURL': 
+      'extensions.jondofox.safebrowsing.provider.0.keyURL',
+    'browser.safebrowsing.provider.0.lookupURL':
+      'extensions.jondofox.safebrowsing.provider.0.lookupURL', 
+    'browser.safebrowsing.provider.0.name': 
+      'extensions.jondofox.safebrowsing.provider.0.name', 
+    'browser.safebrowsing.provider.0.reportErrorURL': 
+      'extensions.jondofox.safebrowsing.provider.0.reportErrorURL',
+    'browser.safebrowsing.provider.0.reportGenericURL': 
+      'extensions.jondofox.safebrowsing.provider.0.reportGenericURL',
+    'browser.safebrowsing.provider.0.reportMalwareErrorURL': 
+      'extensions.jondofox.safebrowsing.provider.0.reportMalwareErrorURL',
+    'browser.safebrowsing.provider.0.reportMalwareURL': 
+      'extensions.jondofox.safebrowsing.provider.0.reportMalwareURL',
+    'browser.safebrowsing.provider.0.reportPhishURL': 
+      'extensions.jondofox.safebrowsing.provider.0.reportPhishURL',
+    'browser.safebrowsing.provider.0.reportURL': 
+      'extensions.jondofox.safebrowsing.provider.0.reportURL',
+    'browser.safebrowsing.provider.0.updateURL': 
+      'extensions.jondofox.safebrowsing.provider.0.updateURL', 
+    'browser.safebrowsing.warning.infoURL': 
+      'extensions.jondofox.safebrowsing.warning.infoURL',
+    'browser.safebrowsing.malware.reportURL': 
+      'extensions.jondofox.safebrowsing.malware.reportURL'
+  },
   
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: { 
@@ -990,6 +1021,11 @@ JDFManager.prototype = {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.jondoUAMap[p]));
         }
+        // Setting our own safebrowsing provider and activate it.
+        for (p in this.safebrowseMap) {
+          this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.safebrowseMap[p])); 
+        }
         //Check whether we had a Tor UA before. If so, the value of the pref
         //is not equal to "en-us" and we change it back to JonDoFox values. (Of
         //course, this does not mean that we really had a Tor UA before, maybe
@@ -1024,6 +1060,11 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
              this.prefsHandler.getStringPref(this.jondoUAMap[p]));
           }
+          // Setting our own safebrowsing provider and activate it.
+          for (p in this.safebrowseMap) {
+            this.prefsHandler.setStringPref(p,
+              this.prefsHandler.getStringPref(this.safebrowseMap[p])); 
+          }
           if (acceptLang !== "en-us") {
           this.settingLocationNeutrality("");
           }
@@ -1039,6 +1080,9 @@ JDFManager.prototype = {
 	  // We use the opportunity to set other user prefs back to their
 	  // default values as well.
 	  this.clearPrefs();
+          for (p in this.safebrowseMap) {
+            this.prefsHandler.deletePreference(p);
+          }
         }
 	this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
 	    this.prefsHandler.
@@ -1046,6 +1090,9 @@ JDFManager.prototype = {
         break;
       case (this.STATE_NONE):
 	this.clearPrefs();
+        for (p in this.safebrowseMap) {
+            this.prefsHandler.deletePreference(p);
+          }
 	if (!proxyKeepAlive) {
 	  this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
 	}
