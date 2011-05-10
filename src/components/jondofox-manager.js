@@ -552,6 +552,9 @@ JDFManager.prototype = {
 	        'extensions.jondofox.websocket.enabled';
         this.boolPrefsMap['dom.indexedDB.enabled'] = 
                 'extensions.jondofox.indexedDB.enabled';
+        // Disabling WebGL for security reasons
+        this.boolPrefsMap['webgl.disabled'] = 
+                'extensions.jondofox.webgl.disabled';
         // Firefox 4 has a whitespace between the "," and "deflate". We need to 
 	// avoid that in order not to reduce our anonymity set.	
 	this.stringPrefsMap['network.http.accept-encoding'] = 
