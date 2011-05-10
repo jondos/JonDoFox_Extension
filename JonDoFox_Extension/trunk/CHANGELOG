@@ -1,6 +1,7 @@
 Changes in version X.X.X - 2011-xx-xx
 
   Minor improvement:
+    * disabled webgl.disabled due to security issues
     * made safebrowsing moz:client and LOCALE settings uniform
     * set dom.indexedDB.enabled to "false" due to tracking risks
     * it is now possible to deactivate the temporary e-mail feature.

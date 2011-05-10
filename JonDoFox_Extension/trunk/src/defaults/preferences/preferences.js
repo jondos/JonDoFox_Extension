@@ -165,6 +165,9 @@ pref("extensions.jondofox.update.autoUpdateDefault", false);
 pref("extensions.jondofox.getAddons.cache.enabled", false);
 pref("extensions.jondofox.donottrackheader.enabled", true);
 
+// See: http://www.contextis.com/resources/blog/webgl/ 
+pref("extensions.jondofox.webgl.disabled", true);
+
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 
