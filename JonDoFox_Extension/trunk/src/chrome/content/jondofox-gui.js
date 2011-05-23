@@ -348,13 +348,20 @@ function openPageNewTab(aString) {
     if (aString === "keepAlive") {
       win.openUILinkIn(jdfUtils.getString('jondofox.keepAliveHelp.url'), 'tab');
     } else if (aString === "anontest") {
-      win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab'); 
+      if (win.gBrowser.getBrowserForTab(win.gBrowser.selectedTab).
+	  currentURI.spec === 'about:blank') {
+        win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'),
+          'current');
+      } else {
+        win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab');
+      } 
     } else if (aString === "homepage") {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab'); 
     } else if (aString === "noScript") {
       win.openUILinkIn('http://noscript.net', 'tab');
     } else if (aString === "cookieMonster") {
-      win.openUILinkIn('https://addons.mozilla.org/en-US/firefox/addon/cookie-monster/', 'tab'); 
+      var cm = 'https://addons.mozilla.org/en-US/firefox/addon/cookie-monster';
+      win.openUILinkIn(cm, 'tab'); 
     } else if (aString === "about") {
       if (win.gBrowser.getBrowserForTab(win.gBrowser.selectedTab).
 	  currentURI.spec === 'about:blank') {
@@ -505,16 +512,17 @@ function errorPageCheck(e) {
           getString("jondofox.jondo.startbutton.value"));
         button.appendChild(text);
         buttonShortDesc.appendChild(button);
+        buttonShortDesc.setAttribute("style", "text-align:center;");
         longContentElem.appendChild(buttonShortDesc);
         button.addEventListener("click", startJondoAgain, false);
       } else {
         // JonDo is probably already starting...
-        
         contDoc.getElementById("errorTitleText").style.display = "none";
         var jondoIsStarting = contDoc.createElement("div");
         jondoIsStarting.setAttribute("id", "errorShortDesc");
         var pNode = contDoc.createElement("p");
         pNode.setAttribute("id", "errorShortDescText");
+        pNode.setAttribute("style", "color:green;"); 
         var textNode = contDoc.createTextNode(jdfUtils.
           getString("jondofox.jondo.isStarting")); 
         pNode.appendChild(textNode);
