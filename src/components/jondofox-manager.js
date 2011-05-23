@@ -160,8 +160,6 @@ JDFManager.prototype = {
       'extensions.jondofox.safebrowsing.provider.0.keyURL',
     'browser.safebrowsing.provider.0.lookupURL':
       'extensions.jondofox.safebrowsing.provider.0.lookupURL', 
-    'browser.safebrowsing.provider.0.name': 
-      'extensions.jondofox.safebrowsing.provider.0.name', 
     'browser.safebrowsing.provider.0.reportErrorURL': 
       'extensions.jondofox.safebrowsing.provider.0.reportErrorURL',
     'browser.safebrowsing.provider.0.reportGenericURL': 
@@ -713,7 +711,7 @@ JDFManager.prototype = {
       }
       wrk.close();
       if (jondoPath) {
-	// Why does 'return jondoExecFile.initWithPath(jondoPath);' not work=
+	// Why does 'return jondoExecFile.initWithPath(jondoPath);' not work?
         jondoExecFile.initWithPath(jondoPath); 
 	return jondoExecFile;
       } else {
