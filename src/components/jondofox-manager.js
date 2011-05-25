@@ -31,11 +31,27 @@ const CU = Components.utils;
 ///////////////////////////////////////////////////////////////////////////////
 
 // Singleton instance definition
-var JDFManager = function(){
+var JDFManager = function() {
   this.wrappedJSObject = this;
   // That CU call has to be here, otherwise it would not work. See:
   // https://developer.mozilla.org/en/JavaScript/Code_modules/Using section
   // "Custom modules and XPCOM components" 
+  CU.import("resource://jondofox/log4moz.js", this); 
+  var formatter = new this.Log4Moz.BasicFormatter();
+  var root = this.Log4Moz.repository.rootLogger;
+  dump("Created a rootLogger!\n");
+  // We want to have output to standard out. 
+  var dapp = new this.Log4Moz.DumpAppender(formatter);
+  dapp.level = this.Log4Moz.Level["Debug"];
+  root.addAppender(dapp); 
+  // We may want to have JS error console output as well...
+  var capp = new this.Log4Moz.ConsoleAppender(formatter);
+  capp.level = this.Log4Moz.Level["Warn"];
+  root.addAppender(capp); 
+
+  // Now we are adding a specific logger (JDFManager)...
+  this.logger = this.Log4Moz.repository.getLogger("JonDoFox Manager");
+  this.logger.level = this.Log4Moz.Level["Debug"];
   //Components.utils.import("resource://jondofox/adblockModule.js", this);
   //Components.utils.import("resource://jondofox/adblockFilter.js", this);
   //Components.utils.import("resource://jondofox/adblockMatcher.js", this);  

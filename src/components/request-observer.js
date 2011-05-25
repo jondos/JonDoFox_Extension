@@ -34,6 +34,8 @@ const CU = Components.utils;
 
 var RequestObserver = function() {
   this.wrappedJSObject = this;
+  CU.import("resource://jondofox/ssl-observatory.jsm", this); 
+  this.sslObservatory.init();
 };
 
 RequestObserver.prototype = {
@@ -43,6 +45,7 @@ RequestObserver.prototype = {
   safeCache: null,
   tldService: null,
   cookiePerm: null,
+  logger: null,
 
   firstRequest: true,
   
@@ -59,6 +62,10 @@ RequestObserver.prototype = {
           getService(Components.interfaces.nsIEffectiveTLDService);
       this.cookiePerm = CC['@mozilla.org/cookie/permission;1'].
           getService(Components.interfaces.nsICookiePermission);
+      this.logger = this.jdfManager.Log4Moz.repository.
+        getLogger("JonDoFox Observer");
+      this.logger.level = this.jdfManager.Log4Moz.Level["Warn"];
+      this.logger.warn("Initialized Logger for Observer!\n");
     } catch (e) {
       log("init(): " + e);
     }
@@ -253,8 +260,30 @@ RequestObserver.prototype = {
           this.jdfManager.noProxyListAdd(location);     
         }
       }
+      // Now the code helping the EFF SSL-Observatory...
+      if (this.prefsHandler.
+          getBoolPref("extensions.jondofox.observatory.submit_jondonym") &&
+          this.jdfManager.getState() === 'jondo') {
+        var certs = this.sslObservatory.getSSLCert(channel);
+        if (certs) {
+          var chainEnum = certs.getChain();
+          var chainArray = [];
+          for (var i = 0; i < chainEnum.length; i++) {
+            var cert = chainEnum.queryElementAt(i, CI.nsIX509Cert);
+            chainArray.push(cert);
+          }
+          this.logger.warn("Cert length is: " + chainArray.length);
+          if (channel.URI.port == -1) {
+            this.sslObservatory.
+              submitChain(chainArray, new String(channel.URI.host));
+          } else {
+            this.sslObservatory.
+              submitChain(chainArray, channel.URI.host+":"+channel.URI.port);
+          }
+        }  
+      }
     } catch (e) {
-      log("examineRespone(): " + e);
+      this.logger.warn("examineRespone(): " + e);
     }
   },
 
