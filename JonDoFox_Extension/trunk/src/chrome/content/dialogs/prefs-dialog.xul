@@ -296,13 +296,12 @@
           </box>
 	  <spacer flex="1" />
 	  <vbox flex="8">
-	  <label value="&jondofox.temp.email.serviceLabel;"
-	    class="bloodyVikingsHead"/>
-          <box>
+	    <label value="&jondofox.temp.email.serviceLabel;"
+	           class="bloodyVikingsHead"/>
             <radiogroup id="selectedService"/>
-          </box>
-	  <label value="* &jondofox.temp.email.recommended;" 
-	    class="bloodyvikingsRecommended" style="margin-top: 6px;"/>
+	    <label value="* &jondofox.temp.email.recommended;" 
+                   class="bloodyvikingsRecommended"
+                   style="margin-top: 6px;"/>
           </vbox>
         </vbox> 
       </tabpanel>
@@ -316,7 +315,8 @@
           &jondofox.dialogtab.proxy.keepAlive.help;
 	  <html:a class="link"  
 	          onclick="contextHelp('keepAlive');">
-	          &jondofox.here.label;</html:a>. 
+            &jondofox.here.label;
+          </html:a>. 
 	</description>
       </vbox>
     </menupopup>

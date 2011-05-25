@@ -1,5 +1,9 @@
 Changes in version X.X.X - 2011-xx-xx
 
+  New Feature:
+    * implemented code to help the EFF regarding their distributed SSL
+      observatory (see: https://www.eff.org/observatory) 
+
   Minor improvement:
     * disabled webgl.disabled due to security issues
     * made safebrowsing moz:client and LOCALE settings uniform
