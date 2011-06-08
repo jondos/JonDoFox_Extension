@@ -291,11 +291,46 @@ function getLabel(state) {
 
 // Refresh the statusbar
 function refresh() {
-  log("Refreshing the statusbar");
+  log("Refreshing the statusbar and the toolbar button");
   try {
     // Get state, label and statusbar respectively
     var state = jdfManager.getState();
     var label = getLabel(state);
+    var tbButton = document.getElementById("jondofox-toolbar-button");
+    var navBar = document.getElementById("nav-bar");
+    if (label === jdfManager.STATE_NONE) {
+      if (navBar.iconsize === "small") { 
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/noproxy-16.png");');
+      } else {
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/noproxy-24.png");'); 
+      }
+    } else if (label === jdfManager.STATE_CUSTOM) {
+      if (navBar.iconsize === "small") { 
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/custom-16.png");');
+      } else {
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/custom-24.png");'); 
+      } 
+    } else if (label === jdfManager.STATE_TOR) {
+      if (navBar.iconsize === "small") { 
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/tor-16.png");');
+      } else {
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/tor-24.png");'); 
+      } 
+    } else if (label === jdfManager.STATE_JONDO) {
+      if (navBar.iconsize === "small") { 
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/jondo-16.png");');
+      } else {
+        tbButton.setAttribute("style",
+          'list-style-image: url("chrome://jondofox/skin/jondo-24.png");'); 
+      } 
+    }
     var statusbar = document.getElementById('jondofox-proxy-status');
     var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
     // Set the text color; if we have proxy state custom and an empty proxy
@@ -734,6 +769,29 @@ var overlayObserver = {
               }
             }
 	    if (jdfManager.ff4) { 
+              // First, setting the toolbar button on first startup...
+              if (prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
+                prefsHandler.setBoolPref("extensions.jondofox.firstStart",
+                   false);
+                var navBar = document.getElementById("nav-bar"); 
+                if (navBar) {
+                  var curSet = navBar.currentSet.split(",");
+                  if (curSet.indexOf("jondofox-toolbar-button") === -1) {
+                    var pos = curSet.indexOf("urlbar-container") + 1 || curSet.
+                      length;
+                    var set = curSet.slice(0, pos).
+                      concat("jondofox-toolbar-button").
+                      concat(curSet.slice(pos));
+                    navBar.setAttribute("currentset", set.join(","));
+                    navBar.currentSet = set.join(",");
+                    document.persist(navBar.id, "currentset");
+          
+                    try {
+                      BrowserToolboxCustomizeDone(true);
+                    } catch (e) {}
+                  }
+                }
+              }
 	      // Second, if there are incompatible extensions we found
 	      // we iterate through the array containing them and we restart
 	      // the browser after showing a proper message dialog

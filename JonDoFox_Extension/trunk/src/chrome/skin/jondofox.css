@@ -240,3 +240,11 @@ body[dir="rtl"] #brand {
   width: 110px;
   height: 60px;
 }
+
+#jondofox-toolbar-button {
+  list-style-image: url("chrome://jondofox/skin/jondos-24.png");
+}
+
+toolbar[iconsize="small"] #jondofox-toolbar-button {
+  list-style-image: url("chrome://jondofox/skin/jondos-16.png");
+} 

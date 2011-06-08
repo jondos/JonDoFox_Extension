@@ -1,10 +1,13 @@
-Changes in version X.X.X - 2011-xx-xx
+Changes in version 0.2.9 - 2011-06-xx
 
   New Feature:
+    * autostart of JonDo if it is not already started
     * implemented code to help the EFF regarding their distributed SSL
       observatory (see: https://www.eff.org/observatory) 
 
   Minor improvement:
+    * vastly improved error page that comes uo if one wants to surf but JonDo
+      is not yet available
     * disabled webgl.disabled due to security issues
     * made safebrowsing moz:client and LOCALE settings uniform
     * set dom.indexedDB.enabled to "false" due to tracking risks

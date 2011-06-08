@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-
+<?xml-stylesheet href="chrome://jondofox/skin/jondofox.css" type="text/css"?>
 <!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
 
 <overlay id="jondofox-overlay"
@@ -26,7 +26,8 @@
                     popup="jondofox-proxy-list"
 		    context="jondofox-proxy-list"
 		    tooltiptext="&jondofox.statusbar.tooltiptext;" />
-    <!-- Include a popup menu -->
+
+                  <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list">
       
       <!-- Anontest and configuration items -->
@@ -64,7 +65,7 @@
              oncommand="setProxy('jondo');" />
       </radiogroup>
 
-    </menupopup>
+    </menupopup> 
   </statusbar>
 
   <!-- Context menu entry for bypassing the proxy -->

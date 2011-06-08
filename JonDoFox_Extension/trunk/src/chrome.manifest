@@ -59,3 +59,5 @@ contract @jondos.de/safecache;1 {fd63cb38-479f-11df-ab87-001d92567994}
 
 # TODO: Stylesheet
 #style chrome://global/skin/netError.css chrome://jondofox/skin/jondofox.css
+style chrome://global/content/customizeToolbar.xul chrome://jondofox/skin/jondofox.css
+
