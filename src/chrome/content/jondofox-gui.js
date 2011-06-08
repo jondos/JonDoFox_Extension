@@ -154,6 +154,8 @@ function setProxy(state) {
       // The state has changed --> set the user agent and clear cookies
       jdfManager.setUserAgent(state);
       jdfManager.clearAllCookies();
+      // Setting already_submitted object back to avoid tracking risks
+      reqObs.sslObservatory.already_submitted = {};
      }
   } catch (e) {
     log("setProxy(): " + e);
@@ -404,7 +406,11 @@ function openPageNewTab(aString) {
       } else {
         win.openUILinkIn('about:jondofox', 'tab');
       }
-    }
+    } else if (aString === "observatory") {
+      win.openUILinkIn("https://www.eff.org/observatory", 'tab'); 
+    } else if (aString === "spec") {
+      win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/HTTPSEverywhere/SSLObservatorySubmission", 'tab'); 
+    } 
   } catch (e) {
     log("openPageNewTab(): " + e);
   }

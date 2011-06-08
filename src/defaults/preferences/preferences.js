@@ -11,8 +11,8 @@ pref("extensions.jondofox.firstStart", true);
 pref("extensions.jondofox.autostartJonDo", true);
 
 // Helping the EFF and its observatory
-pref("extensions.jondofox.observatory.submit_jondonym", true);
 pref("extensions.jondofox.observatory.cache_submitted", true);
+pref("extensions.jondofox.observatory.proxy", 4);
 
 // Set the 'Referer' header according our smart spoof functionality
 pref("extensions.jondofox.set_referrer", true);
