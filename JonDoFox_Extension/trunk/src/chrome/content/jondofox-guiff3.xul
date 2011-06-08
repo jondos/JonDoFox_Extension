@@ -64,6 +64,10 @@
 
   <!-- Context menu entry for bypassing the proxy -->
   <popup id="contentAreaContextMenu">
+    <menuitem id="bypass-proxy"
+              label=""
+              oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
+              insertafter="context-savelink" /> 
     <menuitem id="tempEmailContext"
               label="&jondofox.temp.email;"
 	      class="menuitem-iconic"
@@ -71,10 +75,6 @@
               insertafter="context-delete"
               oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
               hidden="true" /> 
-    <menuitem id="bypass-proxy"
-              label=""
-              oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
-              insertafter="context-savelink" />
     <!-- These are entries to add or remove URIs, currently hidden -->
     <menuitem id="noproxy-add" 
               label="&jondofox.contextmenu.noproxylist.add;"

@@ -165,6 +165,8 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.contextHelp "Kontexthilfe">
 <!ENTITY jondofox.here.label "hier">
 
+<!ENTITY jondofox.and "und">
+
 <!-- General configuration tab -->
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
@@ -174,11 +176,12 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">
-<!ENTITY jondofox.dialogtab.options.observatory.proxy "über einen Proxy">
+<!ENTITY jondofox.dialogtab.options.observatory.proxy "über eigenen Proxy">
 <!ENTITY jondofox.dialogtab.options.observatory.jondo "über JonDonym">
 <!ENTITY jondofox.dialogtab.options.observatory.tor "über Tor"> 
 <!ENTITY jondofox.dialogtab.options.observatory.always "immer">
 <!ENTITY jondofox.dialogtab.options.observatory.never "nie">
+<!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um letztendlich die Sicherheit beim Surfen auf HTTPS-Seiten und damit insgesamt im Web zu verbessern. Wenn Sie SSL-Zertifikate, auf die Sie beim Surfen treffen, an die EFF senden, unterstützen Sie dieses Projekt. Lesen Sie mehr dazu">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">

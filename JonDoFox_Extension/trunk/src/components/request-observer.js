@@ -261,9 +261,15 @@ RequestObserver.prototype = {
         }
       }
       // Now the code helping the EFF SSL-Observatory...
-      if (this.prefsHandler.
-          getBoolPref("extensions.jondofox.observatory.submit_jondonym") &&
-          this.jdfManager.getState() === 'jondo') {
+      var obsProxy = this.prefsHandler.
+        getIntPref("extensions.jondofox.observatory.proxy"); 
+      var proxyState = this.jdfManager.getState();
+      dump("Proxy: " + obsProxy + " state: " + proxyState + "\n");
+      if ((obsProxy === 0 && proxyState === 'jondo') ||
+          (obsProxy === 1 && proxyState === 'tor') ||
+          (obsProxy === 2 && proxyState === 'custom') ||
+          (obsProxy === 3)) {
+        dump("Getting the Cert!\n");
         var certs = this.sslObservatory.getSSLCert(channel);
         if (certs) {
           var chainEnum = certs.getChain();

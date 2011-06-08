@@ -89,23 +89,18 @@
                 </box>
                 <box align="center">
                   <label value="&jondofox.dialogtab.options.observatory;"/>
-                  <menulist>
+                  <menulist id="observatoryProxy">
                     <menupopup>
                       <menuitem
-                        label="&jondofox.dialogtab.options.observatory.proxy;"
-                        value="0"/>
+                        label="&jondofox.dialogtab.options.observatory.jondo;"/>
                       <menuitem
-                        label="&jondofox.dialogtab.options.observatory.jondo;"
-                        value="1"/>
+                        label="&jondofox.dialogtab.options.observatory.tor;"/> 
                       <menuitem
-                        label="&jondofox.dialogtab.options.observatory.tor;"
-                        value="2"/>
+                        label="&jondofox.dialogtab.options.observatory.proxy;"/>
                       <menuitem
-                        label="&jondofox.dialogtab.options.observatory.always;"
-                        value="3"/>
+                        label="&jondofox.dialogtab.options.observatory.always;"/>
                       <menuitem
-                        label="&jondofox.dialogtab.options.observatory.never;"
-                        value="4"/>
+                        label="&jondofox.dialogtab.options.observatory.never;"/>
                     </menupopup>
                   </menulist>
                   <toolbarbutton class="jondofox-ref" popup="observatoryHelp"
@@ -344,14 +339,17 @@
 	</description>
       </vbox>
     </menupopup>
-    <menupopup id "observatoryHelp">
+    <menupopup id="observatoryHelp">
       <vbox class="jondofox-help">
         <description>
           &jondofox.dialogtab.options.observatory.help;
           <html:a class="link"  
 	          onclick="contextHelp('observatory');">
-            &jondofox.here.label;
-          </html:a>. 
+            &jondofox.here.label;</html:a> 
+          &jondofox.and;
+          <html:a class="link"  
+	          onclick="contextHelp('spec');">
+            &jondofox.here.label;</html:a>. 
         </description>
       </vbox>
     </menupopup>

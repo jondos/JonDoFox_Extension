@@ -58,6 +58,9 @@ function loadPrefsGeneral() {
     // Certificate Patrol setting
     document.getElementById('checkbox_set_certpatrol').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
+    // SSL observatory setting
+    document.getElementById('observatoryProxy').selectedIndex = 
+        prefsHandler.getIntPref('extensions.jondofox.observatory.proxy');
     // Adblock setting
     //document.getElementById('checkbox_set_adblock').checked =
     //    prefsHandler.getBoolPref('extensions.jondofox.adblock_enabled');
@@ -86,6 +89,9 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_set_safecache').checked); 
     prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
         document.getElementById('checkbox_set_certpatrol').checked);
+    prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
+        document.getElementById('observatoryProxy').selectedIndex); 
+         
     //prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
 //	document.getElementById('checkbox_set_adblock').checked);
     // Now the settings concerning different warnings

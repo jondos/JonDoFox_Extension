@@ -14,6 +14,8 @@ var sslObservatory = {
   root_ca_hashes : null,
   logger : null,
   client_asn : -1,
+  submit_url : null,
+  csrf_nonce : null,
   already_submitted : {},
 
   encString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -31,7 +33,6 @@ var sslObservatory = {
     this.logger.level = this.jdfManager.Log4Moz.Level["Warn"]; 
     // The url to submit to
     this.submit_url = "https://observatory.eff.org/submit_cert";
-
     // Generate nonce to append to url to protect against CSRF
     this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
   },
@@ -161,7 +162,7 @@ var sslObservatory = {
     reqParams.push("fplist=" + this.compatJSON.encode(fps));
     reqParams.push("certlist=" + this.compatJSON.encode(base64Certs));
     reqParams.push("client_asn=" + this.client_asn); 
-    reqParams.push("private_opt_in=1");
+    reqParams.push("private_opt_in=0");
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 8192;
@@ -176,8 +177,6 @@ var sslObservatory = {
     while (params.length != tot_len) {
       params += "0";
     }
-
-    this.logger.warn("Padded params: "+params);
 
     var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
