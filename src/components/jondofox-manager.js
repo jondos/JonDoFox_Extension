@@ -753,7 +753,13 @@ JDFManager.prototype = {
       }
     } else if (xulRuntime.OS === "Darwin") {
       this.os = "darwin";
-
+      jondoExecFile.initWithPath("/Applications/JAP.app/Contents/MacOS");
+      jondoExecFile.append("JAP");
+      if (jondoExecFile.exists() && jondoExecFile.isFile()) {
+	return jondoExecFile;
+      } else {
+        return null;
+      } 
     } else {
       log("Found an unhandled operating system: " + xulRuntime.OS);
     } 

@@ -87,6 +87,30 @@
                           label="&jondofox.dialogtab.options.certpatrol;"
                           accesskey="C"/>
                 </box>
+                <box align="center">
+                  <label value="&jondofox.dialogtab.options.observatory;"/>
+                  <menulist>
+                    <menupopup>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.proxy;"
+                        value="0"/>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.jondo;"
+                        value="1"/>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.tor;"
+                        value="2"/>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.always;"
+                        value="3"/>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.never;"
+                        value="4"/>
+                    </menupopup>
+                  </menulist>
+                  <toolbarbutton class="jondofox-ref" popup="observatoryHelp"
+                           tooltiptext="&jondofox.contextHelp;"/> 
+                </box>
               </groupbox>
             </row>
 
@@ -318,6 +342,17 @@
             &jondofox.here.label;
           </html:a>. 
 	</description>
+      </vbox>
+    </menupopup>
+    <menupopup id "observatoryHelp">
+      <vbox class="jondofox-help">
+        <description>
+          &jondofox.dialogtab.options.observatory.help;
+          <html:a class="link"  
+	          onclick="contextHelp('observatory');">
+            &jondofox.here.label;
+          </html:a>. 
+        </description>
       </vbox>
     </menupopup>
   </popupset>

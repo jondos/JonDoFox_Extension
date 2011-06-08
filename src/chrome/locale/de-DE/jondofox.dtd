@@ -173,6 +173,12 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
+<!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">
+<!ENTITY jondofox.dialogtab.options.observatory.proxy "über einen Proxy">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "über JonDonym">
+<!ENTITY jondofox.dialogtab.options.observatory.tor "über Tor"> 
+<!ENTITY jondofox.dialogtab.options.observatory.always "immer">
+<!ENTITY jondofox.dialogtab.options.observatory.never "nie">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">
