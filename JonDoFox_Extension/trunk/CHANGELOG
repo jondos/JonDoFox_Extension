@@ -6,6 +6,8 @@ Changes in version 0.2.9 - 2011-06-xx
       observatory (see: https://www.eff.org/observatory) 
 
   Minor improvement:
+    * JonDoFox toolbar button is available (and automatically installed on
+      Firefox >= 4) now
     * vastly improved error page that comes uo if one wants to surf but JonDo
       is not yet available
     * disabled webgl.disabled due to security issues
