@@ -244,7 +244,35 @@ body[dir="rtl"] #brand {
 #jondofox-toolbar-button {
   list-style-image: url("chrome://jondofox/skin/jondos-24.png");
 }
-
 toolbar[iconsize="small"] #jondofox-toolbar-button {
   list-style-image: url("chrome://jondofox/skin/jondos-16.png");
+}
+
+#jondofox-toolbar-button[proxy="jondo"] {
+  list-style-image: url("chrome://jondofox/skin/jondos-24.png");
+}
+toolbar[iconsize="small"] #jondofox-toolbar-button[proxy="jondo"] {
+  list-style-image: url("chrome://jondofox/skin/jondos-16.png");
 } 
+
+#jondofox-toolbar-button[proxy="tor"] {
+  list-style-image: url("chrome://jondofox/skin/tor-24.png");
+}
+toolbar[iconsize="small"] #jondofox-toolbar-button[proxy="tor"] {
+  list-style-image: url("chrome://jondofox/skin/tor-16.png");
+}
+
+#jondofox-toolbar-button[proxy="custom"] {
+  list-style-image: url("chrome://jondofox/skin/custom-24.png");
+}
+toolbar[iconsize="small"] #jondofox-toolbar-button[proxy="custom"] {
+  list-style-image: url("chrome://jondofox/skin/custom-16.png");
+}
+
+#jondofox-toolbar-button[proxy="none"] {
+  list-style-image: url("chrome://jondofox/skin/noproxy-24.png");
+}
+
+toolbar[iconsize="small"] #jondofox-toolbar-button[proxy="none"] {
+  list-style-image: url("chrome://jondofox/skin/noproxy-16.png");
+}

@@ -298,41 +298,6 @@ function refresh() {
     // Get state, label and statusbar respectively
     var state = jdfManager.getState();
     var label = getLabel(state);
-    var tbButton = document.getElementById("jondofox-toolbar-button");
-    var navBar = document.getElementById("nav-bar");
-    if (label === jdfManager.STATE_NONE) {
-      if (navBar.iconsize === "small") { 
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/noproxy-16.png");');
-      } else {
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/noproxy-24.png");'); 
-      }
-    } else if (label === jdfManager.STATE_CUSTOM) {
-      if (navBar.iconsize === "small") { 
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/custom-16.png");');
-      } else {
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/custom-24.png");'); 
-      } 
-    } else if (label === jdfManager.STATE_TOR) {
-      if (navBar.iconsize === "small") { 
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/tor-16.png");');
-      } else {
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/tor-24.png");'); 
-      } 
-    } else if (label === jdfManager.STATE_JONDO) {
-      if (navBar.iconsize === "small") { 
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/jondo-16.png");');
-      } else {
-        tbButton.setAttribute("style",
-          'list-style-image: url("chrome://jondofox/skin/jondo-24.png");'); 
-      } 
-    }
     var statusbar = document.getElementById('jondofox-proxy-status');
     var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
     // Set the text color; if we have proxy state custom and an empty proxy
@@ -357,9 +322,27 @@ function refresh() {
     // Refresh context menu: Set the label of 'bypass-proxy'
     document.getElementById('bypass-proxy').label = jdfUtils.
        formatString("jondofox.contextmenu.bypass.label", [label]);
+    refreshToolbarButton();
   } catch (e) {
     log("refresh(): " + e);
   }
+}
+
+function refreshToolbarButton() {
+  var state = jdfManager.getState();
+  var label = getLabel(state);
+  var tbButton = document.getElementById("jondofox-toolbar-button");
+  if (tbButton) {
+    var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy'); 
+    tbButton.setAttribute("proxy", state);
+    tbButton.setAttribute("label", "Proxy: " + label); 
+    if (state == jdfManager.STATE_NONE || 
+        (state == jdfManager.STATE_CUSTOM && emptyCustomProxy)) {
+      tbButton.style.color = "#F00";
+    } else {
+      tbButton.style.color = "#000";
+    }  
+  }  
 }
 
 // Return false if state is NONE or CUSTOM with no valid proxy
@@ -630,6 +613,23 @@ function startJondoAgain(e) {
   }
 }
 
+function findToolbarIcon() {
+  if (typeof(gNavToolbox) == "undefined") {
+    return; 
+  }
+  var toolbox = gNavToolbox ? gNavToolbox.customizeChange /* 3.5+ */ : getNavToolbox().customizeChange /* 3.0.x */;
+  /* Save the original function, prefixed with our name in case other addons are doing the same thing */
+  getNavToolbox().jondofoxCustomizeChange = getNavToolbox().customizeChange;
+  /* Overwrite the property with our function */
+  getNavToolbox().customizeChange = function() {
+    if (document.getElementById("jondofox-toolbar-button")) {
+      refreshToolbarButton();
+    }
+    getNavToolbox.jondofoxCustomizeChange();
+  }    
+} 
+ 
+
 ///////////////////////////////////////////////////////////////////////////////
 // The method 'initWindow()' is called on the 'load' event + observers
 ///////////////////////////////////////////////////////////////////////////////
@@ -687,8 +687,10 @@ var overlayObserver = {
           // 'subject' implements nsIURI
           var uri = subject.QueryInterface(Ci.nsIURI);
           //log("uri.spec is " + uri.spec);
-          if (uri.spec == "chrome://jondofox/content/jondofox-guiff3.xul" || 
-	      uri.spec == "chrome://jondofox/content/jondofox-guiff4.xul" ) {          
+          if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
+            // Thanks to FoxyProxy for this idea for customizing the toolbar
+            // button automatically if it is added to the toolbar.
+            findToolbarIcon();
             // Overlay is ready --> refresh the GUI
 	    refresh();
             // Add observer to different preferences
@@ -816,11 +818,6 @@ var overlayObserver = {
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
 	      }
-	      // To be on the safe side...
-              var addonBar = document.getElementById("addon-bar");
-              if (addonBar && addonBar.collapsed) {
-	        addonBar.collapsed = false;
-              }
             }
             // Let's test whether the user starts with appropriate 
 	    // proxy-settings..
@@ -927,17 +924,8 @@ function initWindow() {
     // setTimeout(code, 800);
 
     // This should work unexceptionally if bug #330458 is fixed.
-    var versComp = Cc['@mozilla.org/xpcom/version-comparator;1'].
-	             getService(Ci.nsIVersionComparator);
-    // We have to load different overlays here as there is no statusbar anymore
-    // since FF 4.0b7pre.
-    if (versComp.compare(jdfManager.ff4Version, "4.0b7pre") >= 0) {
-      document.loadOverlay('chrome://jondofox/content/jondofox-guiff4.xul',
+    document.loadOverlay('chrome://jondofox/content/jondofox-gui.xul', 
                 overlayObserver);
-    } else {
-      document.loadOverlay('chrome://jondofox/content/jondofox-guiff3.xul', 
-                overlayObserver);
-    }
     var contextMenu = document.getElementById("contentAreaContextMenu");
     if (contextMenu) {
       contextMenu.addEventListener("popupshowing", 
