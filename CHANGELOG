@@ -23,6 +23,10 @@ Changes in version 0.2.9 - 2011-06-xx
     * set feed handler to "bookmarks" if the respective handler is set to 
       "reader" and the respective default handler to "client"
 
+  Bug fixing:
+    * fixed a bug in the request observer (some corner cases did not get
+      treated properly by our SafeCache and Referer spoofing logic due to it)
+
 Changes in version 0.2.8.4 - 2011-03-28
 
   Bug fixing:

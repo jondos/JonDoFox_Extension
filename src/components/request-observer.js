@@ -89,8 +89,12 @@ RequestObserver.prototype = {
       if (!notificationCallbacks) {
         log("We found no Notificationcallbacks!");
       } else {
-        domWin = notificationCallbacks.
-	      getInterface(CI.nsIDOMWindow).content;
+        try {
+          domWin = notificationCallbacks.
+	    getInterface(CI.nsIDOMWindow).content;
+        } catch (ex) {
+          log("nsIDOMWindow seems not to be avaiable here!");
+        }
       }
       // Perform safecache
       if (this.prefsHandler.
@@ -109,8 +113,6 @@ RequestObserver.prototype = {
           // It's an IP address
           baseDomain = channel.URI.hostPort;
         }       
-        log("Request (base domain): " + baseDomain);
-
         // ... the string to compare to
         try {
           // ... the value of the referer header
@@ -216,7 +218,7 @@ RequestObserver.prototype = {
       // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
-        log("The requested interface is not available!");
+        log("The requested interface is not available!" + e);
       } else {
         log("modifyRequest(): " + e);
       }
