@@ -237,7 +237,7 @@ function setCustomProxy() {
 // startup leading to an other default button.
 
 function isProxyDisabled() {
-  var disableJonDo;
+  var disableJonDo = null;
   if (prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
     if (jdfManager.getState() == jdfManager.STATE_NONE) {
       disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
@@ -251,7 +251,7 @@ function isProxyDisabled() {
           getString('jondofox.dialog.message.nocustomproxy'), 'proxy', true);
       }
     }
-    if (!disableJonDo) {
+    if (disableJonDo !== null && !disableJonDo) {
       setProxy('jondo');
     }
   }
@@ -299,6 +299,10 @@ function refresh() {
     var state = jdfManager.getState();
     var label = getLabel(state);
     var statusbar = document.getElementById('jondofox-proxy-status');
+    // No statusbar. Let's try the add-on bar...
+    if (!statusbar) { 
+      statusbar = document.getElementById('addon-bar'); 
+    }
     var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
     // Set the text color; if we have proxy state custom and an empty proxy
     // then change the text color as well...
@@ -310,7 +314,6 @@ function refresh() {
     }
     // Set the label to the statusbar
     statusbar.setAttribute('label', "Proxy: " + label);
-
     // Set the custom proxy label in the popup menu
     document.getElementById('custom-radio').label = getLabel(jdfManager.
                                                        STATE_CUSTOM);
@@ -329,6 +332,7 @@ function refresh() {
 }
 
 function refreshToolbarButton() {
+  log("Now we refresh the toolbar button...");
   var state = jdfManager.getState();
   var label = getLabel(state);
   var tbButton = document.getElementById("jondofox-toolbar-button");
@@ -628,6 +632,50 @@ function findToolbarIcon() {
     getNavToolbox.jondofoxCustomizeChange();
   }    
 } 
+
+function startupChecks() {
+  // Let's check if NoScript and Cookie Monster are installed
+  // and enabled. If not remind the user of the importance to do so 
+  // and load the NoScript (or Cookie Monster) homepage 
+  // if it is missing. We do this here using a flag because either
+  // (FF3) the window is not ready when we check it or (FF4) the
+  // callback returns so late.
+  log("Checking for NoScript and CM....."); 
+  if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
+    if (!jdfManager.isNoScriptInstalled) {
+      jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
+        jdfUtils.formatString('jondofox.dialog.message.necessaryExtension', 
+        ['NoScript']), 'update');
+      openPageNewTab("noScript");
+    } else if (!jdfManager.isNoScriptEnabled) {
+      jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
+        jdfUtils.formatString('jondofox.dialog.message.enableExtension',
+        ['NoScript']), 'update');
+    }
+  } 
+  // The user could have disabled the update warning already in the 
+  // NoScript popup (if that is missing or disabled). Thus, we check
+  // it here again.
+  if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) { 
+    if (!jdfManager.isCMInstalled) {
+      jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
+        jdfUtils.formatString('jondofox.dialog.message.necessaryExtension', 
+        ['Cookie Monster']), 'update');
+      openPageNewTab("cookieMonster"); 
+    } else if (!jdfManager.isCMEnabled) {
+      jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
+        jdfUtils.formatString('jondofox.dialog.message.enableExtension',
+        ['Cookie Monster']), 'update');
+    }
+  }
+  // Let's test whether the user starts with appropriate proxy-settings..
+  isProxyDisabled();
+  // If the user should update the profile and has not disabled the update
+  // warning, help her and show the JonDoFox homepage after startup
+  if (jdfManager.checkProfileUpdate()) {
+    openPageNewTab("homepage");
+  } 
+}
  
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -686,8 +734,8 @@ var overlayObserver = {
         try {
           // 'subject' implements nsIURI
           var uri = subject.QueryInterface(Ci.nsIURI);
-          //log("uri.spec is " + uri.spec);
-          if (uri.spec == "chrome://jondofox/content/jondofox-gui.xul") {
+          log("uri.spec is " + uri.spec);
+          if (uri.spec === "chrome://jondofox/content/jondofox-gui.xul") {
             // Thanks to FoxyProxy for this idea for customizing the toolbar
             // button automatically if it is added to the toolbar.
             findToolbarIcon();
@@ -726,8 +774,8 @@ var overlayObserver = {
 	      // Get the last version property
               var last_version = prefsHandler.
                 getStringPref('extensions.jondofox.last_version');
-              if (last_version !== jdfManager.VERSION || jdfManager.
-		newVersionDetected) {
+              if (jdfManager.newVersionDetected || last_version !== jdfManager.
+                    VERSION) {
                 log("New version detected, opening feature page ..");
 	        // Checking whether we have to open a new tab for about:jondofox
                 // and opening it.
@@ -741,42 +789,9 @@ var overlayObserver = {
               } 
 	    } 
 	    
-            // Let's check if NoScript and Cookie Monster are installed
-            // and enabled. If not remind the user of the importance to do so 
-            // and load the NoScript (or Cookie Monster) homepage 
-            // if it is missing. We do this here using a flag because either
-	    // (FF3) the window is not ready when we check it or (FF4) the
-	    // callback returns so late.
-            if (prefsHandler.
-                  getBoolPref('extensions.jondofox.update_warning')) {
-	      if (!jdfManager.isNoScriptInstalled) {
-                jdfUtils.showAlertCheck(jdfUtils.
-                  getString('jondofox.dialog.attention'), jdfUtils.
-                  formatString('jondofox.dialog.message.necessaryExtension', 
-                  ['NoScript']), 'update');
-                openPageNewTab("noScript");
-              }
-	      if (!jdfManager.isNoScriptEnabled) {
-	        jdfUtils.showAlertCheck(jdfUtils.
-                  getString('jondofox.dialog.attention'), jdfUtils.
-                  formatString('jondofox.dialog.message.enableExtension',
-                  ['NoScript']), 'update');
-              } 
-	      if (!jdfManager.isCMInstalled) {
-                jdfUtils.showAlertCheck(jdfUtils.
-                  getString('jondofox.dialog.attention'), jdfUtils.
-                  formatString('jondofox.dialog.message.necessaryExtension', 
-                  ['Cookie Monster']), 'update');
-                openPageNewTab("cookieMonster"); 
-              }
-	      if (!jdfManager.isCMEnabled) {
-	        jdfUtils.showAlertCheck(jdfUtils.
-                  getString('jondofox.dialog.attention'), jdfUtils.
-                  formatString('jondofox.dialog.message.enableExtension',
-                  ['Cookie Monster']), 'update');
-              }
-            }
-	    if (jdfManager.ff4) { 
+            setTimeout(function() {startupChecks()}, 100);
+
+            if (jdfManager.ff4) { 
               // First, setting the toolbar button on first startup...
               if (prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
                 prefsHandler.setBoolPref("extensions.jondofox.firstStart",
@@ -818,16 +833,6 @@ var overlayObserver = {
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
 	      }
-            }
-            // Let's test whether the user starts with appropriate 
-	    // proxy-settings..
-            isProxyDisabled();
-
-            // If the user should update the profile and has not disabled the 
-            // update warning, help her and show the JonDoFox homepage after 
-            // startup
-            if (jdfManager.checkProfileUpdate()) {
-	      openPageNewTab("homepage");
             }
 	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but

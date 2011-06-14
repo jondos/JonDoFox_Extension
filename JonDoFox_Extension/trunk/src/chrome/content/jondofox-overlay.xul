@@ -19,6 +19,44 @@
                    tooltiptext="&jondofox.dialog.preferences.title;"/>
   </toolbarpalette> 
 
+  <statusbar id="status-bar"> 
+    <!-- Indicate current status in the statusbar -->
+    <statusbarpanel id="jondofox-proxy-status" 
+	            style="cursor: pointer"
+                    insertbefore="statusbar-updates"
+                    label=""
+                    class="statusbarpanel-iconic-text"        
+                    popup="jondofox-proxy-list"
+		    context="jondofox-proxy-list"
+		    tooltiptext="&jondofox.statusbar.tooltiptext;" />
+  </statusbar>
+
+  <!-- Context menu entry for bypassing the proxy -->
+  <menupopup id="contentAreaContextMenu">
+    <menuitem id="bypass-proxy"
+              label=""
+              oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
+              insertafter="context-savelink" />
+    <menuitem id="tempEmailContext"
+              label="&jondofox.temp.email;"
+	      class="menuitem-iconic"
+	      image="chrome://jondofox/skin/mail-16x16.png" 
+              insertafter="context-delete"
+              oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
+              hidden="true" />
+    <!-- These are entries to add or remove URIs, currently hidden -->
+    <menuitem id="noproxy-add" 
+              label="&jondofox.contextmenu.noproxylist.add;"
+              oncommand="noProxyListAdd(gContextMenu.linkURL);"
+              insertbefore="context-savelink" 
+              hidden="true" />
+    <menuitem id="noproxy-remove" 
+              label="&jondofox.contextmenu.noproxylist.remove;"
+              oncommand="noProxyListRemove(gContextMenu.linkURL);"
+              insertbefore="context-savelink"
+              hidden="true" />
+  </menupopup> 
+
 <popupset>
   <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list">
