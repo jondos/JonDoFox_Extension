@@ -92,7 +92,7 @@ JDFManager.prototype = {
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
-  // Part of a hack to show reliable the about:jondofox page in FF4 after a new
+  // Part of a hack to show reliably the about:jondofox page in FF4 after a new
   // version was detected.
   newVersionDetected: false,
 
@@ -1567,6 +1567,7 @@ JDFManager.prototype = {
   // Return the value of the 'STATE_PREF'
   getState: function() {
     try {
+      log("Getting proxy state and it is: " + this.prefsHandler.getStringPref(this.STATE_PREF) + "\n");
       return this.prefsHandler.getStringPref(this.STATE_PREF);
     } catch (e) {
       log("getState(): " + e);

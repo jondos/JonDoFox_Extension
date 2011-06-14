@@ -264,7 +264,6 @@ RequestObserver.prototype = {
       var obsProxy = this.prefsHandler.
         getIntPref("extensions.jondofox.observatory.proxy"); 
       var proxyState = this.jdfManager.getState();
-      dump("Proxy: " + obsProxy + " state: " + proxyState + "\n");
       if ((obsProxy === 0 && proxyState === 'jondo') ||
           (obsProxy === 1 && proxyState === 'tor') ||
           (obsProxy === 2 && proxyState === 'custom') ||
