@@ -39,8 +39,8 @@
               insertafter="context-savelink" />
     <menuitem id="tempEmailContext"
               label="&jondofox.temp.email;"
-	      class="menuitem-iconic"
-	      image="chrome://jondofox/skin/mail-16x16.png" 
+              class="menuitem-iconic"
+              image="chrome://jondofox/skin/mail-16x16.png" 
               insertafter="context-delete"
               oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
               hidden="true" />
@@ -57,10 +57,10 @@
               hidden="true" />
   </menupopup> 
 
-<popupset>
-  <!-- Include a popup menu -->
+  <!-- XXX: Why do I need a <popupset> tag here?? -->
+  <popupset>
+    <!-- Include a popup menu -->
     <menupopup id="jondofox-proxy-list">
-      
       <!-- Anontest and configuration items -->
       <menuitem id="jondofox-anontest"
                 class="menuitem-iconic"
@@ -80,21 +80,27 @@
       <menuseparator />
 
       <!-- Use a radiogroup for the proxy list -->
-      <radiogroup id="jondofox-radiogroup">
-      <radio id="none-radio"
-             label="&jondofox.statusbar.noProxy;"
-             oncommand="setProxyNone();" />
+      <menuitem id="none-radio"
+                label="&jondofox.statusbar.noProxy;"
+                oncommand="setProxyNone();"
+                type="radio"
+                name="proxy-settings" />
       <menuseparator />
-      <radio id="custom-radio"
-             label=""
-             oncommand="setCustomProxy();" />
-      <radio id="tor-radio"
-             label="Tor"
-             oncommand="setProxy('tor');" />
-      <radio id="jondo-radio"
-             label="JonDo"
-             oncommand="setProxy('jondo');" />
-      </radiogroup>
+      <menuitem id="custom-radio"
+                label=""
+                oncommand="setCustomProxy();"
+                type="radio"
+                name="proxy-settings" />
+      <menuitem id="tor-radio"
+                label="Tor"
+                oncommand="setProxy('tor');"
+                type="radio"
+                name="proxy-settings" />
+      <menuitem id="jondo-radio"
+                label="JonDo"
+                oncommand="setProxy('jondo');"
+                type="radio"
+                name="proxy-settings" />
 
     </menupopup> 
   </popupset>
