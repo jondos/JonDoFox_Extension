@@ -317,11 +317,8 @@ function refresh() {
     // Set the custom proxy label in the popup menu
     document.getElementById('custom-radio').label = getLabel(jdfManager.
                                                        STATE_CUSTOM);
-        
-    // Get the radiogroup element and set 'selectedItem'
-    var radiogroupElement = document.getElementById("jondofox-radiogroup");
-    radiogroupElement.selectedItem = document.getElementById(state + "-radio");
-
+    // Checking the proper menuitem here.
+    document.getElementById(state + "-radio").setAttribute("checked", "true"); 
     // Refresh context menu: Set the label of 'bypass-proxy'
     document.getElementById('bypass-proxy').label = jdfUtils.
        formatString("jondofox.contextmenu.bypass.label", [label]);

@@ -26,6 +26,7 @@ Changes in version 0.2.9 - 2011-06-xx
   Bug fixing:
     * fixed a bug in the request observer (some corner cases did not get
       treated properly by our SafeCache and Referer spoofing logic due to it)
+    * corrected some glitches in JonDoFox' popup menu on Windows and MacOS
 
 Changes in version 0.2.8.4 - 2011-03-28
 
