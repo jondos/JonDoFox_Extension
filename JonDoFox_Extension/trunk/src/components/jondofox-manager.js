@@ -642,7 +642,6 @@ JDFManager.prototype = {
       if (this.jondoExecutable) {
         this.jondoProcess = CC["@mozilla.org/process/util;1"].
                            createInstance(CI.nsIProcess); 
-        this.isJondoInstalled = true; 
         // Now we are starting JonDo if it was not already started and the user
         // wants it to get started.
         if (this.prefsHandler.
@@ -698,6 +697,7 @@ JDFManager.prototype = {
         log("Found neither a JonDo nor a JAP key... Checking for a portable " +
           "version...");
         // We need to check that here as __LOCATION__ is undefined in FF4.
+        // No! Only if one does not use the unpack flag!?
 	if (typeof(__LOCATION__) !== "undefined") {
 	  component = __LOCATION__;
 	} else {
@@ -780,11 +780,15 @@ JDFManager.prototype = {
         if (homeDirFile.exists() && homeDirFile.isFile()) {
           var JAPPath = homeDirFile.path;
           this.jondoArgs = ["-jar", JAPPath, "--try"];
+        } else {
+          // No JAP.jar found, thus returning...
+          return;
         } 
       }
     } catch (e if e.name === "NS_ERROR_ALREADY_INITIALIZED") {
       log("Process as already initialized. Just restarting...");
     }
+    this.isJondoInstalled = true; 
     // We do not need to start the process twice.
     if (!this.jondoProcess.isRunning) {
       if (!this.ff4) {
