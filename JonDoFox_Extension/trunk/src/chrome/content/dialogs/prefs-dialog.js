@@ -59,7 +59,11 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_set_certpatrol').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
     // SSL observatory setting
-    document.getElementById('observatoryProxy').selectedIndex = 
+    var obProxy = document.getElementById('observatoryProxy');
+    var customProxy = obProxy.getItemAtIndex(2);
+    customProxy.setAttribute("label", customProxy.getAttribute("label") + " " +
+        window.opener.getLabel(jdfManager.STATE_CUSTOM)); 
+    obProxy.selectedIndex = 
         prefsHandler.getIntPref('extensions.jondofox.observatory.proxy');
     // Adblock setting
     //document.getElementById('checkbox_set_adblock').checked =
@@ -146,7 +150,7 @@ function loadPrefsCustomProxy(onLoad) {
     document.getElementById('ssl_port').value = 
         prefsHandler.getIntPref(prefix + 'ssl_port'); 
     document.getElementById('ftp_host').value = 
-        prefsHandler.getStringPref(prefix + 'ftp_host');
+      prefsHandler.getStringPref(prefix + 'ftp_host');
     document.getElementById('ftp_port').value = 
         prefsHandler.getIntPref(prefix + 'ftp_port');
     // The proxy dialog in FF4 has no Gopher settings anymore. Thus,
@@ -491,6 +495,11 @@ function onApply() {
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
       window.opener.setCustomProxy();
+      // Changing the label for the observatory custom-proxy menuitem
+      //var obProxy = document.getElementById('observatoryProxy');
+      //var customProxy = obProxy.getItemAtIndex(2);
+      //customProxy.setAttribute("label", customProxy.getAttribute("label") +
+      // " " + window.opener.getLabel(jdfManager.STATE_CUSTOM)); 
     } else {
       // Temporary Emails
       writePrefsTempEmail();

@@ -89,7 +89,7 @@
                 </box>
                 <box align="center">
                   <label value="&jondofox.dialogtab.options.observatory;"/>
-                  <menulist id="observatoryProxy">
+                  <menulist id="observatoryProxy" width="160px" crop="end">
                     <menupopup>
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.jondo;"/>
@@ -97,6 +97,8 @@
                         label="&jondofox.dialogtab.options.observatory.tor;"/> 
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.proxy;"/>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.alwaysproxy;"/>
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.always;"/>
                       <menuitem
