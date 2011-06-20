@@ -670,6 +670,7 @@ JDFManager.prototype = {
   },
 
   getJonDoPath: function() {
+  try {
     var subKey;
     var jondoPath;
     var component;
@@ -771,6 +772,9 @@ JDFManager.prototype = {
     } else {
       log("Found an unhandled operating system: " + xulRuntime.OS);
     } 
+  } catch(e) {
+    log("Error while locking for JonDo Executable: " + e);
+  }
   },
 
   startJondo : function() {
