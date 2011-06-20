@@ -7,7 +7,7 @@ ein sichereres Surfen im Internet erm&ouml;glichen.">
 wechseln">
 <!ENTITY jondofox.features.proxyswitcher.part1 "Wenn Sie mit einem anderen 
 (lokalen) Proxy als JonDo oder ganz ohne Proxy im Web surfen wollen, benutzen 
-Sie einfach die in JonDoFox (rechts unten) integrierte Schaltfl&#xe4;che">
+Sie einfach die in JonDoFox (links oben) integrierte Schaltfl&#xe4;che">
 <!ENTITY jondofox.features.proxyswitcher.part2 "um zwischen verschiedenen 
 Proxy-Konfigurationen bequem hin- und herzuschalten: ">
 <!ENTITY jondofox.features.proxyswitcher.picurl "chrome://jondofox/skin/jondofox_popup_de.png">
@@ -83,7 +83,7 @@ Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei
 Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell 
 vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
 <a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
-Man-in-the-middle-Angriffen</a> sch&uuml;tzt.">
+Man-in-the-middle-Angriffen</a> sch&uuml;tzt. Darüber hinaus gibt es die Möglichkeit, der Electronic Frontier Foundation (EFF) beim Sammeln von SSL-Zertifikaten zu helfen. Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu können JonDoFox-Nutzer nun leicht beitragen.">
 <!ENTITY jondofox.features.temp.email.head "Tempor&auml;re E-Mail-Adressen benutzen">
 <!ENTITY jondofox.features.temp.email1 "Mit dem JonDoFox haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und w&auml;hlen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
 <!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_de.png">
@@ -176,10 +176,11 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">
-<!ENTITY jondofox.dialogtab.options.observatory.proxy "über eigenen Proxy">
-<!ENTITY jondofox.dialogtab.options.observatory.jondo "über JonDonym">
+<!ENTITY jondofox.dialogtab.options.observatory.proxy "über">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "über JonDo">
 <!ENTITY jondofox.dialogtab.options.observatory.tor "über Tor"> 
 <!ENTITY jondofox.dialogtab.options.observatory.always "immer">
+<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "immer über Proxy">
 <!ENTITY jondofox.dialogtab.options.observatory.never "nie">
 <!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um letztendlich die Sicherheit beim Surfen auf HTTPS-Seiten und damit insgesamt im Web zu verbessern. Wenn Sie SSL-Zertifikate, auf die Sie beim Surfen treffen, an die EFF senden, unterstützen Sie dieses Projekt. Lesen Sie mehr dazu">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">

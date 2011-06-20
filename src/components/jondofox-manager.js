@@ -645,7 +645,8 @@ JDFManager.prototype = {
         // Now we are starting JonDo if it was not already started and the user
         // wants it to get started.
         if (this.prefsHandler.
-            getBoolPref('extensions.jondofox.autostartJonDo')) {
+            getBoolPref('extensions.jondofox.autostartJonDo') && 
+            this.getState() === 'jondo') {
           log("Starting JonDo...");
           this.startJondo();
         }
@@ -656,6 +657,13 @@ JDFManager.prototype = {
       // prefsMapper.map() in this function and should be more flexible and
       // transparent.
       this.setUserAgent(this.getState());
+      // For our new (2.5.2) profile we may disable the document fonts if the
+      // user wants it (they are disabled by default).
+      if (this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') == "2.5.2") {
+        this.prefsHandler.setIntPref('browser.display.use_document_fonts', this.
+          prefsHandler.getIntPref('extensions.jondofox.use_document_fonts'));
+      }
     } catch (e) {
       log("onUIStartup(): " + e);
     }

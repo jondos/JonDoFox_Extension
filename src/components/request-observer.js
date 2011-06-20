@@ -266,11 +266,15 @@ RequestObserver.prototype = {
       var obsProxy = this.prefsHandler.
         getIntPref("extensions.jondofox.observatory.proxy"); 
       var proxyState = this.jdfManager.getState();
+      // We can safely assume that a user wants to send the certs via a custom
+      // proxy even if there are no "valid" proxy values entered as she has
+      // already been asked whether she really wants to use such a "proxy".
       if ((obsProxy === 0 && proxyState === 'jondo') ||
           (obsProxy === 1 && proxyState === 'tor') ||
           (obsProxy === 2 && proxyState === 'custom') ||
-          (obsProxy === 3)) {
-        dump("Getting the Cert!\n");
+          (obsProxy === 3 && (proxyState === 'jondo' || proxyState === 'tor' ||
+           proxyState === 'custom')) ||
+          (obsProxy === 4)) {
         var certs = this.sslObservatory.getSSLCert(channel);
         if (certs) {
           var chainEnum = certs.getChain();
@@ -322,6 +326,7 @@ RequestObserver.prototype = {
       // Add observers
       observers.addObserver(this, "http-on-modify-request", false);
       observers.addObserver(this, "http-on-examine-response", false);
+      observers.addObserver(this, "cookie-changed", false);
       observers.addObserver(this, "quit-application-granted", false);
     } catch (ex) {
       log("Got exception: " + ex);
@@ -367,6 +372,15 @@ RequestObserver.prototype = {
 	  subject.QueryInterface(CI.nsIHttpChannel);
 	  this.onExamineResponse(subject);
 	  break;
+
+        case 'cookie-changed':
+          if (data === "cleared") {
+            this.sslObservatory.already_submitted = {};
+            this.logger.
+              warn("Cookies were cleared. Purging list of already submitted sites");
+          }
+          break;
+      return  
         default:
           log("!! Topic not handled --> " + topic);
           break;

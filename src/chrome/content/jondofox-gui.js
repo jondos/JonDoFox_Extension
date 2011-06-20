@@ -558,8 +558,12 @@ function errorPageCheck(e) {
       // We found the error page but no JonDo we could start therefore 
       // checking if we can safely whitelist and display the download links...
       var textNode;
-      var phintNode;
+      var pHintNode;
+      var pHintNode2;
+      var pHintNode3;
       var hintTextNode;
+      var hintTextNode2;
+      var imgNode;
       var refNode;
       var jondoURI;
       var downloadLink = contDoc.createElement("div");
@@ -589,8 +593,22 @@ function errorPageCheck(e) {
       hintTextNode = contDoc.createTextNode(jdfUtils.
         getString("jondofox.jondo.hint"));
       pHintNode.appendChild(hintTextNode); 
+      pHintNode2 = contDoc.createElement("p");
+      pHintNode2.setAttribute("id", "errorShortDescText");
+      hintTextNode2 = contDoc.createTextNode(jdfUtils.
+        getString("jondofox.jondo.hint2"));
+      pHintNode2.appendChild(hintTextNode2);
+      pHintNode3 = contDoc.createElement("p");
+      pHintNode3.setAttribute("id", "errorShortDescText"); 
+      imgNode = contDoc.createElement("img");
+      imgNode.setAttribute("src", jdfUtils.
+        getString("jondofox.jondo.hint.image"));
+      pHintNode3.appendChild(imgNode);
+      pHintNode3.setAttribute("style", "text-align:center;");
       downloadLink.appendChild(pHintNode); 
       downloadLink.appendChild(pNode);
+      downloadLink.appendChild(pHintNode2);
+      downloadLink.appendChild(pHintNode3);
       longContentElem.appendChild(downloadLink); 
 
       if (reqObs.firstRequest) {
@@ -797,7 +815,7 @@ var overlayObserver = {
                 if (navBar) {
                   var curSet = navBar.currentSet.split(",");
                   if (curSet.indexOf("jondofox-toolbar-button") === -1) {
-                    var pos = curSet.indexOf("urlbar-container") + 1 || curSet.
+                    var pos = curSet.indexOf("unified-back-forward-button") + 1 || curSet.
                       length;
                     var set = curSet.slice(0, pos).
                       concat("jondofox-toolbar-button").
@@ -830,6 +848,14 @@ var overlayObserver = {
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
 	      }
+              // Third, activating the add-on bar if the user wants that
+              if (prefsHandler.
+                  getBoolPref("extensions.jondofox.showAddon-bar")) {
+                var addonBar = document.getElementById("addon-bar");
+                if (addonBar && addonBar.collapsed) {
+	          addonBar.collapsed = false;
+                } 
+              }
             }
 	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but

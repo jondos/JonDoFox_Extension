@@ -1,11 +1,11 @@
 Changes in version 0.2.9 - 2011-06-xx
 
   New Feature:
-    * autostart of JonDo if it is not already started
     * implemented code to help the EFF regarding their distributed SSL
       observatory (see: https://www.eff.org/observatory) 
 
   Minor improvement:
+    * option to autostart of JonDo if it is not already started 
     * JonDoFox toolbar button is available (and automatically installed on
       Firefox >= 4) now
     * vastly improved error page that comes uo if one wants to surf but JonDo
