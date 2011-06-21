@@ -1,3 +1,9 @@
+Changes in version 0.2.9.1 - 2001-06-21
+
+  Bug fixing:
+    * removed dead link from the observatory context help
+    * fixed link error in start help page on MacOS
+
 Changes in version 0.2.9 - 2011-06-20
 
   New Feature:

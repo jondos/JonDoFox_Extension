@@ -392,8 +392,6 @@ function openPageNewTab(aString) {
       }
     } else if (aString === "observatory") {
       win.openUILinkIn("https://www.eff.org/observatory", 'tab'); 
-    } else if (aString === "spec") {
-      win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/HTTPSEverywhere/SSLObservatorySubmission", 'tab'); 
     } 
   } catch (e) {
     log("openPageNewTab(): " + e);
@@ -579,7 +577,7 @@ function errorPageCheck(e) {
           getString("jondofox.jondo.linux"); 
       } else if (jdfManager.os === "darwin") {
         jondoURI = jdfUtils.
-          getString("jondofox.jondo.darwin"); 
+          getString("jondofox.jondo.mac"); 
       } else {
         jondoURI = jdfUtils.
           getString("jondofox.jondo.unsupported"); 
