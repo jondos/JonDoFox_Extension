@@ -2,7 +2,10 @@ Changes in version 0.2.10 - XXXX-XX-XX
 
   Minor improvement:
     * added (correct) API link to observatory context help again
-    * better handling of context help dialogs if a link got clicked
+    * better handling of context help dialogs if a link got clicked (the popup
+      is closed in this case)
+    * no Accept-Charset header will be sent anymore as it is done in FF6 by 
+      default
 
 Changes in version 0.2.9.1 - 2011-06-21
 

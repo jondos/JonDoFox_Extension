@@ -216,6 +216,9 @@ RequestObserver.prototype = {
       // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
       // actors like NoScript or AdBlock are supporting it.
       // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
+      // We so not send the Accept-Charset header anymore due to FF6 doing this
+      // by default.
+      channel.setRequestHeader("Accept-Charset", null, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!" + e);
