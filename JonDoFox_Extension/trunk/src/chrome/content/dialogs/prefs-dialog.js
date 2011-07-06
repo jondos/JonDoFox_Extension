@@ -527,4 +527,8 @@ var openFilterListWindow = function() {
 
 var contextHelp = function(aString) {
   window.opener.openPageNewTab(aString);
+  // We need to delete the "API" part in "observatoryAPI" in order to be able
+  // to use the generic hidePopup() call.
+  aString = aString.replace("API", "");
+  document.getElementById(aString + "Help").hidePopup(); // hide the help popup
 } 

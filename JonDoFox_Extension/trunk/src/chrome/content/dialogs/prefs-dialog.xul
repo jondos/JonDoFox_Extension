@@ -336,8 +336,7 @@
           &jondofox.dialogtab.proxy.keepAlive.help;
 	  <html:a class="link"  
 	          onclick="contextHelp('keepAlive');">
-            &jondofox.here.label;
-          </html:a>. 
+            &jondofox.here.label;</html:a>. 
 	</description>
       </vbox>
     </menupopup>
@@ -347,6 +346,10 @@
           &jondofox.dialogtab.options.observatory.help;
           <html:a class="link"  
 	          onclick="contextHelp('observatory');">
+            &jondofox.here.label;</html:a>
+          &jondofox.and;
+          <html:a class="link"  
+                  onclick="contextHelp('observatoryAPI');">
             &jondofox.here.label;</html:a>.
         </description>
       </vbox>

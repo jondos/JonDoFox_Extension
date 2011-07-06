@@ -83,7 +83,10 @@ Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei
 Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell 
 vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
 <a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
-Man-in-the-middle-Angriffen</a> sch&uuml;tzt. Darüber hinaus gibt es die Möglichkeit, der Electronic Frontier Foundation (EFF) beim Sammeln von SSL-Zertifikaten zu helfen. Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu können JonDoFox-Nutzer nun leicht beitragen.">
+Man-in-the-middle-Angriffen</a> sch&uuml;tzt. Wenn Sie diese Funktion aktiviert lassen, wird die Datei CertPatrol.sqlite im Profil-Verzeichnis
+des JonDoFox angelegt. Diese Datenbank enth&auml;lt eine Liste der via HTTPS besuchten
+Webseiten und Informationen zu den dabei verwendeten SSL-Zertifikaten. Aus dieser Datenbank k&ouml;nnen keine Informationen von einem Webserver abgefragt werden.">
+<!ENTITY jondofox.features.ssl-observatory "Darüber hinaus gibt es die Möglichkeit, der Electronic Frontier Foundation (EFF) beim Sammeln von SSL-Zertifikaten zu helfen. Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu können JonDoFox-Nutzer nun leicht beitragen.">
 <!ENTITY jondofox.features.temp.email.head "Tempor&auml;re E-Mail-Adressen benutzen">
 <!ENTITY jondofox.features.temp.email1 "Mit dem JonDoFox haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und w&auml;hlen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
 <!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_de.png">
