@@ -392,7 +392,9 @@ function openPageNewTab(aString) {
       }
     } else if (aString === "observatory") {
       win.openUILinkIn("https://www.eff.org/observatory", 'tab'); 
-    } 
+    } else if (aString === "observatoryAPI") {
+      win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/doc/HTTPSEverywhere/SSLObservatorySubmission", 'tab'); 
+    }
   } catch (e) {
     log("openPageNewTab(): " + e);
   }

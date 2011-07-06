@@ -80,7 +80,10 @@ dialog is shown to the user indicating whether there could be something wrong
 with an updated certificate, thus supporting the user to avoid information 
 leaks due to faked certificates and 
 <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
-man-in-the-middle-attacks</a>. We furthermore included a way to help the Electronic Frontier Foundation (EFF) to collect SSL certificates. That effort aims at making the web a safer place in the long run and may be supported very easily by JonDoFox users now.">
+man-in-the-middle-attacks</a>. If you keep this feature enabled a database, CertPatrol.sqlite, is created in the
+directory of your JonDoFox profile. It stores all websites visited via HTTPS together with some information about the SSL certificate of the web server. A web server has no
+means to get that saved data.">
+<!ENTITY jondofox.features.ssl-observatory "We furthermore included a way to help the Electronic Frontier Foundation (EFF) to collect SSL certificates. That effort aims at making the web a safer place in the long run and may be supported very easily by JonDoFox users now.">
 <!ENTITY jondofox.features.temp.email.head "Getting temporary E-Mail addresses">
 <!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity to get temporary E-mail addresses conveniently. In order to do so right-click on a text field in which you want to get the E-mail address and choose the following entry out of the menu popping up:"> 
 <!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_en.png">

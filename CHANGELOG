@@ -1,4 +1,10 @@
-Changes in version 0.2.9.1 - 2001-06-21
+Changes in version 0.2.10 - XXXX-XX-XX
+
+  Minor improvement:
+    * added (correct) API link to observatory context help again
+    * better handling of context help dialogs if a link got clicked
+
+Changes in version 0.2.9.1 - 2011-06-21
 
   Bug fixing:
     * removed dead link from the observatory context help
