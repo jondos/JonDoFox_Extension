@@ -87,19 +87,31 @@ SafeCache.prototype = {
   },
 
   safeCache: function(channel) {
-    var parent = channel.referrer;
+   var parent = null;
+     if (channel.notificationCallbacks) {
+       try {
+         var wind = channel.notificationCallbacks.QueryInterface(
+           CI.nsIInterfaceRequestor).getInterface(CI.nsIDOMWindow);
+            parent = wind.window.top.location;
+        } catch(e) {
+          log("||||||||||SSC: Error while obtaining the Window!" + e);
+        }
+        log("||||||||||SSC: Parent "+parent+" for "+ channel.URI.spec);
+    } 
     if (channel.documentURI && channel.documentURI === channel.URI) {
       parent = null;  // first party interaction
     }
     // Same-origin policy
-    if (parent && parent.host !== channel.URI.host) {
+    if (parent && parent.hostname !== channel.URI.host) {
       log("||||||||||SSC: Segmenting " + channel.URI.host + 
                " content loaded by " + parent.host);
       this.setCacheKey(channel, parent.host);
-    } else if(this.readCacheKey(channel.cacheKey)) {
-      this.setCacheKey(channel, channel.URI.host);
     } else {
-      log("||||||||||SSC: POST data detected; leaving cache key unchanged.");
+      if (!this.readCacheKey(channel.cacheKey)) {
+        this.setCacheKey(channel, channel.URI.host);
+      } else {
+        log("||||||||||SSC: Leaving cache key unchanged.");
+      }
     }
 
     // Third-party blocking policy
@@ -107,7 +119,7 @@ SafeCache.prototype = {
       case this.ACCEPT_COOKIES: 
         break;
       case this.NO_FOREIGN_COOKIES: 
-        if(parent && parent.host !== channel.URI.host) {
+        if(parent && parent.hostname !== channel.URI.host) {
           log("||||||||||SSC: Third party cache blocked for " +
                channel.URI.spec + " content loaded by " + parent.spec);
           this.bypassCache(channel);
@@ -134,8 +146,8 @@ SafeCache.prototype = {
     var oldData = this.readCacheKey(channel.cacheKey);
     var newKey = this.newCacheKey(this.getHash(str) + oldData);
     channel.cacheKey = newKey;
-    //log("||||||||||SSC: Set cache key to hash(" + str + ") = " + 
-     //         newKey.data + "\n   for " + channel.URI.spec + "\n");
+    log("||||||||||SSC: Set cache key to hash(" + str + ") = " + 
+      newKey.data + "\n   for " + channel.URI.spec + "\n");
   },
 
   // Read the integer data contained in a cache key

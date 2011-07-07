@@ -6,6 +6,7 @@ Changes in version 0.2.10 - XXXX-XX-XX
       is closed in this case)
     * no Accept-Charset header will be sent anymore as it is done in FF6 by 
       default
+    * enhanced SafeCache logic
 
 Changes in version 0.2.9.1 - 2011-06-21
 
