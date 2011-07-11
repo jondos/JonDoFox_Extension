@@ -105,7 +105,7 @@ SafeCache.prototype = {
     if (parent && parent.hostname !== channel.URI.host) {
       log("||||||||||SSC: Segmenting " + channel.URI.host + 
                " content loaded by " + parent.host);
-      this.setCacheKey(channel, parent.host);
+      this.setCacheKey(channel, parent.hostname);
     } else {
       if (!this.readCacheKey(channel.cacheKey)) {
         this.setCacheKey(channel, channel.URI.host);
