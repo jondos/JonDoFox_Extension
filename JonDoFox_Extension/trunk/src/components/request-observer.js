@@ -101,7 +101,7 @@ RequestObserver.prototype = {
 	    getBoolPref('extensions.jondofox.stanford-safecache_enabled')) {
 	channel.QueryInterface(CI.nsIHttpChannelInternal);
         channel.QueryInterface(CI.nsICachingChannel);
-        this.safeCache.safeCache(channel); 
+        this.safeCache.safeCache(channel, notificationCallbacks); 
       }
 
       // Forge the referrer if necessary
@@ -122,6 +122,9 @@ RequestObserver.prototype = {
           refDomain = oldRef.split("/", 3)[2];
           //log("Referrer (domain): " + refDomain);  
           // Take a substring with the length of the base domain for comparison
+          // TODO: How should we handle ports here? Currently, they are ignored
+          // and it may happen that we compare tu-dresden.de to dresden.de:80
+          // not sending a Referer but surfing to tu-dresden.de:80 though...
           suffix = refDomain.substr(
               refDomain.length - baseDomain.length, refDomain.length);
           log("Comparing " + baseDomain + " to " + suffix);

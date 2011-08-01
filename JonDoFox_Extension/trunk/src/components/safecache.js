@@ -86,18 +86,21 @@ SafeCache.prototype = {
     this.converter.charset = "UTF-8"; 
   },
 
-  safeCache: function(channel) {
+  safeCache: function(channel, notificationCallbacks) {
    var parent = null;
-     if (channel.notificationCallbacks) {
+     if (notificationCallbacks) {
        try {
-         var wind = channel.notificationCallbacks.QueryInterface(
+         var wind = notificationCallbacks.QueryInterface(
            CI.nsIInterfaceRequestor).getInterface(CI.nsIDOMWindow);
             parent = wind.window.top.location;
         } catch(e) {
           log("||||||||||SSC: Error while obtaining the Window!" + e);
         }
         log("||||||||||SSC: Parent "+parent+" for "+ channel.URI.spec);
-    } 
+    } else {
+      dump("No Channel notification callbacks for: " + channel.URI.spec + "\n"); 
+      dump("Assuming first party...\n");
+    }
     if (channel.documentURI && channel.documentURI === channel.URI) {
       parent = null;  // first party interaction
     }
