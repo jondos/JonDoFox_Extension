@@ -10,7 +10,6 @@ const Cu = Components.utils;
 var sslObservatory = {
 
   jdfManager : null,
-  compatJSON : null,
   root_ca_hashes : null,
   logger : null,
   client_asn : -1,
@@ -27,7 +26,6 @@ var sslObservatory = {
           getService().wrappedJSObject;
     this.prefsHandler = Cc['@jondos.de/preferences-handler;1'].
           getService().wrappedJSObject;
-    this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
     this.logger = this.jdfManager.Log4Moz.repository.
         getLogger("JonDoFox Observatory");
     this.logger.level = this.jdfManager.Log4Moz.Level["Warn"]; 
@@ -159,8 +157,8 @@ var sslObservatory = {
     var reqParams = [];
     reqParams.push("domain=" + domain);
     reqParams.push("server_ip=-1");
-    reqParams.push("fplist=" + this.compatJSON.encode(fps));
-    reqParams.push("certlist=" + this.compatJSON.encode(base64Certs));
+    reqParams.push("fplist=" + JSON.stringify(fps));
+    reqParams.push("certlist=" + JSON.stringify(base64Certs));
     reqParams.push("client_asn=" + this.client_asn); 
     reqParams.push("private_opt_in=0");
 

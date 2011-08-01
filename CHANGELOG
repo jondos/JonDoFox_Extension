@@ -8,6 +8,8 @@ Changes in version 0.2.10 - XXXX-XX-XX
       default
     * enhanced SafeCache logic
     * new Tor User Agent
+    * exchanged methods to handle JSON due to 
+      https://bugzilla.mozilla.org/show_bug.cgi?id=645922 
 
 Changes in version 0.2.9.1 - 2011-06-21
 
