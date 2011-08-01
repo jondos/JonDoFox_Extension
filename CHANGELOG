@@ -11,6 +11,11 @@ Changes in version 0.2.10 - XXXX-XX-XX
     * exchanged methods to handle JSON due to 
       https://bugzilla.mozilla.org/show_bug.cgi?id=645922 
 
+  Bug fixes:
+    * removing port values now before comparing the Referer URL with the
+      one actually surfed in order to decide whether to spoof the Referer or
+      not
+
 Changes in version 0.2.9.1 - 2011-06-21
 
   Bug fixing:

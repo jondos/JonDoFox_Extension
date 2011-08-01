@@ -120,6 +120,9 @@ RequestObserver.prototype = {
           // Cut off the path from the referer
           log("Referrer (unmodified): " + oldRef);
           refDomain = oldRef.split("/", 3)[2];
+          // We have to make sure that no port value interferes with the
+          // comparison.
+          refDomain = refDomain.replace(/(?::\d+)/, "");
           //log("Referrer (domain): " + refDomain);  
           // Take a substring with the length of the base domain for comparison
           // TODO: How should we handle ports here? Currently, they are ignored
