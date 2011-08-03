@@ -125,9 +125,6 @@ RequestObserver.prototype = {
           refDomain = refDomain.replace(/(?::\d+)/, "");
           //log("Referrer (domain): " + refDomain);  
           // Take a substring with the length of the base domain for comparison
-          // TODO: How should we handle ports here? Currently, they are ignored
-          // and it may happen that we compare tu-dresden.de to dresden.de:80
-          // not sending a Referer but surfing to tu-dresden.de:80 though...
           suffix = refDomain.substr(
               refDomain.length - baseDomain.length, refDomain.length);
           log("Comparing " + baseDomain + " to " + suffix);
@@ -222,7 +219,7 @@ RequestObserver.prototype = {
       // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
       // actors like NoScript or AdBlock are supporting it.
       // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
-      // We so not send the Accept-Charset header anymore due to FF6 doing this
+      // We do not send the Accept-Charset header anymore due to FF6 doing this
       // by default.
       channel.setRequestHeader("Accept-Charset", null, false);
     } catch (e) {
