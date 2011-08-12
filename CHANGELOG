@@ -1,5 +1,8 @@
 Changes in version 0.2.10 - XXXX-XX-XX
 
+  New Feature: 
+    * Mitigating tracking risks related to HTTP Authentication
+
   Minor improvement:
     * added (correct) API link to observatory context help again
     * better handling of context help dialogs if a link got clicked (the popup
