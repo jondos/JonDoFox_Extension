@@ -4,6 +4,8 @@ Changes in version 0.2.10 - XXXX-XX-XX
     * Mitigating tracking risks related to HTTP Authentication
 
   Minor improvement:
+    * enhanced confusing error page that shows up while retrieving TLS content
+      without being connected to a cascade
     * added (correct) API link to observatory context help again
     * better handling of context help dialogs if a link got clicked (the popup
       is closed in this case)
