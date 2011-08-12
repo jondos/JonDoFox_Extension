@@ -519,10 +519,72 @@ function openJDFFeaturePage() {
   }
 }
 
+function HTMLParser(aHTMLString){
+  var html = document.implementation.
+    createDocument("http://www.w3.org/1999/xhtml", "html", null),
+    body = document.createElementNS("http://www.w3.org/1999/xhtml", "body"),
+    head = document.createElementNS("http://www.w3.org/1999/xhtml", "head");
+  html.documentElement.appendChild(head);
+  html.documentElement.appendChild(body);
+
+  head.appendChild(Components.classes["@mozilla.org/feed-unescapehtml;1"]
+    .getService(Components.interfaces.nsIScriptableUnescapeHTML)
+    .parseFragment(aHTMLString, false, null, head)); 
+
+  body.appendChild(Components.classes["@mozilla.org/feed-unescapehtml;1"]
+    .getService(Components.interfaces.nsIScriptableUnescapeHTML)
+    .parseFragment(aHTMLString, false, null, body));
+
+  return html;
+}
+
 function errorPageCheck(e) {
   var contDoc = window.content.document;
   if (contDoc.documentURI.indexOf("about:neterror?e=proxyConnectFailure") > 
       -1) {
+    // If we had a TLS request we would get an proxyConnectFailure error as
+    // well if we just had disabled JonDo. The resulting error page is probably
+    // confusing for users. We, therefore, try to request the site over plain
+    // HTTP. If we succeeded we show the usual JonDo errorpage but rewrite the
+    // links to HTTPS. First let's check for a TLS request.
+    var reqURL = gURLBar.value;
+    if (reqURL.indexOf("https://") === 0) {
+      // We have to check whether JonDo is really disabled or not loaded
+      var request = new XMLHttpRequest();
+      request.onreadystatechange = function(aEvt) {
+        if (request.readyState === 4) {
+          if (request.status === 202) {
+            // Got the JonDo Error page.
+            // TODO: Why has the head element the same content as the body
+            // element? Maybe the simple parser used in HTMLParser cannot parse
+            // head elements and takes therefore the content of a body element
+            // as well?
+            try {
+              var DOMPars = HTMLParser(request.responseText);
+              var aElems = DOMPars.getElementsByTagName("a");
+              for (let i = 0; i < aElems.length; i++) {
+                aElems[i].setAttribute("href", gURLBar.value);
+              }  
+              var titleElem = contDoc.createElement("title");
+              var titleText = contDoc.createTextNode("JAP/JonDo");
+              titleElem.appendChild(titleText);
+              DOMPars.getElementsByTagName("head")[0].appendChild(titleElem);
+              var headElem = contDoc.getElementsByTagName("head")[0];
+              var bodyElem = contDoc.getElementsByTagName("body")[0];
+              contDoc.documentElement.replaceChild(DOMPars.firstChild.
+                firstChild, headElem);
+              contDoc.documentElement.replaceChild(DOMPars.firstChild.
+                firstChild, bodyElem);
+            } catch (e) {
+              log("Error while parsing the HTML and modifying the DOm: " + e);
+            }
+            return;
+          }
+        }
+      }
+      request.open("GET", reqURL.replace("https://", "http://"), true);
+      request.send(null);
+    }
     var longContentElem = contDoc.getElementById("errorLongContent"); 
     if (jdfManager.isJondoInstalled) { 
       if (!jdfManager.jondoProcess.isRunning) {
