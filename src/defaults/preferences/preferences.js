@@ -66,12 +66,12 @@ pref("extensions.jondofox.tor.ssl_port", 0);
 // Useragent
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
-pref("extensions.jondofox.jondo.appversion_override", "5.0 (Windows; en-US)");
+pref("extensions.jondofox.jondo.appversion_override", "5.0 (Windows)");
 pref("extensions.jondofox.jondo.buildID_override", "0");
 pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.jondo.platform_override", "Win32");
-pref("extensions.jondofox.jondo.productsub_override", "20110420");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.17) Gecko/20110420 Firefox/3.6.17");
+pref("extensions.jondofox.jondo.productsub_override", "20100101");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:6.0) Gecko/20100101 Firefox/6.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 
