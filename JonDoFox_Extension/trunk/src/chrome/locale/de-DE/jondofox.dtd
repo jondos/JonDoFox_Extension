@@ -60,14 +60,17 @@ zwischen verschiedenen User Agents zu w&auml;hlen:">
 <!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_de.png">
 <!ENTITY jondofox.features.safecache.head "Schutz vor Cacheangriffen">
 <!ENTITY jondofox.features.safecache "Neben dem Versuch, aus dem Referer, dem 
-User Agent und anderen HTTP Headern Informationen &uuml;ber den Nutzer zu 
+User Agent und anderen HTTP-Headern Informationen &uuml;ber den Nutzer zu 
 gewinnen, gibt es noch die M&ouml;glichkeit, den Cache des Browsers f&uuml;r 
 Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
 Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
 installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
 SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung 
-integriert. Im JonDoFox-Einstellungsmen&uuml; findet sich ein entsprechender 
-Hinweis darauf:">
+integriert.<br/> Dar&uuml;ber hinaus sch&uuml;tzt JonDoFox vor Versuchen, den
+Nutzer mit Hilfe von HTTP-Authentifikationsdaten zu verfolgen. Dazu werden
+sowohl die spezifischen Nutzerdaten, die an Drittseiten gesendet als auch von
+ihnen empfangen werden, herausgefiltert. Im JonDoFox-Einstellungsmen&uuml;
+findet sich ein entsprechender Hinweis darauf:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
 <!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
 gef&auml;lschten SSL-Zertifikaten">
@@ -175,7 +178,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.options.header "Header-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.referrer "Aktiviere Referer-Management">
 <!ENTITY jondofox.dialogtab.options.cache "Cache-Einstellungen">
-<!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache">
+<!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">
