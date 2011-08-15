@@ -244,7 +244,34 @@ RequestObserver.prototype = {
   examineResponse: function(channel) {
     var URI;
     var URIplain;
+    var notificationCallbacks;
+    var wind;
+    var parent;
+    // The HTTP Auth tracking protection on the response side.
+    // TODO: General method for the following code as safecache needs it as
+    // well!
     try {
+      notificationCallbacks = 
+          channel.notificationCallbacks ? channel.notificationCallbacks : 
+             channel.loadGroup.notificationCallbacks;
+      if (notificationCallbacks) {
+        wind = notificationCallbacks.QueryInterface(CI.nsIInterfaceRequestor).
+          getInterface(CI.nsIDOMWindow);
+        parent = wind.window.top.location; 
+      } else {
+        log("We found no Notificationcallbacks examining the response!"); 
+      }
+      if (channel.documentURI && channel.documentURI === channel.URI) {
+        parent = null;  // first party interaction
+      }
+      if (parent && parent.hostname !== channel.URI.host) {  
+        try {
+          if (channel.getResponseHeader("WWW-Authenticate")) {
+            channel.setResponseHeader("WWW-Authenticate", null, false);
+          }
+        } catch (e) {} 
+      }
+
       // We are looking for URL's which are on the noProxyList first. The
       // reason is if there occurred a redirection to a different URL it is
       // not set on the noProxyList as well. Thus, it can happen that the user

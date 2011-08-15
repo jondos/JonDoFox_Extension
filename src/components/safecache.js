@@ -92,7 +92,7 @@ SafeCache.prototype = {
        try {
          var wind = notificationCallbacks.QueryInterface(
            CI.nsIInterfaceRequestor).getInterface(CI.nsIDOMWindow);
-            parent = wind.window.top.location;
+         parent = wind.window.top.location;
         } catch(e) {
           log("||||||||||SSC: Error while obtaining the Window!" + e);
         }
@@ -119,9 +119,7 @@ SafeCache.prototype = {
           channel.setRequestHeader("Pragma", null, false);
           channel.setRequestHeader("Cache-Control", null, false);
         }
-      } catch (e) {
-        log("Error while deleting the Auth header: " + e);
-      }
+      } catch (e) { }
     } else {
       if (!this.readCacheKey(channel.cacheKey)) {
         this.setCacheKey(channel, channel.URI.host);
