@@ -113,13 +113,12 @@ SafeCache.prototype = {
       try {
         // We reset the Pragma and the Cache-Control header as well here.
         // Otherwise we would get a "no-cache, no-cache" value which could
-        // help getting the user out of its anon group. BUT: That is still
-        // possible (only slightly more difficult for an attacker) using some
-        // timing attack as the user is prompted for the credentials after we
-        // deleted the authorization header.
-        channel.setRequestHeader("Authorization", null, false);
-        channel.setRequestHeader("Pragma", null, false);
-        channel.setRequestHeader("Cache-Control", null, false);
+        // help getting the user out of its anon group.
+        if (channel.getRequestHeader("Authorization")) {
+          channel.setRequestHeader("Authorization", null, false);
+          channel.setRequestHeader("Pragma", null, false);
+          channel.setRequestHeader("Cache-Control", null, false);
+        }
       } catch (e) {
         log("Error while deleting the Auth header: " + e);
       }

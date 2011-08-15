@@ -657,10 +657,10 @@ JDFManager.prototype = {
       // prefsMapper.map() in this function and should be more flexible and
       // transparent.
       this.setUserAgent(this.getState());
-      // For our new (2.5.2) profile we may disable the document fonts if the
+      // For our new (2.5.3) profile we may disable the document fonts if the
       // user wants it (they are disabled by default).
       if (this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') == "2.5.2") {
+               'extensions.jondofox.profile_version') == "2.5.3") {
         this.prefsHandler.setIntPref('browser.display.use_document_fonts', this.
           prefsHandler.getIntPref('extensions.jondofox.use_document_fonts'));
       }
@@ -1034,6 +1034,8 @@ JDFManager.prototype = {
                'extensions.jondofox.profile_version') !== "2.5.1" &&
            this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== "2.5.2" && 
+          this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.3" &&  
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.

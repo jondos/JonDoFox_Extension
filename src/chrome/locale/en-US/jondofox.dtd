@@ -64,7 +64,10 @@ web pages saved in the cache are loaded faster than the same, non-cached ones.
 Or she might try to set so-called cache cookies to identify a particular user 
 across different domains. In order to better protect our users against this 
 kind of attack we included the slightly modified code of the SafeCache 
-extension into JonDoFox. In the JonDoFox settings panel you 
+extension into JonDoFox.<br/> Additionally, the authentication cache of
+Firefox might get exploited to track users across several different domains. In
+order to defend against this kind of threat we discard authentication
+information sent by/to 3rd party elements. In the JonDoFox settings panel you 
 will find a corresponding hint:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_en.png">
 <!ENTITY jondofox.features.certpatrol.head "Detecting faked SSL-Certificates">
@@ -165,7 +168,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional help 
 <!ENTITY jondofox.dialogtab.options.header "Headers">
 <!ENTITY jondofox.dialogtab.options.referrer "Activate Referer management">
 <!ENTITY jondofox.dialogtab.options.cache "Cache">
-<!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache">
+<!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache and HTTP Authentication protection">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Settings">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Activate Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Send SSL certificates to the SSL Observatory">
