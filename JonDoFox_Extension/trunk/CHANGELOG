@@ -4,6 +4,7 @@ Changes in version 0.2.10 - XXXX-XX-XX
     * Mitigating tracking risks related to HTTP Authentication
 
   Minor improvement:
+    * new User Agent
     * enhanced confusing error page that shows up while retrieving TLS content
       without being connected to a cascade
     * added (correct) API link to observatory context help again
