@@ -114,12 +114,12 @@ SafeCache.prototype = {
         // We reset the Pragma and the Cache-Control header as well here.
         // Otherwise we would get a "no-cache, no-cache" value which could
         // help getting the user out of its anon group.
-        if (channel.getRequestHeader("Authorization")) {
+        if (channel.getRequestHeader("Authorization") !== null) {
           channel.setRequestHeader("Authorization", null, false);
           channel.setRequestHeader("Pragma", null, false);
           channel.setRequestHeader("Cache-Control", null, false);
         }
-      } catch (e) { }
+      } catch (e) {log("Exception!!!" + e)}
     } else {
       if (!this.readCacheKey(channel.cacheKey)) {
         this.setCacheKey(channel, channel.URI.host);

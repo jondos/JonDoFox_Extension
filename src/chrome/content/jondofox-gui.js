@@ -524,12 +524,10 @@ function HTMLParser(aHTMLString){
     createDocument("http://www.w3.org/1999/xhtml", "html", null),
     body = document.createElementNS("http://www.w3.org/1999/xhtml", "body"),
     head = document.createElementNS("http://www.w3.org/1999/xhtml", "head");
+  // Appending the child her, no parsing as the parseFragment method below does
+  // not parse head elements; we add the content later.
   html.documentElement.appendChild(head);
   html.documentElement.appendChild(body);
-
-  head.appendChild(Components.classes["@mozilla.org/feed-unescapehtml;1"]
-    .getService(Components.interfaces.nsIScriptableUnescapeHTML)
-    .parseFragment(aHTMLString, false, null, head)); 
 
   body.appendChild(Components.classes["@mozilla.org/feed-unescapehtml;1"]
     .getService(Components.interfaces.nsIScriptableUnescapeHTML)
@@ -550,20 +548,26 @@ function errorPageCheck(e) {
     var reqURL = gURLBar.value;
     if (reqURL.indexOf("https://") === 0) {
       // We have to check whether JonDo is really disabled or not loaded
+      reqURL = reqURL.replace("https://", "http://");
+      // We just want to send the domain for safety's sake, thus...
+      if (reqURL.indexOf("/", 7) !== -1) {
+        reqURL = reqURL.slice(0, reqURL.indexOf("/", 7)); 
+        log("reqURL is: " + reqURL);
+      }
       var request = new XMLHttpRequest();
       request.onreadystatechange = function(aEvt) {
         if (request.readyState === 4) {
           if (request.status === 202) {
             // Got the JonDo Error page.
-            // TODO: Why has the head element the same content as the body
-            // element? Maybe the simple parser used in HTMLParser cannot parse
-            // head elements and takes therefore the content of a body element
-            // as well?
             try {
               var DOMPars = HTMLParser(request.responseText);
               var aElems = DOMPars.getElementsByTagName("a");
               for (let i = 0; i < aElems.length; i++) {
-                aElems[i].setAttribute("href", gURLBar.value);
+                // We just add the proper http link if the a elements have the
+                // correct id.
+                if (aElems[i].getAttribute("id") === "JonDoProxy") {
+                  aElems[i].setAttribute("href", gURLBar.value);
+                }
               }  
               var titleElem = contDoc.createElement("title");
               var titleText = contDoc.createTextNode("JAP/JonDo");
@@ -582,7 +586,10 @@ function errorPageCheck(e) {
           }
         }
       }
-      request.open("GET", reqURL.replace("https://", "http://"), true);
+      request.open("GET", reqURL, true);
+      // For safety's sake...
+      request.setRequestHeader("Cookie", null);
+      request.setRequestHeader("Authorization", null); 
       request.send(null);
     }
     var longContentElem = contDoc.getElementById("errorLongContent"); 
