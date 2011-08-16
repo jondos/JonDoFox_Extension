@@ -305,26 +305,29 @@ RequestObserver.prototype = {
       // The HTTP Auth tracking protection on the response side.
       // TODO: General method for the following code as safecache needs it as
       // well! 
-      notificationCallbacks = 
+      if (this.prefsHandler.
+        getBoolPref('extensions.jondofox.stanford-safecache_enabled')) { 
+        notificationCallbacks = 
           channel.notificationCallbacks ? channel.notificationCallbacks : 
              channel.loadGroup.notificationCallbacks;
-      if (notificationCallbacks) {
-        wind = notificationCallbacks.QueryInterface(CI.nsIInterfaceRequestor).
-          getInterface(CI.nsIDOMWindow);
-        parent = wind.window.top.location; 
-      } else {
-        log("We found no Notificationcallbacks examining the response!"); 
+        if (notificationCallbacks) {
+          wind = notificationCallbacks.QueryInterface(CI.nsIInterfaceRequestor).
+            getInterface(CI.nsIDOMWindow);
+          parent = wind.window.top.location; 
+        } else {
+          log("We found no Notificationcallbacks examining the response!"); 
+        }
+        if (channel.documentURI && channel.documentURI === channel.URI) {
+          parent = null;  // first party interaction
+        }
+        if (parent && parent.hostname !== channel.URI.host) {  
+          try {
+            if (channel.getResponseHeader("WWW-Authenticate")) {
+              channel.setResponseHeader("WWW-Authenticate", null, false);
+            }
+          } catch (e) {} 
+        } 
       }
-      if (channel.documentURI && channel.documentURI === channel.URI) {
-        parent = null;  // first party interaction
-      }
-      if (parent && parent.hostname !== channel.URI.host) {  
-        try {
-          if (channel.getResponseHeader("WWW-Authenticate")) {
-            channel.setResponseHeader("WWW-Authenticate", null, false);
-          }
-        } catch (e) {} 
-      } 
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
     }
