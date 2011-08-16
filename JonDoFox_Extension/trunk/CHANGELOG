@@ -1,7 +1,13 @@
-Changes in version 0.2.10 - XXXX-XX-XX
+Changes in version 0.2.11 - 2011-08-16
+
+  Bugfixes:
+    * fixed problem that http auth protection got not disabled if safecache
+      protection is disabled
+
+Changes in version 0.2.10 - 2011-08-16
 
   New Feature: 
-    * Mitigating tracking risks related to HTTP Authentication
+    * mitigating tracking risks related to HTTP Authentication
 
   Minor improvement:
     * new User Agent

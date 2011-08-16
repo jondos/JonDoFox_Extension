@@ -98,8 +98,8 @@ SafeCache.prototype = {
         }
         log("||||||||||SSC: Parent "+parent+" for "+ channel.URI.spec);
     } else {
-      dump("No Channel notification callbacks for: " + channel.URI.spec + "\n"); 
-      dump("Assuming first party...\n");
+      log("No Channel notification callbacks for: " + channel.URI.spec); 
+      log("Assuming first party...");
     }
     if (channel.documentURI && channel.documentURI === channel.URI) {
       parent = null;  // first party interaction
@@ -110,16 +110,16 @@ SafeCache.prototype = {
                " content loaded by " + parent.host);
       this.setCacheKey(channel, parent.hostname);
       log("Deleting Authorization header for 3rd party content if available..");
+      // TODO: We currently do not get headers here in all cases. WTF!? Why?
+      // AND: Settinung them to null does not do anything in some cases: The
+      // Auth information are still be sent!
       try {
-        // We reset the Pragma and the Cache-Control header as well here.
-        // Otherwise we would get a "no-cache, no-cache" value which could
-        // help getting the user out of its anon group.
         if (channel.getRequestHeader("Authorization") !== null) {
           channel.setRequestHeader("Authorization", null, false);
           channel.setRequestHeader("Pragma", null, false);
           channel.setRequestHeader("Cache-Control", null, false);
         }
-      } catch (e) {log("Exception!!!" + e)}
+      } catch (e) {}
     } else {
       if (!this.readCacheKey(channel.cacheKey)) {
         this.setCacheKey(channel, channel.URI.host);
