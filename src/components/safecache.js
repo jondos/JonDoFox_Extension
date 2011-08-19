@@ -122,6 +122,7 @@ SafeCache.prototype = {
       } catch (e) {}
     } else {
       if (!this.readCacheKey(channel.cacheKey)) {
+        log("Could not find a cache key for: " + channel.URI.host)
         this.setCacheKey(channel, channel.URI.host);
       } else {
         log("||||||||||SSC: Leaving cache key unchanged.");

@@ -127,7 +127,7 @@ var sslObservatory = {
         replace(":", "", "g");
       fps.push(fp);
       if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
-        this.logger.warn("Got root cert at position: " + i);
+        //this.logger.warn("Got root cert at position: " + i);
         rootidx = i;
       }
     }
@@ -137,13 +137,13 @@ var sslObservatory = {
       if (rootidx == -1) {
         rootidx = fps.length-1;
       }
-      this.logger.warn("Got a private root cert. Ignoring domain "
-               + domain + " with root " + fps[rootidx]);
+      //this.logger.warn("Got a private root cert. Ignoring domain "
+               //+ domain + " with root " + fps[rootidx]);
       return;
     }
 
     if (fps[0] in this.already_submitted) {
-      this.logger.warn("Already submitted cert for " + domain + ". Ignoring");
+      //this.logger.warn("Already submitted cert for " + domain + ". Ignoring");
       return;
     }
 
@@ -165,8 +165,8 @@ var sslObservatory = {
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 8192;
 
-    this.logger.warn("Submitting cert for " + domain);
-    this.logger.warn("submit_cert params: " + params);
+    //this.logger.warn("Submitting cert for " + domain);
+    //this.logger.warn("submit_cert params: " + params);
 
     // Pad to exp scale. This is done because the distribution of cert sizes
     // is almost certainly pareto, and definitely not uniform.
