@@ -246,7 +246,7 @@ RequestObserver.prototype = {
     var URIplain;
     var notificationCallbacks;
     var wind;
-    var parent;
+    var parent_host;
     try {
       // We are looking for URL's which are on the noProxyList first. The
       // reason is if there occurred a redirection to a different URL it is
@@ -307,26 +307,35 @@ RequestObserver.prototype = {
       // well! 
       if (this.prefsHandler.
         getBoolPref('extensions.jondofox.stanford-safecache_enabled')) { 
-        notificationCallbacks = 
-          channel.notificationCallbacks ? channel.notificationCallbacks : 
-             channel.loadGroup.notificationCallbacks;
-        if (notificationCallbacks) {
-          wind = notificationCallbacks.QueryInterface(CI.nsIInterfaceRequestor).
-            getInterface(CI.nsIDOMWindow);
-          parent = wind.window.top.location; 
-        } else {
-          log("We found no Notificationcallbacks examining the response!"); 
+        try {
+          notificationCallbacks = 
+            channel.notificationCallbacks ? channel.notificationCallbacks : 
+              channel.loadGroup.notificationCallbacks;
+          if (notificationCallbacks) {
+            wind = notificationCallbacks.QueryInterface(CI.
+              nsIInterfaceRequestor).getInterface(CI.nsIDOMWindow);
+          parent_host = wind.top.location.hostname; 
+          } else {
+            log("We found no Notificationcallbacks examining the response!"); 
+          }
+        } catch (e) {
+          log("Error while getting the window: " + e);  
         }
         if (channel.documentURI && channel.documentURI === channel.URI) {
-          parent = null;  // first party interaction
+          parent_host = null;  // first party interaction
+        } else if (!parent_host) {
+          // We can't rely on the Referer here as this can legitimately be
+          // 1st party while the content is still 3rd party (from a bird's eye
+          // view. Therefore...
+          parent_host = this.cookiePerm.getOriginatingURI(channel); 
         }
-        if (parent && parent.hostname !== channel.URI.host) {  
+        if (parent_host && parent_host !== channel.URI.host) {  
           try {
             if (channel.getResponseHeader("WWW-Authenticate")) {
               channel.setResponseHeader("WWW-Authenticate", null, false);
             }
           } catch (e) {} 
-        } 
+        }
       }
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
