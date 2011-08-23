@@ -1,3 +1,12 @@
+Changes in version 0.2.13 - XXXX-XX-XX
+
+  Minor improvement: 
+    * slightly enhanced window.name logic (no removal of window.name id in
+      3rd party contexts without Referrer anymore)
+  
+  Bugfixes:
+    * fixed encoding bug (now gzip, deflate is properly used)
+
 Changes in version 0.2.12 - 2011-08-19
 
   Bugfixes:
