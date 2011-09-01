@@ -1082,6 +1082,9 @@ JDFManager.prototype = {
 	if (proxyKeepAlive) {
           this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", false);
 	}
+        this.prefsHandler.setStringPref("network.http.accept.default",
+          this.prefsHandler.
+          getStringPref("extensions.jondofox.accept_default"));
 	break;
       case (this.STATE_TOR):
         for (p in this.torUAMap) {
@@ -1094,6 +1097,9 @@ JDFManager.prototype = {
 	if (!proxyKeepAlive) {
           this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
 	}
+        this.prefsHandler.setStringPref("network.http.accept.default", 
+          this.prefsHandler.
+          getStringPref("extensions.jondofox.tor.accept_default"));
         break;
       case (this.STATE_CUSTOM):
 	userAgent = this.prefsHandler.getStringPref(
@@ -1890,11 +1896,11 @@ JDFManager.prototype = {
 	  }
           
           else if ((data === 'intl.accept_languages' || 
-            data === 'intl.accept_charsets') && this.prefsHandler.
-	    isPreferenceSet('general.useragent.override') && 
-	     this.prefsHandler.getStringPref('general.useragent.override') === 
-	     this.prefsHandler.
-	     getStringPref('extensions.jondofox.tor.useragent_override')) {
+            data === 'intl.accept_charsets' || 'network.http.accept_default')
+            && this.prefsHandler.isPreferenceSet('general.useragent.override')
+            && this.prefsHandler.getStringPref('general.useragent.override') ===
+	    this.prefsHandler.
+	      getStringPref('extensions.jondofox.tor.useragent_override')) {
             // Do nothing here because the pref changed but it was for 
             // imitating Tor properly after the Tor UA has been activated.
           }

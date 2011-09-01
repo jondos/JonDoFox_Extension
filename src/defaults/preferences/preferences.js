@@ -121,6 +121,7 @@ pref("extensions.jondofox.accept_default", "text/html,application/xml,*/*");
 // If the user sets a Torbutton UA then use the following values as well
 pref("extensions.jondofox.tor.accept_languages", "en-us, en");
 pref("extensions.jondofox.tor.accept_charsets", "iso-8859-1,*,utf-8");
+pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
 // Feed prefs
 pref("extensions.jondofox.feeds_handler_default", "bookmarks");
