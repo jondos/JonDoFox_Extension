@@ -1896,7 +1896,8 @@ JDFManager.prototype = {
 	  }
           
           else if ((data === 'intl.accept_languages' || 
-            data === 'intl.accept_charsets' || 'network.http.accept_default')
+            data === 'intl.accept_charsets' || data ===
+            'network.http.accept_default')
             && this.prefsHandler.isPreferenceSet('general.useragent.override')
             && this.prefsHandler.getStringPref('general.useragent.override') ===
 	    this.prefsHandler.

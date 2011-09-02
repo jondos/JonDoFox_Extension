@@ -462,7 +462,6 @@ RequestObserver.prototype = {
               warn("Cookies were cleared. Purging list of already submitted sites");
           }
           break;
-      return  
         default:
           log("!! Topic not handled --> " + topic);
           break;

@@ -524,7 +524,7 @@ function HTMLParser(aHTMLString){
     createDocument("http://www.w3.org/1999/xhtml", "html", null),
     body = document.createElementNS("http://www.w3.org/1999/xhtml", "body"),
     head = document.createElementNS("http://www.w3.org/1999/xhtml", "head");
-  // Appending the child her, no parsing as the parseFragment method below does
+  // Appending the child here, no parsing as the parseFragment method below does
   // not parse head elements; we add the content later.
   html.documentElement.appendChild(head);
   html.documentElement.appendChild(body);
