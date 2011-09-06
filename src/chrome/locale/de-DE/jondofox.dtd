@@ -218,3 +218,6 @@ die Verbindungen zum Proxy Server. Für weitere Informationen dazu siehe ">
 
 <!-- adblock strings -->
 <!ENTITY jondofox.adblock.label "Filterregeln">
+
+<!-- overrideLongDesc override for FF3, FF4-6, FF7+ -->
+<!ENTITY netOffline.overrideLongDesc "<p>Der Browser arbeitet im Offline-Modus und kann keine Verbindung mit dem gewünschten Eintrag herstellen.</p><ul><li>Ist der Computer mit einem aktiven Netzwerk verbunden?</li><li>Setzen Sie den Browser in den Online-Modus und versuchen Sie es nochmals.</li></ul>">

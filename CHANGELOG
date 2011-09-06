@@ -3,8 +3,11 @@ Changes in version 0.2.13 - XXXX-XX-XX
   Minor improvement: 
     * slightly enhanced window.name logic (no removal of window.name id in
       3rd party contexts without Referrer anymore)
+    * made JonDoFox compatible with Firefox up to 9.0a1
   
   Bugfixes:
+    * fixed OCSP problem while having SafeCache activated
+    * spoofed network.http.accept.default properly for Tor mode
     * fixed encoding bug (now gzip, deflate is properly used)
 
 Changes in version 0.2.12 - 2011-08-19
