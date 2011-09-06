@@ -1284,7 +1284,7 @@ JDFManager.prototype = {
           checkboxNews.addEventListener("click", function() {JDFManager.
 		    checkboxNewsChecked(checkboxNews, type);}, false);
         }
-      } else if (this.arguments[0]) {
+      } else if (this.arguments && this.arguments[0]) {
         log("We got probably a commonDialog...");
         dialogParam = this.arguments[0].QueryInterface(CI.nsIDialogParamBlock);
         log("Let's check whether we've got a NoScript pdf-dialog...");
@@ -1897,7 +1897,7 @@ JDFManager.prototype = {
           
           else if ((data === 'intl.accept_languages' || 
             data === 'intl.accept_charsets' || data ===
-            'network.http.accept_default')
+            'network.http.accept.default')
             && this.prefsHandler.isPreferenceSet('general.useragent.override')
             && this.prefsHandler.getStringPref('general.useragent.override') ===
 	    this.prefsHandler.

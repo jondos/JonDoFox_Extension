@@ -371,8 +371,7 @@ RequestObserver.prototype = {
               channel.setResponseHeader("WWW-Authenticate", null, false);
             }
           } catch (e) {} 
-        } else {
-          log("No problem with: " + URI);
+        } else {}
         } 
       }
     } catch (e) {

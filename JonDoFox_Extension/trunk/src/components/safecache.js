@@ -97,8 +97,11 @@ SafeCache.prototype = {
       this.setCacheKey(channel, parentHost);
       log("Deleting Authorization header for 3rd party content if available..");
       // TODO: We currently do not get headers here in all cases. WTF!? Why?
-      // AND: Settinung them to null does not do anything in some cases: The
+      // AND: Setting them to null does not do anything in some cases: The
       // Auth information are still be sent!
+      // Answer: The problem is that the Authorization header is set after
+      // the http-on-modify-request notification is fired :-/. Thus, nothing we
+      // can do here without fixing it in the source (nsHttpChannel.cpp).
       try {
         if (channel.getRequestHeader("Authorization") !== null) {
           channel.setRequestHeader("Authorization", null, false);
@@ -107,7 +110,8 @@ SafeCache.prototype = {
         }
       } catch (e) {}
     } else {
-      if (!this.readCacheKey(channel.cacheKey)) {
+      if (!this.readCacheKey(channel.cacheKey) && channel.requestMethod !==
+        "POST") {
         log("Could not find a cache key for: " + channel.URI.host)
         this.setCacheKey(channel, channel.URI.host);
       } else {
