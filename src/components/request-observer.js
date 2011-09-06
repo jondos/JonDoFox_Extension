@@ -372,7 +372,6 @@ RequestObserver.prototype = {
             }
           } catch (e) {} 
         } else {}
-        } 
       }
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
