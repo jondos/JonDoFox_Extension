@@ -62,7 +62,7 @@ function loadPrefsGeneral() {
     var obProxy = document.getElementById('observatoryProxy');
     var customProxy = obProxy.getItemAtIndex(2);
     customProxy.setAttribute("label", customProxy.getAttribute("label") + " " +
-        window.opener.getLabel(jdfManager.STATE_CUSTOM)); 
+      getLabel(jdfManager.STATE_CUSTOM));
     obProxy.selectedIndex = 
         prefsHandler.getIntPref('extensions.jondofox.observatory.proxy');
     // Adblock setting
@@ -472,7 +472,7 @@ function onAccept() {
     // If the current state is 'custom': reset it
     if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 
         'custom') {
-      window.opener.setCustomProxy();
+      setCustomProxy();
     }
   } catch (e) {
     log("onAccept(): " + e);
@@ -494,12 +494,12 @@ function onApply() {
           'extensions.jondofox.no_proxies_on'));
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
-      window.opener.setCustomProxy();
+      setCustomProxy();
       // Changing the label for the observatory custom-proxy menuitem
       //var obProxy = document.getElementById('observatoryProxy');
       //var customProxy = obProxy.getItemAtIndex(2);
       //customProxy.setAttribute("label", customProxy.getAttribute("label") +
-      // " " + window.opener.getLabel(jdfManager.STATE_CUSTOM)); 
+      // " " + getLabel(jdfManager.STATE_CUSTOM)); 
     } else {
       // Temporary Emails
       writePrefsTempEmail();
@@ -526,7 +526,7 @@ var openFilterListWindow = function() {
 }
 
 var contextHelp = function(aString) {
-  window.opener.openPageNewTab(aString);
+  openPageNewTab(aString);
   // We need to delete the "API" part in "observatoryAPI" in order to be able
   // to use the generic hidePopup() call.
   aString = aString.replace("API", "");

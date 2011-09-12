@@ -20,6 +20,9 @@
   <!-- Include javascript code -->
   <script type="application/x-javascript" 
           src="chrome://jondofox/content/dialogs/prefs-dialog.js"></script>
+  <!-- We need some funtions of it here as well -->
+  <script type="application/x-javascript"
+          src="chrome://jondofox/content/jondofox-gui.js"></script> 
 
   <!-- Create command element -->
   <command id="share_proxy_settings" oncommand="shareProxySettings(false);"/>
