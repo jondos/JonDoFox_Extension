@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2008-2010, JonDos GmbH
+ * Copyright 2008-2011, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
  * JonDoFox extension management and compatibility tasks + utilities
@@ -230,7 +230,8 @@ JDFManager.prototype = {
 
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
-    'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior'
+    'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior',
+    'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts' 
   },
 
   // This map contains those preferences which avoid external apps being opened
@@ -657,13 +658,6 @@ JDFManager.prototype = {
       // prefsMapper.map() in this function and should be more flexible and
       // transparent.
       this.setUserAgent(this.getState());
-      // For our new (2.5.3) profile we may disable the document fonts if the
-      // user wants it (they are disabled by default).
-      if (this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') == "2.5.3") {
-        this.prefsHandler.setIntPref('browser.display.use_document_fonts', this.
-          prefsHandler.getIntPref('extensions.jondofox.use_document_fonts'));
-      }
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -1029,13 +1023,7 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.0" && 
-	   this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.1" &&
-           this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.2" && 
-          this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.3" &&  
+               'extensions.jondofox.profile_version') !== "2.5.4" &&  
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
