@@ -55,7 +55,10 @@ var CertPatrol = {
       this.init();
     }
   },
-
+          
+  onUnload: function() {
+    this.unregisterObserver("http-on-examine-response");
+  },
 
   // DB init
   dbinit: function() {
@@ -102,16 +105,90 @@ var CertPatrol = {
     }
   },
 
-
   // Application trigger
   init: function() {
     // Firefox
-    var content = document.getElementById("content");
-    if(content) {
-      content.addEventListener("load", this.onPageLoad, true);
-    }
+    this.registerObserver("http-on-examine-response"); 
   },
 
+  registerObserver: function(topic) {
+    var observerService = Cc["@mozilla.org/observer-service;1"].
+      getService(Ci.nsIObserverService);
+    observerService.addObserver(this, topic, false);
+  },
+
+  unregisterObserver: function(topic) {
+    var observerService = Cc["@mozilla.org/observer-service;1"].
+      getService(Ci.nsIObserverService);
+    observerService.removeObserver(this, topic);
+  }, 
+
+  observe: function(channel, topic, data) {
+    if (!CertPatrol.prefsHandler.
+        getBoolPref('extensions.jondofox.certpatrol_enabled')) {
+      return;
+    } 
+    channel.QueryInterface(Ci.nsIHttpChannel);
+    var host = channel.URI.hostPort;
+
+    var si = channel.securityInfo;
+    if (!si) return;
+
+    var nc = channel.notificationCallbacks;
+    if (!nc && channel.loadGroup) {
+      nc = channel.loadGroup.notificationCallbacks;
+    }
+    if (!nc) return;
+
+    try {
+      var win = nc.getInterface(Ci.nsIDOMWindow);
+    } catch (e) {
+      return; // no window for e.g. favicons
+    }
+    if (!win.document) return;
+
+    // Assuming lots of JonDoFox users have CertPatrol enabled this seems the
+    // right place (i.e. trade-off) to check for it actually...
+    if (!CertPatrol.prefsHandler.
+        getBoolPref('extensions.jondofox.certpatrol_enabled')) {
+      return;
+    } 
+
+    var browser;
+    browser = gBrowser.getBrowserForDocument(win.top.document);
+    // We get notifications for a request in all of the open windows
+    // but browser is set only in the window the request is originated from,
+    // browser is null for favicons too.
+    if (!browser) return;
+
+    si.QueryInterface(Ci.nsISSLStatusProvider);
+    var st = si.SSLStatus;
+    if (!st) return;
+
+    st.QueryInterface(Ci.nsISSLStatus);
+    var cert = st.serverCert;
+    if (!cert) return;
+
+    var obj = browser;
+    // store certs in the browser object so we can
+    // show only one notification per host for a browser tab
+    var key = [host, cert.md5Fingerprint, cert.sha1Fingerprint].join('|');
+    if (obj.__certs && obj.__certs[key] && cert.equals(obj.__certs[key])) {
+      return;
+    }
+    obj.__certs = obj.__certs || {};
+    obj.__certs[key] = cert;   
+
+    // The interesting part
+    var certobj = this.newCertObj();
+    certobj.host = host;
+    certobj.ciphername = st.cipherName;
+    certobj.keyLength = st.keyLength;
+    certobj.secretKeyLength = st.secretKeyLength;
+    this.fillCertObj(certobj.moz, cert);
+
+    this.certCheck(browser, certobj); 
+  },
 
   // helper functions for advanced patrol
   isodate: function(tim) {
@@ -142,29 +219,8 @@ var CertPatrol = {
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
 
-  // Event trigger
-  onPageLoad: function(aEvent) {
-    if (!CertPatrol.prefsHandler.
-        getBoolPref('extensions.jondofox.certpatrol_enabled')) {
-      return;
-    }
-    var doc = aEvent.originalTarget;
-    if (doc && doc.location && doc.location.protocol == "https:") {
-      CertPatrol.onSecurePageLoad(doc);
-    }
-  },
-
-  // SSL trigger
-  onSecurePageLoad: function(doc) {
-    var thiscert;
-    var validity;
-
-    var browser = gBrowser.getBrowserForDocument(doc);
-    if (!browser) {
-        return;
-    }
-
-    var certobj={
+  newCertObj: function() {
+    return {
       threat:0,
       coloredWarnings:{},
       info:"",
@@ -219,50 +275,19 @@ var CertPatrol = {
         viewDetails:this.jdfUtils.getString("viewDetails")  
       }
     };
+  },
 
-    var ui = browser.securityUI;
-    if (!ui)
-      return;
-    
-    var sp = ui.QueryInterface(Ci.nsISSLStatusProvider);
-    if (!sp)
-      return;
-
-    var stats = sp.SSLStatus;
-    // Domainname not found,
-    // Selfsigned and not yet accepted
-    if (!stats)
-      return;
-    
-    var stati = stats.QueryInterface(Ci.nsISSLStatus);
-    if (!stati)
-      return;
-
-    thiscert = stati.serverCert;
-    if (!thiscert)
-      return;
-
-    validity = thiscert.validity.QueryInterface(Ci.nsIX509CertValidity);
-    if (!validity)
-      return;
-
-    // The interesting part
-    certobj.host = doc.location.host;
-
-    certobj.moz.commonName = thiscert.commonName;
-    certobj.moz.organization = thiscert.organization;
-    certobj.moz.organizationalUnit = thiscert.organizationalUnit;
-    certobj.moz.serialNumber = thiscert.serialNumber;
-    certobj.moz.emailAddress = thiscert.emailAddress;
-    certobj.moz.notBeforeGMT = validity.notBefore;
-    certobj.moz.notAfterGMT = validity.notAfter;
-    certobj.moz.issuerCommonName = thiscert.issuerCommonName;
-    certobj.moz.issuerOrganization = thiscert.issuerOrganization;
-    certobj.moz.issuerOrganizationUnit = thiscert.issuerOrganizationUnit;
-    certobj.moz.md5Fingerprint = thiscert.md5Fingerprint;
-    certobj.moz.sha1Fingerprint = thiscert.sha1Fingerprint;
-
-    this.certCheck(browser, certobj);
+  fillCertObj: function(obj, cert) {
+    obj.notBeforeGMT = cert.validity.notBefore;
+    obj.notAfterGMT = cert.validity.notAfter; 
+    var keys = [
+	  "commonName", "organization", "organizationalUnit", "serialNumber",
+	  "emailAddress", // "subjectAlternativeName",
+	  "issuerCommonName", "issuerOrganization", "issuerOrganizationUnit",
+	  "md5Fingerprint", "sha1Fingerprint" ]; 
+    for (var i in keys) {
+      obj[keys[i]] = cert[keys[i]]; 
+    }
   },
 
 
@@ -279,11 +304,13 @@ var CertPatrol = {
       this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
     }
 
-    var pbs = Cc["@mozilla.org/privatebrowsing;1"].
-	    getService(Ci.nsIPrivateBrowsingService);
-    this.pbm = pbs.privateBrowsingEnabled;
+    var pbs = Cc["@mozilla.org/privatebrowsing;1"];
+    if (pbs) {
+      pbs = Cc["@mozilla.org/privatebrowsing;1"].getService(Ci.
+        nsIPrivateBrowsingService);
+      this.pbm = pbs.privateBrowsingEnabled;
+    }
  
-
     // Get certificate
     var stmt = this.dbselect;
     try {
@@ -308,7 +335,6 @@ var CertPatrol = {
     } finally {
       stmt.reset();
     }
-
 
     // The certificate changed 
     if ( found && (
@@ -505,7 +531,7 @@ var CertPatrol = {
                "_blank", "modal", certobj);
       return;
     }
-    notifyBox.appendNotification(
+    var n = notifyBox.appendNotification(
 	"(CertPatrol) "+ certPatrolMessage
 	  +" "+ certobj.moz.commonName +". "+
 	  certobj.lang.issuedBy +" "+
@@ -518,6 +544,8 @@ var CertPatrol = {
 		"_blank", "modal", certobj);
 	} },
     ]);
+    // make sure it stays visible after redirects
+    n.persistence = 10;
   },
   
   
@@ -536,7 +564,7 @@ var CertPatrol = {
                "_blank", "modal", certobj);
       return;
     }
-    notifyBox.appendNotification(
+    n = notifyBox.appendNotification(
 	"(CertPatrol) "+ certPatrolMessage
 	  +" "+ certobj.moz.commonName +". "+
 	  certobj.lang.issuedBy +" "+
@@ -550,6 +578,8 @@ var CertPatrol = {
 		"_blank", "modal", certobj);
 	} },
     ]);
+    // make sure it stays visible after redirects
+    n.persistence = 10; 
   },
   
   
@@ -561,3 +591,5 @@ var CertPatrol = {
 
 
 window.addEventListener("load", function(e) { CertPatrol.onLoad(e); }, false);
+window.addEventListener("unload", function(e) { CertPatrol.onUnload(e); },
+  false);
