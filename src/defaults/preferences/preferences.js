@@ -188,6 +188,7 @@ pref("extensions.jondofox.stanford-safecache_enabled", true);
 pref("extensions.jondofox.certpatrol_enabled", true);
 pref("extensions.jondofox.certpatrol_showNewCert", false);
 pref("extensions.jondofox.certpatrol_showChangedCert", false);
+pref("extensions.jondofox.certpatrol_notificationTimeout", 10);
 
 //AdBlocking
 pref("extensions.jondofox.adblock_enabled", true);
