@@ -1,0 +1,5 @@
+CertPatrol 2.0.10 - JDF 0.2.13
+==============================
+
+-check for more cert attributes
+-slightly more paranoid handling of wildcard certificates

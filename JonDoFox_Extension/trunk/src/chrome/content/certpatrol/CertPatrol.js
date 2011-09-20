@@ -2,7 +2,8 @@
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
  * ''Certificate Patrol'' was conceived by Carlo v. Loesch and
- * implemented by Aiko Barz, Mukunda Modell and Carlo v. Loesch.
+ * implemented by Aiko Barz, Gabor Adam Toth, Carlo v. Loesch and Mukunda
+ * Modell.
  *
  * http://patrol.psyced.org
  *
@@ -185,7 +186,7 @@ var CertPatrol = {
     certobj.ciphername = st.cipherName;
     certobj.keyLength = st.keyLength;
     certobj.secretKeyLength = st.secretKeyLength;
-    this.fillCertObj(certobj.moz, cert);
+    this.fillCertObj(certobj.now, cert);
 
     this.certCheck(browser, certobj); 
   },
@@ -225,7 +226,7 @@ var CertPatrol = {
       coloredWarnings:{},
       info:"",
       host:"",
-      moz:{
+      now:{
         commonName:"",
         organization:"",
         organizationalUnit:"",
@@ -239,7 +240,7 @@ var CertPatrol = {
         md5Fingerprint:"",
         sha1Fingerprint:""
       },
-      sql:{
+      old:{
         commonName:"",
         organization:"",
         organizationalUnit:"",
@@ -298,10 +299,10 @@ var CertPatrol = {
 
    // memory cache of last seen SHA1 - useful for private browsing
     if (this.last_sha1Fingerprint && 
-        this.last_sha1Fingerprint === certobj.moz.sha1Fingerprint) {
+        this.last_sha1Fingerprint === certobj.now.sha1Fingerprint) {
       return;
     } else {
-      this.last_sha1Fingerprint = certobj.moz.sha1Fingerprint;
+      this.last_sha1Fingerprint = certobj.now.sha1Fingerprint;
     }
 
     var pbs = Cc["@mozilla.org/privatebrowsing;1"];
@@ -317,18 +318,18 @@ var CertPatrol = {
       stmt.bindUTF8StringParameter(0, certobj.host);
       if (stmt.executeStep()) {
         found = true;
-        certobj.sql.commonName = stmt.getUTF8String(1);
-        certobj.sql.organization = stmt.getUTF8String(2);
-        certobj.sql.organizationalUnit = stmt.getUTF8String(3);
-        certobj.sql.serialNumber = stmt.getUTF8String(4);
-        certobj.sql.emailAddress = stmt.getUTF8String(5);
-        certobj.sql.notBeforeGMT = stmt.getUTF8String(6);
-        certobj.sql.notAfterGMT = stmt.getUTF8String(7);
-        certobj.sql.issuerCommonName = stmt.getUTF8String(8);
-        certobj.sql.issuerOrganization = stmt.getUTF8String(9);
-        certobj.sql.issuerOrganizationUnit = stmt.getUTF8String(10);
-        certobj.sql.md5Fingerprint = stmt.getUTF8String(11);
-        certobj.sql.sha1Fingerprint = stmt.getUTF8String(12);
+        certobj.old.commonName = stmt.getUTF8String(1);
+        certobj.old.organization = stmt.getUTF8String(2);
+        certobj.old.organizationalUnit = stmt.getUTF8String(3);
+        certobj.old.serialNumber = stmt.getUTF8String(4);
+        certobj.old.emailAddress = stmt.getUTF8String(5);
+        certobj.old.notBeforeGMT = stmt.getUTF8String(6);
+        certobj.old.notAfterGMT = stmt.getUTF8String(7);
+        certobj.old.issuerCommonName = stmt.getUTF8String(8);
+        certobj.old.issuerOrganization = stmt.getUTF8String(9);
+        certobj.old.issuerOrganizationUnit = stmt.getUTF8String(10);
+        certobj.old.md5Fingerprint = stmt.getUTF8String(11);
+        certobj.old.sha1Fingerprint = stmt.getUTF8String(12);
       }
     } catch(err) {
       this.warn("Error trying to check certificate: "+ err);
@@ -338,33 +339,33 @@ var CertPatrol = {
 
     // The certificate changed 
     if ( found && (
-         certobj.sql.sha1Fingerprint != certobj.moz.sha1Fingerprint ||
-         certobj.sql.md5Fingerprint  != certobj.moz.md5Fingerprint 
+         certobj.old.sha1Fingerprint != certobj.now.sha1Fingerprint ||
+         certobj.old.md5Fingerprint  != certobj.now.md5Fingerprint 
        )) {
       // Let's check whether we have a wildcard certificate and whether we 
       // have the same certificare already stored...
       // We have to do this here, before the certificate is updated. Otherwise,
       // the updated wildcard certificate is obviously always found and the 
       // test fails...
-      existingWildcardCert = this.wildcardCertCheck(certobj.moz.commonName,
-		      certobj.moz.sha1Fingerprint);
+      existingWildcardCert = this.wildcardCertCheck(certobj.now.commonName,
+		      certobj.now.sha1Fingerprint);
       if (!this.pbm) {
         // DB update
         stmt = this.dbupdate;
         try {
           stmt.bindUTF8StringParameter( 0, certobj.host);
-          stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
-          stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
-          stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
-          stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
-          stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-          stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
-          stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
-          stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
-          stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
-          stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
-          stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
-          stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
+          stmt.bindUTF8StringParameter( 1, certobj.now.commonName);
+          stmt.bindUTF8StringParameter( 2, certobj.now.organization);
+          stmt.bindUTF8StringParameter( 3, certobj.now.organizationalUnit);
+          stmt.bindUTF8StringParameter( 4, certobj.now.serialNumber);
+          stmt.bindUTF8StringParameter( 5, certobj.now.emailAddress);
+          stmt.bindUTF8StringParameter( 6, certobj.now.notBeforeGMT);
+          stmt.bindUTF8StringParameter( 7, certobj.now.notAfterGMT);
+          stmt.bindUTF8StringParameter( 8, certobj.now.issuerCommonName);
+          stmt.bindUTF8StringParameter( 9, certobj.now.issuerOrganization);
+          stmt.bindUTF8StringParameter(10, certobj.now.issuerOrganizationUnit);
+          stmt.bindUTF8StringParameter(11, certobj.now.md5Fingerprint);
+          stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
           stmt.execute();
         } catch(err) {
           this.warn("Error trying to update certificate: "+ err);
@@ -380,7 +381,7 @@ var CertPatrol = {
       } 
 
       // Try to make some sense out of the certificate changes
-      var natd = this.timedelta(certobj.sql.notAfterGMT);
+      var natd = this.timedelta(certobj.old.notAfterGMT);
       if (natd <= 0) {
         certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") + 
 		"\n";
@@ -402,7 +403,7 @@ var CertPatrol = {
         certobj.info += this.jdfUtils.formatString("warn_notAfterGMT_due", 
 			[Math.round(natd / 86400000)]) +"\n";
       }
-      if (certobj.moz.commonName != certobj.sql.commonName) {
+      if (certobj.now.commonName != certobj.old.commonName) {
         certobj.info += this.jdfUtils.getString("warn_commonName") +"\n";
 	certobj.threat += 2;
 	// We use the coloredWarnings object to be later on able to render the
@@ -410,13 +411,13 @@ var CertPatrol = {
 	// firebrick[sic!]) in the change dialog.
 	certobj.coloredWarnings.first = "cmcnn";
       }
-      if (certobj.moz.issuerCommonName != certobj.sql.issuerCommonName) {
+      if (certobj.now.issuerCommonName != certobj.old.issuerCommonName) {
         certobj.info += this.jdfUtils.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
 	certobj.coloredWarnings.second = "cmicnn";
       }
       // checking NEW certificate here..
-      var td = this.timedelta(certobj.moz.notBeforeGMT);
+      var td = this.timedelta(certobj.now.notBeforeGMT);
       if (td > 0) {
         certobj.info += this.jdfUtils.getString("warn_notBeforeGMT") +"\n";
 	certobj.threat += 2;
@@ -432,15 +433,15 @@ var CertPatrol = {
       }
       certobj.lang.changeEvent += " " + this.jdfUtils.getString("threatLevel_" +
 		           certobj.threat);
-      certobj.sql.notBeforeGMT= this.isodate(certobj.sql.notBeforeGMT) +
+      certobj.old.notBeforeGMT= this.isodate(certobj.old.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.
-							sql.notBeforeGMT));
-      certobj.sql.notAfterGMT = this.isodate(certobj.sql.notAfterGMT) +
+							old.notBeforeGMT));
+      certobj.old.notAfterGMT = this.isodate(certobj.old.notAfterGMT) +
 				this.daysdelta(natd);
-      certobj.moz.notBeforeGMT= this.isodate(certobj.moz.notBeforeGMT) +
-				this.daysdelta(this.timedelta(certobj.moz.notBeforeGMT));
-      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
-				this.daysdelta(this.timedelta(certobj.moz.notAfterGMT));
+      certobj.now.notBeforeGMT= this.isodate(certobj.now.notBeforeGMT) +
+				this.daysdelta(this.timedelta(certobj.now.notBeforeGMT));
+      certobj.now.notAfterGMT = this.isodate(certobj.now.notAfterGMT) +
+				this.daysdelta(this.timedelta(certobj.now.notAfterGMT));
 
       this.outchange(browser, certobj);
 
@@ -451,18 +452,18 @@ var CertPatrol = {
         stmt = this.dbinsert;
         try {
           stmt.bindUTF8StringParameter( 0, certobj.host);
-          stmt.bindUTF8StringParameter( 1, certobj.moz.commonName);
-          stmt.bindUTF8StringParameter( 2, certobj.moz.organization);
-          stmt.bindUTF8StringParameter( 3, certobj.moz.organizationalUnit);
-          stmt.bindUTF8StringParameter( 4, certobj.moz.serialNumber);
-          stmt.bindUTF8StringParameter( 5, certobj.moz.emailAddress);
-          stmt.bindUTF8StringParameter( 6, certobj.moz.notBeforeGMT);
-          stmt.bindUTF8StringParameter( 7, certobj.moz.notAfterGMT);
-          stmt.bindUTF8StringParameter( 8, certobj.moz.issuerCommonName);
-          stmt.bindUTF8StringParameter( 9, certobj.moz.issuerOrganization);
-          stmt.bindUTF8StringParameter(10, certobj.moz.issuerOrganizationUnit);
-          stmt.bindUTF8StringParameter(11, certobj.moz.md5Fingerprint);
-          stmt.bindUTF8StringParameter(12, certobj.moz.sha1Fingerprint);
+          stmt.bindUTF8StringParameter( 1, certobj.now.commonName);
+          stmt.bindUTF8StringParameter( 2, certobj.now.organization);
+          stmt.bindUTF8StringParameter( 3, certobj.now.organizationalUnit);
+          stmt.bindUTF8StringParameter( 4, certobj.now.serialNumber);
+          stmt.bindUTF8StringParameter( 5, certobj.now.emailAddress);
+          stmt.bindUTF8StringParameter( 6, certobj.now.notBeforeGMT);
+          stmt.bindUTF8StringParameter( 7, certobj.now.notAfterGMT);
+          stmt.bindUTF8StringParameter( 8, certobj.now.issuerCommonName);
+          stmt.bindUTF8StringParameter( 9, certobj.now.issuerOrganization);
+          stmt.bindUTF8StringParameter(10, certobj.now.issuerOrganizationUnit);
+          stmt.bindUTF8StringParameter(11, certobj.now.md5Fingerprint);
+          stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
           stmt.execute();
         } catch(err) {
           this.warn("Error trying to insert certificate for " + certobj.host +
@@ -471,11 +472,11 @@ var CertPatrol = {
           stmt.reset();
         }
       }
-      certobj.moz.notBeforeGMT = this.isodate(certobj.moz.notBeforeGMT) +
-				this.daysdelta(this.timedelta(certobj.moz.
+      certobj.now.notBeforeGMT = this.isodate(certobj.now.notBeforeGMT) +
+				this.daysdelta(this.timedelta(certobj.now.
 				notBeforeGMT));
-      certobj.moz.notAfterGMT = this.isodate(certobj.moz.notAfterGMT) +
-				this.daysdelta(this.timedelta(certobj.moz.
+      certobj.now.notAfterGMT = this.isodate(certobj.now.notAfterGMT) +
+				this.daysdelta(this.timedelta(certobj.now.
 				notAfterGMT));
       this.outnew(browser, certobj);
     }
@@ -531,21 +532,40 @@ var CertPatrol = {
                "_blank", "modal", certobj);
       return;
     }
+    var timeout;
     var n = notifyBox.appendNotification(
 	"(CertPatrol) "+ certPatrolMessage
-	  +" "+ certobj.moz.commonName +". "+
+	  +" "+ certobj.now.commonName +". "+
 	  certobj.lang.issuedBy +" "+
-	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+          (certobj.now.issuerOrganization || certobj.now.issuerCommonName),
 	certobj.host, null,
-	notifyBox.PRIORITY_INFO_HIGH, [
-	    { accessKey: "D", label: certobj.lang.viewDetails,
-	      callback: function(msg, btn) {
-	window.openDialog("chrome://jondofox/content/certpatrol/new.xul", 
-		"_blank", "modal", certobj);
-	} },
-    ]);
+	notifyBox.PRIORITY_INFO_HIGH,
+        [{ accessKey: "D", label: certobj.lang.viewDetails,
+	   callback: function(msg, btn) {
+             if (timeout) {
+               clearTimeout(timeout); 
+             }
+	     window.
+               openDialog("chrome://jondofox/content/certpatrol/new.xul", 
+               "_blank", "modal", certobj);
+	   }
+        }]
+    );
     // make sure it stays visible after redirects
     n.persistence = 10;
+
+    try {
+      var t = this.prefsHandler.
+        getIntPref("extensions.jondofox.certpatrol_notificationTimeout");
+      if (t > 0) {
+        timeout = setTimeout(function() {
+                               if (n.parentNode) {
+                                 notifyBox.removeNotification(n);
+                               }
+                               n = null;
+                             }, t * 1000);
+      }
+    } catch (err) {} 
   },
   
   
@@ -564,24 +584,43 @@ var CertPatrol = {
                "_blank", "modal", certobj);
       return;
     }
-    n = notifyBox.appendNotification(
+    var timeout;
+    var n = notifyBox.appendNotification(
 	"(CertPatrol) "+ certPatrolMessage
-	  +" "+ certobj.moz.commonName +". "+
+	  +" "+ certobj.now.commonName +". "+
 	  certobj.lang.issuedBy +" "+
-	    (certobj.moz.issuerOrganization || certobj.moz.issuerCommonName),
+	  (certobj.now.issuerOrganization || certobj.now.issuerCommonName),
 	certobj.host, null,
 	certobj.threat > 0 ? notifyBox.PRIORITY_WARNING_HIGH
-			    : notifyBox.PRIORITY_INFO_LOW, [
-	    { accessKey: "D", label: certobj.lang.viewDetails,
-	      callback: function(msg, btn) {
-	window.openDialog("chrome://jondofox/content/certpatrol/change.xul", 
-		"_blank", "modal", certobj);
-	} },
-    ]);
+			    : notifyBox.PRIORITY_INFO_LOW,
+        [{
+          accessKey: "D", label: certobj.lang.viewDetails,
+	  callback: function(msg, btn) {
+            if (timeout) {
+              clearTimeout(timeout);
+            }
+            window.
+              openDialog("chrome://jondofox/content/certpatrol/change.xul",
+              "_blank", "modal", certobj);
+	  }
+        }]
+    );
     // make sure it stays visible after redirects
     n.persistence = 10; 
+
+    try {
+      var t = this.prefsHandler.
+        getIntPref("extensions.jondofox.certpatrol_notificationTimeout");
+      if (t > 0) {
+        timeout = setTimeout(function() {
+                               if (n.parentNode) {
+                                 notifyBox.removeNotification(n);
+                               }
+                               n = null;
+                             }, t * 1000);
+      }
+    } catch(err) {}
   },
-  
   
   warn: function(result) {
     window.openDialog("chrome://jondofox/content/certpatrol/warning.xul",
