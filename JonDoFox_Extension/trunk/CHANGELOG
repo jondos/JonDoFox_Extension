@@ -1,6 +1,7 @@
 Changes in version 0.2.13 - XXXX-XX-XX
 
   Minor improvement: 
+    * included CertPatrol (2.0.10) code to check third party SSL certificates
     * slightly enhanced window.name logic (no removal of window.name id in
       3rd party contexts without Referrer anymore)
     * made JonDoFox compatible with Firefox up to 9.0a1
