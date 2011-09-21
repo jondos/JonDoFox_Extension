@@ -370,6 +370,7 @@ var CertPatrol = {
   // Certificate check
   certCheck: function(browser, certobj) {
     var found = false;
+    var old = certobj.old;
     var existingWildcardCert = false;
 
    // memory cache of last seen SHA1 - useful for private browsing
@@ -393,20 +394,20 @@ var CertPatrol = {
       stmt.bindUTF8StringParameter(0, certobj.host);
       if (stmt.executeStep()) {
         found = true;
-        certobj.old.commonName = stmt.getUTF8String(1);
-        certobj.old.organization = stmt.getUTF8String(2);
-        certobj.old.organizationalUnit = stmt.getUTF8String(3);
-        certobj.old.serialNumber = stmt.getUTF8String(4);
-        certobj.old.emailAddress = stmt.getUTF8String(5);
-        certobj.old.notBeforeGMT = stmt.getUTF8String(6);
-        certobj.old.notAfterGMT = stmt.getUTF8String(7);
-        certobj.old.issuerCommonName = stmt.getUTF8String(8);
-        certobj.old.issuerOrganization = stmt.getUTF8String(9);
-        certobj.old.issuerOrganizationUnit = stmt.getUTF8String(10);
-        certobj.old.md5Fingerprint = stmt.getUTF8String(11);
-        certobj.old.sha1Fingerprint = stmt.getUTF8String(12);
+        old.commonName = stmt.getUTF8String(1);
+        old.organization = stmt.getUTF8String(2);
+        old.organizationalUnit = stmt.getUTF8String(3);
+        old.serialNumber = stmt.getUTF8String(4);
+        old.emailAddress = stmt.getUTF8String(5);
+        old.notBeforeGMT = stmt.getUTF8String(6);
+        old.notAfterGMT = stmt.getUTF8String(7);
+        old.issuerCommonName = stmt.getUTF8String(8);
+        old.issuerOrganization = stmt.getUTF8String(9);
+        old.issuerOrganizationUnit = stmt.getUTF8String(10);
+        old.md5Fingerprint = stmt.getUTF8String(11);
+        old.sha1Fingerprint = stmt.getUTF8String(12);
         old.issuerMd5Fingerprint = stmt.getUTF8String(13); 
-        certobj.old.issuerSha1Fingerprint = stmt.getUTF8String(14);
+        old.issuerSha1Fingerprint = stmt.getUTF8String(14);
         var blob = {};
         stmt.getBlob(15, {}, blob);
         if (blob.value.length) {
@@ -424,8 +425,8 @@ var CertPatrol = {
 
     // The certificate changed 
     if ( found && (
-         certobj.old.sha1Fingerprint != certobj.now.sha1Fingerprint ||
-         certobj.old.md5Fingerprint  != certobj.now.md5Fingerprint 
+         old.sha1Fingerprint != certobj.now.sha1Fingerprint ||
+         old.md5Fingerprint  != certobj.now.md5Fingerprint 
        )) {
       // Let's check whether we have a wildcard certificate and whether we 
       // have the same certificare already stored...
@@ -445,8 +446,8 @@ var CertPatrol = {
           stmt.bindUTF8StringParameter( 3, cert.organizationalUnit);
           stmt.bindUTF8StringParameter( 4, cert.serialNumber);
           stmt.bindUTF8StringParameter( 5, cert.emailAddress);
-          stmt.bindUTF8StringParameter( 6, cert.notBeforeGMT);
-          stmt.bindUTF8StringParameter( 7, cert.notAfterGMT);
+          stmt.bindUTF8StringParameter( 6, cert.validity.notBefore);
+          stmt.bindUTF8StringParameter( 7, cert.validity.notAfter);
           stmt.bindUTF8StringParameter( 8, cert.issuerCommonName);
           stmt.bindUTF8StringParameter( 9, cert.issuerOrganization);
           stmt.bindUTF8StringParameter(10, cert.issuerOrganizationUnit);
@@ -475,7 +476,7 @@ var CertPatrol = {
       } 
 
       // Try to make some sense out of the certificate changes
-      var natd = this.timedelta(certobj.old.notAfterGMT);
+      var natd = this.timedelta(old.notAfterGMT);
       if (natd <= 0) {
         certobj.info += this.jdfUtils.getString("warn_notAfterGMT_expired") + 
 		"\n";
@@ -497,7 +498,7 @@ var CertPatrol = {
         certobj.info += this.jdfUtils.formatString("warn_notAfterGMT_due", 
 			[Math.round(natd / 86400000)]) +"\n";
       }
-      if (certobj.now.commonName != certobj.old.commonName) {
+      if (certobj.now.commonName != old.commonName) {
         certobj.info += this.jdfUtils.getString("warn_commonName") +"\n";
 	certobj.threat += 2;
 	// We use the coloredWarnings object to be later on able to render the
@@ -505,7 +506,7 @@ var CertPatrol = {
 	// firebrick[sic!]) in the change dialog.
 	certobj.coloredWarnings.first = "cmcnn";
       }
-      if (certobj.now.issuerCommonName != certobj.old.issuerCommonName) {
+      if (certobj.now.issuerCommonName != old.issuerCommonName) {
         certobj.info += this.jdfUtils.getString("warn_issuerCommonName") +"\n";
 	certobj.threat ++;
 	certobj.coloredWarnings.second = "cmicnn";
@@ -527,10 +528,9 @@ var CertPatrol = {
       }
       certobj.lang.changeEvent += " " + this.jdfUtils.getString("threatLevel_" +
 		           certobj.threat);
-      certobj.old.notBeforeGMT= this.isodate(certobj.old.notBeforeGMT) +
-				this.daysdelta(this.timedelta(certobj.
-							old.notBeforeGMT));
-      certobj.old.notAfterGMT = this.isodate(certobj.old.notAfterGMT) +
+      old.notBeforeGMT= this.isodate(old.notBeforeGMT) +
+				this.daysdelta(this.timedelta(old.notBeforeGMT));
+      old.notAfterGMT = this.isodate(old.notAfterGMT) +
 				this.daysdelta(natd);
       certobj.now.notBeforeGMT= this.isodate(certobj.now.notBeforeGMT) +
 				this.daysdelta(this.timedelta(certobj.now.notBeforeGMT));
