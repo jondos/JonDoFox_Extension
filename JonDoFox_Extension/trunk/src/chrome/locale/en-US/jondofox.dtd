@@ -111,6 +111,23 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional help 
 <!ENTITY _popup_change2	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
 <!ENTITY _home		"Home">
 <!ENTITY _close		"Done">
+<!ENTITY CP_hierarchy   "Certification Hierarchy:">
+<!ENTITY CP_viewDetails "View Details">
+<!ENTITY CP_viewDetails_key "V">
+<!ENTITY CP_issuedTo    "Issued To:">
+  <!--<!ENTITY issuedBy		"Apparently Issued By:">-->
+<!ENTITY CP_validity    "Validity:">
+<!ENTITY CP_fingerprints "Fingerprints:">
+<!ENTITY CP_commonName  "Common Name (CN):">
+<!ENTITY CP_organization "Organization (O):">
+<!ENTITY CP_organizationalUnit "Organizational Unit (OU):">
+  <!--<!ENTITY serialNumber		"Serial Number:">-->
+<!ENTITY CP_emailAddress "Contact:">
+  <!--<!ENTITY notBefore		"Issued On:">-->
+<!ENTITY CP_notAfterGMT  "Expires On:">
+  <!--<!ENTITY stored			"Stored Since:">-->
+<!ENTITY CP_md5Fingerprint "MD5 Fingerprint:">
+<!ENTITY CP_sha1Fingerprint "SHA1 Fingerprint:">
 
 <!-- Bloody Vikings functionality-->
 <!ENTITY jondofox.temp.email "Request a temporary E-mail address">

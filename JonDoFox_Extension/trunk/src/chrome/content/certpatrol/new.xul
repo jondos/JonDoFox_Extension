@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<!DOCTYPE dialog PUBLIC "-//MOZILLA//DTD XUL V1.0//EN" "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<!DOCTYPE dialog SYSTEM "chrome://jondofox/locale/jondofox.dtd">
 
 <?xml-stylesheet href="chrome://jondofox/skin/CertPatrol.css" type="text/css"?>
 
-<dialog id="ssl-new"
+<dialog id="ssl-new2"
   title="Certificate Patrol"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-  persist="screenX screenY width height" width="630" height="470"
+  persist="screenX screenY width height" width="800" height="370"
   buttons="accept"
   onload="return onLoad();"
   onDialogAccept="return doOK();">
@@ -21,69 +21,61 @@
     <grid>
       <columns>
         <column flex="1" />
-        <column flex="1" />
+        <column flex="2" />
       </columns>
     
       <rows>
         <groupbox>
-          <caption id="cmissto" />
+          <caption id="cmhierarchy" label="&CP_hierarchy;" />
         </groupbox>
         <row>
-          <label id="cmcnl" />
-          <textbox class="plain" readonly="true" id="cmcnv" />
+          <vbox>
+            <button id="cmdetails"
+                    oncommand="CertPatrol.viewCert(certobj.now.cert)"
+                    label="&CP_viewDetails;" accesskey="&CP_viewDetails_key;" />
+          </vbox>
+          <vbox>
+            <textbox id="cmchain" multiline="true" readonly="true" />
+          </vbox>
+        </row> 
+        <groupbox>
+          <caption id="cmissto" label="&CP_issuedTo;" />
+        </groupbox> 
+        <row>
+          <label id="cmcnl" value="&CP_commonName;" />
+          <textbox class="plain" readonly="true" id="commonName" />
         </row>
 	<row>
-          <label id="cmol" />
-          <textbox class="plain" readonly="true" id="cmov" />
+          <label id="cmol" value="&CP_organization;" />
+          <textbox class="plain" readonly="true" id="organization" />
         </row>
         <row>
-          <label id="cmoul" />
-          <textbox class="plain" readonly="true" id="cmouv" />
+          <label id="cmoul" value="&CP_organizationalUnit;" />
+          <textbox class="plain" readonly="true" id="organizationalUnit" />
         </row>
         <row>
-          <label id="cmsnl" />
-          <textbox class="plain" readonly="true" id="cmsnv" />
-        </row>
-        <row>
-          <label id="cmeml" />
-          <textbox class="plain" readonly="true" id="cmemv" />
-        </row>
+          <label id="cmeml" value="&CP_emailAddress;" />
+          <textbox class="plain" readonly="true" id="emailAddress" />
+        </row> 
         <groupbox>
-          <caption id="cmissby" />
+          <caption id="cmvalid" label="&CP_validity;" />
         </groupbox>
         <row>
-          <label id="cmicnl" />
-          <textbox class="plain" readonly="true" id="cmicnv" />
-        </row>
-        <row>
-          <label id="cmiol" />
-          <textbox class="plain" readonly="true" id="cmiov" />
-        </row>
-        <row>
-          <label id="cmioul" />
-          <textbox class="plain" readonly="true" id="cmiouv" />
+          <label id="cmnal" value="&CP_notAfterGMT;" />
+          <textbox class="plain" readonly="true" id="notAfterGMT" />
         </row>
         <groupbox>
-          <caption id="cmvalid" />
+          <caption id="cmfinger" label="&CP_fingerprints;" />
         </groupbox>
         <row>
-          <label id="cmnbl" />
-          <textbox class="plain" readonly="true" id="cmnbv" />
+          <label id="cmmd5l" value="&CP_md5Fingerprint;" />
+          <textbox class="plain" readonly="true" size="64" 
+            id="md5Fingerprint" />
         </row>
         <row>
-          <label id="cmnal" />
-          <textbox class="plain" readonly="true" id="cmnav" />
-        </row>
-        <groupbox>
-          <caption id="cmfinger" />
-        </groupbox>
-        <row>
-          <label id="cmmd5l" />
-          <textbox class="plain" readonly="true" size="64" id="cmmd5v" />
-        </row>
-        <row>
-          <label id="cmsha1l" />
-          <textbox class="plain" readonly="true" size="64" id="cmsha1v" />
+          <label id="cmsha1l" value="&CP_sha1Fingerprint;"/>
+          <textbox class="plain" readonly="true" size="64"
+            id="sha1Fingerprint" />
 	</row>
       </rows>
     </grid>

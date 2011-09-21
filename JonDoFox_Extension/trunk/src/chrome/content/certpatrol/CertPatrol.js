@@ -52,6 +52,8 @@ var CertPatrol = {
                     getService().wrappedJSObject;
       this.prefsHandler = Cc['@jondos.de/preferences-handler;1'].
                     getService().wrappedJSObject;
+      this.version = prefsHandler.
+        getStringPref("extensions.jondofox.last_version"); 
       this.dbinit();
       this.init();
     }
@@ -83,23 +85,75 @@ var CertPatrol = {
 
       // CertPatrol.sqlite initialization
       if (!exists) {
-        this.dbh.executeSimpleSQL(
-        "CREATE TABLE version (version INT)");
-        this.dbh.executeSimpleSQL(
-        "INSERT INTO version (version) VALUES (1)");
-        this.dbh.executeSimpleSQL(
-        "CREATE TABLE certificates (host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR)");
+        this.dbh.executeSimpleSQL("CREATE TABLE version (version INT," +
+          " extversion TEXT)");
+        this.dbh.executeSimpleSQL("INSERT INTO version (version," +
+          " extversion) VALUES (3, '" + this.version + "')");
+	this.dbh.executeSimpleSQL("CREATE TABLE certificates ("+
+	  "  host VARCHAR, commonName VARCHAR, organization VARCHAR, organizationalUnit VARCHAR, "+
+          "  serialNumber VARCHAR, emailAddress VARCHAR, notBeforeGMT VARCHAR, notAfterGMT VARCHAR, "+
+          "  issuerCommonName VARCHAR, issuerOrganization VARCHAR, issuerOrganizationUnit VARCHAR, "+
+          "  md5Fingerprint VARCHAR, sha1Fingerprint VARCHAR, "+
+          "  issuerMd5Fingerprint VARCHAR, issuerSha1Fingerprint VARCHAR, "+
+          "  cert BLOB, flags INT, stored INT)");
+      } else {
+        var stmt = this.dbh.createStatement("SELECT version FROM version");
+        stmt.executeStep();
+        var version = stmt.row.version;
+        stmt.reset();
+
+        if (version < 2) {
+          this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN issuerMd5Fingerprint VARCHAR");
+          this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN issuerSha1Fingerprint VARCHAR");
+          this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN cert BLOB");
+          this.dbh.executeSimpleSQL("UPDATE version SET version = 2");
+        }
+
+        if (version < 3) {
+          this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN flags INT");
+          this.dbh.executeSimpleSQL("ALTER TABLE certificates ADD COLUMN stored INT");
+	  this.dbh.executeSimpleSQL("UPDATE version SET version = 3");
+        }
+
+        var extversion;
+        try {
+          var stmt = this.dbh.createStatement("SELECT extversion FROM version");
+           stmt.executeStep();
+           extversion = stmt.row.extversion;
+           stmt.reset();
+        } catch (e) {
+	  this.dbh.
+            executeSimpleSQL("ALTER TABLE version ADD COLUMN extversion TEXT");
+	}
+
+        // ToDo: Does not work right now. extversion is always null if
+        // migrating from older database format. That's an upstream bug.
+        if (extversion && this.version && extversion != this.version) {
+          this.dbh.executeSimpleSQL("UPDATE version SET extversion='" +
+            this.version + "'");
+	}
       }
 
       // Prepared statements
       this.dbselect = this.dbh.createStatement(
       "SELECT * FROM certificates where host=?1");
       this.dbselectWildcard = this.dbh.createStatement(
-      "SELECT * FROM certificates where sha1Fingerprint=?13");		      
+      "SELECT * FROM certificates where md5Fingerprint=?12 AND sha1Fingerprint=?13");		      
       this.dbinsert = this.dbh.createStatement(
-      "INSERT INTO certificates (host, commonName, organization, organizationalUnit,serialNumber, emailAddress, notBeforeGMT, notAfterGMT, issuerCommonName, issuerOrganization, issuerOrganizationUnit, md5Fingerprint, sha1Fingerprint) values (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
+      "INSERT INTO certificates (host, commonName, organization," +
+        " organizationalUnit, serialNumber, emailAddress, notBeforeGMT," +
+        " notAfterGMT, issuerCommonName, issuerOrganization," +
+        " issuerOrganizationUnit, md5Fingerprint, sha1Fingerprint," +
+        " issuerMd5Fingerprint, issuerSha1Fingerprint, cert, flags, stored)" +
+        " VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18)");
       this.dbupdate = this.dbh.createStatement(
-      "UPDATE certificates set commonName=?2, organization=?3, organizationalUnit=?4, serialNumber=?5, emailAddress=?6, notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9, issuerOrganization=?10, issuerOrganizationUnit=?11, md5Fingerprint=?12, sha1Fingerprint=?13 where host=?1");
+      "UPDATE certificates SET commonName=?2, organization=?3," +
+      " organizationalUnit=?4, serialNumber=?5, emailAddress=?6," +
+      " notBeforeGMT=?7, notAfterGMT=?8, issuerCommonName=?9," +
+      " issuerOrganization=?10, issuerOrganizationUnit=?11," +
+      " md5Fingerprint=?12, sha1Fingerprint=?13, issuerMd5Fingerprint=?14," +
+      " issuerSha1Fingerprint=?15, cert=?16, flags=?17, stored=?18" +
+      " WHERE host=?1");
     }
     catch(err) {
       this.warn("Error initializing SQLite operations: "+ err);
@@ -125,10 +179,6 @@ var CertPatrol = {
   }, 
 
   observe: function(channel, topic, data) {
-    if (!CertPatrol.prefsHandler.
-        getBoolPref('extensions.jondofox.certpatrol_enabled')) {
-      return;
-    } 
     channel.QueryInterface(Ci.nsIHttpChannel);
     var host = channel.URI.hostPort;
 
@@ -220,12 +270,27 @@ var CertPatrol = {
 	 "daysPast" : "daysFuture", [td < 0 ? -td : td]) +")";
   },
 
+  byteArrayToString: function(ba) {
+    var s = "";
+    for (var i = 0; i < ba.length; i++) {
+      s += String.fromCharCode(ba[i]);
+    }
+    return s;
+  },
+
+  byteArrayToCert: function(ba) {
+    var c = "@mozilla.org/security/x509certdb;1", i= "nsIX509CertDB";
+    return Cc[c].getService(Ci[i]).constructX509FromBase64(window.btoa(this.
+      byteArrayToString(ba.value)));
+  }, 
+
   newCertObj: function() {
     return {
-      threat:0,
+      threat: 0,
+      flags: 0,
       coloredWarnings:{},
-      info:"",
-      host:"",
+      info: "",
+      host: "",
       now:{
         commonName:"",
         organization:"",
@@ -238,7 +303,10 @@ var CertPatrol = {
         issuerOrganization:"",
         issuerOrganizationUnit:"",
         md5Fingerprint:"",
-        sha1Fingerprint:""
+        sha1Fingerprint:"",
+        issuerMd5Fingerprint: "",
+        issuerSha1Fingerprint: "",
+        cert: null 
       },
       old:{
         commonName:"",
@@ -252,7 +320,10 @@ var CertPatrol = {
         issuerOrganization:"",
         issuerOrganizationUnit:"",
         md5Fingerprint:"",
-        sha1Fingerprint:""
+        sha1Fingerprint:"",
+        issuerMd5Fingerprint: "",
+        issuerSha1Fingerprint: "",
+        cert: null 
       },
       lang:{
         newEvent:this.jdfUtils.getString("newEvent"),
@@ -279,8 +350,13 @@ var CertPatrol = {
   },
 
   fillCertObj: function(obj, cert) {
+    obj.cert = cert;
     obj.notBeforeGMT = cert.validity.notBefore;
     obj.notAfterGMT = cert.validity.notAfter; 
+    if (cert.issuer) {
+      obj.issuerMd5Fingerprint = cert.issuer.md5Fingerprint;
+      obj.issuerSha1Fingerprint = cert.issuer.sha1Fingerprint;
+    } 
     var keys = [
 	  "commonName", "organization", "organizationalUnit", "serialNumber",
 	  "emailAddress", // "subjectAlternativeName",
@@ -290,7 +366,6 @@ var CertPatrol = {
       obj[keys[i]] = cert[keys[i]]; 
     }
   },
-
 
   // Certificate check
   certCheck: function(browser, certobj) {
@@ -330,6 +405,16 @@ var CertPatrol = {
         certobj.old.issuerOrganizationUnit = stmt.getUTF8String(10);
         certobj.old.md5Fingerprint = stmt.getUTF8String(11);
         certobj.old.sha1Fingerprint = stmt.getUTF8String(12);
+        old.issuerMd5Fingerprint = stmt.getUTF8String(13); 
+        certobj.old.issuerSha1Fingerprint = stmt.getUTF8String(14);
+        var blob = {};
+        stmt.getBlob(15, {}, blob);
+        if (blob.value.length) {
+          old.cert = this.byteArrayToCert(blob);
+        }
+        // Both not used by us yet.
+        certobj.flags = stmt.getInt64(16);
+        old.stored = stmt.getInt64(17) * 1000; 
       }
     } catch(err) {
       this.warn("Error trying to check certificate: "+ err);
@@ -352,20 +437,29 @@ var CertPatrol = {
       if (!this.pbm) {
         // DB update
         stmt = this.dbupdate;
+        var cert = certobj.now.cert;
         try {
           stmt.bindUTF8StringParameter( 0, certobj.host);
-          stmt.bindUTF8StringParameter( 1, certobj.now.commonName);
-          stmt.bindUTF8StringParameter( 2, certobj.now.organization);
-          stmt.bindUTF8StringParameter( 3, certobj.now.organizationalUnit);
-          stmt.bindUTF8StringParameter( 4, certobj.now.serialNumber);
-          stmt.bindUTF8StringParameter( 5, certobj.now.emailAddress);
-          stmt.bindUTF8StringParameter( 6, certobj.now.notBeforeGMT);
-          stmt.bindUTF8StringParameter( 7, certobj.now.notAfterGMT);
-          stmt.bindUTF8StringParameter( 8, certobj.now.issuerCommonName);
-          stmt.bindUTF8StringParameter( 9, certobj.now.issuerOrganization);
-          stmt.bindUTF8StringParameter(10, certobj.now.issuerOrganizationUnit);
-          stmt.bindUTF8StringParameter(11, certobj.now.md5Fingerprint);
-          stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
+          stmt.bindUTF8StringParameter( 1, cert.commonName);
+          stmt.bindUTF8StringParameter( 2, cert.organization);
+          stmt.bindUTF8StringParameter( 3, cert.organizationalUnit);
+          stmt.bindUTF8StringParameter( 4, cert.serialNumber);
+          stmt.bindUTF8StringParameter( 5, cert.emailAddress);
+          stmt.bindUTF8StringParameter( 6, cert.notBeforeGMT);
+          stmt.bindUTF8StringParameter( 7, cert.notAfterGMT);
+          stmt.bindUTF8StringParameter( 8, cert.issuerCommonName);
+          stmt.bindUTF8StringParameter( 9, cert.issuerOrganization);
+          stmt.bindUTF8StringParameter(10, cert.issuerOrganizationUnit);
+          stmt.bindUTF8StringParameter(11, cert.md5Fingerprint);
+          stmt.bindUTF8StringParameter(12, cert.sha1Fingerprint);
+          if (cert.issuer) {
+            stmt.bindUTF8StringParameter(13, cert.issuer.md5Fingerprint);
+            stmt.bindUTF8StringParameter(14, cert.issuer.sha1Fingerprint);
+          }
+          var der = cert.getRawDER({});
+          stmt.bindBlobParameter(15, der, der.length);
+          stmt.bindInt64Parameter(16, certobj.flags);
+          stmt.bindInt64Parameter(17, parseInt(new Date().getTime() / 1000)); 
           stmt.execute();
         } catch(err) {
           this.warn("Error trying to update certificate: "+ err);
@@ -464,6 +558,12 @@ var CertPatrol = {
           stmt.bindUTF8StringParameter(10, certobj.now.issuerOrganizationUnit);
           stmt.bindUTF8StringParameter(11, certobj.now.md5Fingerprint);
           stmt.bindUTF8StringParameter(12, certobj.now.sha1Fingerprint);
+          stmt.bindUTF8StringParameter(13, certobj.now.issuerMd5Fingerprint);
+          stmt.bindUTF8StringParameter(14, certobj.now.issuerSha1Fingerprint);
+          var der = certobj.now.cert.getRawDER({});
+          stmt.bindBlobParameter(15, der, der.length);
+          stmt.bindInt64Parameter(16, 0);
+          stmt.bindInt64Parameter(17, parseInt(new Date().getTime() / 1000)); 
           stmt.execute();
         } catch(err) {
           this.warn("Error trying to insert certificate for " + certobj.host +
@@ -547,7 +647,7 @@ var CertPatrol = {
              }
 	     window.
                openDialog("chrome://jondofox/content/certpatrol/new.xul", 
-               "_blank", "modal", certobj);
+               "_blank", "modal", certobj, CertPatrol);
 	   }
         }]
     );
@@ -601,7 +701,7 @@ var CertPatrol = {
             }
             window.
               openDialog("chrome://jondofox/content/certpatrol/change.xul",
-              "_blank", "modal", certobj);
+              "_blank", "modal", certobj, CertPatrol);
 	  }
         }]
     );
@@ -625,7 +725,27 @@ var CertPatrol = {
   warn: function(result) {
     window.openDialog("chrome://jondofox/content/certpatrol/warning.xul",
 		      /* "ssl-warning" */ "_blank", "modal", result);
-  }
+  },
+
+  addCertChain: function(node, cert) {
+    if (!cert) return;
+    var chain = cert.getChain();
+    var text = "";
+
+    for (var i = chain.length - 1; i >= 0; i--) {
+      var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
+      text += Array((chain.length - i - 1) * 2 + 1).join(" ") + "- " +
+        (cert.commonName || cert.windowTitle) + (i > 0 ? "\n" : "");
+    }
+    node.value = text;
+    node.clickSelectsAll = true;
+    node.setAttribute("rows", chain.length);
+  }, 
+
+  viewCert: function(cert, parent) {
+    Cc["@mozilla.org/nsCertificateDialogs;1"].getService(Ci.
+      nsICertificateDialogs).viewCert(parent, cert);
+  } 
 };
 
 

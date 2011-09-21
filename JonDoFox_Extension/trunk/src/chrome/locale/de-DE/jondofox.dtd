@@ -115,6 +115,23 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY _popup_change2	"Immer Details anzeigen auch bei harmlosen Zertifikatsänderungen">
 <!ENTITY _home		"Homepage">
 <!ENTITY _close		"Passt">
+<!ENTITY CP_hierarchy   "Zertifikatshierarchie:">
+<!ENTITY CP_viewDetails "Details anschauen">
+<!ENTITY CP_viewDetails_key "S">
+<!ENTITY CP_issuedTo    "Ausgegeben an:">
+  <!--<!ENTITY issuedBy		"Apparently Issued By:">-->
+<!ENTITY CP_validity    "Gültigkeit:">
+<!ENTITY CP_fingerprints "Prüfsummen:">
+<!ENTITY CP_commonName  "Name (CN):">
+<!ENTITY CP_organization "Organisation (O):">
+<!ENTITY CP_organizationalUnit "Abteilung (OU):">
+  <!--<!ENTITY serialNumber		"Serial Number:">-->
+<!ENTITY CP_emailAddress "Kontakt:">
+  <!--<!ENTITY notBefore		"Issued On:">-->
+<!ENTITY CP_notAfterGMT  "Gültig bis:">
+  <!--<!ENTITY stored			"Stored Since:">-->
+<!ENTITY CP_md5Fingerprint "MD5 Fingerabdruck:">
+<!ENTITY CP_sha1Fingerprint "SHA1 Fingerabdruck:">
 
 <!-- Bloody Vikings -->
 <!ENTITY jondofox.temp.email "E-Mail-Adresse generieren (temporär)">
