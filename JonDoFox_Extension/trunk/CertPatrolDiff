@@ -1,4 +1,4 @@
-CertPatrol 2.0.10 - JDF 0.2.13
+CertPatrol 2.0.12 - JDF 0.2.13
 ==============================
 
 -check for more cert attributes
@@ -11,6 +11,6 @@ CertPatrol 2.0.10 - JDF 0.2.13
   different issuers
 -cert is used for comparison with new cert; compat mode with earlier version
   (there, only SAH1 and MD5 fingerprints were saved)
--slightly different threat model
 -flags like CHECK_ISSUER_ONLY
 -option to delete certs saved since a specific date
+-some CSS rules included in CertPatrol.css
