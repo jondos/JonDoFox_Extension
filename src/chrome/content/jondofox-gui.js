@@ -536,10 +536,10 @@ function HTMLParser(aHTMLString){
   return html;
 }
 
-function errorPageCheck(e) {
+function errorPageCheck() {
   var contDoc = window.content.document;
-  if (contDoc.documentURI.indexOf("about:neterror?e=proxyConnectFailure") > 
-      -1) {
+  if (contDoc.documentURI.indexOf("about:neterror?e=proxyConnectFailure") ===
+      0) {
     // If we had a TLS request we would get an proxyConnectFailure error as
     // well if we just had disabled JonDo. The resulting error page is probably
     // confusing for users. We, therefore, try to request the site over plain
@@ -991,6 +991,7 @@ function shutdown() {
 	    removeEventListener("click", clearingSearchbar, true);
     document.getElementById("content").removeEventListener("DOMTitleChanged", 
 		    setTitleModifier, false);
+    // TODO: Does not work as this is an anonymous function!
     document.getElementById("content").removeEventListener("load",
 		    CertPatrol.onPageLoad, true);
     document.getElementById("contentAreaContextMenu").

@@ -5,3 +5,7 @@
 	border: none;
 }
 
+.threat-0 { }
+.threat-1 { background-color: darkgreen; }
+.threat-2 { background-color: darkorange; }
+.threat-3 { background-color: darkred; }

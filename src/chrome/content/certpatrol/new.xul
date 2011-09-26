@@ -61,7 +61,7 @@
           <caption id="cmvalid" label="&CP_validity;" />
         </groupbox>
         <row>
-          <label id="cmnal" value="&CP_notAfterGMT;" />
+          <label id="cmnal" value="&CP_notAfter;" />
           <textbox class="plain" readonly="true" id="notAfterGMT" />
         </row>
         <groupbox>

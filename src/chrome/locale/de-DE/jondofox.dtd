@@ -119,7 +119,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY CP_viewDetails "Details anschauen">
 <!ENTITY CP_viewDetails_key "S">
 <!ENTITY CP_issuedTo    "Ausgegeben an:">
-  <!--<!ENTITY issuedBy		"Apparently Issued By:">-->
+<!ENTITY CP_issuedBy    "Anscheinend ausgestellt durch:">
 <!ENTITY CP_validity    "Gültigkeit:">
 <!ENTITY CP_fingerprints "Prüfsummen:">
 <!ENTITY CP_commonName  "Name (CN):">
@@ -127,11 +127,23 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY CP_organizationalUnit "Abteilung (OU):">
   <!--<!ENTITY serialNumber		"Serial Number:">-->
 <!ENTITY CP_emailAddress "Kontakt:">
-  <!--<!ENTITY notBefore		"Issued On:">-->
-<!ENTITY CP_notAfterGMT  "Gültig bis:">
+<!ENTITY CP_notBefore "Ausgestellt am:">
+<!ENTITY CP_notAfter "Gültig bis:">
   <!--<!ENTITY stored			"Stored Since:">-->
 <!ENTITY CP_md5Fingerprint "MD5 Fingerabdruck:">
 <!ENTITY CP_sha1Fingerprint "SHA1 Fingerabdruck:">
+<!ENTITY warn_commonName "Warnung: Name der Site hat sich geändert. Schau mal ob das ok ist so.">
+<!ENTITY warn_issuerCommonName "Vorsicht: Es wurde die Zertifizierungsstelle gewechselt.">
+<!ENTITY warn_notBefore "Achtung! Dieses Zertifikat ist noch nicht gültig.">
+<!ENTITY warn_notAfter_expired "Info: Altes Zertifikat ist abgelaufen. Es muss ersetzt werden.">
+<!ENTITY warn_notAfter_notdue "Warnung: Dieses Zertifikat ist noch lange Zeit gültig, aber vielleicht gab es andere Gründe es zu ersetzen.">
+<!ENTITY warn_notAfter_due "Info: Das alte Zertifikat liefe demnächst ab. Es ist in Ordnung es zu erneuern.">
+<!ENTITY oldCertHier "Alte Zertifikatshierarchie:">
+<!ENTITY newCertHier "Neue Zertifikatshierarchie:">
+<!ENTITY viewOldCert "Betrachte altes Zertifikat">
+<!ENTITY viewOldCert_key "T">
+<!ENTITY viewNewCert "Betrachte neues Zertifikat">
+<!ENTITY viewNewCert_key "N">
 
 <!-- Bloody Vikings -->
 <!ENTITY jondofox.temp.email "E-Mail-Adresse generieren (temporär)">
