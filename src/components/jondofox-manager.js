@@ -231,7 +231,7 @@ JDFManager.prototype = {
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
     'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior',
-    'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts' 
+    'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts'
   },
 
   // This map contains those preferences which avoid external apps being opened
@@ -573,9 +573,12 @@ JDFManager.prototype = {
         // Firefox 4 has a whitespace between the "," and "deflate". We need to 
 	// avoid that in order not to reduce our anonymity set.	
 	this.stringPrefsMap['network.http.accept-encoding'] = 
-	        'extensions.jondofox.http.accept_encoding';
+          'extensions.jondofox.http.accept_encoding';
 	this.boolPrefsMap['privacy.donottrackheader.enabled'] = 
 	  'extensions.jondofox.donottrackheader.enabled';
+        // Restricting the sessionhistory max_entries
+        this.intPrefsMap['browser.sessionhistory.max_entries'] =
+           'extensions.jondofox.sessionhistory.max_entries';
 	// For clearity of code we implement a different method to check the
 	// installed extension in Firefox4
         this.checkExtensionsFF4();
@@ -1023,6 +1026,14 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.0" && 
+	  this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.1" &&
+          this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.2" && 
+          this.prefsHandler.getStringPref(
+               'extensions.jondofox.profile_version') !== "2.5.3" &&
+          this.prefsHandler.getStringPref(
                'extensions.jondofox.profile_version') !== "2.5.4" &&  
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.

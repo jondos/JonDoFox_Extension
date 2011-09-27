@@ -181,6 +181,9 @@ pref("extensions.jondofox.webgl.disabled", true);
 // No document fonts to avoid this fingerprint means
 pref("extensions.jondofox.use_document_fonts", 0);
 
+// we allow just two items in the session history due to fingerprinting issues
+pref("extensions.jondofox.sessionhistory.max_entries", 2);
+
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 
