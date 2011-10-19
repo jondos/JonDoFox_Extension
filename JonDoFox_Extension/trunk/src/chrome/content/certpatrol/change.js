@@ -7,22 +7,11 @@ function $() {
 
 function onLoad() {
   var warning;
-  var coloredWarnings; 
   var threat = window.arguments[0].threat;
   $("cmdiag").setAttribute("description", "(" + certobj.host + ")");
   $("cmdiag").setAttribute("title", certobj.lang.changeEvent);       
   $("cmdiag").className += 'threat-' + threat;
 
-  coloredWarnings = window.arguments[0].coloredWarnings;
-  if (threat === 1 || threat === 2) {
-    for (warning in coloredWarnings) {
-      $(coloredWarnings[warning]+2).setAttribute("style", "color: darkorange");
-    }
-  } else if (threat === 3) {
-    for (warning in coloredWarnings) {
-      $(coloredWarnings[warning]+2).setAttribute("style", "color: darkred");
-    }
-  }
   if (!certobj.old.cert) $("cmdetailso").disabled = true; 
   $("cmdetailsn").focus();
   $("cmbox").scrollTop = 0; 
@@ -40,6 +29,8 @@ function onLoad() {
     } else {
       $(key).value = certobj.old[key];
       $(key+2).value = certobj.now[key];
+      $(key).className += " old";
+      $(key+2).className += " new";
       $(key+2).hidden = false;
     }
   } 

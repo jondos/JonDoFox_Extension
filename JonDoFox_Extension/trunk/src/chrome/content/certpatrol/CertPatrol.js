@@ -288,7 +288,6 @@ var CertPatrol = {
     return {
       threat: 0,
       flags: 0,
-      coloredWarnings:{},
       warn:{},
       host: "",
       now:{
@@ -479,10 +478,6 @@ var CertPatrol = {
       if (now.commonName != old.commonName) {
         certobj.warn.commonName = true;
 	certobj.threat += 2;
-	// We use the coloredWarnings object to be later on able to render the
-	// problematic attributes in the appropriate color (i.e. orange or 
-	// firebrick[sic!]) in the change dialog.
-	certobj.coloredWarnings.first = "commonName";
       } 
       var natd = this.timedelta(old.notAfterGMT);
       if (natd <= 0) {
@@ -500,19 +495,12 @@ var CertPatrol = {
         // new cert is not valid yet
         certobj.warn.notBefore = true;
 	certobj.threat += 2;
-	certobj.coloredWarnings.second = "notBeforeGMT";
       } 
       if (now.issuerCommonName != old.issuerCommonName ||
           now.issuerOrganization != old.issuerOrganization) {
         certobj.warn.issuerCommonName = true
 	certobj.threat ++;
-	certobj.coloredWarnings.third = "issuerCommonName";
       }
-      // The SHA1 and MD5 checksum have probably changed, it should get some
-      // coloring as well if there are some threats...
-      certobj.coloredWarnings.fourth = "md5Fingerprint";
-      certobj.coloredWarnings.fifth = "sha1Fingerprint";
-
 
       if (certobj.threat > 3) {
         certobj.threat = 3;
