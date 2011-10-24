@@ -184,6 +184,10 @@ pref("extensions.jondofox.use_document_fonts", 0);
 // we allow just two items in the session history due to fingerprinting issues
 pref("extensions.jondofox.sessionhistory.max_entries", 2);
 
+// Disabling all plugins in JonDonym-Mode
+pref("extensions.jondofox.disableAllPluginsJonDoMode", false);
+pref("extensions.jondofox.plugin-protection_enabled", true );
+
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 
