@@ -79,6 +79,18 @@
               </groupbox>
             </row>
   
+            <!-- Plugin preference -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.plugins.label;:"/>
+		<box>
+		  <!-- Checkbox to activate/deactivate plugin protection  -->
+                  <checkbox id="checkbox_set_plugins" 
+                          label="&jondofox.dialogtab.options.plugins;"
+                          accesskey="L"/>
+		</box>
+              </groupbox>
+            </row> 
 
             <!-- SSL preferences -->
             <row align="center">

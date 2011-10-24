@@ -199,6 +199,8 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional help 
 <!ENTITY jondofox.dialogtab.options.referrer "Activate Referer management">
 <!ENTITY jondofox.dialogtab.options.cache "Cache">
 <!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache and HTTP Authentication protection">
+<!ENTITY jondofox.dialogtab.options.plugins.label "Plugins">
+<!ENTITY jondofox.dialogtab.options.plugins "Deactivate all plugins but Flash in JonDo mode"> 
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Settings">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Activate Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Send SSL certificates to the SSL Observatory">

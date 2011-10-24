@@ -55,6 +55,10 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_set_safecache').checked =
         prefsHandler.
 	getBoolPref('extensions.jondofox.stanford-safecache_enabled');
+    // Plugin setting
+    document.getElementById('checkbox_set_plugins').checked =
+        prefsHandler.
+	getBoolPref('extensions.jondofox.plugin-protection_enabled'); 
     // Certificate Patrol setting
     document.getElementById('checkbox_set_certpatrol').checked = 
         prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
@@ -91,6 +95,9 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_set_referrer').checked);
     prefsHandler.setBoolPref('extensions.jondofox.stanford-safecache_enabled',
         document.getElementById('checkbox_set_safecache').checked); 
+    prefsHandler.
+	setBoolPref('extensions.jondofox.plugin-protection_enabled',
+      document.getElementById('checkbox_set_plugins').checked); 
     prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
         document.getElementById('checkbox_set_certpatrol').checked);
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
@@ -466,6 +473,8 @@ function onAccept() {
     writePrefsGeneral();
     writePrefsCustomProxy();
     writePrefsTempEmail();
+    // Act according to the plugin checkbox
+    jdfManager.enforcePluginPref(jdfManager.getState()); 
     // Set proxy exceptions to FF
     proxyManager.setExceptions(prefsHandler.getStringPref(
         'extensions.jondofox.no_proxies_on'));
@@ -489,6 +498,9 @@ function onApply() {
     // Call the respective write-method
     if (index == TABINDEX_GENERAL) {
       writePrefsGeneral();
+      //
+      // Act according to the plugin checkbox
+      jdfManager.enforcePluginPref(jdfManager.getState()); 
       // Set proxy exceptions to FF
       proxyManager.setExceptions(prefsHandler.getStringPref(
           'extensions.jondofox.no_proxies_on'));
