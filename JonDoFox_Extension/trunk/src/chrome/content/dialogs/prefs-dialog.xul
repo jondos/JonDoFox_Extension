@@ -87,7 +87,7 @@
 		  <!-- Checkbox to activate/deactivate plugin protection  -->
                   <checkbox id="checkbox_set_plugins" 
                           label="&jondofox.dialogtab.options.plugins;"
-                          accesskey="L"/>
+                          accesskey="G"/>
 		</box>
               </groupbox>
             </row> 

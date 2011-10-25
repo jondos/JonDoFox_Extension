@@ -72,6 +72,13 @@ sowohl die spezifischen Nutzerdaten, die an Drittseiten gesendet als auch von
 ihnen empfangen werden, herausgefiltert. Im JonDoFox-Einstellungsmen&uuml;
 findet sich ein entsprechender Hinweis darauf:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
+<!ENTITY jondofox.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
+von JonDoFox umgehen, was sie besonders gef&auml;hrlich beim anonymen Surfen
+macht. Daher werden beim JonDoFox im JonDo-Modus standardm&auml;&szlig;ig alle
+Plugins abgeschaltet. Lediglich Flash wird aktiv gelassen, was allein dessen
+weiter Verbreitung zuzuschreiben ist. Die Einstellung, die dieses Verhalten
+regelt, findet man wiederum im JonDoFox-Einstellungsmen&uuml;:">
+<!ENTITY jondofox.features.plugins.picurl "chrome://jondofox/skin/plugins_de.png">
 <!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
 gef&auml;lschten SSL-Zertifikaten">
 <!ENTITY jondofox.features.certpatrol1 "F&uuml;r einen besseren Schutz vor 
@@ -209,7 +216,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.options.cache "Cache-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
 <!ENTITY jondofox.dialogtab.options.plugins.label "Plugin-Einstellungen">
-<!ENTITY jondofox.dialogtab.options.plugins "Deaktiviere alle Plugins außer Flash im JonDo-Modus">
+<!ENTITY jondofox.dialogtab.options.plugins "Deaktiviere im JonDo-Modus alle Plugins außer Flash">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">

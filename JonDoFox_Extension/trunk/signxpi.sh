@@ -17,7 +17,7 @@ fi
 # Unzipping the unsigned .xpi and signing the files
 mkdir signdir
 unzip -d signdir xpi/jondofox.xpi
-signtool -d ${HOME}/.mozilla/firefox/profile -k "The USERTRUST Network ID von JonDos GmbH" signdir
+signtool -d ${HOME}/.mozilla/firefox/profile -k "Importiertes Zertifikat" signdir
 
 # Finally zipping the signed files again to get a .xpi
 cd signdir
