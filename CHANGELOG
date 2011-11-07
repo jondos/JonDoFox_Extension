@@ -1,7 +1,7 @@
 Changes in version 0.2.14 - 2011-11-07
 
   New Feature:
-    * options to disable all plugins but Flash in JonDo mode; included a hidden
+    * option to disable all plugins but Flash in JonDo mode; included a hidden
       option (extensions.jondofox.disableAllPluginsJonDoMode) to disable even
       Flash; all plugins are disabled in Tor mode by default and enabled in no-
       proxy mode; in custom-proxy mode the behavior depends on the chosen UA
