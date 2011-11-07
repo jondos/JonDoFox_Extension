@@ -9,6 +9,7 @@ Changes in version 0.2.14 - 2011-11-07
   Minor improvement: 
     * improved change dialog for CertPatrol (uniform coloring of old (red) and
       new attributes (green)) 
+    * improved error page for Windows users
     * raised maxVersion of JonDoFox to Firefox 10.0a1
 
   Bugfixes:
