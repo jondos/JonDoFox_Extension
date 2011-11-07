@@ -678,6 +678,13 @@ function errorPageCheck() {
       downloadLink.appendChild(pNode);
       downloadLink.appendChild(pHintNode2);
       downloadLink.appendChild(pHintNode3);
+      if (jdfManager.os === "windows") {
+        var pHintNode4 = contDoc.createElement("p");
+        var hintTextNode4 = contDoc.createTextNode(jdfUtils.
+          getString("jondofox.jondo.hint4.windows"));
+        pHintNode4.appendChild(hintTextNode4);
+        downloadLink.appendChild(pHintNode4);
+      }
       longContentElem.appendChild(downloadLink); 
 
       if (reqObs.firstRequest) {
