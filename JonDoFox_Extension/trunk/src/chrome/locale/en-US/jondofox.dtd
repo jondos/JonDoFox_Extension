@@ -70,6 +70,7 @@ order to defend against this kind of threat we discard authentication
 information sent by/to 3rd party elements. In the JonDoFox settings panel you 
 will find a corresponding hint:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_en.png">
+<!ENTITY jondofox.features.plugins.head "Defending against Plugins">
 <!ENTITY jondofox.features.plugins "Plugins can circumvent the proxy settings of
 JonDoFox which makes them especially dangerous while surfing anonymously.
 Therefore, all plugins are deactivated by default in JonDoFox' JonDo mode. Only

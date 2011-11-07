@@ -1,9 +1,10 @@
-Changes in version 0.2.14 - XXXX-XX-XX
+Changes in version 0.2.14 - 2011-11-07
 
   New Feature:
     * options to disable all plugins but Flash in JonDo mode; included a hidden
       option (extensions.jondofox.disableAllPluginsJonDoMode) to disable even
-      Flash; all plugins are disabled in Tor mode by default 
+      Flash; all plugins are disabled in Tor mode by default and enabled in no-
+      proxy mode; in custom-proxy mode the behavior depends on the chosen UA
 
   Minor improvement: 
     * improved change dialog for CertPatrol (uniform coloring of old (red) and
@@ -12,6 +13,7 @@ Changes in version 0.2.14 - XXXX-XX-XX
 
   Bugfixes:
     * fixed wrong sent FF version to Google's safebrowsing server
+    * fixed wrong entity for JonDo Mac image link in german language file
 
 Changes in version 0.2.13 - 2011-09-27
 

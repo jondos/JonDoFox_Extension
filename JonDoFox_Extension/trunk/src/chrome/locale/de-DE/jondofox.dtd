@@ -72,6 +72,7 @@ sowohl die spezifischen Nutzerdaten, die an Drittseiten gesendet als auch von
 ihnen empfangen werden, herausgefiltert. Im JonDoFox-Einstellungsmen&uuml;
 findet sich ein entsprechender Hinweis darauf:">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
+<!ENTITY jondofox.features.plugins.head "Schutz vor Plugins">
 <!ENTITY jondofox.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
 von JonDoFox umgehen, was sie besonders gef&auml;hrlich beim anonymen Surfen
 macht. Daher werden beim JonDoFox im JonDo-Modus standardm&auml;&szlig;ig alle
