@@ -1048,47 +1048,44 @@ JDFManager.prototype = {
   },
 
   enforcePluginPref: function(state) {
+    var userAgent = this.prefsHandler.
+      getStringPref('extensions.jondofox.custom.user_agent'); 
     var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.
       nsIPluginHost);
     var plugins = pluginHost.getPluginTags({}); 
-     switch(state) {
-      case (this.STATE_JONDO): 
-        for (var i = 0; i < plugins.length; i++) {
-          var p=plugins[i];
-          if (this.prefsHandler.
-            getBoolPref("extensions.jondofox.plugin-protection_enabled")) { 
-            if (/^Shockwave.*Flash/i.test(p.name)) { 
-              if (this.prefsHandler.
-                getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
-                p.disabled = true;
-              } else {
-                // We need this if we are coming from Tor mode
-                p.disabled = false;
-              }
-            } else {
+    if (state === this.STATE_JONDO || (state === this.STATE_CUSTOM &&
+        userAgent === 'jondo')) {
+      for (var i = 0; i < plugins.length; i++) {
+        var p=plugins[i];
+        if (this.prefsHandler.
+          getBoolPref("extensions.jondofox.plugin-protection_enabled")) { 
+          if (/^Shockwave.*Flash/i.test(p.name)) { 
+            if (this.prefsHandler.
+              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
               p.disabled = true;
+            } else {
+              // We need this if we are coming from Tor mode
+              p.disabled = false;
             }
           } else {
-            p.disabled = false;
-          } 
-        }
-        break;
-      case (this.STATE_TOR):
-        for (var i = 0; i < plugins.length; i++) {
-          var p = plugins[i]; 
-          // The TorBrowserBundle blocks all plugins by default
-          p.disabled = true;
-        }   
-        break;
-      case (this.STATE_CUSTOM):
-      case (this.STATE_NONE):
-        for (var i = 0; i < plugins.length; i++) {
-          var p = plugins[i]; 
+            p.disabled = true;
+          }
+        } else {
           p.disabled = false;
         } 
-        break;
-      default:
-        break;
+      }
+    } else if (state === this.STATE_TOR || (state === this.STATE_CUSTOM &&
+               userAgent === 'tor')) {
+      for (var i = 0; i < plugins.length; i++) {
+        var p = plugins[i]; 
+        // The TorBrowserBundle blocks all plugins by default
+        p.disabled = true;
+      }   
+    } else if (state === this.STATE_CUSTOM || state === this.STATE_NONE) {
+      for (var i = 0; i < plugins.length; i++) {
+        var p = plugins[i]; 
+        p.disabled = false;
+      } 
     }
   },
 
