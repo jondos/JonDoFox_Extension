@@ -1026,17 +1026,7 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.0" && 
-	  this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.1" &&
-          this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.2" && 
-          this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.3" &&
-          this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.4" &&  
-          this.prefsHandler.getStringPref(
-               'extensions.jondofox.profile_version') !== "2.5.5" && 
+            'extensions.jondofox.profile_version') !== "2.6.0" && 
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
