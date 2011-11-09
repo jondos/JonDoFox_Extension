@@ -1,3 +1,8 @@
+Changes in version 0.2.14.1 - 2011-11-09
+
+  Bugfix:
+    * disabling the plugin feature means it is disabled globally now
+
 Changes in version 0.2.14 - 2011-11-08
 
   New Feature:
