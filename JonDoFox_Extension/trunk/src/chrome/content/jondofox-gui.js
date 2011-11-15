@@ -147,12 +147,12 @@ function setProxy(state) {
       // Maybe somone configured her proxy not to use a fake UA anymore. We
       // should therefore check the User Agent here as well.
       if (state === jdfManager.STATE_CUSTOM) {
-	jdfManager.setUserAgent(state)
+	jdfManager.setUserAgent(false, state)
       }
       refresh();
     } else {
       // The state has changed --> set the user agent and clear cookies
-      jdfManager.setUserAgent(state);
+      jdfManager.setUserAgent(false, state);
       jdfManager.clearAllCookies();
       // Setting already_submitted object back to avoid tracking risks
       reqObs.sslObservatory.already_submitted = {};
@@ -161,7 +161,10 @@ function setProxy(state) {
     log("setProxy(): " + e);
   } finally {
     // Actively hide the 'menupopup'
-    document.getElementById('jondofox-proxy-list').hidePopup();
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser'); 
+    win.document.getElementById('jondofox-proxy-list').hidePopup();
   }
 }
 
@@ -169,7 +172,10 @@ function setProxy(state) {
 function setProxyNone() {
   try {
     // Hide 'menupopup'
-    document.getElementById('jondofox-proxy-list').hidePopup();
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser'); 
+    win.document.getElementById('jondofox-proxy-list').hidePopup();
     // Request user confirmation if she has not disabled the warning
     var keepProxyEnabled;
     if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
@@ -201,8 +207,12 @@ function setCustomProxy() {
   var keepProxyEnabled;
   log("Check whether there is a proxy set at all ..");
   try {
-    // Hide 'menupopup'
-    document.getElementById('jondofox-proxy-list').hidePopup();
+    // Hide 'menupopup'; As we may call it from prefs-dialog,js as well we need
+    // the browser window.
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser'); 
+    win.document.getElementById('jondofox-proxy-list').hidePopup();
     // Check whether one of the relevant preferences is zero
     
     if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
@@ -298,29 +308,35 @@ function refresh() {
     // Get state, label and statusbar respectively
     var state = jdfManager.getState();
     var label = getLabel(state);
-    var statusbar = document.getElementById('jondofox-proxy-status');
+    var win = Cc['@mozilla.org/appshell/window-mediator;1'].
+                 getService(Ci.nsIWindowMediator).
+                 getMostRecentWindow('navigator:browser'); 
+    var statusbar = win.document.getElementById('jondofox-proxy-status');
     // No statusbar. Let's try the add-on bar...
     if (!statusbar) { 
-      statusbar = document.getElementById('addon-bar'); 
+      log("We try the addon-bar!");
+      statusbar = win.document.getElementById('addon-bar'); 
     }
     var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
-    // Set the text color; if we have proxy state custom and an empty proxy
-    // then change the text color as well...
-    if (state == jdfManager.STATE_NONE || 
-        (state == jdfManager.STATE_CUSTOM && emptyCustomProxy)) {
-      statusbar.style.color = "#F00";
-    } else {
-      statusbar.style.color = "#000";
+    if (statusbar) {
+      // Set the text color; if we have proxy state custom and an empty proxy
+      // then change the text color as well...
+      if (state == jdfManager.STATE_NONE || 
+          (state == jdfManager.STATE_CUSTOM && emptyCustomProxy)) {
+        statusbar.style.color = "#F00";
+      } else {
+        statusbar.style.color = "#000";
+      }
+      // Set the label to the statusbar
+      statusbar.setAttribute('label', "Proxy: " + label);
     }
-    // Set the label to the statusbar
-    statusbar.setAttribute('label', "Proxy: " + label);
     // Set the custom proxy label in the popup menu
-    document.getElementById('custom-radio').label = getLabel(jdfManager.
+    win.document.getElementById('custom-radio').label = getLabel(jdfManager.
                                                        STATE_CUSTOM);
     // Checking the proper menuitem here.
-    document.getElementById(state + "-radio").setAttribute("checked", "true"); 
+    win.document.getElementById(state + "-radio").setAttribute("checked", "true"); 
     // Refresh context menu: Set the label of 'bypass-proxy'
-    document.getElementById('bypass-proxy').label = jdfUtils.
+    win.document.getElementById('bypass-proxy').label = jdfUtils.
        formatString("jondofox.contextmenu.bypass.label", [label]);
     refreshToolbarButton();
   } catch (e) {
@@ -787,7 +803,7 @@ var prefsObserver = {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
             // .. set the state to 'none'
             jdfManager.setState(jdfManager.STATE_NONE);
-            jdfManager.setUserAgent(jdfManager.STATE_NONE);
+            jdfManager.setUserAgent(false, jdfManager.STATE_NONE);
           }
         } 
         else if (data === VERSION_PREF && jdfManager.ff4) {
