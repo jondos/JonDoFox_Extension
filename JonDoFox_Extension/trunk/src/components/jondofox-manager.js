@@ -255,6 +255,8 @@ JDFManager.prototype = {
 
   isClearingSearchhistoryEnabled: false,
 
+  envSrv: null,
+
   // Inititalize services and stringBundle
   init: function() {
     var bundleService;
@@ -273,6 +275,8 @@ JDFManager.prototype = {
 	                      getService(CI.nsIRDFService);
       JDFManager.prototype.directoryService = 
        CC['@mozilla.org/file/directory_service;1'].getService(CI.nsIProperties);
+      this.envSrv = CC["@mozilla.org/process/environment;1"].
+        getService(CI.nsIEnvironment); 
       // Determine whether we use FF4 or still some FF3
       this.isFirefox4();
       if (this.ff4) {
@@ -661,9 +665,6 @@ JDFManager.prototype = {
           this.startJondo();
         }
       }*/
-      // We set the timezone on startup here (and not in setUserAgent()) as
-      // we want to save the original timezone for recovery.
-      this.setTimezone(true, this.getState());
       // A convenient method to set user prefs that change from proxy to proxy.
       // We should nevertheless make the settings of userprefs in broader way
       // dependant on the chosen proxy. This would include the call to 
@@ -827,8 +828,6 @@ JDFManager.prototype = {
     //  1. odd timezones like IST and IST+13:30
     //  2. negative offsets
     //  3. Windows-style spaced names
-    var environ = CC["@mozilla.org/process/environment;1"].
-      getService(CI.nsIEnvironment);
         
     log("Setting timezone at " + startup + " for mode " + mode);
 
@@ -836,10 +835,11 @@ JDFManager.prototype = {
     // http://www-01.ibm.com/support/docview.wss?rs=0&uid=swg21150296
     // and 
     // http://msdn.microsoft.com/en-us/library/90s5c885.aspx
-    if(startup) {
+    if (startup) {
       // Save Date() string to pref
       var d = new Date();
       var offset = d.getTimezoneOffset();
+      log(offset);
       var offStr = "";
       if (d.getTimezoneOffset() < 0) {
         offset = -offset;
@@ -847,15 +847,17 @@ JDFManager.prototype = {
       } else {
         offStr = "+";
       }
-        
-      if (offset/60 < 10) {
+      var minutes = offset % 60;
+      // Division in JS gives always floating point results we do not want.
+      if ((offset - minutes) / 60 < 10) {
         offStr += "0";
       }
-      offStr += (offset/60)+":";
-      if ((offset%60) < 10) {
+      offStr += ((offset - minutes) / 60) + ":";
+      if ((minutes) < 10) {
         offStr += "0";
       }
-      offStr += (offset%60);
+      offStr += (minutes);
+      log(offStr);
 
       // Regex match for 3 letter code
       var re = new RegExp('\\((\\S+)\\)', "gm");
@@ -863,7 +865,7 @@ JDFManager.prototype = {
       // Parse parens. If parseable, use. Otherwise set TZ=""
       var set = ""
       if (match) {
-        set = match[1]+offStr;
+        set = match[1] + offStr;
       } else {
         log("Skipping timezone storage");
       }
@@ -877,14 +879,14 @@ JDFManager.prototype = {
     if (mode === "jondo" || mode === "tor" ||
         (mode === "custom" && (userAgent === "jondo" || userAgent === "tor"))) {
       log("Setting timezone to UTC");
-      environ.set("TZ", "UTC");
+      this.envSrv.set("TZ", "UTC");
     } else {
       // 1. If startup TZ string, reset.
       log("Unsetting timezone.");
       // FIXME: Tears.. This will not update during daylight switch for
       // linux+mac users. Windows users will be fine though, because tz_string
       // should be empty for them.
-      environ.set("TZ",
+      this.envSrv.set("TZ",
         this.prefsHandler.getStringPref("extensions.jondofox.tz_string"));
     }
   },
@@ -1274,12 +1276,9 @@ JDFManager.prototype = {
 	log("We should not be here!");
         break;
     }
-    // Setting the timezone according to the proxy settings. We are calling
-    // setTimezone() separately in order to save the original timezone. We may
-    // need it later to "give" the user who uses no proxy her timezone back.
-    if (!startup) {
-      this.setTimezone(startup, state); 
-    }
+    // Setting the timezone according to the proxy settings and, on startup,
+    // saving the original one for recovery
+    this.setTimezone(startup, state); 
   },
 
   // We get the original values (needed for proxy = none and if the user 
@@ -1858,6 +1857,15 @@ JDFManager.prototype = {
           if (this.clean) {
             this.cleanup();
           }
+
+          // We reset the timezone here: That is usually not a problem as the
+          // real timezone is read and saved during every startup. But if one
+          // just updates extensions the old environment variables are kept
+          // and it can happen that the timezone switching does not work
+          // properly anymore. Thus...
+          this.envSrv.set("TZ",
+            this.prefsHandler.getStringPref("extensions.jondofox.tz_string"));
+
           // Unregister observers
           this.unregisterObservers();
           break;
