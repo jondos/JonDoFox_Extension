@@ -282,17 +282,37 @@ JDFManager.prototype = {
       if (this.ff4) {
         try {
           var extensionListener = {
-	    onUninstalling: function(addon) {
+            onInstalling: function(addon, needsRestart) {
+              if (needsRestart) {
+                JDFManager.prefsHandler.
+                  setStringPref("extensions.jondofox.tz_string", "");
+              }
+            },
+	    onUninstalling: function(addon, needsRestart) {
               if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
 		log("We got the onUninstalling notification...")
                 JDFManager.prototype.clean = true;
 		JDFManager.prototype.uninstall = true;
 	      }
+              if (needsRestart) {
+                JDFManager.prefsHandler.
+                  setStringPref("extensions.jondofox.tz_string", "");
+              }
 	    },
-            onDisabling: function(addon) {
+            onEnabling: function(addon, needsRestart) {
+              if (needsRestart) {
+                JDFManager.prefsHandler.
+                  setStringPref("extensions.jondofox.tz_string", "");
+              }
+            },
+            onDisabling: function(addon, needsRestart) {
               if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
 		log("We got the onDisabling notification...");
                 JDFManager.prototype.clean = true;
+              }
+              if (needsRestart) {
+                JDFManager.prefsHandler.
+                  setStringPref("extensions.jondofox.tz_string", "");
               }
 	    },
 	    onOperationCancelled: function(addon) {
@@ -824,11 +844,6 @@ JDFManager.prototype = {
   
   // Taken with some minor modifications from Torbutton (torbutton.js).
   setTimezone: function(startup, mode) {
-    // XXX: Test: 
-    //  1. odd timezones like IST and IST+13:30
-    //  2. negative offsets
-    //  3. Windows-style spaced names
-        
     log("Setting timezone at " + startup + " for mode " + mode);
 
     // For TZ info, see:
@@ -839,7 +854,6 @@ JDFManager.prototype = {
       // Save Date() string to pref
       var d = new Date();
       var offset = d.getTimezoneOffset();
-      log(offset);
       var offStr = "";
       if (d.getTimezoneOffset() < 0) {
         offset = -offset;
@@ -857,7 +871,6 @@ JDFManager.prototype = {
         offStr += "0";
       }
       offStr += (minutes);
-      log(offStr);
 
       // Regex match for 3 letter code
       var re = new RegExp('\\((\\S+)\\)', "gm");
@@ -867,7 +880,12 @@ JDFManager.prototype = {
       if (match) {
         set = match[1] + offStr;
       } else {
-        log("Skipping timezone storage");
+        // If we get no 3 letter code we set the string at least to "" in
+        // order to have at least a small chance to get the timezone properly
+        // set after proxy switching.
+        // Just taking the offset does not work (at least on the Windows
+        // machine I had for testing).
+        set = "";
       }
       this.prefsHandler.setStringPref("extensions.jondofox.tz_string", set);
     }
@@ -883,6 +901,7 @@ JDFManager.prototype = {
     } else {
       // 1. If startup TZ string, reset.
       log("Unsetting timezone.");
+      // Hmmmm... I would need a test for this.
       // FIXME: Tears.. This will not update during daylight switch for
       // linux+mac users. Windows users will be fine though, because tz_string
       // should be empty for them.
