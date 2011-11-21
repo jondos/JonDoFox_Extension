@@ -1138,12 +1138,14 @@ JDFManager.prototype = {
   },
 
   savePluginSettings: function() {
+    log("Saving plugins...");
     var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.
       nsIPluginHost);
     var plugins = pluginHost.getPluginTags({}); 
     var oldPlugins = {};
     for (var i = 0; i < plugins.length; i++) { 
       var p = plugins[i];
+      log(p.name + " : " + p.disabled);
       oldPlugins[p.name] = p.disabled;  
     }
     var pluginJSON = JSON.stringify(oldPlugins);
@@ -1157,35 +1159,42 @@ JDFManager.prototype = {
     var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.
       nsIPluginHost);
     var plugins = pluginHost.getPluginTags({}); 
-    if (state === this.STATE_JONDO || (state === this.STATE_CUSTOM &&
-        userAgent === 'jondo')) {
+    if (state === this.STATE_JONDO) {
       for (var i = 0; i < plugins.length; i++) {
         var p=plugins[i];
-        if (this.prefsHandler.
-          getBoolPref("extensions.jondofox.plugin-protection_enabled")) { 
-          if (/^Shockwave.*Flash/i.test(p.name)) { 
+        if (/^Shockwave.*Flash/i.test(p.name)) { 
+          if (this.prefsHandler.
+              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
+            p.disabled = true;
+          } else {
             // We need this if we are coming from Tor mode
             p.disabled = false;
-          } else {
-            p.disabled = true;
           }
         } else {
-          p.disabled = false;
+          p.disabled = true;
         } 
       }
-    } else if (state === this.STATE_TOR || (state === this.STATE_CUSTOM &&
-               userAgent === 'tor')) {
+    } else if (state === this.STATE_TOR) {
       for (var i = 0; i < plugins.length; i++) {
         var p = plugins[i]; 
         // The TorBrowserBundle blocks all plugins by default
         p.disabled = true;
       }   
     } else if (state === this.STATE_CUSTOM || state === this.STATE_NONE) {
+      log("Setting plugin state back...");
       var oldPluginSettings = JSON.parse(this.prefsHandler.
         getStringPref('extensions.jondofox.saved_plugin_settings'));
       for (var i = 0; i < plugins.length; i++) {
         var p = plugins[i]; 
-        p.disabled = oldPluginSettings[p.name];
+        try {
+          var oldSettings = oldPluginSettings.hasOwnProperty(p.name);
+          dump("Name: " + p.name + " exists: " + oldSettings);
+        } catch (e) {}
+        if (oldSettings) {
+          p.disabled = oldPluginSettings[p.name];
+        }
+        // If new plugins were installed meanwhile (i.e. in an other mode) we do
+        // nothing here but take the status the user had chosen for them.
       } 
     }
   },
@@ -1201,7 +1210,10 @@ JDFManager.prototype = {
     var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
     log("Setting user agent and other stuff for: " + state);
     // First the plugin pref
-    this.enforcePluginPref(state);
+    if (this.prefsHandler.
+        getBoolPref("extensions.jondofox.plugin-protection_enabled")) {
+      this.enforcePluginPref(state);
+    }
     switch(state) {
       case (this.STATE_JONDO): 
         for (p in this.jondoUAMap) {
@@ -1296,7 +1308,7 @@ JDFManager.prototype = {
         break;
     }
     // Setting the timezone according to the proxy settings and, on startup,
-    // saving the original one for recovery
+    // saving the original one for recovery.
     this.setTimezone(startup, state); 
   },
 
@@ -1766,6 +1778,19 @@ JDFManager.prototype = {
     try {
       // Store the previous state to detect state changes
       var previousState = this.getState();
+      // We store the previous plugin settings if the user comes out of no proxy
+      // mode in order to restore them later if the user switches back. That
+      // should be independent of the status of the plugin feature. Otherwise it
+      // could happen that an old saved state gets restored as soon as the user
+      // is enabling that feature: forgetting about e.g. newly installed or
+      // removed plugins.
+      // We treat custom proxy mode as no proxy mode for the plugin feature
+      // as otherwise the user would have no options to use JonDonym with
+      // plugins other than Flash enabled.
+      if (previousState === this.STATE_NONE ||
+          (previousState === this.STATE_CUSTOM)) {
+        this.savePluginSettings();
+      }
       // STATE_NONE --> straight disable
       if (state === this.STATE_NONE) {
         this.disableProxy();
