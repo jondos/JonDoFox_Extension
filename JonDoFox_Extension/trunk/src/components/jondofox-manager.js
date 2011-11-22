@@ -1188,13 +1188,15 @@ JDFManager.prototype = {
         var p = plugins[i]; 
         try {
           var oldSettings = oldPluginSettings.hasOwnProperty(p.name);
-          dump("Name: " + p.name + " exists: " + oldSettings);
         } catch (e) {}
         if (oldSettings) {
           p.disabled = oldPluginSettings[p.name];
+        } else {
+          // If new plugins were installed meanwhile (i.e. in an other mode) we
+          // do enable them as the user probably installed these plugins in
+          // order to make use of them.
+          p.disabled = false; 
         }
-        // If new plugins were installed meanwhile (i.e. in an other mode) we do
-        // nothing here but take the status the user had chosen for them.
       } 
     }
   },
