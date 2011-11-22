@@ -2,7 +2,11 @@ Changes in version 0.2.15 - XXXX-XX-XX
 
   New Features:
     * using the TZ environment variable to deliver a uniform time zone in
-      JonDonym and Tor mode (thanks to Torbutton for the code)
+      JonDonym and Tor mode (thanks to Torbutton for the idea)
+
+  Minor improvements:
+    * modified plugin feature to allow customizations in no proxy and custom
+      proxy mode  
 
   Bugfixes:
     * corrected missing release date of 0.2.14.1 in CHANGELOG
