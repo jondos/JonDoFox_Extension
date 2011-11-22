@@ -1,6 +1,7 @@
 Changes in version 0.2.15 - XXXX-XX-XX
 
   New Features:
+    * implemented protection against tracking via TLS Session Resumption
     * using the TZ environment variable to deliver a uniform time zone in
       JonDonym and Tor mode (thanks to Torbutton for the idea)
 

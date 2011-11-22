@@ -225,7 +225,9 @@ JDFManager.prototype = {
     'privacy.clearOnShutdown.history':
     'extensions.jondofox.clearOnShutdown_history',
     'privacy.clearOnShutdown.offlineApps':
-    'extensions.jondofox.clearOnShutdown_offlineApps'
+    'extensions.jondofox.clearOnShutdown_offlineApps',
+    'security.enable_tls_session_tickets':
+    'extensions.jondofox.tls_session_tickets'
   },
 
   //This map of integer preferences is given to the prefsMapper
