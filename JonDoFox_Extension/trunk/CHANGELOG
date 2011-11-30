@@ -1,4 +1,4 @@
-Changes in version 0.2.15 - XXXX-XX-XX
+Changes in version 0.2.15 - 2011-11-30
 
   New Features:
     * implemented protection against tracking via TLS Session Resumption
@@ -8,6 +8,7 @@ Changes in version 0.2.15 - XXXX-XX-XX
   Minor improvements:
     * modified plugin feature to allow customizations in no proxy and custom
       proxy mode  
+    * set maxVersion to 11.0a1
 
   Bugfixes:
     * corrected missing release date of 0.2.14.1 in CHANGELOG
