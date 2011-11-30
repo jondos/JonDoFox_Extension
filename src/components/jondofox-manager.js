@@ -865,6 +865,7 @@ JDFManager.prototype = {
       }
       var minutes = offset % 60;
       // Division in JS gives always floating point results we do not want.
+      // And Math.floor() is not working properly for negative values.
       if ((offset - minutes) / 60 < 10) {
         offStr += "0";
       }
@@ -882,12 +883,11 @@ JDFManager.prototype = {
       if (match) {
         set = match[1] + offStr;
       } else {
-        // If we get no 3 letter code we set the string at least to "" in
+        // If we get no 3 letter code we set the pref at least to "" in
         // order to have at least a small chance to get the timezone properly
         // set after proxy switching.
         // Just taking the offset does not work (at least on the Windows
         // machine I had for testing).
-        set = "";
       }
       this.prefsHandler.setStringPref("extensions.jondofox.tz_string", set);
     }
@@ -903,7 +903,6 @@ JDFManager.prototype = {
     } else {
       // 1. If startup TZ string, reset.
       log("Unsetting timezone.");
-      // Hmmmm... I would need a test for this.
       // FIXME: Tears.. This will not update during daylight switch for
       // linux+mac users. Windows users will be fine though, because tz_string
       // should be empty for them.
