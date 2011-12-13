@@ -410,6 +410,8 @@ function openPageNewTab(aString) {
       win.openUILinkIn("https://www.eff.org/observatory", 'tab'); 
     } else if (aString === "observatoryAPI") {
       win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/doc/HTTPSEverywhere/SSLObservatorySubmission", 'tab'); 
+    } else if (aString === "tempWiki") {
+      win.openUILinkIn(jdfUtils.getString("jondofox.temp.email.wikiURL"), 'tab');
     }
   } catch (e) {
     log("openPageNewTab(): " + e);
