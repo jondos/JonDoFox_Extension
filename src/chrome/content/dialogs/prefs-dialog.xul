@@ -339,6 +339,12 @@
                    class="bloodyvikingsRecommended"
                    style="margin-top: 6px;"/>
           </vbox>
+          <spacer flex="1" />
+          <description>&jondofox.temp.email.wiki1;
+            <html:a class="link"  
+              onclick="openPageNewTab('tempWiki');">
+            &jondofox.temp.email.wiki2;</html:a>.  
+          </description>
         </vbox> 
       </tabpanel>
     </tabpanels>

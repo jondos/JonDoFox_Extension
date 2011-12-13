@@ -155,6 +155,8 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional help 
 <!ENTITY jondofox.temp.email.title "Temporary E-mails">
 <!ENTITY jondofox.temp.email.serviceLabel "E-mail services:">
 <!ENTITY jondofox.temp.email.recommended "Recommended">
+<!ENTITY jondofox.temp.email.wiki1 "You may find further temporary E-mail services ">
+<!ENTITY jondofox.temp.email.wiki2 "in our wiki">
 
 <!-- Instructions text -->
 <!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
