@@ -184,6 +184,18 @@
                 <label value="&jondofox.dialogtab.options.example;: .mozilla.org, 192.168.1.0/24"/>
               </groupbox>
             </row>
+
+            <!-- Checkbox for JonDoBrowser -->
+            <row id="jondofox-menu-row" hidden="true" align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.jondofox;:"/>
+                <box>
+                  <checkbox id="checkbox_advanced_menu"
+                    label="&jondofox.dialogtab.options.menu;"
+                    accesskey="w"/>
+		</box> 
+              </groupbox>
+            </row>
           </rows>
         </grid>
       </tabpanel>

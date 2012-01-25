@@ -29,14 +29,23 @@ var prefsHandler = Cc['@jondos.de/preferences-handler;1'].
 // Get the appInfo service
 var appInfo = Cc['@mozilla.org/xre/app-info;1'].getService(Ci.nsIXULAppInfo);
 
+var versionPref;
+var jondosApp;
 // Get both of the version strings and the application's name
-var versionPref = "extensions.jondofox.profile_version";
+if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
+  versionPref = "extensions.jondofox.browser_version";
+  jondosApp = "JonDoBrowser";
+} else {
+  versionPref = "extensions.jondofox.profile_version";
+  jondosApp = "JonDoFox";
+}
 var profileVersion = prefsHandler.getStringPref(versionPref);
 var appVersion = appInfo.version;
 var appName = appInfo.name;
 
 // Create an appendix for the title string
-const titleString = "JonDoFox "+profileVersion+" ("+appName+" "+appVersion+")";
+const titleString = jondosApp + " " + profileVersion + " (" + appName + " " + 
+  appVersion + ")";
 
 // Set the title modifier
 // FIXME: This does not work on Macs?
