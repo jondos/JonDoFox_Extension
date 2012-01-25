@@ -60,7 +60,9 @@
   <!-- XXX: Why do I need a <popupset> tag here?? -->
   <popupset>
     <!-- Include a popup menu -->
-    <menupopup id="jondofox-proxy-list">
+    <!-- TODO: Why does the position attribute not affect the positioning of
+         the popup after a right click? -->
+    <menupopup id="jondofox-proxy-list" position="after_start">
       <!-- Anontest and configuration items -->
       <menuitem id="jondofox-anontest"
                 class="menuitem-iconic"
@@ -84,26 +86,34 @@
                 label="&jondofox.statusbar.noProxy;"
                 oncommand="setProxyNone();"
                 type="radio"
+                observes="enhanced-menu-selected"
                 name="proxy-settings" />
       <menuseparator />
       <menuitem id="custom-radio"
                 label=""
                 oncommand="setCustomProxy();"
                 type="radio"
+                observes="enhanced-menu-selected"
                 name="proxy-settings" />
       <menuitem id="tor-radio"
                 label="Tor"
                 oncommand="setProxy('tor');"
                 type="radio"
+                observes="enhanced-menu-selected"
                 name="proxy-settings" />
       <menuitem id="jondo-radio"
                 label="JonDo"
                 oncommand="setProxy('jondo');"
                 type="radio"
+                observes="enhanced-menu-selected"
                 name="proxy-settings" />
 
     </menupopup> 
   </popupset>
+
+  <broadcasterset>
+    <broadcaster id="enhanced-menu-selected" hidden="false"/>
+  </broadcasterset>
 
   <!-- Add listener that loads jondofox-gui.xul on "load" -->
   <script type="application/x-javascript"><![CDATA[

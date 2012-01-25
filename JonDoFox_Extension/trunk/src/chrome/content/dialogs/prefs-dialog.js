@@ -79,6 +79,14 @@ function loadPrefsGeneral() {
         prefsHandler.getBoolPref('extensions.jondofox.preferences_warning'); 
     document.getElementById('checkbox_proxy_warning').checked =
         prefsHandler.getBoolPref('extensions.jondofox.proxy_warning');
+    // Advanced menu in JonDoBrowser
+    // TODO: We do not get the jondofox.withinJonDoBrowser from jondofox-gui.js
+    // but why other functions work fine?
+    if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
+      document.getElementById('jondofox-menu-row').hidden = false;
+      document.getElementById('checkbox_advanced_menu').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.advanced_menu');
+    }
     // 'no_proxies_on'
     document.getElementById('no_proxies_on').value = 
         prefsHandler.getStringPref('extensions.jondofox.no_proxies_on');
@@ -112,6 +120,11 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_preferences_warning').checked);
     prefsHandler.setBoolPref('extensions.jondofox.proxy_warning',
         document.getElementById('checkbox_proxy_warning').checked);
+     // Advanced menu in JonDoBrowser
+    if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
+      prefsHandler.setBoolPref('extensions.jondofox.advanced_menu', 
+        document.getElementById('checkbox_advanced_menu').checked);
+    } 
     // Setting 'no_proxies_on'
     prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
         document.getElementById('no_proxies_on').value);

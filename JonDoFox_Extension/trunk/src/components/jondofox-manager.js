@@ -698,7 +698,7 @@ JDFManager.prototype = {
     }
   },
 
-  getJonDoPath: function() {
+  /*getJonDoPath: function() {
   try {
     var subKey;
     var jondoPath;
@@ -842,7 +842,7 @@ JDFManager.prototype = {
         this.jondoProcess.runw(false, this.jondoArgs, this.jondoArgs.length); 
       } 
     }
-  },
+  },*/
   
   // Taken with some minor modifications from Torbutton (torbutton.js).
   setTimezone: function(startup, mode) {
@@ -1128,6 +1128,8 @@ JDFManager.prototype = {
             'extensions.jondofox.profile_version') !== "2.6.0" &&
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.1" && 
+          this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.6.2" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.

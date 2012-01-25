@@ -1,3 +1,11 @@
+Changes in version 0.2.17 - 2012-01-31
+  Minor improvements:
+    * added positioning parameter to the JonDoFox menu popup to avoid loading
+      the anontest unnecessarily
+    * made JonDoFox compatible with JonDoBrowser
+    * updated preferences to match Firefox 10 values
+    * set maxVersion to 12.0a1
+
 Changes in version 0.2.16 - 2011-12-20
 
   Minor improvements:

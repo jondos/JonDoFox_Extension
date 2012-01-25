@@ -71,7 +71,7 @@ pref("extensions.jondofox.jondo.buildID_override", "0");
 pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.jondo.platform_override", "Win32");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:6.0) Gecko/20100101 Firefox/6.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:10.0) Gecko/20100101 Firefox/10.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 
@@ -88,11 +88,11 @@ pref("extensions.jondofox.tor.useragent_vendorSub","");
 
 // SafeBrowsing provider
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL", 
-    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=6.0&pver=2.2");
+    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=10.0&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.keyURL", 
-    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=6.0&pver=2.2");
+    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=10.0&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.lookupURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=6.0&");
+    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=10.0&");
 pref("extensions.jondofox.safebrowsing.provider.0.reportErrorURL", 
     "http://en-US.phish-error.mozilla.com/?hl=en-US");
 pref("extensions.jondofox.safebrowsing.provider.0.reportGenericURL", 
@@ -106,7 +106,7 @@ pref("extensions.jondofox.safebrowsing.provider.0.reportPhishURL",
 pref("extensions.jondofox.safebrowsing.provider.0.reportURL", 
     "http://safebrowsing.clients.google.com/safebrowsing/report?"); 
 pref("extensions.jondofox.safebrowsing.provider.0.updateURL", 
-    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=6.0&pver=2.2");
+    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=10.0&pver=2.2");
 
 pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
 
@@ -207,3 +207,6 @@ pref("extensions.jondofox.adblock_enabled", true);
 //Bloody Vkings
 pref("extensions.jondofox.temp.email.activated", true);
 pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
+
+//JonDoBrowser
+pref("extensions.jondofox.advanced_menu", false);

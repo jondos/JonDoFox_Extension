@@ -58,7 +58,9 @@ jondofox = {
     } catch (e) {
       log("showMenuItem(): " + e);
     }
-  }
+  },
+
+  withinJonDoBrowser: false
 };
 
 jondofox.bloodyVikings = {
@@ -134,6 +136,7 @@ var PROXY_PREF = 'network.proxy.type';
 var CUSTOM_LABEL = 'extensions.jondofox.custom.label';
 var EMPTY_PROXY = 'extensions.jondofox.custom.empty_proxy';
 var VERSION_PREF = 'extensions.jondofox.last_version';
+var MENU_PREF = 'extensions.jondofox.advanced_menu';
 
 // Set the extension into a certain state, 
 // pass one of the jdfManager.STATE_XXXs
@@ -525,6 +528,9 @@ function openJDFFeaturePage() {
   var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
                  getMostRecentWindow('navigator:browser'); 
+  // TODO: That does not take into account the scenario of having different
+  // tabs open and updating + restarting an extension! Test with more than one
+  // windows as well.
   if (prefsHandler.getIntPref("browser.startup.page") === 0 ||
       (prefsHandler.getIntPref("browser.startup.page") === 1 && prefsHandler.
        getStringPref("browser.startup.homepage") === "about:blank")) {
@@ -780,10 +786,22 @@ function startupChecks() {
   // Let's test whether the user starts with appropriate proxy-settings..
   isProxyDisabled();
   // If the user should update the profile and has not disabled the update
-  // warning, help her and show the JonDoFox homepage after startup
-  if (jdfManager.checkProfileUpdate()) {
-    openPageNewTab("homepage");
-  } 
+  // warning, help her and show the JonDoFox homepage after startup. But first
+  // we check whether the user is deploying our JonDoBrowser...
+  if (!prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
+    if (jdfManager.checkProfileUpdate()) {
+      openPageNewTab("homepage");
+    } 
+  } else {
+    // We are within JonDoBrowser...
+    jondofox.withinJonDoBrowser = true;
+    // Adapt our menu according to the user settings and monitor the respective
+    // preference.
+    if (!prefsHandler.getBoolPref(MENU_PREF)) {
+      document.getElementById("enhanced-menu-selected").hidden = true;
+    }
+    prefsHandler.prefs.addObserver(MENU_PREF, prefsObserver, false);
+  }
 }
  
 
@@ -817,6 +835,14 @@ var prefsObserver = {
 		  setBoolPref('noscript.showDomain', false);
             } 
 	  } 
+        else if (data === MENU_PREF) {
+          let menuObserver = document.getElementById("enhanced-menu-selected");
+          if (prefsHandler.getBoolPref(MENU_PREF)) { 
+            menuObserver.hidden = false;
+          } else {
+            menuObserver.hidden = true;
+          }
+        }
         else {
           // STATE_PREF or CUSTOM_LABEL or EMPTY_PROXY has changed,
           // just refresh the statusbar
@@ -899,6 +925,7 @@ var overlayObserver = {
 	    } 
 	    
             setTimeout(function() {startupChecks()}, 100);
+            log(jondofox.withinJonDoBrowser);
 
             if (jdfManager.ff4) { 
               // First, setting the toolbar button on first startup...
@@ -994,7 +1021,7 @@ var overlayObserver = {
 
 function shutdown() {
   try {
-    log("Removing event listeners...");
+    log("Removing event listeners and observers...");
     window.removeEventListener("load", initWindow, true);
     window.removeEventListener("unload", shutdown, false);
     window.removeEventListener("load", initTitleListener, false);
@@ -1023,8 +1050,16 @@ function shutdown() {
 	    removeEventListener("popupshowing", 
 		jondofox.updateContextMenuEntry, false);
     gBrowser.removeEventListener("DOMContentLoaded", errorPageCheck, false);
+    prefsHandler.prefs.removeObserver(VERSION_PREF, prefsObserver, false);
+    prefsHandler.prefs.removeObserver(STATE_PREF, prefsObserver, false);
+    prefsHandler.prefs.removeObserver(PROXY_PREF, prefsObserver, false);
+    prefsHandler.prefs.removeObserver(CUSTOM_LABEL, prefsObserver, false);
+    prefsHandler.prefs.removeObserver(EMPTY_PROXY, prefsObserver, false); 
+    if (jondofox.withinJonDoBrowser) {
+      prefsHandler.prefs.removeObserver(MENU_PREF, prefsObserver, false);
+    }
   } catch (e) {
-    log("Error while removing event listeners: " + e);
+    log("Error while removing event listeners and observers: " + e);
   }
 }
 

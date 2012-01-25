@@ -1,4 +1,5 @@
 <!-- JonDoFox Features -->
+<!ENTITY jondofox.features.title "JonDoFox Features">
 <!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank daf&uuml;r, 
 dass Sie JonDoFox heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
 die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her erl&auml;utert, die 
@@ -237,6 +238,8 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a> zu finden. Des We
 <!ENTITY jondofox.dialogtab.options.warnings.update "Zeige Warnung bei notwendigem Profil-Update">
 <!ENTITY jondofox.dialogtab.options.warnings.prefs "Zeige Warnung bei Veränderung wichtiger Einstellungen">
 <!ENTITY jondofox.dialogtab.options.warnings.proxy "Zeige Warnung bei nicht eingestelltem Proxy">
+<!ENTITY jondofox.dialogtab.options.jondofox "JonDoFox-Einstellungen">
+<!ENTITY jondofox.dialogtab.options.menu "Erweitertes Menü anzeigen">
 <!ENTITY jondofox.dialogtab.options.noproxy "Globale Proxy-Ausnahmen">
 <!ENTITY jondofox.dialogtab.options.example "Beispiel">
 
