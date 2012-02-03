@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://jondofox/skin/jondofox.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
+
+<overlay id="jondofox-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+         <!--Just a dummy for our old document.loadOverlay() call-->
+</overlay>
