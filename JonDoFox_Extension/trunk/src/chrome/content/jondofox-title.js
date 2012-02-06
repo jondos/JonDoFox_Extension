@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2008, JonDos GmbH
+ * Copyright (C) 2008-2012, JonDos GmbH
  * Author: Johannes Renner
  *
  * This code adds a customized string to the window title

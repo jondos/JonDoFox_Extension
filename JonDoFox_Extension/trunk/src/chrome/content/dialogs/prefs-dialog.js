@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2009-2011, Johannes Renner, Georg Koppen
+ * Copyright (c) 2009-2012, Johannes Renner, Georg Koppen
  *
  * Preferences dialog javascript code
  *****************************************************************************/

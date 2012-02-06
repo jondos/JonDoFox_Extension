@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2010, JonDos GmbH
+ * Copyright (c) 2010-2012, JonDos GmbH
  * Author: Georg Koppen
  *
  * JonDoFox extension utilities

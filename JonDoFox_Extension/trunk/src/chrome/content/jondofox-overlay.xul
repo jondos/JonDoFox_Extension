@@ -79,7 +79,7 @@
 		image="chrome://jondofox/skin/about-16x16.png"
 		label="&jondofox.statusbar.about;"
 		oncommand="openPageNewTab('about');" />
-      <menuseparator />
+      <menuseparator observes="enhanced-menu-selected" />
 
       <!-- Use a radiogroup for the proxy list -->
       <menuitem id="none-radio"
@@ -88,7 +88,7 @@
                 type="radio"
                 observes="enhanced-menu-selected"
                 name="proxy-settings" />
-      <menuseparator />
+      <menuseparator observes="enhanced-menu-selected" />
       <menuitem id="custom-radio"
                 label=""
                 oncommand="setCustomProxy();"
