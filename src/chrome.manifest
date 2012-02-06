@@ -1,6 +1,4 @@
-# Content (both lines are needed for compatibility to FF2), see:
-# http://developer.mozilla.org/en/Chrome_Registration#contentaccessible
-content jondofox jar:chrome/jondofox.jar!/content/
+# Content
 content jondofox jar:chrome/jondofox.jar!/content/ contentaccessible=yes
 
 # Locales

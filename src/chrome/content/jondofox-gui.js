@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2008-2011, JonDos GmbH
+ * Copyright (C) 2008-2012, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
  * This code is available on a per window basis.
@@ -795,6 +795,8 @@ function startupChecks() {
   } else {
     // We are within JonDoBrowser...
     jondofox.withinJonDoBrowser = true;
+    // Check if we are up to date.
+    // JDB update check coming soon... 
     // Adapt our menu according to the user settings and monitor the respective
     // preference.
     if (!prefsHandler.getBoolPref(MENU_PREF)) {

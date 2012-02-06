@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2008-2011, JonDos GmbH
+ * Copyright 2008-2012, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
  * JonDoFox extension management and compatibility tasks + utilities
@@ -1130,6 +1130,8 @@ JDFManager.prototype = {
             'extensions.jondofox.profile_version') !== "2.6.1" && 
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.2" &&
+          this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.6.3" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.

@@ -8,7 +8,7 @@ pref("extensions.jondofox.alwaysUseJonDo", false);
 pref("extensions.jondofox.firstStart", true);
 
 // Autostart of JonDo
-pref("extensions.jondofox.autostartJonDo", false);
+// pref("extensions.jondofox.autostartJonDo", false);
 
 // We still need that as Cookie Monster has no toolbar icon as in 1.0.5
 pref("extensions.jondofox.showAddon-bar", true);
@@ -184,7 +184,7 @@ pref("extensions.jondofox.use_document_fonts", 0);
 // we allow just two items in the session history due to fingerprinting issues
 pref("extensions.jondofox.sessionhistory.max_entries", 2);
 
-// Disabling TLS Seesion Resumption tracking (see:
+// Disabling TLS Session Resumption tracking (see:
 // https://tools.ietf.org/html/rfc5077)
 pref("extensions.jondofox.tls_session_tickets", false);
 

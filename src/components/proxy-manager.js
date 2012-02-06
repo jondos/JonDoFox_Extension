@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2008, JonDos GmbH
+ * Copyright (c) 2008-2012, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
  * This component implements a proxy manager interface offering methods to set 
