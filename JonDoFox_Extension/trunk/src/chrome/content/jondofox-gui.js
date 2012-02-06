@@ -794,9 +794,19 @@ function startupChecks() {
     } 
   } else {
     // We are within JonDoBrowser...
+    // Check if we are up-to-date and first whether we did that check already
+    // (i.e. in an other window).
+    if (!jdfManager.jdbCheck) {
+      if (prefsHandler.getStringPref("extensions.jondofox.jdb.version") ===
+          prefsHandler.getStringPref("extensions.jondofox.browser_version")) {
+        // Everything is fine, JonDoBrowser is up-to-date.
+      } else {
+        alert("Update!!");
+      }
+      // Having the message in one window is enough...
+      jdfManager.jdbCheck = true;
+    }
     jondofox.withinJonDoBrowser = true;
-    // Check if we are up to date.
-    // JDB update check coming soon... 
     // Adapt our menu according to the user settings and monitor the respective
     // preference.
     if (!prefsHandler.getBoolPref(MENU_PREF)) {
@@ -927,7 +937,6 @@ var overlayObserver = {
 	    } 
 	    
             setTimeout(function() {startupChecks()}, 100);
-            log(jondofox.withinJonDoBrowser);
 
             if (jdfManager.ff4) { 
               // First, setting the toolbar button on first startup...

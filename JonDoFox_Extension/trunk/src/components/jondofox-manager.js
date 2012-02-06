@@ -92,6 +92,9 @@ JDFManager.prototype = {
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
+  // Do we have already checked whether JonDoBrowser is up-to-date
+  jdbCheck: false,
+
   // Part of a hack to show reliably the about:jondofox page in FF4 after a new
   // version was detected.
   newVersionDetected: false,
@@ -1131,7 +1134,7 @@ JDFManager.prototype = {
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.2" &&
           this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.3" &&
+            'extensions.jondofox.profile_version') !== "2.6.3" && 
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.

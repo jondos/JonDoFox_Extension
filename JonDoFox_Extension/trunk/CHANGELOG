@@ -1,4 +1,16 @@
+Changes in version 0.2.18 - XXXX-XX-XX
+
+  Minor improvement:
+    * implemented version check for JonDoBrowser
+
+Changes in version 0.2.17.1 - 2012-02-03
+
+  Minor improvement:
+    * corrected CHANGELOG
+    * compatibility with profile 2.6.3
+
 Changes in version 0.2.17 - 2012-01-31
+
   Minor improvements:
     * added positioning parameter to the JonDoFox menu popup to avoid loading
       the anontest unnecessarily
