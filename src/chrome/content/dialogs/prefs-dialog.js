@@ -25,7 +25,7 @@ var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
     getService().wrappedJSObject;
 
 // Prefix for custom proxy settings
-var prefix = "extensions.jondofox.custom.";
+var customPrefix = "extensions.jondofox.custom.";
 
 // Define a log method 
 function log(msg) {
@@ -138,7 +138,7 @@ function loadPrefsCustomProxy(onLoad) {
   log("Loading custom proxy preferences");
   try {
     // Get the custom proxy label
-    var label = prefsHandler.getStringPref(prefix + 'label');    
+    var label = prefsHandler.getStringPref(customPrefix + 'label');    
     if (label == "") {
       // If label is empty, get the default label
       label = jdfUtils.getString('jondofox.statusbar.label.custom');
@@ -146,7 +146,7 @@ function loadPrefsCustomProxy(onLoad) {
     // Set the label to the textfield
     document.getElementById('textbox_custom_label').value = label;
     // Get the user agent
-    var userAgent = prefsHandler.getStringPref(prefix + 'user_agent');
+    var userAgent = prefsHandler.getStringPref(customPrefix + 'user_agent');
     if (userAgent == 'jondo') {
       document.getElementById('user_agent').selectedItem =
 	  document.getElementById('jondoUA');
@@ -159,36 +159,36 @@ function loadPrefsCustomProxy(onLoad) {
     }
     // Get the proxy keep-alive status
     document.getElementById('proxyKeepAlive').checked = 
-        prefsHandler.getBoolPref(prefix + 'proxyKeepAlive');
+        prefsHandler.getBoolPref(customPrefix + 'proxyKeepAlive');
     // Get host and port settings for different protocols
     document.getElementById('http_host').value =
-        prefsHandler.getStringPref(prefix + 'http_host');
+        prefsHandler.getStringPref(customPrefix + 'http_host');
     document.getElementById('http_port').value = 
-        prefsHandler.getIntPref(prefix + 'http_port');
+        prefsHandler.getIntPref(customPrefix + 'http_port');
     document.getElementById('ssl_host').value = 
-        prefsHandler.getStringPref(prefix + 'ssl_host');
+        prefsHandler.getStringPref(customPrefix + 'ssl_host');
     document.getElementById('ssl_port').value = 
-        prefsHandler.getIntPref(prefix + 'ssl_port'); 
+        prefsHandler.getIntPref(customPrefix + 'ssl_port'); 
     document.getElementById('ftp_host').value = 
-      prefsHandler.getStringPref(prefix + 'ftp_host');
+      prefsHandler.getStringPref(customPrefix + 'ftp_host');
     document.getElementById('ftp_port').value = 
-        prefsHandler.getIntPref(prefix + 'ftp_port');
+        prefsHandler.getIntPref(customPrefix + 'ftp_port');
     // The proxy dialog in FF4 has no Gopher settings anymore. Thus,
     // we remove (i.e. hide) them as well in this case.
     if (jdfManager.ff4) {
       document.getElementById('gopher_row').collapsed = true;
     } else {
       document.getElementById('gopher_host').value = 
-        prefsHandler.getStringPref(prefix + 'gopher_host');
+        prefsHandler.getStringPref(customPrefix + 'gopher_host');
       document.getElementById('gopher_port').value = 
-        prefsHandler.getIntPref(prefix + 'gopher_port'); 
+        prefsHandler.getIntPref(customPrefix + 'gopher_port'); 
     }
     document.getElementById('socks_host').value = 
-        prefsHandler.getStringPref(prefix + 'socks_host');
+        prefsHandler.getStringPref(customPrefix + 'socks_host');
     document.getElementById('socks_port').value = 
-        prefsHandler.getIntPref(prefix + 'socks_port');        
+        prefsHandler.getIntPref(customPrefix + 'socks_port');        
     // Get socks version
-    var version = prefsHandler.getIntPref(prefix + 'socks_version');
+    var version = prefsHandler.getIntPref(customPrefix + 'socks_version');
     if (version == 4) {
       document.getElementById('socks_version').selectedItem = 
           document.getElementById('version4');
@@ -198,7 +198,7 @@ function loadPrefsCustomProxy(onLoad) {
     }
     // Get 'custom.share_proxy_settings' and enable/disable components
     document.getElementById('checkbox_all_protocols').checked = 
-        prefsHandler.getBoolPref(prefix + 'share_proxy_settings');
+        prefsHandler.getBoolPref(customPrefix + 'share_proxy_settings');
     shareProxySettings(onLoad); 
   } catch (e) {
     log("loadPrefsCustomProxy(): " + e);
@@ -210,81 +210,81 @@ function writePrefsCustomProxy() {
   log("Write prefs custom proxy"); 
   try {
     // Set the label
-    prefsHandler.setStringPref(prefix + 'label',
+    prefsHandler.setStringPref(customPrefix + 'label',
         document.getElementById('textbox_custom_label').value);
     // Set the user agent
-    prefsHandler.setStringPref(prefix + 'user_agent', 
+    prefsHandler.setStringPref(customPrefix + 'user_agent', 
         document.getElementById('user_agent').selectedItem.value);
     // Set proxy.keep-alive
-    prefsHandler.setBoolPref(prefix + 'proxyKeepAlive',
+    prefsHandler.setBoolPref(customPrefix + 'proxyKeepAlive',
 	document.getElementById('proxyKeepAlive').checked);
     // Set single proxies
-    prefsHandler.setStringPref(prefix + 'http_host', 
+    prefsHandler.setStringPref(customPrefix + 'http_host', 
         document.getElementById('http_host').value);
-    prefsHandler.setIntPref(prefix + 'http_port', 
+    prefsHandler.setIntPref(customPrefix + 'http_port', 
         document.getElementById('http_port').value);
     //shareProxySettings();
-    prefsHandler.setStringPref(prefix + 'ssl_host', 
+    prefsHandler.setStringPref(customPrefix + 'ssl_host', 
         document.getElementById('ssl_host').value);
-    prefsHandler.setIntPref(prefix + 'ssl_port', 
+    prefsHandler.setIntPref(customPrefix + 'ssl_port', 
         document.getElementById('ssl_port').value);
-    prefsHandler.setStringPref(prefix + 'ftp_host', 
+    prefsHandler.setStringPref(customPrefix + 'ftp_host', 
         document.getElementById('ftp_host').value);
-    prefsHandler.setIntPref(prefix + 'ftp_port', 
+    prefsHandler.setIntPref(customPrefix + 'ftp_port', 
         document.getElementById('ftp_port').value);
-    prefsHandler.setStringPref(prefix + 'gopher_host', 
+    prefsHandler.setStringPref(customPrefix + 'gopher_host', 
         document.getElementById('gopher_host').value);
-    prefsHandler.setIntPref(prefix + 'gopher_port', 
+    prefsHandler.setIntPref(customPrefix + 'gopher_port', 
         document.getElementById('gopher_port').value);
-    prefsHandler.setStringPref(prefix + 'socks_host', 
+    prefsHandler.setStringPref(customPrefix + 'socks_host', 
         document.getElementById('socks_host').value);
-    prefsHandler.setIntPref(prefix + 'socks_port', 
+    prefsHandler.setIntPref(customPrefix + 'socks_port', 
         document.getElementById('socks_port').value);        
     // Set socks version
-    prefsHandler.setIntPref(prefix + 'socks_version', 
+    prefsHandler.setIntPref(customPrefix + 'socks_version', 
         document.getElementById('socks_version').selectedItem.value);
     // Set the preference according to checkbox state
-    prefsHandler.setBoolPref(prefix + 'share_proxy_settings',
+    prefsHandler.setBoolPref(customPrefix + 'share_proxy_settings',
           document.getElementById('checkbox_all_protocols').checked);
     // We should overwrite our backup with the new settings.
     // Without that, the backup values are displayed all the time.
     var checked = document.getElementById('checkbox_all_protocols').checked;
     if(!checked) {
-      prefsHandler.setStringPref(prefix + 'backup.ssl_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.ssl_host', 
         document.getElementById('ssl_host').value);
-      prefsHandler.setIntPref(prefix + 'backup.ssl_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.ssl_port', 
         document.getElementById('ssl_port').value);
-      prefsHandler.setStringPref(prefix + 'backup.ftp_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.ftp_host', 
         document.getElementById('ftp_host').value);
-      prefsHandler.setIntPref(prefix + 'backup.ftp_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.ftp_port', 
         document.getElementById('ftp_port').value);
-      prefsHandler.setStringPref(prefix + 'backup.gopher_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.gopher_host', 
         document.getElementById('gopher_host').value);
-      prefsHandler.setIntPref(prefix + 'backup.gopher_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.gopher_port', 
         document.getElementById('gopher_port').value);
-      prefsHandler.setStringPref(prefix + 'backup.socks_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.socks_host', 
         document.getElementById('socks_host').value);
-      prefsHandler.setIntPref(prefix + 'backup.socks_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.socks_port', 
         document.getElementById('socks_port').value);        
       // Set socks version
-      prefsHandler.setIntPref(prefix + 'backup.socks_version', 
+      prefsHandler.setIntPref(customPrefix + 'backup.socks_version', 
         document.getElementById('socks_version').selectedItem.value);
     }
       // Check if the relevant values are okay for using JonDo, i.e. not
       // empty; the 'empty_proxy' preference will be observed in jondofox-gui.js
       // in order to set the text color of 'custom' properly
-    if ((prefsHandler.getStringPref(prefix + 'http_host') &&
-          prefsHandler.getIntPref(prefix + 'http_port') &&
-	 prefsHandler.getStringPref(prefix + 'ssl_host') &&
-          prefsHandler.getIntPref(prefix + 'ssl_port') &&
-         prefsHandler.getStringPref(prefix + 'ftp_host') &&
-          prefsHandler.getIntPref(prefix + 'ftp_port')) ||
-	(prefsHandler.getStringPref(prefix + 'socks_host') &&
-	  prefsHandler.getIntPref(prefix + 'socks_port') && 
-	  prefsHandler.getIntPref(prefix + 'socks_version') === 5)) {
-      prefsHandler.setBoolPref(prefix + 'empty_proxy', false);
+    if ((prefsHandler.getStringPref(customPrefix + 'http_host') &&
+          prefsHandler.getIntPref(customPrefix + 'http_port') &&
+	 prefsHandler.getStringPref(customPrefix + 'ssl_host') &&
+          prefsHandler.getIntPref(customPrefix + 'ssl_port') &&
+         prefsHandler.getStringPref(customPrefix + 'ftp_host') &&
+          prefsHandler.getIntPref(customPrefix + 'ftp_port')) ||
+	(prefsHandler.getStringPref(customPrefix + 'socks_host') &&
+	  prefsHandler.getIntPref(customPrefix + 'socks_port') && 
+	  prefsHandler.getIntPref(customPrefix + 'socks_version') === 5)) {
+      prefsHandler.setBoolPref(customPrefix + 'empty_proxy', false);
     } else {
-      prefsHandler.setBoolPref(prefix + 'empty_proxy', true);
+      prefsHandler.setBoolPref(customPrefix + 'empty_proxy', true);
     }
   } catch (e) {
     log("writePrefsCustomProxy(): " + e);
@@ -299,24 +299,24 @@ function shareProxySettings(onLoad) {
       if (!onLoad) {
         // Mirroring Firefox' behaviour, we save the old proxy values first
         // but not during startup... 
-        prefsHandler.setStringPref(prefix + 'backup.ssl_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.ssl_host', 
             document.getElementById('ssl_host').value);
-        prefsHandler.setIntPref(prefix + 'backup.ssl_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.ssl_port', 
             document.getElementById('ssl_port').value);
-        prefsHandler.setStringPref(prefix + 'backup.ftp_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.ftp_host', 
             document.getElementById('ftp_host').value);
-        prefsHandler.setIntPref(prefix + 'backup.ftp_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.ftp_port', 
             document.getElementById('ftp_port').value);
-        prefsHandler.setStringPref(prefix + 'backup.gopher_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.gopher_host', 
             document.getElementById('gopher_host').value);
-        prefsHandler.setIntPref(prefix + 'backup.gopher_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.gopher_port', 
             document.getElementById('gopher_port').value);
-        prefsHandler.setStringPref(prefix + 'backup.socks_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.socks_host', 
             document.getElementById('socks_host').value);
-        prefsHandler.setIntPref(prefix + 'backup.socks_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.socks_port', 
             document.getElementById('socks_port').value);        
         // and save socks version...
-        prefsHandler.setIntPref(prefix + 'backup.socks_version', 
+        prefsHandler.setIntPref(customPrefix + 'backup.socks_version', 
             document.getElementById('socks_version').selectedItem.value);
       }
       var host = document.getElementById("http_host").value;
@@ -350,23 +350,24 @@ function shareProxySettings(onLoad) {
       document.getElementById("socks_port").disabled = false;
       // And now we are going to restore everything...
       document.getElementById('ssl_host').value = 
-        prefsHandler.getStringPref(prefix + 'backup.ssl_host');
+        prefsHandler.getStringPref(customPrefix + 'backup.ssl_host');
       document.getElementById('ssl_port').value = 
-        prefsHandler.getIntPref(prefix + 'backup.ssl_port'); 
+        prefsHandler.getIntPref(customPrefix + 'backup.ssl_port'); 
       document.getElementById('ftp_host').value = 
-        prefsHandler.getStringPref(prefix + 'backup.ftp_host');
+        prefsHandler.getStringPref(customPrefix + 'backup.ftp_host');
       document.getElementById('ftp_port').value = 
-        prefsHandler.getIntPref(prefix + 'backup.ftp_port');
+        prefsHandler.getIntPref(customPrefix + 'backup.ftp_port');
       document.getElementById('gopher_host').value = 
-        prefsHandler.getStringPref(prefix + 'backup.gopher_host');
+        prefsHandler.getStringPref(customPrefix + 'backup.gopher_host');
       document.getElementById('gopher_port').value = 
-        prefsHandler.getIntPref(prefix + 'backup.gopher_port'); 
+        prefsHandler.getIntPref(customPrefix + 'backup.gopher_port'); 
       document.getElementById('socks_host').value = 
-        prefsHandler.getStringPref(prefix + 'backup.socks_host');
+        prefsHandler.getStringPref(customPrefix + 'backup.socks_host');
       document.getElementById('socks_port').value = 
-        prefsHandler.getIntPref(prefix + 'backup.socks_port');        
+        prefsHandler.getIntPref(customPrefix + 'backup.socks_port');        
       // At last we restore the socks version
-      var version = prefsHandler.getIntPref(prefix + 'backup.socks_version');
+      var version = prefsHandler.getIntPref(customPrefix +
+        'backup.socks_version');
       if (version == 4) {
         document.getElementById('socks_version').selectedItem = 
           document.getElementById('version4');

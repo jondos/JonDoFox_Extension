@@ -2,6 +2,7 @@ Changes in version 0.2.18 - XXXX-XX-XX
 
   Minor improvement:
     * implemented version check for JonDoBrowser
+    * resolved compatibility issue with Bookmark Autohider
 
 Changes in version 0.2.17.1 - 2012-02-03
 

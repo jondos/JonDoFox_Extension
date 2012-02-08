@@ -128,7 +128,7 @@ var jdfUtils = Cc['@jondos.de/jondofox-utils;1'].
 var iOService = Cc["@mozilla.org/network/io-service;1"]
                 .getService(Ci.nsIIOService);
 
-var prefix = "extensions.jondofox.custom.";
+var customPrefix = "extensions.jondofox.custom.";
 
 // Preferences that need to be observed for triggering GUI changes
 var STATE_PREF = jdfManager.STATE_PREF;
@@ -218,7 +218,7 @@ function setCustomProxy() {
     win.document.getElementById('jondofox-proxy-list').hidePopup();
     // Check whether one of the relevant preferences is zero
     
-    if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
+    if (prefsHandler.getBoolPref(customPrefix + 'empty_proxy')) {
       if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
         keepProxyEnabled = false; 
       }
@@ -258,7 +258,7 @@ function isProxyDisabled() {
         getString('jondofox.dialog.message.proxyoff'), 'proxy', true);
     }
     else if (jdfManager.getState() == jdfManager.STATE_CUSTOM) {
-      if (prefsHandler.getBoolPref(prefix + 'empty_proxy')) {
+      if (prefsHandler.getBoolPref(customPrefix + 'empty_proxy')) {
         disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
           getString('jondofox.dialog.attention'), jdfUtils.
           getString('jondofox.dialog.message.nocustomproxy'), 'proxy', true);
@@ -320,7 +320,7 @@ function refresh() {
       log("We try the addon-bar!");
       statusbar = win.document.getElementById('addon-bar'); 
     }
-    var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy');
+    var emptyCustomProxy = prefsHandler.getBoolPref(customPrefix + 'empty_proxy');
     if (statusbar) {
       // Set the text color; if we have proxy state custom and an empty proxy
       // then change the text color as well...
@@ -353,7 +353,7 @@ function refreshToolbarButton() {
   var label = getLabel(state);
   var tbButton = document.getElementById("jondofox-toolbar-button");
   if (tbButton) {
-    var emptyCustomProxy = prefsHandler.getBoolPref(prefix + 'empty_proxy'); 
+    var emptyCustomProxy = prefsHandler.getBoolPref(customPrefix + 'empty_proxy'); 
     tbButton.setAttribute("proxy", state);
     tbButton.setAttribute("label", "Proxy: " + label); 
     if (state == jdfManager.STATE_NONE || 
@@ -370,7 +370,7 @@ function refreshToolbarButton() {
 function isProxyActive() {
   // log("Checking if proxy is active");
     var customAndDisabled = jdfManager.getState() == jdfManager.STATE_CUSTOM &&
-	prefsHandler.getBoolPref(prefix + 'empty_proxy');
+	prefsHandler.getBoolPref(customPrefix + 'empty_proxy');
   return (jdfManager.getState() != jdfManager.STATE_NONE && !customAndDisabled);
 }
 
