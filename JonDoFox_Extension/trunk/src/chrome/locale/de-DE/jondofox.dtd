@@ -37,7 +37,8 @@ gestartet</a> sein.">
 Proxy vorbei herunterladen m&#xf6;chten, ohne den Proxy dabei zu deaktivieren 
 (z.B. um bei gro&#xdf;en Downloads Kosten oder Zeit zu sparen), &#xf6;ffnen Sie 
 dazu einfach das Kontextmen&#xfc; mit einem rechten Mausklick auf die Datei und 
-w&#xe4;hlen Sie <em>JonDo/Tor/Proxy umgehen und Ziel speichern unter...</em>.">
+w&#xe4;hlen Sie <em>JonDo/Tor/Proxy umgehen und Ziel speichern unter...</em> 
+aus.">
 <!ENTITY jondofox.features.referer1 "Der Referer ist eines der Merkmale, mit 
 dessen Hilfe sich Nutzer beim Surfen unterscheiden lassen. Das kann allerdings 
 verhindert werden, indem man unser Referer-Management aktiviert:">
