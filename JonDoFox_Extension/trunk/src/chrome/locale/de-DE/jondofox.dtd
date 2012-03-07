@@ -30,7 +30,7 @@ und gestartet haben, k&#xf6;nnen Sie es mithilfe dieser Einstellung als
 Alternative zu JonDo verwenden.">
 <!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: Bei dieser 
 Einstellung schickt JonDoFox die Kommunikationsdaten des Browsers &#xfc;ber 
-JonDo. JonDo muss dazu separat
+JonDo und wird Ihre IP-Adresse verstecken. JonDo muss dazu separat
 <a href='http://www.anonym-surfen.de/jondo.html'>installiert und 
 gestartet</a> sein."> 
 <!ENTITY jondofox.features.proxyswitcher.contextmenu "Wenn Sie eine Datei am 
