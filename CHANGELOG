@@ -3,6 +3,7 @@ Changes in version 0.2.19 - 2012-03-13
   Minor improvement:
     * implemented version check for JonDoBrowser
     * resolved compatibility issue with Bookmark Autohider
+    * fixed some typos in german about:config text
 
 [version 0.2.18 got not released as stable version]
 
