@@ -1,14 +1,17 @@
-Changes in version 0.2.18 - XXXX-XX-XX
+Changes in version 0.2.19 - 2012-03-13
 
   Minor improvement:
     * implemented version check for JonDoBrowser
     * resolved compatibility issue with Bookmark Autohider
+
+[version 0.2.18 got not released as stable version]
 
 Changes in version 0.2.17.1 - 2012-02-03
 
   Minor improvement:
     * corrected CHANGELOG
     * compatibility with profile 2.6.3
+    * set maxVersion to 13.0a1
 
 Changes in version 0.2.17 - 2012-01-31
 
