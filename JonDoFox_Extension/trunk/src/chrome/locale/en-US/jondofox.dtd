@@ -47,10 +47,10 @@ behavior ensures that no web pages will break while at the same time the
 Referer cannot be used to gather information to identify users.">
 <!ENTITY jondofox.features.useragent "Information regarding users surfing the 
 web may not only be gathered analyzing the Referer but examing the individual 
-User Agent header as well. Therefore, we built an uniform User Agent which all 
+User Agent header as well. Therefore, we built a uniform User Agent which all 
 users of JonDo are sending along while requesting pages on the WWW. If a user 
 wants to connect to the Tor network instead of using JonDo the User Agent is 
-rebuilt again, this time matching the one issued by the Tor project and its 
+rebuilt again, this time matching the one issued by the Tor Project and its 
 browser add-on, <a href='http://www.torproject.org/torbutton/'>Torbutton</a>. 
 And, additionally, if someone wants to configure a proxy manually then she has 
 the opportunity to choose between different User Agents, i.e. Unchanged 
