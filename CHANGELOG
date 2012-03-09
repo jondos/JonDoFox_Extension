@@ -5,6 +5,9 @@ Changes in version 0.2.19 - 2012-03-13
     * resolved compatibility issue with Bookmark Autohider
     * fixed some typos in german about:config text
 
+  Bugfixes:
+    * repaired some possible null pointers
+
 [version 0.2.18 got not released as stable version]
 
 Changes in version 0.2.17.1 - 2012-02-03
