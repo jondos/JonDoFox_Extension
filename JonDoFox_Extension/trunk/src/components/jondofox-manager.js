@@ -289,7 +289,7 @@ JDFManager.prototype = {
           var extensionListener = {
             onInstalling: function(addon, needsRestart) {
               if (needsRestart) {
-                JDFManager.prefsHandler.
+                JDFManager.prototype.prefsHandler.
                   setStringPref("extensions.jondofox.tz_string", "");
               }
             },
@@ -300,13 +300,13 @@ JDFManager.prototype = {
 		JDFManager.prototype.uninstall = true;
 	      }
               if (needsRestart) {
-                JDFManager.prefsHandler.
+                JDFManager.prototype.prefsHandler.
                   setStringPref("extensions.jondofox.tz_string", "");
               }
 	    },
             onEnabling: function(addon, needsRestart) {
               if (needsRestart) {
-                JDFManager.prefsHandler.
+                JDFManager.prototype.prefsHandler.
                   setStringPref("extensions.jondofox.tz_string", "");
               }
             },
@@ -316,7 +316,7 @@ JDFManager.prototype = {
                 JDFManager.prototype.clean = true;
               }
               if (needsRestart) {
-                JDFManager.prefsHandler.
+                JDFManager.prototype.prefsHandler.
                   setStringPref("extensions.jondofox.tz_string", "");
               }
 	    },

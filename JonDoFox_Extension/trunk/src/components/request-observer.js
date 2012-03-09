@@ -75,9 +75,15 @@ RequestObserver.prototype = {
     let notificationCallbacks;
     let wind = null;
     // Getting the content window for resetting window.name and history.length
-    notificationCallbacks = 
-        channel.notificationCallbacks ? channel.notificationCallbacks : 
-           channel.loadGroup.notificationCallbacks;
+    if (channel.notificationCallbacks) {
+      notificationCallbacks = channel.notificationCallbacks;
+    } else {
+      if (channel.loadGroup) {
+        notificationCallbacks = channel.loadGroup.notificationCallbacks;
+      } else {
+        notificationCallbacks = null;
+      }
+    }
     if (!notificationCallbacks) {
       log("We found no Notificationcallbacks! Returning null...");
     } else {
