@@ -1,0 +1,5 @@
+The directory 'screenshots-bmp' contains the original screenshots. These are 
+best edited using the Gimp, stored as .png, and imported in Inkscape 
+afterwards. Inkscape can then be used to add text and arrows etc. To export
+pngs from Inkscape, it is important to deactivate oversampling of bitmaps in 
+the general Inkscape settings panel.

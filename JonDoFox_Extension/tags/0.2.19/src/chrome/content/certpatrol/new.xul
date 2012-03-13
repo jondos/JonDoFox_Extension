@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE dialog SYSTEM "chrome://jondofox/locale/jondofox.dtd">
+
+<?xml-stylesheet href="chrome://jondofox/skin/CertPatrol.css" type="text/css"?>
+
+<dialog id="ssl-new2"
+  title="Certificate Patrol"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  persist="screenX screenY width height" width="800" height="370"
+  buttons="accept"
+  onload="return onLoad();"
+  onDialogAccept="return doOK();">
+
+  <script type="application/x-javascript"
+	  src="chrome://jondofox/content/certpatrol/new.js"></script>
+
+  <dialogheader id="cmdiag" />
+
+  <vbox flex="1" style="overflow: auto">
+
+    <grid>
+      <columns>
+        <column flex="1" />
+        <column flex="2" />
+      </columns>
+    
+      <rows>
+        <groupbox>
+          <caption id="cmhierarchy" label="&CP_hierarchy;" />
+        </groupbox>
+        <row>
+          <vbox>
+            <button id="cmdetails"
+                    oncommand="CertPatrol.viewCert(certobj.now.cert)"
+                    label="&CP_viewDetails;" accesskey="&CP_viewDetails_key;" />
+          </vbox>
+          <vbox>
+            <textbox id="cmchain" multiline="true" readonly="true" />
+          </vbox>
+        </row> 
+        <groupbox>
+          <caption id="cmissto" label="&CP_issuedTo;" />
+        </groupbox> 
+        <row>
+          <label id="cmcnl" value="&CP_commonName;" />
+          <textbox class="plain" readonly="true" id="commonName" />
+        </row>
+	<row>
+          <label id="cmol" value="&CP_organization;" />
+          <textbox class="plain" readonly="true" id="organization" />
+        </row>
+        <row>
+          <label id="cmoul" value="&CP_organizationalUnit;" />
+          <textbox class="plain" readonly="true" id="organizationalUnit" />
+        </row>
+        <row>
+          <label id="cmeml" value="&CP_emailAddress;" />
+          <textbox class="plain" readonly="true" id="emailAddress" />
+        </row> 
+        <groupbox>
+          <caption id="cmvalid" label="&CP_validity;" />
+        </groupbox>
+        <row>
+          <label id="cmnal" value="&CP_notAfter;" />
+          <textbox class="plain" readonly="true" id="notAfterGMT" />
+        </row>
+        <groupbox>
+          <caption id="cmfinger" label="&CP_fingerprints;" />
+        </groupbox>
+        <row>
+          <label id="cmmd5l" value="&CP_md5Fingerprint;" />
+          <textbox class="plain" readonly="true" size="64" 
+            id="md5Fingerprint" />
+        </row>
+        <row>
+          <label id="cmsha1l" value="&CP_sha1Fingerprint;"/>
+          <textbox class="plain" readonly="true" size="64"
+            id="sha1Fingerprint" />
+	</row>
+      </rows>
+    </grid>
+
+  </vbox>
+</dialog>
