@@ -4,6 +4,8 @@ Changes in version 0.2.19 - 2012-03-13
     * implemented version check for JonDoBrowser
     * resolved compatibility issue with Bookmark Autohider
     * fixed some typos in german about:config text
+    * added new pref that sets dom.battery.enabled to false
+    * set plugin notification preference according to the JonDoFox mode
 
   Bugfixes:
     * repaired some possible null pointers

@@ -230,7 +230,8 @@ JDFManager.prototype = {
     'privacy.clearOnShutdown.offlineApps':
     'extensions.jondofox.clearOnShutdown_offlineApps',
     'security.enable_tls_session_tickets':
-    'extensions.jondofox.tls_session_tickets'
+    'extensions.jondofox.tls_session_tickets',
+    'dom.battery.enabled': 'extensions.jondofox.battery.enabled'
   },
 
   //This map of integer preferences is given to the prefsMapper
@@ -1161,8 +1162,12 @@ JDFManager.prototype = {
       oldPlugins[p.name] = p.disabled;  
     }
     var pluginJSON = JSON.stringify(oldPlugins);
-    this.prefsHandler.setStringPref('extensions.jondofox.saved_plugin_settings',
+    this.prefsHandler.setStringPref("extensions.jondofox.saved_plugin_settings",
       pluginJSON);
+    // Saving the missing plugin notification as well...
+    this.prefsHandler.
+      setBoolPref("extensions.jondofox.saved_plugin_notification", this.
+      prefsHandler.getBoolPref("plugins.hide_infobar_for_missing_plugin"));
   }, 
 
   enforcePluginPref: function(state) {
@@ -1186,16 +1191,23 @@ JDFManager.prototype = {
           p.disabled = true;
         } 
       }
+      // We do not want to show a warning about missing plugins. No plugins
+      // no security risk stemming from them.
+      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin",
+        true);
     } else if (state === this.STATE_TOR) {
       for (var i = 0; i < plugins.length; i++) {
         var p = plugins[i]; 
         // The TorBrowserBundle blocks all plugins by default
         p.disabled = true;
       }   
+      // The same as for JonDo mode...
+      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin",
+        true);
     } else if (state === this.STATE_CUSTOM || state === this.STATE_NONE) {
       log("Setting plugin state back...");
       var oldPluginSettings = JSON.parse(this.prefsHandler.
-        getStringPref('extensions.jondofox.saved_plugin_settings'));
+        getStringPref("extensions.jondofox.saved_plugin_settings"));
       for (var i = 0; i < plugins.length; i++) {
         var p = plugins[i]; 
         try {
@@ -1210,6 +1222,11 @@ JDFManager.prototype = {
           p.disabled = false; 
         }
       } 
+      // Using the saved plugin notification settings.
+      this.prefsHandler.
+        setBoolPref("plugins.hide_infobar_for_missing_plugin",
+        this.prefsHandler.
+        getBoolPref("extensions.jondofox.saved_plugin_notification"));
     }
   },
 
