@@ -190,7 +190,10 @@ pref("extensions.jondofox.tls_session_tickets", false);
 
 // Disabling all plugins in JonDonym-Mode
 pref("extensions.jondofox.disableAllPluginsJonDoMode", false);
-pref("extensions.jondofox.plugin-protection_enabled", true );
+pref("extensions.jondofox.plugin-protection_enabled", true);
+
+// The Battery API
+pref("extensions.jondofox.battery.enabled", false);
 
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
