@@ -88,8 +88,8 @@ RequestObserver.prototype = {
       log("We found no Notificationcallbacks! Returning null...");
     } else {
       try {
-        wind = notificationCallbacks.QueryInterface(CI.
-          nsIInterfaceRequestor).getInterface(CI.nsIDOMWindow); 
+        wind = notificationCallbacks.getInterface(CI.nsILoadContext).
+          associatedWindow; 
       } catch (e) {
         log("Error while trying to get the Window: " + e); 
       }
@@ -363,21 +363,6 @@ RequestObserver.prototype = {
               submitChain(chainArray, channel.URI.host+":"+channel.URI.port);
           }
         }  
-      }
-      // The HTTP Auth tracking protection on the response side.
-      if (this.prefsHandler.
-        getBoolPref('extensions.jondofox.stanford-safecache_enabled')) { 
-        parentHost = this.getParentHost(channel); 
-        if (channel.documentURI && channel.documentURI === channel.URI) {
-          parentHost = null;  // first party interaction
-        } 
-        if (parentHost && parentHost !== channel.URI.host) {  
-          try {
-            if (channel.getResponseHeader("WWW-Authenticate")) {
-              channel.setResponseHeader("WWW-Authenticate", null, false);
-            }
-          } catch (e) {} 
-        } else {}
       }
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
