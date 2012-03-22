@@ -73,6 +73,7 @@ SafeCache.prototype = {
   
   cryptoHash: null,
   converter: null,
+  reqObs: null,
 
   ACCEPT_COOKIES: 0,
   NO_FOREIGN_COOKIES: 1,
@@ -84,6 +85,8 @@ SafeCache.prototype = {
     this.converter = CC['@mozilla.org/intl/scriptableunicodeconverter'].
 	 createInstance(CI.nsIScriptableUnicodeConverter); 
     this.converter.charset = "UTF-8"; 
+    this.reqObs = CC['@jondos.de/request-observer;1'].
+         getService().wrappedJSObject;
   },
 
   safeCache: function(channel, parentHost) {
@@ -104,9 +107,27 @@ SafeCache.prototype = {
       // can do here without fixing it in the source (nsHttpChannel.cpp).
       try {
         if (channel.getRequestHeader("Authorization") !== null) {
+          // We need both the header normalization and the LOAD_ANONYMOUS flag.
+          // The first because the headers got added before
+          // http-on-modify-request got called. The second to avoid the auth
+          // popup due to removing the auth headers. Note: This holds only for
+          // Firefox 12 or later Firefox versions. 
           channel.setRequestHeader("Authorization", null, false);
           channel.setRequestHeader("Pragma", null, false);
           channel.setRequestHeader("Cache-Control", null, false);
+          channel.loadFlags |= channel.LOAD_ANONYMOUS;
+          // Let's show the user some notification...
+          try {
+            let ww = CC["@mozilla.org/appshell/window-mediator;1"].
+              getService(CI.nsIWindowMediator); 
+            let notifyBox = ww.getMostRecentWindow("navigator:browser").
+              gBrowser.getNotificationBox();
+            let n = notifyBox.appendNotification("Test", channel.URI.host,
+              notifyBox.PRIORITY_WARNING_MEDIUM, [{accessKey: "O",
+              label: "OK", callback: null}]);
+            // Make sure it stays visible after redirects.
+            n.persistence = 10;
+          } catch(e) {dump("NOTERROR: " + e + "\n\n")};
         }
       } catch (e) {}
     } else {
@@ -187,7 +208,7 @@ SafeCache.prototype = {
       finalHash += hash.charCodeAt(i) << (i << 3); 
     return finalHash;
   },
-
+   
   classDescription: "SafeCache", 
   classID:          Components.ID("{fd63cb38-479f-11df-ab87-001d92567994}"),
   contractID:       "@jondos.de/safecache;1",

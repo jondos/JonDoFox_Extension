@@ -1,3 +1,9 @@
+Changes in version 0.2.20 - 2012-04-XX
+
+  Minor improvement:
+    * improved HTTP-Authentication defense and notified user about possible
+      tracking attempts
+
 Changes in version 0.2.19 - 2012-03-13
 
   Minor improvement:
