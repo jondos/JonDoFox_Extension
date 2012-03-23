@@ -689,7 +689,7 @@ var CertPatrol = {
 
     try {
       var t = this.prefsHandler.
-        getIntPref("extensions.jondofox.certpatrol_notificationTimeout");
+        getIntPref("extensions.jondofox.notificationTimeout");
       if (t > 0) {
         timeout = setTimeout(function() {
                                if (n.parentNode) {
