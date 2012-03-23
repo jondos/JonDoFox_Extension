@@ -74,6 +74,7 @@ SafeCache.prototype = {
   cryptoHash: null,
   converter: null,
   reqObs: null,
+  prefsHandler: null,
 
   ACCEPT_COOKIES: 0,
   NO_FOREIGN_COOKIES: 1,
@@ -81,12 +82,14 @@ SafeCache.prototype = {
   
   init: function() {
     this.cryptoHash = CC['@mozilla.org/security/hash;1'].
-	 createInstance(CI.nsICryptoHash); 
+      createInstance(CI.nsICryptoHash); 
     this.converter = CC['@mozilla.org/intl/scriptableunicodeconverter'].
-	 createInstance(CI.nsIScriptableUnicodeConverter); 
+      createInstance(CI.nsIScriptableUnicodeConverter); 
     this.converter.charset = "UTF-8"; 
-    this.reqObs = CC['@jondos.de/request-observer;1'].
-         getService().wrappedJSObject;
+    this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
+      getService().wrappedJSObject;
+    this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].getService().
+      wrappedJSObject; 
   },
 
   safeCache: function(channel, parentHost) {
@@ -99,12 +102,13 @@ SafeCache.prototype = {
                " content loaded by " + parentHost);
       this.setCacheKey(channel, parentHost);
       log("Deleting Authorization header for 3rd party content if available..");
-      // TODO: We currently do not get headers here in all cases. WTF!? Why?
+      // We currently do not get headers here in all cases. WTF!? Why?
       // AND: Setting them to null does not do anything in some cases: The
       // Auth information are still be sent!
       // Answer: The problem is that the Authorization header is set after
       // the http-on-modify-request notification is fired :-/. Thus, nothing we
       // can do here without fixing it in the source (nsHttpChannel.cpp).
+      // Update: That got fixed in FF 12.
       try {
         if (channel.getRequestHeader("Authorization") !== null) {
           // We need both the header normalization and the LOAD_ANONYMOUS flag.
@@ -116,18 +120,60 @@ SafeCache.prototype = {
           channel.setRequestHeader("Pragma", null, false);
           channel.setRequestHeader("Cache-Control", null, false);
           channel.loadFlags |= channel.LOAD_ANONYMOUS;
-          // Let's show the user some notification...
+          // Let's show the user some notification. We could try to get the
+          // window associated with the channel but using the most recent window
+          // is a more generic solution.
           try {
             let ww = CC["@mozilla.org/appshell/window-mediator;1"].
               getService(CI.nsIWindowMediator); 
-            let notifyBox = ww.getMostRecentWindow("navigator:browser").
-              gBrowser.getNotificationBox();
-            let n = notifyBox.appendNotification("Test", channel.URI.host,
-              notifyBox.PRIORITY_WARNING_MEDIUM, [{accessKey: "O",
-              label: "OK", callback: null}]);
-            // Make sure it stays visible after redirects.
-            n.persistence = 10;
-          } catch(e) {dump("NOTERROR: " + e + "\n\n")};
+            let wind = ww.getMostRecentWindow("navigator:browser");
+            let notifyBox = wind.gBrowser.getNotificationBox();
+            let timeout;
+            let timer;
+            // One notification per host seems to be enough.
+            if (notifyBox && !notifyBox.getNotificationWithValue(channel.URI.
+                host)) {
+              let n = notifyBox.appendNotification(channel.URI.host + " " +
+                  this.jdfUtils.getString("jondofox.basicAuth.tracking"),
+                  channel.URI.host, null, notifyBox.PRIORITY_WARNING_MEDIUM,
+                  [{accessKey: "O", label: "OK", callback:
+                     function(msg, btn){
+                       if (timeout) {
+                         timer.cancel();
+                         notifyBox.removeCurrentNotification();
+                       }
+                     }
+                   }]);
+              // Make sure it stays visible after redirects. Ten redirects
+              // should be enough to get the message to the user that something
+              // fishy is going on. Thanks to Certificate Patrol for this idea.
+              n.persistence = 10;
+
+              let event = {
+                notify: function() {
+                  if (n.parentNode) {
+                    notifyBox.removeNotification(n);
+                    n = null;
+                  }
+                }
+              }
+
+              let notifyTimeout = this.prefsHandler.
+                getIntPref("extensions.jondofox.notificationTimeout"); 
+              if (notifyTimeout > 0) {
+                // One timer is enough...
+                if (timer) {
+                  timer.cancel();
+                } else {
+                  timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+                }
+                timeout = timer.initWithCallback(event, notifyTimeout * 1000,
+                  CI.nsITimer.TYPE_ONE_SHOT);
+              }
+            }
+          } catch(e) {
+            log("Error the notificationBox code: " + e);
+          }
         }
       } catch (e) {}
     } else {
