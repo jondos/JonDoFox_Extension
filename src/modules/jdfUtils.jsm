@@ -13,6 +13,12 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 
 let jdfUtils = {
+
+  bundleService : null,
+  stringBundle : null,
+  promptService : null,
+  prefsHandler : null,
+
   init : function() {
     this.bundleService = Cc["@mozilla.org/intl/stringbundle;1"].
       getService(Ci.nsIStringBundleService);
