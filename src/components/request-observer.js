@@ -35,7 +35,9 @@ const CU = Components.utils;
 var RequestObserver = function() {
   this.wrappedJSObject = this;
   CU.import("resource://jondofox/ssl-observatory.jsm", this); 
+  CU.import("resource://jondofox/safeCache.jsm", this);
   this.sslObservatory.init();
+  this.safeCache.init();
 };
 
 RequestObserver.prototype = {
@@ -55,9 +57,6 @@ RequestObserver.prototype = {
           getService().wrappedJSObject;
       this.jdfManager = CC['@jondos.de/jondofox-manager;1'].
           getService().wrappedJSObject;
-      this.safeCache = CC['@jondos.de/safecache;1'].
-          getService().wrappedJSObject;
-      this.safeCache.init();
       this.tldService = CC['@mozilla.org/network/effective-tld-service;1'].
           getService(Components.interfaces.nsIEffectiveTLDService);
       this.cookiePerm = CC['@mozilla.org/cookie/permission;1'].

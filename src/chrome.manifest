@@ -46,11 +46,6 @@ component {cd05fe5d-8815-4397-bcfd-ca3ae4029193} components/request-observer.js
 contract @jondos.de/request-observer;1 {cd05fe5d-8815-4397-bcfd-ca3ae4029193} 
 category profile-after-change requestObserver @jondos.de/request-observer;1
 
-# safecache
-component {fd63cb38-479f-11df-ab87-001d92567994} components/safecache.js
-contract @jondos.de/safecache;1 {fd63cb38-479f-11df-ab87-001d92567994} 
-
-
 # TODO: Stylesheet
 #style chrome://global/skin/netError.css chrome://jondofox/skin/jondofox.css
 style chrome://global/content/customizeToolbar.xul chrome://jondofox/skin/jondofox.css

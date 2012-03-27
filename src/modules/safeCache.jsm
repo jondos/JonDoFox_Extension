@@ -35,72 +35,57 @@
  */
 
 // These functions are slightly adapted by Georg Koppen, JonDos GmbH.
-// The other code was written by Georg Koppen, JonDos GmbH 2010.
+// The other code was written by Georg Koppen, JonDos GmbH 2010-2012.
 
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-var mDebug = true;
+"use strict";
 
-// Log a message
-var log = function(message) {
-  if (mDebug) dump("SafeCache :: " + message + "\n");
-}
+let EXPORTED_SYMBOLS = ["safeCache"];
 
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-///////////////////////////////////////////////////////////////////////////////
-// Constants
-///////////////////////////////////////////////////////////////////////////////
+const Cc = Components.classes;
+const Ci = Components.interfaces;
 
-const CC = Components.classes;
-const CI = Components.interfaces;
-const CR = Components.results;
-
-///////////////////////////////////////////////////////////////////////////////
-// Class definition
-///////////////////////////////////////////////////////////////////////////////
-
-// Class constructor
-var SafeCache = function() {
+let safeCache = {
   
-  // Set wrappedJSObject
-  this.wrappedJSObject = this;
-};
+  cryptoHash : null,
+  converter : null,
+  reqObs : null,
+  prefsHandler : null,
 
-// Class definition
-SafeCache.prototype = {
+  ACCEPT_COOKIES : 0,
+  NO_FOREIGN_COOKIES : 1,
+  REJECT_COOKIES : 2,
   
-  cryptoHash: null,
-  converter: null,
-  reqObs: null,
-  prefsHandler: null,
-
-  ACCEPT_COOKIES: 0,
-  NO_FOREIGN_COOKIES: 1,
-  REJECT_COOKIES: 2,
-  
-  init: function() {
-    this.cryptoHash = CC['@mozilla.org/security/hash;1'].
-      createInstance(CI.nsICryptoHash); 
-    this.converter = CC['@mozilla.org/intl/scriptableunicodeconverter'].
-      createInstance(CI.nsIScriptableUnicodeConverter); 
-    this.converter.charset = "UTF-8"; 
-    this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
-      getService().wrappedJSObject;
+  init : function() {
+    this.cryptoHash = Cc["@mozilla.org/security/hash;1"].
+      createInstance(Ci.nsICryptoHash);
+    this.converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].
+      createInstance(Ci.nsIScriptableUnicodeConverter);
+    this.converter.charset = "UTF-8";
+    this.prefsHandler = Cc["@jondos.de/preferences-handler;1"].getService().
+      wrappedJSObject;
     Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
   },
 
-  safeCache: function(channel, parentHost) {
+  log : function(message) {
+    dump("SafeCache :: " + message + "\n");
+  },
+
+  safeCache : function(channel, parentHost) {
     if (channel.documentURI && channel.documentURI === channel.URI) {
-      parentHost = null;  // first party interaction
+      // first party interaction
+      parentHost = null;
     }
     // Same-origin policy
-    if (parentHost && parentHost !== channel.URI.host) {
-      log("||||||||||SSC: Segmenting " + channel.URI.host + 
-               " content loaded by " + parentHost);
+    let host = channel.URI.host;
+    if (parentHost && parentHost !== host) {
+      this.log("Segmenting " + host + " content loaded by " + parentHost);
       this.setCacheKey(channel, parentHost);
-      log("Deleting Authorization header for 3rd party content if available..");
+      this.log("Deleting Authorization header for 3rd party content if " +
+        "available..");
       // We currently do not get headers here in all cases. WTF!? Why?
       // AND: Setting them to null does not do anything in some cases: The
       // Auth information are still be sent!
@@ -114,7 +99,7 @@ SafeCache.prototype = {
           // The first because the headers got added before
           // http-on-modify-request got called. The second to avoid the auth
           // popup due to removing the auth headers. Note: This holds only for
-          // Firefox 12 or later Firefox versions. 
+          // Firefox 12 or later Firefox versions.
           channel.setRequestHeader("Authorization", null, false);
           channel.setRequestHeader("Pragma", null, false);
           channel.setRequestHeader("Cache-Control", null, false);
@@ -123,18 +108,17 @@ SafeCache.prototype = {
           // window associated with the channel but using the most recent window
           // is a more generic solution.
           try {
-            let ww = CC["@mozilla.org/appshell/window-mediator;1"].
-              getService(CI.nsIWindowMediator); 
+            let ww = Cc["@mozilla.org/appshell/window-mediator;1"].
+              getService(Ci.nsIWindowMediator);
             let wind = ww.getMostRecentWindow("navigator:browser");
             let notifyBox = wind.gBrowser.getNotificationBox();
             let timeout;
             let timer;
             // One notification per host seems to be enough.
-            if (notifyBox && !notifyBox.getNotificationWithValue(channel.URI.
-                host)) {
-              let n = notifyBox.appendNotification(channel.URI.host + " " +
+            if (notifyBox && !notifyBox.getNotificationWithValue(host)) {
+              let n = notifyBox.appendNotification(host + " " +
                   this.jdfUtils.getString("jondofox.basicAuth.tracking"),
-                  channel.URI.host, null, notifyBox.PRIORITY_WARNING_MEDIUM,
+                  host, null, notifyBox.PRIORITY_WARNING_MEDIUM,
                   [{accessKey: "O", label: "OK", callback:
                      function(msg, btn){
                        if (timeout) {
@@ -158,50 +142,50 @@ SafeCache.prototype = {
               }
 
               let notifyTimeout = this.prefsHandler.
-                getIntPref("extensions.jondofox.notificationTimeout"); 
+                getIntPref("extensions.jondofox.notificationTimeout");
               if (notifyTimeout > 0) {
                 // One timer is enough...
                 if (timer) {
                   timer.cancel();
                 } else {
-                  timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+                  timer = Cc["@mozilla.org/timer;1"].
+                    createInstance(Ci.nsITimer);
                 }
                 timeout = timer.initWithCallback(event, notifyTimeout * 1000,
-                  CI.nsITimer.TYPE_ONE_SHOT);
+                  Ci.nsITimer.TYPE_ONE_SHOT);
               }
             }
           } catch(e) {
-            log("Error the notificationBox code: " + e);
+            this.log("Error in the notificationBox code: " + e);
           }
         }
       } catch (e) {}
     } else {
       if (!this.readCacheKey(channel.cacheKey) && channel.requestMethod !==
         "POST") {
-        log("Could not find a cache key for: " + channel.URI.host)
-        this.setCacheKey(channel, channel.URI.host);
+        this.log("Could not find a cache key for: " + host);
+        this.setCacheKey(channel, host);
       } else {
-        log("||||||||||SSC: Leaving cache key unchanged.");
+        this.log("Leaving cache key unchanged.");
       }
     }
 
     // Third-party blocking policy
     switch(this.getCookieBehavior()) {
-      case this.ACCEPT_COOKIES: 
+      case this.ACCEPT_COOKIES:
         break;
-      case this.NO_FOREIGN_COOKIES: 
-        if(parentHost && parentHost !== channel.URI.host) {
-          log("||||||||||SSC: Third party cache blocked for " +
-               channel.URI.spec + " content loaded by " + parentHost);
+      case this.NO_FOREIGN_COOKIES:
+        if(parentHost && parentHost !== host) {
+          this.log("Third party cache blocked for " +
+            channel.URI.spec + " content loaded by " + parentHost);
           this.bypassCache(channel);
         }
         break;
-      case this.REJECT_COOKIES: 
+      case this.REJECT_COOKIES:
         this.bypassCache(channel);
         break;
       default:
-        log("||||||||||SSC: " + this.getCookieBehavior() + 
-                 " is not a valid cookie behavior.");
+        this.log(this.getCookieBehavior() + " is not a valid cookie behavior.");
         break;
     }
   },
@@ -214,23 +198,23 @@ SafeCache.prototype = {
   },
 
   setCacheKey: function(channel, str) {
-    var oldData = this.readCacheKey(channel.cacheKey);
-    var newKey = this.newCacheKey(this.getHash(str) + oldData);
+    let oldData = this.readCacheKey(channel.cacheKey);
+    let newKey = this.newCacheKey(this.getHash(str) + oldData);
     channel.cacheKey = newKey;
-    log("||||||||||SSC: Set cache key to hash(" + str + ") = " + 
-      newKey.data + "\n   for " + channel.URI.spec + "\n");
+    this.log("Set cache key to hash(" + str + ") = " + newKey.data + "\n for " +
+      channel.URI.spec + "\n");
   },
 
   // Read the integer data contained in a cache key
   readCacheKey: function(key) {
-    key.QueryInterface(CI.nsISupportsPRUint32);
+    key.QueryInterface(Ci.nsISupportsPRUint32);
     return key.data;
   },
 
   // Construct a new cache key with some integer data
   newCacheKey: function(data) {
-    var cacheKey = CC["@mozilla.org/supports-PRUint32;1"].
-                      createInstance(CI.nsISupportsPRUint32);
+    let cacheKey = Cc["@mozilla.org/supports-PRUint32;1"].
+      createInstance(Ci.nsISupportsPRUint32);
     cacheKey.data = data;
     return cacheKey;
   },
@@ -239,33 +223,19 @@ SafeCache.prototype = {
     channel.loadFlags |= channel.LOAD_BYPASS_CACHE;  
       // INHIBIT_PERSISTENT_CACHING instead?
     channel.cacheKey = this.newCacheKey(0);
-    log("||||||||||SSC: Bypassed cache for " + channel.URI.spec);
+    this.log("Bypassed cache for " + channel.URI.spec);
   },
 
   getHash: function(str) {
-    var result = {};
+    let result = {};
     this.cryptoHash.init(this.cryptoHash.MD5);
-    var data = this.converter.convertToByteArray(str, result);
+    let data = this.converter.convertToByteArray(str, result);
     this.cryptoHash.update(data, data.length);
-    var hash = this.cryptoHash.finish(false);
-    var finalHash = 0;    
-    for(var i = 0; i < hash.length && i < 8; i++)
-      finalHash += hash.charCodeAt(i) << (i << 3); 
+    let hash = this.cryptoHash.finish(false);
+    let finalHash = 0;
+    for (var i = 0; i < hash.length && i < 8; i++) {
+      finalHash += hash.charCodeAt(i) << (i << 3);
+    }
     return finalHash;
-  },
-   
-  classDescription: "SafeCache", 
-  classID:          Components.ID("{fd63cb38-479f-11df-ab87-001d92567994}"),
-  contractID:       "@jondos.de/safecache;1",
-  // Implement nsISupports
-  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports])
+  }
 };
-
-// XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
-// XPCOMUtils.generateNSGetModule is for Mozilla 1.9.1/1.9.2 (FF 3.5/3.6).
-
-if (XPCOMUtils.generateNSGetFactory)
-    var NSGetFactory = XPCOMUtils.generateNSGetFactory([SafeCache]);
-else
-    var NSGetModule = XPCOMUtils.generateNSGetModule([SafeCache]);
-
