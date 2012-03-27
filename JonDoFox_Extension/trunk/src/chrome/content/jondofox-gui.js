@@ -121,9 +121,7 @@ var jdfManager = Cc['@jondos.de/jondofox-manager;1'].
 var reqObs = Cc['@jondos.de/request-observer;1'].
              getService().wrappedJSObject;
 
-// Get the utility Object
-var jdfUtils = Cc['@jondos.de/jondofox-utils;1'].
-                               getService().wrappedJSObject;
+Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
 
 var iOService = Cc["@mozilla.org/network/io-service;1"]
                 .getService(Ci.nsIIOService);

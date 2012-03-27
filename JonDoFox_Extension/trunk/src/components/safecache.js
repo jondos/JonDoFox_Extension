@@ -88,8 +88,7 @@ SafeCache.prototype = {
     this.converter.charset = "UTF-8"; 
     this.prefsHandler = CC['@jondos.de/preferences-handler;1'].
       getService().wrappedJSObject;
-    this.jdfUtils = CC['@jondos.de/jondofox-utils;1'].getService().
-      wrappedJSObject; 
+    Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
   },
 
   safeCache: function(channel, parentHost) {

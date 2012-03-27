@@ -29,10 +29,6 @@ category profile-after-change JDFManager @jondos.de/jondofox-manager;1
 #category content-policy JDFManager @jondos.de/jondofox-manager;1
 #category net-channel-event-sinks JDFManager @jondos.de/jondofox-manager;1
 
-# jondofox-utils
-component {790237a4-17ae-4652-98c8-0dd6afde511b} components/jondofox-utils.js
-contract @jondos.de/jondofox-utils;1 {790237a4-17ae-4652-98c8-0dd6afde511b}   
-
 # preferences-handler
 component {0fa6df5b-815d-413b-ad76-edd44ab30b74} components/preferences-handler.js
 contract @jondos.de/preferences-handler;1 {0fa6df5b-815d-413b-ad76-edd44ab30b74}

@@ -48,8 +48,7 @@ var CertPatrol = {
     // (those in our init() code additionally to the ones in the CertPatrol 
     // init() code).
     if (!jdfManager.certPatrol) {
-      this.jdfUtils = Cc['@jondos.de/jondofox-utils;1'].
-                    getService().wrappedJSObject;
+      Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
       this.prefsHandler = Cc['@jondos.de/preferences-handler;1'].
                     getService().wrappedJSObject;
       this.version = prefsHandler.

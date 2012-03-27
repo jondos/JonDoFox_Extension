@@ -37,6 +37,8 @@ var JDFManager = function() {
   // https://developer.mozilla.org/en/JavaScript/Code_modules/Using section
   // "Custom modules and XPCOM components" 
   CU.import("resource://jondofox/log4moz.js", this); 
+  CU.import("resource://jondofox/jdfUtils.jsm", this);
+  this.jdfUtils.init();
   var formatter = new this.Log4Moz.BasicFormatter();
   var root = this.Log4Moz.repository.rootLogger;
   dump("Created a rootLogger!\n");
@@ -275,8 +277,6 @@ JDFManager.prototype = {
                             getService().wrappedJSObject;
       JDFManager.prototype.proxyManager = CC['@jondos.de/proxy-manager;1'].
                              getService().wrappedJSObject;
-      JDFManager.prototype.jdfUtils = CC['@jondos.de/jondofox-utils;1'].
-                         getService().wrappedJSObject;
       JDFManager.prototype.rdfService = CC['@mozilla.org/rdf/rdf-service;1'].
 	                      getService(CI.nsIRDFService);
       JDFManager.prototype.directoryService = 

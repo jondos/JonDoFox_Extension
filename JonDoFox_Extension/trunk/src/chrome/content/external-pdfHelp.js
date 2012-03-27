@@ -17,10 +17,7 @@ function log(msg) {
   if (mDebug) dump("JonDoFox :: " + msg + "\n");
 }
 
-// Get the JDFManager
-var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
-                                 getService().wrappedJSObject;
-
+Components.utils.import("resource://jondofox/jdfUtils.jsm");
 
 function externalHelp() {
   try {
