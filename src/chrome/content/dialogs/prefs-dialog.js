@@ -21,8 +21,7 @@ var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
 var jdfManager = Components.classes['@jondos.de/jondofox-manager;1'].
     getService().wrappedJSObject;
 
-var jdfUtils = Components.classes['@jondos.de/jondofox-utils;1'].
-    getService().wrappedJSObject;
+Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
 
 // Prefix for custom proxy settings
 var customPrefix = "extensions.jondofox.custom.";
