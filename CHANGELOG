@@ -4,6 +4,10 @@ Changes in version 0.2.20 - 2012-04-XX
     * improved HTTP-Authentication defense and notified user about possible
       tracking attempts
 
+  Bugfixes:
+    * fixed small bug in Date spoofing code (saved TZ was reset during add-on
+      upgrade)
+
   Other:
     * code clean-up
 
