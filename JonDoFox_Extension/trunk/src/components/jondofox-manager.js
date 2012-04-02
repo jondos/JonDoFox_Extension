@@ -94,6 +94,9 @@ JDFManager.prototype = {
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
+  // Can we use our improved HTTP Auth defense (available since FF12)?
+  ff12: true,
+
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
 
@@ -284,51 +287,31 @@ JDFManager.prototype = {
       this.envSrv = CC["@mozilla.org/process/environment;1"].
         getService(CI.nsIEnvironment); 
       // Determine whether we use FF4 or still some FF3
-      this.isFirefox4();
+      this.isFirefox4or12();
       if (this.ff4) {
         try {
           var extensionListener = {
-            onInstalling: function(addon, needsRestart) {
-              if (needsRestart) {
-                JDFManager.prototype.prefsHandler.
-                  setStringPref("extensions.jondofox.tz_string", "");
-              }
-            },
 	    onUninstalling: function(addon, needsRestart) {
               if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
 		log("We got the onUninstalling notification...")
                 JDFManager.prototype.clean = true;
 		JDFManager.prototype.uninstall = true;
 	      }
-              if (needsRestart) {
-                JDFManager.prototype.prefsHandler.
-                  setStringPref("extensions.jondofox.tz_string", "");
-              }
 	    },
-            onEnabling: function(addon, needsRestart) {
-              if (needsRestart) {
-                JDFManager.prototype.prefsHandler.
-                  setStringPref("extensions.jondofox.tz_string", "");
-              }
-            },
             onDisabling: function(addon, needsRestart) {
               if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
-		log("We got the onDisabling notification...");
+                log("We got the onDisabling notification...");
                 JDFManager.prototype.clean = true;
               }
-              if (needsRestart) {
-                JDFManager.prototype.prefsHandler.
-                  setStringPref("extensions.jondofox.tz_string", "");
-              }
-	    },
-	    onOperationCancelled: function(addon) {
+            },
+            onOperationCancelled: function(addon) {
               if (addon.id === "{437be45a-4114-11dd-b9ab-71d256d89593}") {
 		log("Operation got cancelled!");
                 JDFManager.prototype.clean = false;
 		JDFManager.prototype.uninstall = false;
               }
 	    }
-	  }
+	  };
 
           CU.import("resource://gre/modules/AddonManager.jsm");
 	  this.getVersionFF4();
@@ -1104,7 +1087,7 @@ JDFManager.prototype = {
     }
   },
 
-  isFirefox4: function() {
+  isFirefox4or12: function() {
     // Due to some changes in Firefox 4 (notably the replacement of the
     // nsIExtensionmanager by the AddonManager) we check the FF version now
     // to ensure compatibility.
@@ -1112,11 +1095,17 @@ JDFManager.prototype = {
 	    getService(CI.nsIXULAppInfo);
     var versComp = CC['@mozilla.org/xpcom/version-comparator;1'].
 	    getService(CI.nsIVersionComparator);
-    if (versComp.compare(appInfo.version, "4.0a1") >= 0) {
-      this.ff4Version = appInfo.version;
+    var ffVersion = appInfo.version;
+    if (versComp.compare(ffVersion, "4.0a1") >= 0) {
+      this.ff4Version = ffVersion;
       this.ff4 = true;
     } else {
       this.ff4 = false;
+    }
+    if (versComp.compare(ffVersion, "12.0") >= 0) {
+      this.ff12 = true;
+    } else {
+      this.ff12 = false;
     }
   },
 

@@ -363,6 +363,24 @@ RequestObserver.prototype = {
           }
         }  
       }
+      // The HTTP Auth tracking protection on the response side: Just for FF <
+      // 12! Starting from FF 12 we have an improved protection.
+      if (!this.jdfManager.ff12) {
+        if (this.prefsHandler.
+          getBoolPref('extensions.jondofox.stanford-safecache_enabled')) { 
+          parentHost = this.getParentHost(channel); 
+          if (channel.documentURI && channel.documentURI === channel.URI) {
+            parentHost = null;  // first party interaction
+          } 
+          if (parentHost && parentHost !== channel.URI.host) {  
+            try {
+              if (channel.getResponseHeader("WWW-Authenticate")) {
+                channel.setResponseHeader("WWW-Authenticate", null, false);
+              }
+            } catch (e) {} 
+          } else {}
+        } 
+      }
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
     }
