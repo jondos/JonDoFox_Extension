@@ -6,7 +6,6 @@ const Ci = Components.interfaces;
 const Cc = Components.classes;
 const Cu = Components.utils;
 
-
 var sslObservatory = {
 
   jdfManager : null,
@@ -16,19 +15,28 @@ var sslObservatory = {
   submit_url : null,
   csrf_nonce : null,
   already_submitted : {},
+  cryptoHash : null,
+  converter : null,
 
   encString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
   encStringS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
 
   init: function() {
-    Cu.import("resource://jondofox/ssl-observatory-cas.jsm", this); 
+    Cu.import("resource://jondofox/ssl-observatory-cas.jsm", this);
+    Cu.import("resource://jondofox/ssl-observatory-white.jsm", this);
+    this.cryptoHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.
+      nsICryptoHash);
+    this.converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].
+      createInstance(Ci.nsIScriptableUnicodeConverter);
+    this.converter.charset = "UTF-8";
     this.jdfManager = Cc['@jondos.de/jondofox-manager;1'].
           getService().wrappedJSObject;
     this.prefsHandler = Cc['@jondos.de/preferences-handler;1'].
           getService().wrappedJSObject;
     this.logger = this.jdfManager.Log4Moz.repository.
         getLogger("JonDoFox Observatory");
-    this.logger.level = this.jdfManager.Log4Moz.Level["Warn"]; 
+    this.logger.level = this.jdfManager.Log4Moz.Level["Info"];
+    this.logger.info("Initialized SSL Observatory Logger!\n");
     // The url to submit to
     this.submit_url = "https://observatory.eff.org/submit_cert";
     // Generate nonce to append to url to protect against CSRF
@@ -58,20 +66,35 @@ var sslObservatory = {
     } catch(err) {
       return null;
     }
-  }, 
+  },
 
   base64_encode: function(inp, uc, safe) {
     // do some argument checking
-    if (arguments.length < 1) return null;
-    var readBuf = new Array();    // read buffer
-    if (arguments.length >= 3 && safe != true && safe != false) return null;
-    var enc = (arguments.length >= 3 && safe) ? this.encStringS : this.encString; // character set used
-    var b = (typeof inp == "string"); // how input is to be processed
-    if (!b && (typeof inp != "object") && !(inp instanceof Array)) return null; // bad input
+    if (arguments.length < 1) {
+      return null;
+    }
+    // read buffer     
+    let readBuf = new Array();
+    if (arguments.length >= 3 && safe !== true && safe !== false) {
+      return null;
+    }
+    // character set used
+    let enc = (arguments.length >= 3 && safe) ? this.encStringS :
+      this.encString;
+    // how input is to be processed
+    let b = (typeof inp === "string");
+    if (!b && (typeof inp !== "object") && !(inp instanceof Array)) {
+      // bad input
+      return null;
+    }
     if (arguments.length < 2) {
-      uc = true;                  // set default
-    } // otherwise its value is passed from the caller
-    if (uc != true && uc != false) return null;
+      // set default
+      uc = true;
+    }
+    // otherwise its value is passed from the caller
+    if (uc != true && uc != false) {
+      return null;
+    }
     var n = (!b || !uc) ? 1 : 2;  // length of read buffer
     var out = '';                 // output string
     var c = 0;                    // holds character code (maybe 16 bit or 8 bit)
@@ -80,7 +103,7 @@ var sslObservatory = {
     var s = 0;                    // holds sextett
 
     // convert  
-    for (var i = 0; i < inp.length; i++) {  // read input
+    for (let i = 0, len = inp.length; i < len; ++i) {  // read input
       c = (b) ? inp.charCodeAt(i) : inp[i]; // fill read buffer
       for (var k = n - 1; k >= 0; k--) {
         readBuf[k] = c & 0xff;
@@ -115,30 +138,68 @@ var sslObservatory = {
     }
 
     return out;
-  }, 
+  },
+
+  isChainWhitelisted: function(chainhash) {
+    if (this.X509ChainWhitelist == null) {
+      this.logger.warn("Could not find whitelist of popular certificate " +
+         "chains, so ignoring whitelist");
+      return false;
+    }
+    if (this.X509ChainWhitelist[chainhash] === true) {
+      return true;
+    }
+    return false;
+  },
+
+  // return the two-digit hexadecimal code for a byte
+  toHexString : function(charCode) {
+    return ("0" + charCode.toString(16)).slice(-2);
+  },
 
   submitChain: function(certArray, domain) {
-    var base64Certs = [];
-    var fps = [];
-    var rootidx = -1;
+    let base64Certs = [];
+    let fps = [];
+    let rootidx = -1;
+    let chainArrayFpStr = '';
+    let result = {};
 
-    for (var i = 0; i < certArray.length; i++) {
-      var fp = (certArray[i].md5Fingerprint + certArray[i].sha1Fingerprint).
+    for (let i = 0; i < certArray.length; i++) {
+      let fp = (certArray[i].md5Fingerprint + certArray[i].sha1Fingerprint).
         replace(":", "", "g");
       fps.push(fp);
+      chainArrayFpStr = chainArrayFpStr + fp;
       if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
         //this.logger.warn("Got root cert at position: " + i);
         rootidx = i;
       }
     }
 
-    if (rootidx == -1 || (fps.length > 1 && 
+    let data = this.converter.convertToByteArray(chainArrayFpStr, result);
+    this.cryptoHash.init(this.cryptoHash.SHA256);
+    this.cryptoHash.update(data, data.length);
+    let hash = this.cryptoHash.finish(false);
+
+    let chain_hash = [this.toHexString(hash.charCodeAt(i)) for (i in hash)].
+      join("").toUpperCase();
+    this.logger.info("SHA-256 hash of cert chain for " + domain + " is " +
+      chain_hash);
+
+    if (this.isChainWhitelisted(chain_hash)) {
+        this.logger.info("This cert chain is whitelisted. Not submitting.");
+      return;
+    } else {
+      this.logger.info("Cert chain is NOT whitelisted. Proceeding with " +
+        "submission.");
+    }
+
+    if (rootidx == -1 || (fps.length > 1 &&
         !(fps[rootidx] in this.root_ca_hashes))) {
       if (rootidx == -1) {
         rootidx = fps.length-1;
       }
       //this.logger.warn("Got a private root cert. Ignoring domain "
-               //+ domain + " with root " + fps[rootidx]);
+      //+ domain + " with root " + fps[rootidx]);
       return;
     }
 
@@ -148,29 +209,32 @@ var sslObservatory = {
     }
 
     for (var i = 0; i < certArray.length; i++) {
-      var len = {}; 
-      var derData = certArray[i].getRawDER(len);
-      base64Certs.push(this.base64_encode(derData, false, false));//btoa(derData));
+      let len = {};
+      let derData = certArray[i].getRawDER(len);
+      // btoa() does not seem to work properly with the server side Base64
+      // decoding. Therefore, we need to use a custom function here...
+      // TODO: Investigate that issue.
+      base64Certs.push(this.base64_encode(derData, false, false));
     }
 
     // TODO: Server ip??
-    var reqParams = [];
+    let reqParams = [];
     reqParams.push("domain=" + domain);
     reqParams.push("server_ip=-1");
     reqParams.push("fplist=" + JSON.stringify(fps));
     reqParams.push("certlist=" + JSON.stringify(base64Certs));
-    reqParams.push("client_asn=" + this.client_asn); 
+    reqParams.push("client_asn=" + this.client_asn);
     reqParams.push("private_opt_in=0");
 
     var params = reqParams.join("&") + "&padding=0";
-    var tot_len = 8192;
+    var tot_len = 4096;
 
-    //this.logger.warn("Submitting cert for " + domain);
-    //this.logger.warn("submit_cert params: " + params);
+    this.logger.info("Submitting cert for " + domain);
+    this.logger.debug("submit_cert params: " + params);
 
     // Pad to exp scale. This is done because the distribution of cert sizes
     // is almost certainly pareto, and definitely not uniform.
-    for (tot_len = 8192; tot_len < params.length; tot_len*=2);
+    for (tot_len = 4096; tot_len < params.length; tot_len*=2);
 
     while (params.length != tot_len) {
       params += "0";

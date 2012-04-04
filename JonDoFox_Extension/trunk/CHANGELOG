@@ -3,6 +3,7 @@ Changes in version 0.2.20 - 2012-04-XX
   Minor improvement:
     * improved HTTP-Authentication defense and notified user about possible
       tracking attempts
+    * adapted integrated SSL Observatory logic to reference implementation
 
   Bugfixes:
     * fixed small bug in Date spoofing code (saved TZ was reset during add-on
