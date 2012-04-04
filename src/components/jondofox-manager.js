@@ -48,7 +48,7 @@ var JDFManager = function() {
   root.addAppender(dapp); 
   // We may want to have JS error console output as well...
   var capp = new this.Log4Moz.ConsoleAppender(formatter);
-  capp.level = this.Log4Moz.Level["Warn"];
+  capp.level = this.Log4Moz.Level["Info"];
   root.addAppender(capp); 
 
   // Now we are adding a specific logger (JDFManager)...
