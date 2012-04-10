@@ -1297,16 +1297,32 @@ JDFManager.prototype = {
               this.prefsHandler.getStringPref(this.safebrowseMap[p])); 
           }
           if (acceptLang !== "en-us") {
-          this.settingLocationNeutrality("");
+            this.settingLocationNeutrality("");
           }
+          // Check whether we had network.http.proxy.keep-alive on before. If so
+	  // we switch it off.
+	  if (proxyKeepAlive) {
+            this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
+              false);
+	  }
+          this.prefsHandler.setStringPref("network.http.accept.default",
+            this.prefsHandler.
+            getStringPref("extensions.jondofox.accept_default")); 
         } else if (userAgent === 'tor') {
           for (p in this.torUAMap) {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
 	  }
           if (acceptLang !== "en-us, en") {
-          this.settingLocationNeutrality("tor.");
+            this.settingLocationNeutrality("tor.");
           }
+          if (!proxyKeepAlive) {
+            this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
+              true);
+	  }
+          this.prefsHandler.setStringPref("network.http.accept.default", 
+            this.prefsHandler.
+            getStringPref("extensions.jondofox.tor.accept_default"));
         } else {
 	  // We use the opportunity to set other user prefs back to their
 	  // default values as well.
