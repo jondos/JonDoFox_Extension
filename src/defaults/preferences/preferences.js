@@ -195,6 +195,9 @@ pref("extensions.jondofox.plugin-protection_enabled", true);
 // The Battery API
 pref("extensions.jondofox.battery.enabled", false);
 
+// SPDY
+pref("extensions.jondofox.spdy.enabled", false);
+
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 
