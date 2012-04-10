@@ -10,6 +10,7 @@ Changes in version 0.2.20 - 2012-04-XX
     * fixed small bug in Date spoofing code (saved TZ was reset during add-on
       upgrade)
     * do not write to stderr/stdout if the debug preference is set to false
+    * fixed wrong HTTP header after switching from custom mode to Tor mode
 
   Other:
     * code clean-up
