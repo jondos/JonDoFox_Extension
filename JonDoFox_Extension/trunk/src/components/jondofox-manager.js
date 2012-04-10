@@ -236,7 +236,8 @@ JDFManager.prototype = {
     'extensions.jondofox.clearOnShutdown_offlineApps',
     'security.enable_tls_session_tickets':
     'extensions.jondofox.tls_session_tickets',
-    'dom.battery.enabled': 'extensions.jondofox.battery.enabled'
+    'dom.battery.enabled': 'extensions.jondofox.battery.enabled',
+    'network.http.spdy.enabled': 'extensions.jondofox.spdy.enabled'
   },
 
   //This map of integer preferences is given to the prefsMapper
