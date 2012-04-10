@@ -19,7 +19,12 @@ let jdfUtils = {
   promptService : null,
   prefsHandler : null,
 
+  debug : false,
+
   init : function() {
+    this.debug = Cc["@mozilla.org/preferences-service;1"].
+      getService(Ci.nsIPrefService).getBranch("extensions.jondofox.").
+      getBoolPref("debug.enabled");
     this.bundleService = Cc["@mozilla.org/intl/stringbundle;1"].
       getService(Ci.nsIStringBundleService);
     this.stringBundle = this.bundleService.
@@ -31,7 +36,9 @@ let jdfUtils = {
   },
 
   log : function(message) {
-    dump("JonDoFoxUtils :: " + message + "\n");
+    if (this.debug) {
+      dump("JonDoFoxUtils :: " + message + "\n");
+    }
   },
 
   showAlert : function(title, text) {

@@ -1,5 +1,7 @@
 // General prefs
 pref("extensions.jondofox.last_version", "");
+// Debug pref
+pref("extensions.jondofox.debug.enabled", false);
 pref("extensions.jondofox.new_profile", true);
 // Proxy state 
 pref("extensions.jondofox.proxy.state", "jondo");

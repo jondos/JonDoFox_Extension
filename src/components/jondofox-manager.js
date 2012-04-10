@@ -5,19 +5,7 @@
  * JonDoFox extension management and compatibility tasks + utilities
  * TODO: Create another component containing the utils only
  *****************************************************************************/
- 
-///////////////////////////////////////////////////////////////////////////////
-// Debug stuff
-///////////////////////////////////////////////////////////////////////////////
 
-var mDebug = true;
-
-// Log a message
-var log = function(message) {
-  if (mDebug) dump("JDFManager :: " + message + "\n");
-};
-
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,6 +13,21 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 const CC = Components.classes;
 const CI = Components.interfaces;
 const CU = Components.utils;
+ 
+///////////////////////////////////////////////////////////////////////////////
+// Debug stuff
+///////////////////////////////////////////////////////////////////////////////
+
+var m_debug = CC["@mozilla.org/preferences-service;1"].
+  getService(CI.nsIPrefService).getBranch("extensions.jondofox.").
+  getBoolPref("debug.enabled");
+
+// Log a message
+var log = function(message) {
+  if (m_debug) dump("JDFManager :: " + message + "\n");
+};
+
+CU.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ///////////////////////////////////////////////////////////////////////////////
 // Listen for events to delete traces in case of uninstall etc.
@@ -41,11 +44,13 @@ var JDFManager = function() {
   this.jdfUtils.init();
   var formatter = new this.Log4Moz.BasicFormatter();
   var root = this.Log4Moz.repository.rootLogger;
-  dump("Created a rootLogger!\n");
-  // We want to have output to standard out. 
-  var dapp = new this.Log4Moz.DumpAppender(formatter);
-  dapp.level = this.Log4Moz.Level["Debug"];
-  root.addAppender(dapp); 
+  log("Created a rootLogger!\n");
+  if (m_debug) {
+    // We want to have output to standard out. 
+    var dapp = new this.Log4Moz.DumpAppender(formatter);
+    dapp.level = this.Log4Moz.Level["Debug"];
+    root.addAppender(dapp); 
+  }
   // We may want to have JS error console output as well...
   var capp = new this.Log4Moz.ConsoleAppender(formatter);
   capp.level = this.Log4Moz.Level["Info"];

@@ -9,6 +9,7 @@ Changes in version 0.2.20 - 2012-04-XX
   Bugfixes:
     * fixed small bug in Date spoofing code (saved TZ was reset during add-on
       upgrade)
+    * do not write to stderr/stdout if the debug preference is set to false
 
   Other:
     * code clean-up

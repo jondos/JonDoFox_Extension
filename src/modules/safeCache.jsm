@@ -58,8 +58,13 @@ let safeCache = {
   ACCEPT_COOKIES : 0,
   NO_FOREIGN_COOKIES : 1,
   REJECT_COOKIES : 2,
+
+  debug : false,
   
   init : function() {
+    this.debug = Cc["@mozilla.org/preferences-service;1"].
+      getService(Ci.nsIPrefService).getBranch("extensions.jondofox.").
+      getBoolPref("debug.enabled"); 
     this.cryptoHash = Cc["@mozilla.org/security/hash;1"].
       createInstance(Ci.nsICryptoHash);
     this.converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].
@@ -71,7 +76,9 @@ let safeCache = {
   },
 
   log : function(message) {
-    dump("SafeCache :: " + message + "\n");
+    if (this.debug) {
+      dump("SafeCache :: " + message + "\n");
+    }
   },
 
   safeCache : function(channel, parentHost) {
