@@ -6,22 +6,26 @@
  *****************************************************************************/
 
 ///////////////////////////////////////////////////////////////////////////////
-// Debug stuff
-///////////////////////////////////////////////////////////////////////////////
-
-var mDebug = true;
-
-// Log a message
-var log = function(message) {
-  if (mDebug) dump("PrefsMapper :: " + message + "\n");
-};
-
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
 
+const CC = Components.classes;
 const CI = Components.interfaces;
+
+///////////////////////////////////////////////////////////////////////////////
+// Debug stuff
+///////////////////////////////////////////////////////////////////////////////
+
+var m_debug = CC["@mozilla.org/preferences-service;1"].
+  getService(CI.nsIPrefService).getBranch("extensions.jondofox.").
+  getBoolPref("debug.enabled");
+
+// Log a message
+var log = function(message) {
+  if (m_debug) dump("PrefsMapper :: " + message + "\n");
+};
+
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ///////////////////////////////////////////////////////////////////////////////
 // Class definition
@@ -30,8 +34,8 @@ const CI = Components.interfaces;
 // Class constructor
 var PrefsMapper = function() {
   // Init the prefs handler
-  this.prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
-                                    getService().wrappedJSObject; 
+  this.prefsHandler = CC['@jondos.de/preferences-handler;1'].getService().
+    wrappedJSObject; 
   // Init the JSObject
   this.wrappedJSObject = this;
 };

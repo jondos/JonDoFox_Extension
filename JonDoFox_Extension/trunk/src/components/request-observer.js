@@ -2,24 +2,12 @@
  * Copyright 2008-2012 JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
- * This component is instanciated once on app-startup and does the following:
+ * This component is instantiated once on app-startup and does the following:
  *
  * - Replace RefControl functionality by simply forging every referrer
  * - Arbitrary HTTP request headers can be set from here as well
  *****************************************************************************/
 
-///////////////////////////////////////////////////////////////////////////////
-// Debug stuff
-///////////////////////////////////////////////////////////////////////////////
-
-m_debug = true;
-
-// Log method
-var log = function(message) {
-  if (m_debug) dump("RequestObserver :: " + message + "\n");
-};
-
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +15,21 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 const CC = Components.classes;
 const CI = Components.interfaces;
 const CU = Components.utils;
+
+///////////////////////////////////////////////////////////////////////////////
+// Debug stuff
+///////////////////////////////////////////////////////////////////////////////
+
+var m_debug = CC["@mozilla.org/preferences-service;1"].
+  getService(CI.nsIPrefService).getBranch("extensions.jondofox.").
+  getBoolPref("debug.enabled");
+
+// Log method
+var log = function(message) {
+  if (m_debug) dump("RequestObserver :: " + message + "\n");
+};
+
+CU.import("resource://gre/modules/XPCOMUtils.jsm");
 
 ///////////////////////////////////////////////////////////////////////////////
 // Observer for "http-on-modify-request"
