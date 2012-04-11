@@ -11,6 +11,8 @@ Changes in version 0.2.20 - 2012-04-XX
       upgrade)
     * do not write to stderr/stdout if the debug preference is set to false
     * fixed wrong HTTP header after switching from custom mode to Tor mode
+    * fixed loading of about:jondofox in every new window after upgrading
+      JonDoFox
 
   Other:
     * code clean-up

@@ -528,7 +528,7 @@ function openJDFFeaturePage() {
                  getMostRecentWindow('navigator:browser'); 
   // TODO: That does not take into account the scenario of having different
   // tabs open and updating + restarting an extension! Test with more than one
-  // windows as well.
+  // windows as well. Test again with newVersion flag set to false (see below)!
   if (prefsHandler.getIntPref("browser.startup.page") === 0 ||
       (prefsHandler.getIntPref("browser.startup.page") === 1 && prefsHandler.
        getStringPref("browser.startup.homepage") === "about:blank")) {
@@ -932,6 +932,13 @@ var overlayObserver = {
                   prefsHandler.setBoolPref('noscript.showDomain', false);
                 }
               } 
+              // Assuming we have a FF > 4 we detected the new version once and
+              // need to set the flag to false now. Otherwise we are getting
+              // always the about:jondofox page shown in the first session after
+              // the upgrade (or in every first session after the start of the
+              // Live-CD!) if a new window is opened (e.g. due to a login window
+              // of a bank).
+              jdfManager.newVersionDetected = false;
 	    } 
 	    
             setTimeout(function() {startupChecks()}, 100);
