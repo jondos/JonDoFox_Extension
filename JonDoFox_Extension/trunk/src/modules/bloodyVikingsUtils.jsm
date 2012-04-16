@@ -15,8 +15,8 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Bloody Vikings.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * along with Bloody Vikings.  If not, see <http://www.gnu.org/licenses/>
+ * or the GPL-LICENSE file at the root of this installation.
  */
 
 // Minor modifications by Georg Koppen, JonDos GmbH 2011
