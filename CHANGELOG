@@ -5,6 +5,7 @@ Changes in version 0.2.20 - 2012-04-XX
       tracking attempts
     * adapted integrated SSL Observatory logic to reference implementation
     * disabled SPDY by default
+    * disabled NavigationTiming API by default
 
   Bugfixes:
     * fixed small bug in Date spoofing code (saved TZ was reset during add-on

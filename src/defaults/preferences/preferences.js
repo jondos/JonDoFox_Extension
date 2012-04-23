@@ -194,6 +194,10 @@ pref("extensions.jondofox.tls_session_tickets", false);
 pref("extensions.jondofox.disableAllPluginsJonDoMode", false);
 pref("extensions.jondofox.plugin-protection_enabled", true);
 
+// The Navigation Timing API
+
+pref("extensions.jondofox.navigationTiming.enabled", false);
+
 // The Battery API
 pref("extensions.jondofox.battery.enabled", false);
 
