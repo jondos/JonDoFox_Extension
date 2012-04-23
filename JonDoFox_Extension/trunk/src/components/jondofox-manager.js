@@ -99,6 +99,9 @@ JDFManager.prototype = {
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
+  // The NavigationTiming API we want to deactivate got introduced in FF7.
+  ff7: true,
+
   // Can we use our improved HTTP Auth defense (available since FF12)?
   ff12: true,
 
@@ -293,7 +296,7 @@ JDFManager.prototype = {
       this.envSrv = CC["@mozilla.org/process/environment;1"].
         getService(CI.nsIEnvironment); 
       // Determine whether we use FF4 or still some FF3
-      this.isFirefox4or12();
+      this.isFirefox4or7or12();
       if (this.ff4) {
         try {
           var extensionListener = {
@@ -580,6 +583,10 @@ JDFManager.prototype = {
       // Call init() first
       this.init();
       if (this.ff4) {
+        if (this.ff7) {
+          this.boolPrefsMap['dom.enable_performance'] =
+            'extensions.jondofox.navigationTiming.enabled';
+        }
 	// Adding the websockets pref until we decided whether this
 	// feature is harmless.
 	this.boolPrefsMap['network.websocket.enabled'] = 
@@ -1093,7 +1100,7 @@ JDFManager.prototype = {
     }
   },
 
-  isFirefox4or12: function() {
+  isFirefox4or7or12: function() {
     // Due to some changes in Firefox 4 (notably the replacement of the
     // nsIExtensionmanager by the AddonManager) we check the FF version now
     // to ensure compatibility.
@@ -1107,6 +1114,11 @@ JDFManager.prototype = {
       this.ff4 = true;
     } else {
       this.ff4 = false;
+    }
+    if (versComp.compare(ffVersion, "7.0") >= 0) {
+      this.ff7 = true;
+    } else {
+      this.ff7 = false;
     }
     if (versComp.compare(ffVersion, "12.0") >= 0) {
       this.ff12 = true;
@@ -1133,6 +1145,8 @@ JDFManager.prototype = {
             'extensions.jondofox.profile_version') !== "2.6.3" && 
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.4" &&
+          this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.6.5" && 
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
