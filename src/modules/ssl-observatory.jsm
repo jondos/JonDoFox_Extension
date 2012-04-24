@@ -2,9 +2,11 @@
  *                  Peter Eckersley <pde@eff.org>
  *
  * This source code is released under the GPL license version 2 or later,
- * available in the GPL-LICENSE file at the root of this installation
- * and also online at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * available in the GPL-TEXT file at the root of this installation and also
+ * online at http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * or https://www.gnu.org/licenses/gpl.html
+ *
+ * Minor modifications and enhancements made by Georg Koppen, JonDos GmbH 2012.
  */
 
 "use strict";
