@@ -1,4 +1,4 @@
-Changes in version 0.2.20 - 2012-04-XX
+Changes in version 0.2.20 - 2012-04-24
 
   Minor improvement:
     * improved HTTP-Authentication defense and notified user about possible
