@@ -100,8 +100,9 @@ var sslObservatory = {
     let rootidx = -1;
     let chainArrayFpStr = '';
     let result = {};
+    let certLength = certArray.length;
 
-    for (let i = 0; i < certArray.length; i++) {
+    for (let i = 0; i < certLength; ++i) {
       let fp = (certArray[i].md5Fingerprint + certArray[i].sha1Fingerprint).
         replace(":", "", "g");
       fps.push(fp);
@@ -145,7 +146,7 @@ var sslObservatory = {
       return;
     }
 
-    for (var i = 0; i < certArray.length; i++) {
+    for (let i = 0; i < certLength; ++i) {
       let len = {};
       let derData = certArray[i].getRawDER(len);
       // btoa() alone does not seem to work properly with the server side
@@ -182,7 +183,7 @@ var sslObservatory = {
       params += "0";
     }
 
-    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+    let req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
     req.open("POST", this.submit_url + this.csrf_nonce, true);
 
@@ -200,7 +201,7 @@ var sslObservatory = {
     req.setRequestHeader("Accept-Encoding", "");
     req.setRequestHeader("Accept-Charset", "");
 
-    var that = this; 
+    let that = this; 
     // XXX: Not onreadystatechange due to performance reasons!
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
@@ -225,9 +226,9 @@ var sslObservatory = {
       }
     };
 
-    // Cache this here to prevent multiple submissions for all the content elements.
+    // Cache this here to prevent multiple submissions for all the content
+    // elements.
     that.already_submitted[fps[0]] = true;
     req.send(params);
   } 
-
 }
