@@ -1,3 +1,8 @@
+Changes in version 0.2.21 - 2012-XX-XX
+
+  Bugfix:
+    * fixed corner case in new HTTP-Authentication defense code
+
 Changes in version 0.2.20 - 2012-04-24
 
   Minor improvement:

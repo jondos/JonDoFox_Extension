@@ -87,8 +87,7 @@ let safeCache = {
     if (parentHost && parentHost !== host) {
       this.log("Segmenting " + host + " content loaded by " + parentHost);
       this.setCacheKey(channel, parentHost);
-      this.log("Deleting Authorization header for 3rd party content if " +
-        "available..");
+      
       // We currently do not get headers here in all cases. WTF!? Why?
       // AND: Setting them to null does not do anything in some cases: The
       // Auth information are still be sent!
@@ -96,73 +95,76 @@ let safeCache = {
       // the http-on-modify-request notification is fired :-/. Thus, nothing we
       // can do here without fixing it in the source (nsHttpChannel.cpp).
       // Update: That got fixed in FF 12.
-      try {
-        if (channel.getRequestHeader("Authorization") !== null) {
-          // We need both the header normalization and the LOAD_ANONYMOUS flag.
-          // The first because the headers got added before
-          // http-on-modify-request got called. The second to avoid the auth
-          // popup due to removing the auth headers. Note: This holds only for
-          // Firefox 12 or later Firefox versions.
-          channel.setRequestHeader("Authorization", null, false);
-          channel.setRequestHeader("Pragma", null, false);
-          channel.setRequestHeader("Cache-Control", null, false);
-          channel.loadFlags |= channel.LOAD_ANONYMOUS;
-          // Let's show the user some notification. We could try to get the
-          // window associated with the channel but using the most recent window
-          // is a more generic solution.
-          try {
-            let ww = Cc["@mozilla.org/appshell/window-mediator;1"].
-              getService(Ci.nsIWindowMediator);
-            let wind = ww.getMostRecentWindow("navigator:browser");
-            let notifyBox = wind.gBrowser.getNotificationBox();
-            let timeout;
-            let timer;
-            // One notification per host seems to be enough.
-            if (notifyBox && !notifyBox.getNotificationWithValue(host)) {
-              let n = notifyBox.appendNotification(host + " " +
-                  this.jdfUtils.getString("jondofox.basicAuth.tracking"),
-                  host, null, notifyBox.PRIORITY_WARNING_MEDIUM,
-                  [{accessKey: "O", label: "OK", callback:
-                     function(msg, btn){
-                       if (timeout) {
-                         timer.cancel();
-                         notifyBox.removeCurrentNotification();
-                       }
+      
+      // We need to avoid false positives like favicon load done by the
+      // browser
+      if (channel.getRequestHeader("Authorization") !== null && parentHost !==
+          "browser") {
+        this.log("Deleting Authorization header for 3rd party content...");
+        // We need both the header normalization and the LOAD_ANONYMOUS flag.
+        // The first because the headers got added before
+        // http-on-modify-request got called. The second to avoid the auth
+        // popup due to removing the auth headers. Note: This holds only for
+        // Firefox 12 or later Firefox versions.
+        channel.setRequestHeader("Authorization", null, false);
+        channel.setRequestHeader("Pragma", null, false);
+        channel.setRequestHeader("Cache-Control", null, false);
+        channel.loadFlags |= channel.LOAD_ANONYMOUS;
+        // Let's show the user some notification. We could try to get the
+        // window associated with the channel but using the most recent window
+        // is a more generic solution.
+        try {
+          let ww = Cc["@mozilla.org/appshell/window-mediator;1"].
+            getService(Ci.nsIWindowMediator);
+          let wind = ww.getMostRecentWindow("navigator:browser");
+          let notifyBox = wind.gBrowser.getNotificationBox();
+          let timeout;
+          let timer;
+          // One notification per host seems to be enough.
+          if (notifyBox && !notifyBox.getNotificationWithValue(host)) {
+            let n = notifyBox.appendNotification(host + " " +
+                this.jdfUtils.getString("jondofox.basicAuth.tracking"),
+                host, null, notifyBox.PRIORITY_WARNING_MEDIUM,
+                [{accessKey: "O", label: "OK", callback:
+                   function(msg, btn){
+                     if (timeout) {
+                       timer.cancel();
+                       notifyBox.removeCurrentNotification();
                      }
-                   }]);
-              // Make sure it stays visible after redirects. Ten redirects
-              // should be enough to get the message to the user that something
-              // fishy is going on. Thanks to Certificate Patrol for this idea.
-              n.persistence = 10;
+                   }
+                 }]);
+            // Make sure it stays visible after redirects. Ten redirects
+            // should be enough to get the message to the user that something
+            // fishy is going on. Thanks to Certificate Patrol for this idea.
+            n.persistence = 10;
 
-              let event = {
-                notify: function() {
-                  if (n.parentNode) {
-                    notifyBox.removeNotification(n);
-                    n = null;
-                  }
+            let event = {
+              notify: function() {
+                if (n.parentNode) {
+                  notifyBox.removeNotification(n);
+                  n = null;
                 }
-              }
-
-              let notifyTimeout = this.prefsHandler.
-                getIntPref("extensions.jondofox.notificationTimeout");
-              if (notifyTimeout > 0) {
-                // One timer is enough...
-                if (timer) {
-                  timer.cancel();
-                } else {
-                  timer = Cc["@mozilla.org/timer;1"].
-                    createInstance(Ci.nsITimer);
-                }
-                timeout = timer.initWithCallback(event, notifyTimeout * 1000,
-                  Ci.nsITimer.TYPE_ONE_SHOT);
               }
             }
-          } catch(e) {
-            this.log("Error in the notificationBox code: " + e);
+
+            let notifyTimeout = this.prefsHandler.
+              getIntPref("extensions.jondofox.notificationTimeout");
+            if (notifyTimeout > 0) {
+              // One timer is enough...
+              if (timer) {
+                timer.cancel();
+              } else {
+                timer = Cc["@mozilla.org/timer;1"].
+                  createInstance(Ci.nsITimer);
+              }
+              timeout = timer.initWithCallback(event, notifyTimeout * 1000,
+                Ci.nsITimer.TYPE_ONE_SHOT);
+            }
           }
+        } catch(e) {
+          this.log("Error in the notificationBox code: " + e);
         }
-      } catch (e) {}
+      }
     } else {
       if (!this.readCacheKey(channel.cacheKey) && channel.requestMethod !==
         "POST") {
