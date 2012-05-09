@@ -90,17 +90,35 @@ let safeCache = {
       
       // We currently do not get headers here in all cases. WTF!? Why?
       // AND: Setting them to null does not do anything in some cases: The
-      // Auth information are still be sent!
+      // Auth information is still sent!
       // Answer: The problem is that the Authorization header is set after
       // the http-on-modify-request notification is fired :-/. Thus, nothing we
       // can do here without fixing it in the source (nsHttpChannel.cpp).
       // Update: That got fixed in FF 12.
-      
-      // We need to avoid false positives like favicon load done by the
-      // browser
-      if (channel.getRequestHeader("Authorization") !== null && parentHost !==
+      let authHeader;
+      try { 
+        authHeader = channel.getRequestHeader("Authorization");
+      } catch (e) {
+        authHeader = false;
+      }
+      // Just checking the Authorization header is not enough. We need to avoid
+      // two corner cases: 1) false positives like favicon load done by the
+      // browser and 2) race conditions due to asynchronous networking. To
+      // explain the latter in this context: Suppose we have a third party
+      // request to http://foo:bar@example.com/. Ideally, it would return with a
+      // 401 before the next request, say to
+      // http://foo:bar@example.com/baz.html, would be issued. In this case we
+      // would strip the Authorization header and add the LOAD_ANONYMOUS flag
+      // (see below) and everything would be fine. But now imagine the second
+      // request above would be issued before the response of the first arrived.
+      // The LOAD_ANONYMOUS flag would not get added which leads to a prompt
+      // of the authentication dialog after the response of the second request
+      // arrived. Thus, we already add the LOAD_ANONYMOUS flag if we find a
+      // user(:pass)@ in a third party URL.
+      if ((authHeader || channel.URI.userPass !== "") && parentHost !==
           "browser") {
-        this.log("Deleting Authorization header for 3rd party content...");
+        this.log("Deleting Authorization header for 3rd party content, if any" +
+          "  ...");
         // We need both the header normalization and the LOAD_ANONYMOUS flag.
         // The first because the headers got added before
         // http-on-modify-request got called. The second to avoid the auth
