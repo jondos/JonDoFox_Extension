@@ -4,6 +4,9 @@ Changes in version 0.2.21 - 2012-XX-XX
     * fixed corner case in new HTTP-Authentication defense code
     * fixed race condition in new HTTP-Authentication defense code
 
+  Other:
+    * new icons
+
 Changes in version 0.2.20 - 2012-04-24
 
   Minor improvement:
