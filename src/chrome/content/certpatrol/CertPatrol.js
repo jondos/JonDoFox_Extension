@@ -711,7 +711,7 @@ var CertPatrol = {
     var text = "";
 
     for (var i = chain.length - 1; i >= 0; i--) {
-      var cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
+      cert = chain.queryElementAt(i, Components.interfaces.nsIX509Cert);
       text += Array((chain.length - i - 1) * 2 + 1).join(" ") + "- " +
         (cert.commonName || cert.windowTitle) + (i > 0 ? "\n" : "");
     }

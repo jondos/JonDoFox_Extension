@@ -62,7 +62,7 @@ done
 # Create a jarfile in src/chrome containing chrome contents
 echo \*\* Creating jarfile containing \'chrome\':
 cd src/chrome
-zip -Xvr9 jondofox.jar ./ -x "*.svn/*" "*.swp"
+zip -Xvr9 jondofox.jar ./ -x "*.svn/*" "*.swp" "*.git"
 cd ../..
 
 # Create the .xpi
@@ -70,12 +70,13 @@ echo \*\* Creating the xpi file:
 cd src
 # Exclude chrome from the zip
 if ! [ ${JDF_VERSION} ]; then
-  zip -Xvr9 ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp" "chrome/*"
+  zip -Xvr9 ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp" "chrome/*" "*.git"
   # Move jondofox.jar into the .xpi but without compressing it. 
   zip -Xvm0 ../xpi/jondofox.xpi ./chrome/jondofox.jar 
   cd ..
 else
-  zip -Xvr9 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./ -x "*.svn/*" "*.swp" "chrome/*"  
+  zip -Xvr9 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./ -x
+  "*.svn/*" "*.swp" "chrome/*" "*.git"
   zip -Xvm0 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./chrome/jondofox.jar 
   echo \*\* Signing -xpi
   signing
