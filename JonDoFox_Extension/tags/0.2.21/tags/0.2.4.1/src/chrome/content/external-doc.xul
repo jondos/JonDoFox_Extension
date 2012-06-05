@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
+
+<overlay id="external-app-overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  
+  <description style="color: red;">&jondofox.warnings.externalDoc;</description>
+</overlay>

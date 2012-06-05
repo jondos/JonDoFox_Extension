@@ -1,0 +1,8 @@
+content jondofox chrome/content/
+content jondofox chrome/content/ contentaccessible=yes
+
+skin jondofox classic/1.0 chrome/skin/
+
+override chrome://global/content/netError.xhtml chrome://jondofox/content/netError.xhtml
+
+#locale jondofox en-US chrome/locale/en-US/

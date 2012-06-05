@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd" >
+
+<overlay xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <vbox id="container">  
+    <description id="warning"
+                 style="color: red;"
+                 hiddden="true">
+      &jondofox.warnings.externalApp;
+    </description>
+  </vbox>
+</overlay>

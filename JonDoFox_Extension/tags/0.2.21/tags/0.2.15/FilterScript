@@ -1,0 +1,31 @@
+#!/bin/bash
+echo "Removing old filter list..."
+rm easylistgermany+easylist.txt
+
+echo "Getting the filter list..."
+wget https://easylist-downloads.adblockplus.org/easylistgermany+easylist.txt 
+filterList="easylistgermany+easylist.txt"
+
+
+if [ -e "$filterList" ]
+then
+  echo "We downloaded the filterlist. Checking the hash value..."
+else
+  echo "The download failed! Exiting..."
+  exit
+fi
+
+perl AdBlockvalidateChecksum.pl $filterList 
+
+validateReturn=$?
+
+if  [ "$validateReturn" -eq "0" ]
+then
+  echo "Moving $filterList to src/"
+  mv $filterList src/
+else
+  echo "Not using the filterlist"
+fi
+
+exit
+

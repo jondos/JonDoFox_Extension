@@ -1,0 +1,69 @@
+<!-- Instructions text -->
+<!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
+<!ENTITY jondofox.instructions.titleText "JonDoFox <b>additionally</b> needs the JonDo client
+   program to be able to connect to the JonDonym service.">
+
+<!ENTITY jondofox.instructions.instrTitle "Please install and start the JonDo client:">
+<!ENTITY jondofox.instructions.proxyOffText "For installation, temporarily disable the JonDo 
+   interface by choosing &quot;No Proxy&quot; in the proxy menu:">
+<!ENTITY jondofox.instructions.proxyOffImage 
+   "<img src='chrome://jondofox/content/error/proxy-off-en.png'></img>">
+<!ENTITY jondofox.instructions.downloadLink 
+   "<a href='http://anonymous-proxy-servers.net/en/jondo/download' target='_blank'>Now click here to visit the JonDos 
+   download site and get the client program.</a>">
+<!ENTITY jondofox.instructions.proxyOnText "After installing the JonDo client to your system and 
+   starting it, please reset the proxy settings to &quot;JonDo&quot;:">
+<!ENTITY jondofox.instructions.proxyOnImage 
+   "<img src='chrome://jondofox/content/error/proxy-on-en.png'></img>">
+<!ENTITY jondofox.instructions.instrWarning "WARNING: If you do not reset the proxy settings to 
+   &quot;JonDo&quot;, you will surf the web without anonymity!">
+
+<!ENTITY jondofox.instructions.testTitle "Final test:">
+<!ENTITY jondofox.instructions.testLink 
+   "<a href='http://anonymous-proxy-servers.net/en/anontest' target='_blank'>Click here to check your 
+   installation using the JonDonym anonymity test.</a>">
+<!ENTITY jondofox.instructions.testDesc "If one of the fields turns 
+   <b><font color='red'>red</font></b> you might be identifyable or recognizable. In this case you 
+   should re-check your configuration and read the help files.">
+
+<!-- Warnings-->
+<!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files/links directly with external applications!">
+<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content is deactivated in your pdf-reader before opening the file!">
+
+
+<!-- Context menu strings -->
+<!ENTITY jondofox.contextmenu.noproxylist.add "Add Link to 'No Proxy'-List">
+<!ENTITY jondofox.contextmenu.noproxylist.remove "Remove Link from 'No Proxy'-List">
+
+<!-- Statusbar strings -->
+<!ENTITY jondofox.statusbar.noProxy "No Proxy">
+<!ENTITY jondofox.statusbar.custom "Custom Proxy">
+<!ENTITY jondofox.statusbar.preferences "Preferences">
+
+<!-- General dialog strings -->
+<!ENTITY jondofox.dialog.accept "Ok">
+<!ENTITY jondofox.dialog.cancel "Cancel">
+<!ENTITY jondofox.dialog.save "Save">
+<!ENTITY jondofox.dialog.apply "Apply">
+
+<!-- Preferences dialog -->
+<!ENTITY jondofox.dialog.preferences.title "JonDoFox Settings">
+
+<!-- General configuration tab -->
+<!ENTITY jondofox.dialogtab.options.title "Preferences">
+<!ENTITY jondofox.dialogtab.options.header "Headers">
+<!ENTITY jondofox.dialogtab.options.referrer "Replace 'Referrer'-headers by current URL">
+<!ENTITY jondofox.dialogtab.options.warnings "Warnings">
+<!ENTITY jondofox.dialogtab.options.warnings.update "Show warning if a profile update is necessary">
+<!ENTITY jondofox.dialogtab.options.warnings.prefs "Show warning if important preferences changed">
+<!ENTITY jondofox.dialogtab.options.warnings.proxy "Show warning if there is no proxy set">
+<!ENTITY jondofox.dialogtab.options.noproxy "Global proxy exceptions">
+<!ENTITY jondofox.dialogtab.options.example "Example">
+
+<!-- Edit custom proxy tab -->
+<!ENTITY jondofox.dialogtab.custom.title "Custom Proxy Configuration">
+<!ENTITY jondofox.dialogtab.custom.label "Label">
+<!ENTITY jondofox.dialogtab.custom.useragent.normal "Unchanged">
+<!ENTITY jondofox.dialogtab.custom.allprotocols "Use this proxy server for all protocols">
+
+

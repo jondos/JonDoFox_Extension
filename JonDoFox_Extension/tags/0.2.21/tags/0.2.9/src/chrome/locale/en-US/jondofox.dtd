@@ -1,0 +1,204 @@
+<!-- JonDoFox features -->
+<!ENTITY jondofox.features.introduction "<h3 align='center'>Thank you for 
+downloading and using JonDoFox!</h3>In the following, the main features of our 
+JonDoFox extension will be explained. They allow the user to surf the web in a 
+more secure and convenient way.">
+<!ENTITY jondofox.features.proxyswitcher.head "Stay flexible and switch proxy">
+<!ENTITY jondofox.features.proxyswitcher.part1 "If you would like to surf the 
+Web with a different (local) proxy than JonDo or without any proxy, just use 
+the button" >
+<!ENTITY jondofox.features.proxyswitcher.part2 "integrated in JonDoFox (upper 
+left) in order to switch between different proxy configurations: ">
+<!ENTITY jondofox.features.proxyswitcher.picurl "chrome://jondofox/skin/jondofox_popup_en.png">
+<!ENTITY jondofox.features.proxyswitcher.list1 "<b>No Proxy</b>: If no proxy is 
+set, JonDoFox directly connects to the Internet. <strong>Attention: Your IP 
+address will be sent in plain and is not hidden!</strong>">
+<!ENTITY jondofox.features.proxyswitcher.list2_1 "<b>Custom</b>: Using this setting, you may 
+use your own proxy configuration. Choose ">
+<!ENTITY jondofox.features.proxyswitcher.list_alt "not trustworthy">
+<!ENTITY jondofox.features.proxyswitcher.list_configure "Preferences">
+<!ENTITY jondofox.features.proxyswitcher.list2_2 "in order to create an 
+individual proxy configuration. However, this is only recommended for experts.">
+<!ENTITY jondofox.features.proxyswitcher.list3 "<b>Tor</b>: If you have 
+installed and started the program <a href='https://www.torproject.org'>Tor</a> 
+you may use it as an alternative to JonDo with this setting."> 
+<!ENTITY jondofox.features.proxyswitcher.list4 "<b>JonDo</b>: When this setting 
+is active, JonDoFox sends the browser's communication data to JonDo. JonDo 
+needs to be separately 
+<a href='https://anonymous-proxy-servers.net/en/jondo.html'> installed and 
+started</a>.">
+<!ENTITY jondofox.features.proxyswitcher.contextmenu "Whenever you like to 
+bypass the proxy without completely deactivating it (e.g. when downloading 
+large files to save time and money), just open the context menu with a right 
+mouse click on the file and choose <em>Bypass JonDo/Tor/Proxy and Save Link 
+As...</em>">
+<!ENTITY jondofox.features.referer1 "The Referer is one of those HTTP features 
+that allow to distinguish different users while surfing the web and therefore, 
+to reduce their anonymity. But that can be avoided activating our Referer 
+management:">
+<!ENTITY jondofox.features.referer_picurl "chrome://jondofox/skin/referer_management_en.png">
+<!ENTITY jondofox.features.referer2 "With it, the Referer is not simply deleted 
+as some webservices are not available without it. Rather, the Referer will or 
+will not be set depending on the context of a particular request. E.g. it will 
+be set as long as a user is surfing within the same domain and will not be set 
+if a bookmark is used to request a particular web page. This context dependent 
+behavior ensures that no web pages will break while at the same time the 
+Referer cannot be used to gather information to identify users.">
+<!ENTITY jondofox.features.useragent "Information regarding users surfing the 
+web may not only be gathered analyzing the Referer but examing the individual 
+User Agent header as well. Therefore, we built an uniform User Agent which all 
+users of JonDo are sending along while requesting pages on the WWW. If a user 
+wants to connect to the Tor network instead of using JonDo the User Agent is 
+rebuilt again, this time matching the one issued by the Tor project and its 
+browser add-on, <a href='http://www.torproject.org/torbutton/'>Torbutton</a>. 
+And, additionally, if someone wants to configure a proxy manually then she has 
+the opportunity to choose between different User Agents, i.e. Unchanged 
+(leaving the default setting), JonDo and Tor:">
+<!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_en.png">
+<!ENTITY jondofox.features.safecache.head "Mitigating cache attacks">
+<!ENTITY jondofox.features.safecache "Besides the possibility to obtain user 
+related information examining the Referer, the User Agent and other HTTP 
+headers, the browser cache can be exploited as well to achieve this goal. An 
+attacker may, for instance, try to get  some information out of the fact that 
+web pages saved in the cache are loaded faster than the same, non-cached ones. 
+Or she might try to set so-called cache cookies to identify a particular user 
+across different domains. In order to better protect our users against this 
+kind of attack we included the slightly modified code of the SafeCache 
+extension into JonDoFox. In the JonDoFox settings panel you 
+will find a corresponding hint:">
+<!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_en.png">
+<!ENTITY jondofox.features.certpatrol.head "Detecting faked SSL-Certificates">
+<!ENTITY jondofox.features.certpatrol1 "In order to provide a better protection 
+against faked SSL-certificates we enhanced the functionality of the Certificate 
+Patrol extension and included it into JonDoFox (as can be seen in the JonDoFox 
+settings panel):"> 
+<!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_en.png">
+<!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_en.png">
+<!ENTITY jondofox.features.certpatrol2 "On the one hand, this allows users to 
+check the fingerprint of a certificate very easily. On the other hand a helpful 
+dialog is shown to the user indicating whether there could be something wrong 
+with an updated certificate, thus supporting the user to avoid information 
+leaks due to faked certificates and 
+<a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
+man-in-the-middle-attacks</a>. We furthermore included a way to help the Electronic Frontier Foundation (EFF) to collect SSL certificates. That effort aims at making the web a safer place in the long run and may be supported very easily by JonDoFox users now.">
+<!ENTITY jondofox.features.temp.email.head "Getting temporary E-Mail addresses">
+<!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity to get temporary E-mail addresses conveniently. In order to do so right-click on a text field in which you want to get the E-mail address and choose the following entry out of the menu popping up:"> 
+<!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_en.png">
+<!ENTITY jondofox.features.temp.email2 "Thereafter, the requested E-mail address will get inserted into the text field and your account gets opened in a new tab. If you want to decide by yourself which provider of temporary E-mail addresses you would like to use or you even want to deactivate that feature then you may do this in the JonDoFox settings menu in the Temporary E-mails tab:"> 
+<!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_en.png">
+<!ENTITY jondofox.features.searchbar.head "Protecting search queries at your workplace">
+<!ENTITY jondofox.features.searchbar "In order to mitigate the risk that an outsider might get to know the queries entered into the browser's searchbar, JonDoFox erases them just after they were submitted. Furthermore, the search history gets deleted every thirty minutes. By this means it can on the one hand not happen anymore that the last search query is visible to everyone having access to the user's browser session. On the other hand JonDoFox minimizes the possibility that entries in the search history may compromise the user without loosing the search history feature completely.">
+<!ENTITY jondofox.features.additionalAddons.head "Additional features of the JonDoFox profile">
+<!ENTITY jondofox.features.additionalAddons "Besides our self-designed 
+extension we have incorporated a bunch of others in our profile that help the 
+user surfing the Web anonymously: Cookie Monster, Adblock Plus, NoScript and 
+UnPlug. You will find information on how to use them on
+<a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
+https://anonymous-proxy-servers.net/en/help/jondofox2.html</a>. Additional help is provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
+
+<!-- Certificate Patrol -->
+<!ENTITY _title		"Certificate Patrol Preferences">
+<!ENTITY _title_main	"Options">
+<!ENTITY _popup_new	"No detailed pop-up for newly accepted certificates (beta)">
+<!ENTITY _popup_change	"No detailed pop-up for mostly harmless certificate changes (beta)">
+<!ENTITY _popup_new2	"Newly accepted certificates are always shown in a pop-up by default">
+<!ENTITY _popup_change2	"All certificate changes, even harmless ones, are always shown in a pop-up by default">
+<!ENTITY _home		"Home">
+<!ENTITY _close		"Done">
+
+<!-- Bloody Vikings functionality-->
+<!ENTITY jondofox.temp.email "Request a temporary E-mail address">
+<!ENTITY jondofox.temp.email.activated "Activate temporary E-mail services">
+<!ENTITY jondofox.temp.email.title "Temporary E-mails">
+<!ENTITY jondofox.temp.email.serviceLabel "E-mail services:">
+<!ENTITY jondofox.temp.email.recommended "Recommended">
+
+<!-- Instructions text -->
+<!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
+<!ENTITY jondofox.instructions.titleText "JonDoFox <b>additionally</b> needs the JonDo proxy program to be able to connect to the JonDonym service.">
+<!ENTITY jondofox.instructions.testTitle "Final test:">
+<!ENTITY jondofox.instructions.testLink 
+   "<a href='http://ip-check.info/?lang=en' target='_blank'>Click here to check your 
+   installation using the JonDonym anonymity test.</a>">
+<!ENTITY jondofox.instructions.testDesc "If one of the fields turns 
+   <b><font color='red'>red</font></b> you might be identifyable or recognizable. In this case you 
+   should re-check your configuration and read the help files.">
+
+<!-- Warnings-->
+<!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files/links directly with external applications!">
+<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content is deactivated in your pdf-reader before opening the file!">
+<!ENTITY jondofox.warnings.externalDoc "Use OpenOffice.org instead of Word to open this file if you want to keep your IP address protected!">
+
+<!-- Context menu strings -->
+<!ENTITY jondofox.contextmenu.noproxylist.add "Add Link to 'No Proxy'-List">
+<!ENTITY jondofox.contextmenu.noproxylist.remove "Remove Link from 'No Proxy'-List">
+
+<!-- Statusbar strings -->
+<!ENTITY jondofox.statusbar.noProxy "No Proxy">
+<!ENTITY jondofox.statusbar.custom "Custom Proxy">
+<!ENTITY jondofox.statusbar.preferences "Preferences">
+<!ENTITY jondofox.statusbar.anontest "Test Anonymity">
+<!ENTITY jondofox.statusbar.tooltiptext "JonDoFox Preferences">
+<!ENTITY jondofox.statusbar.about "About JonDoFox">
+
+<!-- General dialog strings -->
+<!ENTITY jondofox.dialog.accept "Ok">
+<!ENTITY jondofox.dialog.cancel "Cancel">
+<!ENTITY jondofox.dialog.save "Save">
+<!ENTITY jondofox.dialog.apply "Apply">
+<!ENTITY jondofox.dialog.help "Help">
+
+<!-- Context help -->
+<!ENTITY jondofox.contextHelp "Context help">
+<!ENTITY jondofox.here.label "here">
+
+<!ENTITY jondofox.and "and">
+
+<!-- Preferences dialog -->
+<!ENTITY jondofox.dialog.preferences.title "JonDoFox Settings">
+
+<!-- General configuration tab -->
+<!ENTITY jondofox.dialogtab.options.title "Preferences">
+<!ENTITY jondofox.dialogtab.options.header "Headers">
+<!ENTITY jondofox.dialogtab.options.referrer "Activate Referer management">
+<!ENTITY jondofox.dialogtab.options.cache "Cache">
+<!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache">
+<!ENTITY jondofox.dialogtab.options.SSL "SSL-Settings">
+<!ENTITY jondofox.dialogtab.options.certpatrol "Activate Certificate Patrol">
+<!ENTITY jondofox.dialogtab.options.observatory "Send SSL certificates to the SSL Observatory">
+<!ENTITY jondofox.dialogtab.options.observatory.proxy "using">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "using JonDo">
+<!ENTITY jondofox.dialogtab.options.observatory.tor "using Tor"> 
+<!ENTITY jondofox.dialogtab.options.observatory.always "always">
+<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "only via proxy">
+<!ENTITY jondofox.dialogtab.options.observatory.never "never">
+<!ENTITY jondofox.dialogtab.options.observatory.help "The Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages eventually and thus surfing the Internet altogether. If you are transmitting SSL certificates to the EFF while surfing the web you help with this project. Read more about that">
+<!ENTITY jondofox.dialogtab.options.adBlocking "AdBlocker-Settings">
+<!ENTITY jondofox.dialogtab.options.adBlocker "Activate the AdBlocker">
+<!ENTITY jondofox.dialogtab.options.filtertext "Show filter">
+<!ENTITY jondofox.dialogtab.options.warnings "Warnings">
+<!ENTITY jondofox.dialogtab.options.warnings.update "Show warning if a profile update is necessary">
+<!ENTITY jondofox.dialogtab.options.warnings.prefs "Show warning if important preferences changed">
+<!ENTITY jondofox.dialogtab.options.warnings.proxy "Show warning if there is no proxy set">
+<!ENTITY jondofox.dialogtab.options.noproxy "Global proxy exceptions">
+<!ENTITY jondofox.dialogtab.options.example "Example">
+
+<!-- Edit custom proxy tab -->
+<!ENTITY jondofox.dialogtab.custom.title "Custom Proxy Configuration">
+<!ENTITY jondofox.dialogtab.custom.name "Name">
+<!ENTITY jondofox.dialogtab.custom.useragent.normal "Unchanged">
+<!ENTITY jondofox.dialogtab.custom.connection "Connection type">
+<!ENTITY jondofox.dialogtab.proxy.keepAlive.help "HTTP keep-alive connections
+may be used for several requests to a web server. This increases the speed 
+while surfing as there is no need to set up a new connection with every single
+request. The adjacent checkbox controls this behavior for connections to a proxy
+server. For further information click ">
+<!ENTITY jondofox.dialogtab.custom.allprotocols "Use this proxy server for all protocols">
+
+<!-- about settings -->
+<!ENTITY jondofox.about.createdBy "Created by:">
+<!ENTITY jondofox.about.developers "Developers:">
+<!ENTITY jondofox.about.homepageURL "https://anonymous-proxy-servers.net/en/software.html">
+
+<!-- adblock strings -->
+<!ENTITY jondofox.adblock.label "Filter rules">
