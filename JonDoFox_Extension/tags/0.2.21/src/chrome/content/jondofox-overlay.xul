@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://jondofox/skin/jondofox.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
+
+<overlay id="jondofox-test"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <!-- Include jondofox-title.js and jondofox-gui.js -->
+  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-title.js" />
+  <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
+  <script type="application/x-javascript" src="chrome://jondofox/content/certpatrol/CertPatrol.js" /> 
+    
+  <toolbarpalette id="BrowserToolbarPalette">
+    <toolbarbutton id="jondofox-toolbar-button"
+                   class="toolbarbutton-1 chromeclass-toolbar-additional"
+                   label="JonDo"
+                   popup="jondofox-proxy-list"
+		   context="jondofox-proxy-list" 
+                   tooltiptext="&jondofox.dialog.preferences.title;"/>
+  </toolbarpalette> 
+
+  <statusbar id="status-bar"> 
+    <!-- Indicate current status in the statusbar -->
+    <statusbarpanel id="jondofox-proxy-status" 
+	            style="cursor: pointer"
+                    insertbefore="statusbar-updates"
+                    label=""
+                    class="statusbarpanel-iconic-text"        
+                    popup="jondofox-proxy-list"
+		    context="jondofox-proxy-list"
+		    tooltiptext="&jondofox.statusbar.tooltiptext;" />
+  </statusbar>
+
+  <!-- Context menu entry for bypassing the proxy -->
+  <menupopup id="contentAreaContextMenu">
+    <menuitem id="bypass-proxy"
+              label=""
+              oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
+              insertafter="context-savelink" />
+    <menuitem id="tempEmailContext"
+              label="&jondofox.temp.email;"
+              class="menuitem-iconic"
+              image="chrome://jondofox/skin/mail-16x16.png" 
+              insertafter="context-delete"
+              oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
+              hidden="true" />
+    <!-- These are entries to add or remove URIs, currently hidden -->
+    <menuitem id="noproxy-add" 
+              label="&jondofox.contextmenu.noproxylist.add;"
+              oncommand="noProxyListAdd(gContextMenu.linkURL);"
+              insertbefore="context-savelink" 
+              hidden="true" />
+    <menuitem id="noproxy-remove" 
+              label="&jondofox.contextmenu.noproxylist.remove;"
+              oncommand="noProxyListRemove(gContextMenu.linkURL);"
+              insertbefore="context-savelink"
+              hidden="true" />
+  </menupopup> 
+
+  <!-- XXX: Why do I need a <popupset> tag here?? -->
+  <popupset>
+    <!-- Include a popup menu -->
+    <!-- TODO: Why does the position attribute not affect the positioning of
+         the popup after a right click? -->
+    <menupopup id="jondofox-proxy-list" position="after_start">
+      <!-- Anontest and configuration items -->
+      <menuitem id="jondofox-anontest"
+                class="menuitem-iconic"
+                image="chrome://jondofox/skin/anontest-16x16.png"
+                label="&jondofox.statusbar.anontest;"
+                oncommand="openPageNewTab('anontest');" />
+      <menuitem id="jondofox-editcustom"
+                class="menuitem-iconic"
+                image="chrome://jondofox/skin/preferences-16x16.png"
+                label="&jondofox.statusbar.preferences;"
+		oncommand="openDialogPreferences();" />
+      <menuitem id="jondofox-about"
+	        class="menuitem-iconic"
+		image="chrome://jondofox/skin/about-16x16.png"
+		label="&jondofox.statusbar.about;"
+		oncommand="openPageNewTab('about');" />
+      <menuseparator observes="enhanced-menu-selected" />
+
+      <!-- Use a radiogroup for the proxy list -->
+      <menuitem id="none-radio"
+                label="&jondofox.statusbar.noProxy;"
+                oncommand="setProxyNone();"
+                type="radio"
+                observes="enhanced-menu-selected"
+                name="proxy-settings" />
+      <menuseparator observes="enhanced-menu-selected" />
+      <menuitem id="custom-radio"
+                label=""
+                oncommand="setCustomProxy();"
+                type="radio"
+                observes="enhanced-menu-selected"
+                name="proxy-settings" />
+      <menuitem id="tor-radio"
+                label="Tor"
+                oncommand="setProxy('tor');"
+                type="radio"
+                observes="enhanced-menu-selected"
+                name="proxy-settings" />
+      <menuitem id="jondo-radio"
+                label="JonDo"
+                oncommand="setProxy('jondo');"
+                type="radio"
+                observes="enhanced-menu-selected"
+                name="proxy-settings" />
+
+    </menupopup> 
+  </popupset>
+
+  <broadcasterset>
+    <broadcaster id="enhanced-menu-selected" hidden="false"/>
+  </broadcasterset>
+
+  <!-- Add listener that loads jondofox-gui.xul on "load" -->
+  <script type="application/x-javascript"><![CDATA[
+
+    try {
+      window.addEventListener("load", initWindow, true);
+    } catch(e) {
+      log("!! Error initing new window: " + e);
+    }
+
+  ]]></script>
+ 
+</overlay>
