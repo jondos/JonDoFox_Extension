@@ -3,13 +3,14 @@
 # Use this script to generate a distributable .xpi or an alhpa version 
 # including the chrome-folder as a .jar-archive
 
-OPTSTR="v:a:h"
+OPTSTR="v:a:b:h"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     v) JDF_VERSION="${OPTARG}";;
     a) ALPHA_VERSION="${OPTARG}";; 
+    b) JDF_BROWSER="${OPTARG}";;
     h) echo '' 
        echo 'JonDoDox Extension Packaging Script 1.0 (2011 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
@@ -19,6 +20,7 @@ do
        echo '   release).'
        echo '-a [alpha_version]'
        echo '   The alpha version number.'
+       echo '-b builds the xpi for use in the JonDoBrowser'
        echo '-h prints this help text.'
        echo ''
        exit 0
@@ -53,6 +55,23 @@ signing()
   mv jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi xpi 
 }
 
+if [ ${JDF_BROWSER} ]; then
+  # We basically replace all the JDF peculiarites (like logos, .xhtml,
+  # "about:jondobrowser") with the JDB ones and undo that after building the
+  # .xpi.
+  echo "Replacing \"about:jondofox\" with \"about:jondobrowser\""
+  cd src
+  sed -i 's/about:jondofox/about:jondobrowser/g' `grep -ril 'about:jondofox' *`
+  sed -i 's/what=jondofox/what=jondobrowser/g' `grep -ril 'what=jondofox' *`
+  sed -i 's/jondofox-features.xhtml/jondobrowser-features.xhtml/g' \
+    `grep -ril 'jondofox-features.xhtml' *`
+  sed -i 's/jondofox-colors.jpg/jondobrowser-colors.jpg/g' \
+    `grep -ril 'jondofox-colors.jpg' *`
+  sed -i 's/jondofox-background.jpg/jondobrowser-background.jpg/g' \
+    `grep -ril 'jondofox-background.jpg' *`
+  cd ..
+fi
+
 # Check for existence of the .xpi. [ -e ] does not work due to the "*".
 for FILE in xpi/jondofox*.xpi; do
   echo \*\* Removing existing ${FILE} ..
@@ -68,12 +87,12 @@ cd ../..
 # Create the .xpi
 echo \*\* Creating the xpi file:
 cd src
+
 # Exclude chrome from the zip
 if ! [ ${JDF_VERSION} ]; then
   zip -Xvr9 ../xpi/jondofox.xpi ./ -x "*.svn/*" "*.swp" "chrome/*" "*.git"
   # Move jondofox.jar into the .xpi but without compressing it. 
   zip -Xvm0 ../xpi/jondofox.xpi ./chrome/jondofox.jar 
-  cd ..
 else
   zip -Xvr9 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./ -x
   "*.svn/*" "*.swp" "chrome/*" "*.git"
@@ -83,5 +102,21 @@ else
   echo \*\* Uploading new alpha version... 
   scp -P 55022 xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi root@78.129.207.114:/var/www/website/htdocs/en/downloads/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi  
 fi
+
+if [ ${JDF_BROWSER} ]; then
+  # We basically reset all the JDF peculiarites (like logos, .xhtml,
+  # "about:jondobrowser").
+  sed -i 's/about:jondobrowser/about:jondofox/g' \
+    `grep -ril 'about:jondobrowser' *`
+  sed -i 's/what=jondobrowser/what=jondofox/g' `grep -ril 'what=jondobrowser' *`
+  sed -i 's/jondobrowser-features.xhtml/jondofox-features.xhtml/g' \
+    `grep -ril 'jondobrowser-features.xhtml' *` 
+  sed -i 's/jondobrowser-colors.jpg/jondofox-colors.jpg/g' \
+    `grep -ril 'jondobrowser-colors.jpg' *`
+  sed -i 's/jondobrowser-background.jpg/jondofox-background.jpg/g' \
+    `grep -ril 'jondobrowser-background.jpg' *` 
+fi
+
+cd ..
 
 exit 0
