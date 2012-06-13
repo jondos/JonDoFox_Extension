@@ -1,3 +1,45 @@
+<!-- JonDoBrowser features -->
+<!ENTITY jondobrowser.features.title "JonDoBrowser Features">
+<!ENTITY jondobrowser.features.introduction "<h3 align='center'>Thank you for 
+downloading and using JonDoBrowser!</h3>In the following, the main features of
+JonDoBrowser which are built into the browser itself or provided by the JonDoFox extension will be explained. They allow the user to surf the web in a 
+more secure and convenient way.">
+<!ENTITY jondobrowser.features.safecache "Besides the possibility to obtain user 
+related information examining the Referer, the User Agent and other HTTP 
+headers, the browser cache can be exploited as well to achieve this goal. An 
+attacker may, for instance, try to get  some information out of the fact that 
+web pages saved in the cache are loaded faster than the same, non-cached ones. 
+Or she might try to set so-called cache cookies to identify a particular user 
+across different domains. In order to better protect our users against this 
+kind of attack we included the slightly modified code of the SafeCache 
+extension into JonDoFox.<br/> Additionally, the authentication cache of
+JonDoBrowser might get exploited to track users across several different domains. In
+order to defend against this kind of threat we discard authentication
+information sent by/to 3rd party elements. In the JonDoFox settings panel you 
+will find a corresponding hint:">
+<!ENTITY jondobrowser.features.plugins "Plugins can circumvent the proxy settings of
+JonDoBrowser which makes them especially dangerous while surfing anonymously.
+Therefore, all plugins are deactivated by default in JonDo mode. Only
+Flash is still available due to its widespread use. The setting governing this
+behavior may again be found in JonDoFox' settings panel:">
+<!ENTITY jondobrowser.features.certpatrol2 "On the one hand, this allows users to 
+check the fingerprint of a certificate very easily. On the other hand a helpful 
+dialog is shown to the user indicating whether there could be something wrong 
+with an updated certificate, thus supporting the user to avoid information 
+leaks due to faked certificates and 
+<a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
+man-in-the-middle-attacks</a>. If you keep this feature enabled a database, CertPatrol.sqlite, is created in the
+directory of your browsing profile. It stores all websites visited via HTTPS together with some information about the SSL certificate of the web server. A web server has no
+means to get that saved data.">
+<!ENTITY jondobrowser.features.ssl-observatory "We furthermore included a way to help the Electronic Frontier Foundation (EFF) to collect SSL certificates. That effort aims at making the web a safer place in the long run and may be supported very easily by JonDoBrowser users now.">
+<!ENTITY jondobrowser.features.temp.email1 "With JonDoBrowser you have the opportunity to get temporary E-mail addresses conveniently. In order to do so right-click on a text field in which you want to get the E-mail address and choose the following entry out of the menu popping up:"> 
+<!ENTITY jondobrowser.features.searchbar "In order to mitigate the risk that an outsider might get to know the queries entered into the browser's searchbar, JonDoBrowser erases them just after they were submitted. Furthermore, the search history gets deleted every thirty minutes. By this means it can on the one hand not happen anymore that the last search query is visible to everyone having access to the user's browser session. On the other hand JonDoBrowser minimizes the possibility that entries in the search history may compromise the user without loosing the search history feature completely.">
+<!ENTITY jondobrowser.features.additionalAddons.head "Additional features of JonDoBrowser">
+<!ENTITY jondobrowser.features.additionalAddons "Besides our self-designed 
+extension we have incorporated a bunch of others into JonDoBrowser that help the 
+user surfing the Web anonymously: Cookie Monster, Adblock Plus, NoScript, UnPlug and HTTPS-Everywhere. You will find information on how to use them on
+<a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
+https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the following). Additional help is provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
 <!-- JonDoFox features -->
 <!ENTITY jondofox.features.title "JonDoFox Features">
 <!ENTITY jondofox.features.introduction "<h3 align='center'>Thank you for 
@@ -51,7 +93,7 @@ User Agent header as well. Therefore, we built a uniform User Agent which all
 users of JonDo are sending along while requesting pages on the WWW. If a user 
 wants to connect to the Tor network instead of using JonDo the User Agent is 
 rebuilt again, this time matching the one issued by the Tor Project and its 
-browser add-on, <a href='http://www.torproject.org/torbutton/'>Torbutton</a>. 
+browser add-on, <a href='https://www.torproject.org/torbutton/'>Torbutton</a>. 
 And, additionally, if someone wants to configure a proxy manually then she has 
 the opportunity to choose between different User Agents, i.e. Unchanged 
 (leaving the default setting), JonDo and Tor:">
@@ -74,7 +116,7 @@ will find a corresponding hint:">
 <!ENTITY jondofox.features.plugins.head "Defending against Plugins">
 <!ENTITY jondofox.features.plugins "Plugins can circumvent the proxy settings of
 JonDoFox which makes them especially dangerous while surfing anonymously.
-Therefore, all plugins are deactivated by default in JonDoFox' JonDo mode. Only
+Therefore, all plugins are deactivated by default in JonDo mode. Only
 Flash is still available due to its widespread use. The setting governing this
 behavior may again be found in JonDoFox' settings panel:">
 <!ENTITY jondofox.features.plugins.picurl "chrome://jondofox/skin/plugins_en.png">
