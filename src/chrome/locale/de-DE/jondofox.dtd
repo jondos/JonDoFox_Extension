@@ -1,5 +1,49 @@
+<!-- JonDoBrowser Features -->
+<!ENTITY jondobrowser.features.title "JonDoBrowser-Features">
+<!ENTITY jondobrowser.features.introduction "<h3 align='center'>Vielen Dank daf&uuml;r, 
+dass Sie JonDoBrowser heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
+die Hauptfeatures von JonDoBrowser n&auml;her erl&auml;utert, die in den Browser selbst eingebaut wurden oder &uuml;ber die JonDoFox-Erweiterung zur Verf&uuml;gung gestellt werden, um ein sichereres Surfen im Internet erm&ouml;glichen.">
+<!ENTITY jondobrowser.features.safecache "Neben dem Versuch, aus dem Referer, dem 
+User Agent und anderen HTTP-Headern Informationen &uuml;ber den Nutzer zu 
+gewinnen, gibt es noch die M&ouml;glichkeit, den Cache des Browsers f&uuml;r 
+Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
+Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
+installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
+SafeCache-Erweiterung mit leichten Modifikationen in die JonDoFox-Erweiterung 
+integriert.<br/> Dar&uuml;ber hinaus sch&uuml;tzt JonDoBrowser vor Versuchen, den
+Nutzer mit Hilfe von HTTP-Authentifikationsdaten zu verfolgen. Dazu werden
+sowohl die spezifischen Nutzerdaten, die an Drittseiten gesendet als auch von
+ihnen empfangen werden, herausgefiltert. Im JonDoFox-Einstellungsmen&uuml;
+findet sich ein entsprechender Hinweis darauf:">
+<!ENTITY jondobrowser.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
+von JonDoBrowser umgehen, was sie besonders gef&auml;hrlich beim anonymen Surfen
+macht. Daher werden im JonDo-Modus standardm&auml;&szlig;ig alle
+Plugins abgeschaltet. Lediglich Flash wird aktiv gelassen, was allein dessen
+weiter Verbreitung zuzuschreiben ist. Die Einstellung, die dieses Verhalten
+regelt, findet man wiederum im JonDoFox-Einstellungsmen&uuml;:">
+<!ENTITY jondobrowser.features.certpatrol2 "Dadurch wird 
+es f&uuml;r den Nutzer zum einen sehr komfortabel, die Fingerabdr&uuml;cke der 
+Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei 
+Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell 
+vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
+<a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
+Man-in-the-middle-Angriffen</a> sch&uuml;tzt. Wenn Sie diese Funktion aktiviert lassen, wird die Datei <em>CertPatrol.sqlite</em> im Profil-Verzeichnis
+des JonDoBrowsers angelegt. Diese Datenbank enth&auml;lt eine Liste der via HTTPS besuchten
+Webseiten und Informationen zu den dabei verwendeten SSL-Zertifikaten. Aus dieser Datenbank k&ouml;nnen keine Informationen von einem Webserver abgefragt werden.">
+<!ENTITY jondobrowser.features.ssl-observatory "Darüber hinaus gibt es die Möglichkeit, der Electronic Frontier Foundation (EFF) beim Sammeln von SSL-Zertifikaten zu helfen. Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu können JonDoBrowser-Nutzer nun leicht beitragen.">
+<!ENTITY jondobrowser.features.temp.email1 "Mit dem JonDoBrowser haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen bei einer Anmeldung in Foren oder beim Posten von Blog-Kommentaren zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und w&auml;hlen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
+<!ENTITY jondobrowser.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoBrowser diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage f&uuml;r jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchhistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalit&auml;t ganz aufzugeben.">
+<!ENTITY jondobrowser.features.additionalAddons.head "Weitere Features des JonDoBrowsers">
+<!ENTITY jondobrowser.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
+Erweiterung haben wir einige weitere Add-Ons in den JonDoBrowser
+integriert, damit die Anonymität während des Surfens noch besser gesch&uuml;tzt ist. 
+Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, UnPlug und HTTPS-Everywhere) 
+sind auf unserer Hilfeseiten unter 
+<a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
+https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">
+
 <!-- JonDoFox Features -->
-<!ENTITY jondofox.features.title "JonDoFox Features">
+<!ENTITY jondofox.features.title "JonDoFox-Features">
 <!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank daf&uuml;r, 
 dass Sie JonDoFox heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
 die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her erl&auml;utert, die 
@@ -56,7 +100,7 @@ mitsendet, lassen sich Nutzerinformationen gewinnen. Daher haben wir einen
 einheitlichen User Agent zusammengestellt, den alle JonDo-Nutzer mitschicken, 
 wenn sie Anfragen an das WWW stellen. Wenn hingegen Tor als Proxy eingestellt 
 wird, so wird der User Agent an die Vorgaben von 
-<a href='http://www.torproject.org/torbutton/'> Torbutton</a> angepasst. Wer 
+<a href='https://www.torproject.org/torbutton/'> Torbutton</a> angepasst. Wer 
 seinen Proxy manuell konfigurieren m&ouml;chte, hat die M&ouml;glichkeit, 
 zwischen verschiedenen User Agents zu w&auml;hlen:">
 <!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_de.png">
@@ -106,7 +150,7 @@ Webseiten und Informationen zu den dabei verwendeten SSL-Zertifikaten. Aus diese
 <!ENTITY jondofox.features.temp.email2 "Danach wird die angeforderte E-Mail-Adresse in das Textfeld eingef&uuml;gt und Ihr Account in einem neuen Tab ge&ouml;ffnet. Wenn Sie selbst bestimmen m&ouml;chten, welchen Anbieter tempor&auml;rer E-Mail-Adressen Sie verwenden oder das Feature sogar ganz deaktivieren wollen, dann k&ouml;nnen Sie die entsprechenden Anpassungen in dem JonDoFox-Einstellungsmen&uuml; vornehmen:">
 <!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_de.png">
 <!ENTITY jondofox.features.searchbar.head "Schutz der Suchanfragen vor Beoachtern am Rechner-Arbeitsplatz">
-<!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoFox diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage f&uuml;r jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalit&auml;t ganz aufzugeben.">
+<!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoFox diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage f&uuml;r jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchhistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalit&auml;t ganz aufzugeben.">
 <!ENTITY jondofox.features.additionalAddons.head "Weitere Features des JonDoFox-Profils">
 <!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
