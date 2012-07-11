@@ -1502,17 +1502,6 @@ JDFManager.prototype = {
           checkboxNews.addEventListener("click", function() {JDFManager.
 		    checkboxNewsChecked(checkboxNews, type);}, false);
         }
-      } else if (this.arguments && this.arguments[0]) {
-        log("We got probably a commonDialog...");
-        dialogParam = this.arguments[0].QueryInterface(CI.nsIDialogParamBlock);
-        log("Let's check whether we've got a NoScript pdf-dialog...");
-        dialogMessage = dialogParam.GetString(0).substr(0,10000).trim().
-                        toLowerCase();
-        if (dialogMessage.indexOf(".pdf") !== -1) {
-          this.document.loadOverlay(
-               "chrome://jondofox/content/external-pdfPlugin.xul", null);
-          this.setTimeout(JDFManager.prototype.showWarning, 200, this, true, false);
-        }
       } else {
         log("Nothing found...");
       } 
