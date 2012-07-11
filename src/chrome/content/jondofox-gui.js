@@ -879,7 +879,6 @@ var overlayObserver = {
         try {
           // 'subject' implements nsIURI
           var uri = subject.QueryInterface(Ci.nsIURI);
-          log("uri.spec is " + uri.spec);
           if (uri.spec === "chrome://jondofox/content/jondofox-gui.xul") {
             // Thanks to FoxyProxy for this idea for customizing the toolbar
             // button automatically if it is added to the toolbar.
