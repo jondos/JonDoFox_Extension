@@ -64,22 +64,27 @@ jondofox = {
 };
 
 jondofox.bloodyVikings = {
-  insertAddress: function(field) {
+  insertAddress: function(field, id) {
+    if (!field)
+      return;
+
     try {
       log("Trying to get an temp email-address...");
       Cu.import("resource://jondofox/bloodyVikingsUtils.jsm", this);
       Cu.import("resource://jondofox/bloodyVikingsServices.jsm", this);
 
-      let serviceId = prefsHandler.
-        getStringPref("extensions.jondofox.temp.email.selected");
+      let serviceId = (id === undefined) ? prefsHandler.
+        getStringPref("extensions.jondofox.temp.email.selected") : id;
       let service = this.BloodyVikings.Services.getService(serviceId);
 
       if (!service) {
-	jdfUtils.showAlert(jdfUtils.
+        if (id === undefined) {
+	  jdfUtils.showAlert(jdfUtils.
 	    getString("jondofox.temp.email.invalidId.title"), jdfUtils.
 	    getString("jondofox.temp.email.invalidID.message"));
-        prefsHandler.
-          setStringPref("extensions.jondofox.temp.email.selected", null);
+          prefsHandler.
+            setStringPref("extensions.jondofox.temp.email.selected", null);
+        }
         return;
       }
 
@@ -102,6 +107,26 @@ jondofox.bloodyVikings = {
       );
     } catch(e) {
       log("Error while fetching temporary a Email-Address: " + e);
+    }
+  },
+
+  populateContextServicePopup: function(servicePopup) {
+    if (!servicePopup.hasChildNodes()) {
+      Cu.import("resource://jondofox/bloodyVikingsServices.jsm", this);
+
+      for (let id in this.BloodyVikings.Services.serviceList) {
+        let service = this.BloodyVikings.Services.getService(id);
+        let item = document.createElement("menuitem");
+        item.setAttribute("label", service.name);
+        item.addEventListener("command",
+          function() {
+            jondofox.bloodyVikings.insertAddress(document.popupNode,
+              service.name);
+          },
+          false);
+
+        servicePopup.appendChild(item);
+      }
     }
   }
 };

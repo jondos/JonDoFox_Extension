@@ -276,3 +276,13 @@ toolbar[iconsize="small"] #jondofox-toolbar-button[proxy="custom"] {
 toolbar[iconsize="small"] #jondofox-toolbar-button[proxy="none"] {
   list-style-image: url("chrome://jondofox/skin/noproxy-16.png");
 }
+
+bvsplitmenu {
+  -moz-binding: url(chrome://jondofox/content/bindings.xml#bvsplitmenu);
+}
+
+.bvsplitmenu-menu > .menu-text,
+.bvsplitmenu-menu > .menu-accel-container,
+.bvsplitmenu-menuitem > .menu-accel-container {
+  display: none;
+}
