@@ -37,13 +37,15 @@
               label=""
               oncommand="bypassProxyAndSave(gContextMenu.linkURL);"
               insertafter="context-savelink" />
-    <menuitem id="tempEmailContext"
+    <bvsplitmenu id="tempEmailContext"
               label="&jondofox.temp.email;"
-              class="menuitem-iconic"
               image="chrome://jondofox/skin/mail-16x16.png" 
               insertafter="context-delete"
-              oncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
-              hidden="true" />
+              bvoncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
+              hidden="true">
+    <menupopup id="bloodyvikingsContextServicePopup"
+               onpopupshowing="if (event.target === this) jondofox.bloodyVikings.populateContextServicePopup(this);"/>
+    </bvsplitmenu>
     <!-- These are entries to add or remove URIs, currently hidden -->
     <menuitem id="noproxy-add" 
               label="&jondofox.contextmenu.noproxylist.add;"
