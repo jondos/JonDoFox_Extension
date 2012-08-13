@@ -94,7 +94,7 @@ if ! [ ${JDF_VERSION} ]; then
   # Move jondofox.jar into the .xpi but without compressing it. 
   zip -Xvm0 ../xpi/jondofox.xpi ./chrome/jondofox.jar 
 else
-  zip -Xvr9 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./ -x
+  zip -Xvr9 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./ -x \
   "*.svn/*" "*.swp" "chrome/*" "*.git"
   zip -Xvm0 ../xpi/jondofox${JDF_VERSION}-alpha${ALPHA_VERSION}.xpi ./chrome/jondofox.jar 
   echo \*\* Signing -xpi
