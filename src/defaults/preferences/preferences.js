@@ -82,7 +82,7 @@ pref("extensions.jondofox.tor.appname_override","Netscape");
 pref("extensions.jondofox.tor.appversion_override","5.0 (Windows)");
 pref("extensions.jondofox.tor.platform_override","Win32");
 pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
-pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:5.0) Gecko/20100101 Firefox/5.0");
+pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:10.0) Gecko/20100101 Firefox/10.0");
 pref("extensions.jondofox.tor.productsub_override","20100101");
 pref("extensions.jondofox.tor.buildID_override","0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
@@ -195,7 +195,6 @@ pref("extensions.jondofox.disableAllPluginsJonDoMode", false);
 pref("extensions.jondofox.plugin-protection_enabled", true);
 
 // The Navigation Timing API
-
 pref("extensions.jondofox.navigationTiming.enabled", false);
 
 // The Battery API
@@ -203,6 +202,12 @@ pref("extensions.jondofox.battery.enabled", false);
 
 // SPDY
 pref("extensions.jondofox.spdy.enabled", false);
+
+// Connection sniffing via JS
+pref("extensions.jondofox.dom.network.enabled", false);
+
+// Thumbnails for the New Tab page
+pref("extensions.jondofox.pagethumbnails.disabled", true);
 
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);

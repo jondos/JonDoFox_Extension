@@ -245,7 +245,10 @@ JDFManager.prototype = {
     'security.enable_tls_session_tickets':
     'extensions.jondofox.tls_session_tickets',
     'dom.battery.enabled': 'extensions.jondofox.battery.enabled',
-    'network.http.spdy.enabled': 'extensions.jondofox.spdy.enabled'
+    'network.http.spdy.enabled': 'extensions.jondofox.spdy.enabled',
+    'dom.network.enabled': 'extensions.jondofox.dom.network.enabled',
+    'browser.pagethumbnails.capturing_disabled':
+    'extensions.jondofox.pagethumbnails.disabled'
   },
 
   //This map of integer preferences is given to the prefsMapper
