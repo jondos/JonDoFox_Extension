@@ -7,6 +7,7 @@ Changes in version 0.2.23 - XXXX-XX-XX
     * disabled the capturing of thumbnails for the New Page tab (set
       "browser.pagethumbnails.capturing_disabled" to true)
     * made some explanations more precise/updated language strings
+    * added missing language strings for JonDoBrowser
 
 Changes in version 0.2.22 - 2012-07-17
 

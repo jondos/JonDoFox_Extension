@@ -40,6 +40,8 @@ extension we have incorporated a bunch of others into JonDoBrowser that help the
 user surfing the Web anonymously: Cookie Monster, Adblock Plus, NoScript, UnPlug and HTTPS-Everywhere. You will find information on how to use them on
 <a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the following). Additional help is provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
+<!ENTITY jondobrowser.instructions.titleText "JonDoBrowser <b>additionally</b> needs the JonDo proxy program to be able to connect to the JonDonym service.">
+
 <!-- JonDoFox features -->
 <!ENTITY jondofox.features.title "JonDoFox Features">
 <!ENTITY jondofox.features.introduction "<h3 align='center'>Thank you for 

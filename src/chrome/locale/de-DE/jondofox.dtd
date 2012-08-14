@@ -41,6 +41,8 @@ Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, UnPlug und HTTP
 sind auf unserer Hilfeseiten unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">
+<!ENTITY jondobrowser.instructions.titleText "JonDoBrowser benötigt <b>zusätzlich</b> das Programm JonDo, 
+   um eine Verbindung zum JonDonym-Dienst herzustellen.">
 
 <!-- JonDoFox Features -->
 <!ENTITY jondofox.features.title "JonDoFox-Features">
