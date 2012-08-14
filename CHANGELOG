@@ -1,10 +1,12 @@
 Changes in version 0.2.23 - XXXX-XX-XX
+
   Minor improvement:
     * updated Tor User Agent
     * disabled "dom.network.enabled" to avoid sniffing of the connection type
       via JavaScript
     * disabled the capturing of thumbnails for the New Page tab (set
       "browser.pagethumbnails.capturing_disabled" to true)
+    * made some explanations more precise/updated language strings
 
 Changes in version 0.2.22 - 2012-07-17
 

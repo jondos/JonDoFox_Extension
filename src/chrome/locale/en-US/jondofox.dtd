@@ -213,7 +213,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 
 <!-- Warnings-->
 <!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files/links directly with external applications!">
-<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content is deactivated in your pdf-reader before opening the file!">
+<!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content is deactivated in your pdf-reader before opening the file as they can compromise your anonymity!">
 <!ENTITY jondofox.warnings.externalDoc "Use OpenOffice.org instead of Word to open this file if you want to keep your IP address protected!">
 
 <!-- Context menu strings -->
@@ -226,7 +226,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.statusbar.preferences "Preferences">
 <!ENTITY jondofox.statusbar.anontest "Test Anonymity">
 <!ENTITY jondofox.statusbar.tooltiptext "JonDoFox Preferences">
-<!ENTITY jondofox.statusbar.about "About JonDoFox">
+<!ENTITY jondofox.statusbar.about "about:jondofox">
 
 <!-- General dialog strings -->
 <!ENTITY jondofox.dialog.accept "Ok">
