@@ -3,14 +3,14 @@
 # Use this script to generate a distributable .xpi or an alhpa version 
 # including the chrome-folder as a .jar-archive
 
-OPTSTR="v:a:b:h"
+OPTSTR="v:a:bh"
 getopts "${OPTSTR}" CMD_OPT
 while [ $? -eq 0 ];
 do
   case ${CMD_OPT} in
     v) JDF_VERSION="${OPTARG}";;
     a) ALPHA_VERSION="${OPTARG}";; 
-    b) JDF_BROWSER="${OPTARG}";;
+    b) JDF_BROWSER="1";;
     h) echo '' 
        echo 'JonDoDox Extension Packaging Script 1.0 (2011 Copyright (c) JonDos GmbH)'
        echo "usage: $0 [options]"
@@ -61,14 +61,22 @@ if [ ${JDF_BROWSER} ]; then
   # .xpi.
   echo "Replacing \"about:jondofox\" with \"about:jondobrowser\""
   cd src
-  sed -i 's/about:jondofox/about:jondobrowser/g' `grep -ril 'about:jondofox' *`
-  sed -i 's/what=jondofox/what=jondobrowser/g' `grep -ril 'what=jondofox' *`
+  sed -i 's/about:jondofox/about:jondobrowser/g' \
+    $(grep -ril 'about:jondofox' *)
+  sed -i 's/what=jondofox/what=jondobrowser/g' \
+    $(grep -ril 'what=jondofox' *)
   sed -i 's/jondofox-features.xhtml/jondobrowser-features.xhtml/g' \
-    `grep -ril 'jondofox-features.xhtml' *`
+    $(grep -ril 'jondofox-features.xhtml' *)
   sed -i 's/jondofox-colors.jpg/jondobrowser-colors.jpg/g' \
-    `grep -ril 'jondofox-colors.jpg' *`
+    $(grep -ril 'jondofox-colors.jpg' *)
   sed -i 's/jondofox-background.jpg/jondobrowser-background.jpg/g' \
-    `grep -ril 'jondofox-background.jpg' *`
+    $(grep -ril 'jondofox-background.jpg' *)
+  echo "Replacing the JonDoFox update URL with an own"
+  sed -i 's/downloads\/update.rdf/en\/downloads\/update.rdf/g' \
+    $(grep -ril 'downloads/update.rdf' *)
+  echo "Adapting netError.xhtml"
+  sed -i 's/\&jondofox.instructions.titleText;/\&jondobrowser.instructions.titleText;/g' \
+    $(grep -ril '&jondofox.instructions.titleText;' *)
   cd ..
 fi
 
@@ -106,15 +114,22 @@ fi
 if [ ${JDF_BROWSER} ]; then
   # We basically reset all the JDF peculiarites (like logos, .xhtml,
   # "about:jondobrowser").
+  echo "Resetting the values."
   sed -i 's/about:jondobrowser/about:jondofox/g' \
-    `grep -ril 'about:jondobrowser' *`
-  sed -i 's/what=jondobrowser/what=jondofox/g' `grep -ril 'what=jondobrowser' *`
+    $(grep -ril 'about:jondobrowser' *)
+  sed -i 's/what=jondobrowser/what=jondofox/g' \
+    $(grep -ril 'what=jondobrowser' *)
   sed -i 's/jondobrowser-features.xhtml/jondofox-features.xhtml/g' \
-    `grep -ril 'jondobrowser-features.xhtml' *` 
+    $(grep -ril 'jondobrowser-features.xhtml' *)
   sed -i 's/jondobrowser-colors.jpg/jondofox-colors.jpg/g' \
-    `grep -ril 'jondobrowser-colors.jpg' *`
+    $(grep -ril 'jondobrowser-colors.jpg' *)
   sed -i 's/jondobrowser-background.jpg/jondofox-background.jpg/g' \
-    `grep -ril 'jondobrowser-background.jpg' *` 
+    $(grep -ril 'jondobrowser-background.jpg' *)
+  # Resetting the update URL to the old one...
+  sed -i 's/en\/downloads\/update.rdf/downloads\/update.rdf/g' \
+    `grep -ril 'en/downloads/update.rdf' *`
+  sed -i 's/\&jondobrowser.instructions.titleText;/\&jondofox.instructions.titleText;/g' \
+    $(grep -ril '&jondobrowser.instructions.titleText;' *)
 fi
 
 cd ..
