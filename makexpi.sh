@@ -72,7 +72,7 @@ if [ ${JDF_BROWSER} ]; then
   sed -i 's/jondofox-background.jpg/jondobrowser-background.jpg/g' \
     $(grep -ril 'jondofox-background.jpg' *)
   echo "Replacing the JonDoFox update URL with an own"
-  sed -i 's/downloads\/update.rdf/en\/downloads\/update.rdf/g' \
+  sed -i 's/downloads\/update.rdf/downloads\/updateBrowser.rdf/g' \
     $(grep -ril 'downloads/update.rdf' *)
   echo "Adapting netError.xhtml"
   sed -i 's/\&jondofox.instructions.titleText;/\&jondobrowser.instructions.titleText;/g' \
@@ -126,8 +126,8 @@ if [ ${JDF_BROWSER} ]; then
   sed -i 's/jondobrowser-background.jpg/jondofox-background.jpg/g' \
     $(grep -ril 'jondobrowser-background.jpg' *)
   # Resetting the update URL to the old one...
-  sed -i 's/en\/downloads\/update.rdf/downloads\/update.rdf/g' \
-    `grep -ril 'en/downloads/update.rdf' *`
+  sed -i 's/downloads\/updateBrowser.rdf/downloads\/update.rdf/g' \
+    `grep -ril 'downloads/updateBrowser.rdf' *`
   sed -i 's/\&jondobrowser.instructions.titleText;/\&jondofox.instructions.titleText;/g' \
     $(grep -ril '&jondobrowser.instructions.titleText;' *)
 fi
