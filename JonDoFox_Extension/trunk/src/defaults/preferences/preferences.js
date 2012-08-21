@@ -228,4 +228,4 @@ pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
-pref("extensions.jondofox.jdb.version", "0.0.1");
+pref("extensions.jondofox.jdb.version", "0.1");
