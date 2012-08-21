@@ -20,14 +20,14 @@ do
        echo '   release).'
        echo '-a [alpha_version]'
        echo '   The alpha version number.'
-       echo '-b builds the xpi for use in the JonDoBrowser'
+       echo '-b builds the xpi for use in the JonDoBrowser.'
        echo '-h prints this help text.'
        echo ''
        exit 0
        ;;
   esac
   getopts "${OPTSTR}" CMD_OPT
-done 
+done
 
 signing()
 {
