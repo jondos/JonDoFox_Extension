@@ -824,7 +824,8 @@ function startupChecks() {
           prefsHandler.getStringPref("extensions.jondofox.browser_version")) {
         // Everything is fine, JonDoBrowser is up-to-date.
       } else {
-        jdfUtils.showAlert(jdfUtils.getString("jondofox.browser.update"));
+        jdfUtils.showAlert(jdfUtils.getString("jondofox.dialog.attention"),
+            jdfUtils.getString("jondofox.browser.update"));
       }
       // Having the message in one window is enough...
       jdfManager.jdbCheck = true;
