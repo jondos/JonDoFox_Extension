@@ -438,6 +438,8 @@ function openPageNewTab(aString) {
       win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/doc/HTTPSEverywhere/SSLObservatorySubmission", 'tab'); 
     } else if (aString === "tempWiki") {
       win.openUILinkIn(jdfUtils.getString("jondofox.temp.email.wikiURL"), 'tab');
+    } else if (aString === "jdb") {
+      win.openUILinkIn(jdfUtils.getString("jondofox.browser.url"), 'tab');
     }
   } catch (e) {
     log("openPageNewTab(): " + e);
@@ -824,8 +826,12 @@ function startupChecks() {
           prefsHandler.getStringPref("extensions.jondofox.browser_version")) {
         // Everything is fine, JonDoBrowser is up-to-date.
       } else {
-        jdfUtils.showAlert(jdfUtils.getString("jondofox.dialog.attention"),
-            jdfUtils.getString("jondofox.browser.update"));
+        if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
+          jdfUtils.showAlertCheck(jdfUtils.
+            getString('jondofox.dialog.attention'), jdfUtils.
+            getString("jondofox.browser.update"), 'update');
+          openPageNewTab("jdb");
+        }
       }
       // Having the message in one window is enough...
       jdfManager.jdbCheck = true;

@@ -1,4 +1,4 @@
-Changes in version 0.2.23 - XXXX-XX-XX
+Changes in version 0.2.23 - 2012-08-30
 
   Minor improvement:
     * updated Tor User Agent
@@ -7,7 +7,6 @@ Changes in version 0.2.23 - XXXX-XX-XX
     * disabled the capturing of thumbnails for the New Page tab (set
       "browser.pagethumbnails.capturing_disabled" to true)
     * made some explanations more precise/updated language strings
-    * added missing language strings for JonDoBrowser
 
   Other:
     * added language strings for JonDoBrowser
