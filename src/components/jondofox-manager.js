@@ -231,7 +231,7 @@ JDFManager.prototype = {
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
-    'view_source.editor.external': 'extensions.jondofox.source_editor_external',
+    'view_source.editor.external':'extensions.jondofox.source_editor_external',
     'security.remember_cert_checkbox_default_setting':
     'extensions.jondofox.security.remember_cert_checkbox_default_setting',
     'browser.search.suggest.enabled':
@@ -244,11 +244,12 @@ JDFManager.prototype = {
     'extensions.jondofox.clearOnShutdown_offlineApps',
     'security.enable_tls_session_tickets':
     'extensions.jondofox.tls_session_tickets',
-    'dom.battery.enabled': 'extensions.jondofox.battery.enabled',
-    'network.http.spdy.enabled': 'extensions.jondofox.spdy.enabled',
-    'dom.network.enabled': 'extensions.jondofox.dom.network.enabled',
+    'dom.battery.enabled':'extensions.jondofox.battery.enabled',
+    'network.http.spdy.enabled':'extensions.jondofox.spdy.enabled',
+    'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
     'browser.pagethumbnails.capturing_disabled':
-    'extensions.jondofox.pagethumbnails.disabled'
+    'extensions.jondofox.pagethumbnails.disabled',
+    'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled'
   },
 
   //This map of integer preferences is given to the prefsMapper
@@ -1594,7 +1595,6 @@ JDFManager.prototype = {
         var windowWidth;
         var style;
         windowWidth = window.innerWidth;
-        log("The width of the window is: " + windowWidth);
         style = window.document.getElementById("warning").getAttribute("style");
         style = style + "width: " + windowWidth + "px;";
         window.document.getElementById("warning").setAttribute("style", style);

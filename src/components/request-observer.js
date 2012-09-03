@@ -116,7 +116,7 @@ RequestObserver.prototype = {
     // We are still here, thus something went wrong. Trying further things.
     // We can't rely on the Referer here as this can legitimately be
     // 1st party while the content is still 3rd party (from a bird's eye
-    // view. Therefore...
+    // view). Therefore...
     try {
       parentHost = this.cookiePerm.getOriginatingURI(channel).host; 
     } catch (e) {
