@@ -226,6 +226,9 @@ pref("extensions.jondofox.adblock_enabled", true);
 pref("extensions.jondofox.temp.email.activated", true);
 pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
 
+// Mozilla shall not be able to deactivate one of our extensions
+pref("extensions.jondofox.blocklist.enabled", false);
+
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.jdb.version", "0.1");
