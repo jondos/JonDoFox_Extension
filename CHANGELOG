@@ -4,6 +4,8 @@ Changes in version 0.2.24 - XXXX-XX-XX
     * disabled "extensions.blocklist.enabled" in order to not allow Mozilla to
       disable one of our extensions and to avoid OS and kernel information leaks
       (see: https://trac.torproject.org/projects/tor/ticket/6734)
+    * improved english about:jondofox/about:jondobrowser translation (thanks to
+      sovereignpress)
     * bumped maxVersion to 17.0a2
 
 Changes in version 0.2.23 - 2012-08-30
