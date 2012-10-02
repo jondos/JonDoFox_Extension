@@ -43,6 +43,8 @@ Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, UnPlug und HTTP
 sind auf unserer Hilfeseiten unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">
+<!ENTITY jondobrowser.features.ipcheck.head "Testen Sie Ihre Einstellungen mit dem IP-Check">
+<!ENTITY jondobrowser.features.ipcheck "Um zu überprüfen, ob Sie Ihren Browser ordentlich konfiguriert haben, bieten wir den <a href='http://ip-check.info'>IP-Check</a> an. Dort wird mit verschiedenen Mitteln versucht, Ihre IP-Adresse herauszubekommen oder identifizierende Informationen aus Ihrem Browser auszulesen. Sie finden dort auch Hinweise dazu, wie Sie eventuell auftretende Probleme beheben und sich so besser vor einer Identifikation im Netz schützen können.">
 <!ENTITY jondobrowser.instructions.titleText "JonDoBrowser benötigt <b>zusätzlich</b> das Programm JonDo, 
    um eine Verbindung zum JonDonym-Dienst herzustellen.">
 

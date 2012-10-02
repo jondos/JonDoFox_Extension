@@ -14,7 +14,7 @@ loaded faster than the same, non-cached ones. Conversely, an attacker may try
 to set so-called cache cookies to identify a particular user across different
 domains. In order to better protect our users against this kind of attack, we
 included the slightly modified code of the SafeCache extension into JonDoFox.
-</br>Additionally, the authentication cache of JonDoBrowser might get exploited
+<br/>Additionally, the authentication cache of JonDoBrowser might get exploited
 to track users across several different domains. In order to defend against
 this kind of attack, however, we discard authentication information sent to or
 by third party elements. In the JonDoFox settings panel you will find a
@@ -51,6 +51,8 @@ experience: Cookie Monster, Adblock Plus, NoScript, UnPlug and
 HTTPS-Everywhere. You will find information on how to use them on
 <a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the following). Additional help is provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
+<!ENTITY jondobrowser.features.ipcheck.head "Test your configuration with the IP check">
+<!ENTITY jondobrowser.features.ipcheck "In order to test your browser configuration we offer the <a href='http://ip-check.info'>IP check</a>. There, we try to get your real IP address or identifying information out of your browser by different means. If we find some issues you will get help in resolving them in order to surf the Web securely without being identified.">
 <!ENTITY jondobrowser.instructions.titleText "JonDoBrowser <b>additionally</b> needs the JonDo proxy program to be able to connect to the JonDonym service.">
 
 <!-- JonDoFox features -->
