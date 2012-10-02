@@ -122,7 +122,7 @@ loaded faster than the same, non-cached ones. Conversely, an attacker may try
 to set so-called cache cookies to identify a particular user across different
 domains. In order to better protect our users against this kind of attack, we
 included the slightly modified code of the SafeCache extension into JonDoFox.
-</br>Additionally, the authentication cache of Firefox might get exploited to
+<br/>Additionally, the authentication cache of Firefox might get exploited to
 track users across several different domains. In order to defend against this
 kind of attack, however, we discard authentication information sent to or by
 third party elements. In the JonDoFox settings panel you will find a
