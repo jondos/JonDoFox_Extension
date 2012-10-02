@@ -3,12 +3,12 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
-  <Description about="urn:mozilla:install-manifest">	
+  <Description about="urn:mozilla:install-manifest">
     <!-- Required properties -->
     <em:id>{437be45a-4114-11dd-b9ab-71d256d89593}</em:id>
     <em:version>0.2.24a1</em:version>
     <em:description>Private and Secure Web Surfing</em:description>
-   
+
     <!-- Firefox -->
     <em:targetApplication>
       <Description>
