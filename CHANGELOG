@@ -1,4 +1,4 @@
-Changes in version 0.2.24 - XXXX-XX-XX
+Changes in version 0.2.24 - 2012-10-9
 
   Minor improvement:
     * disabled "extensions.blocklist.enabled" in order to not allow Mozilla to
@@ -6,7 +6,7 @@ Changes in version 0.2.24 - XXXX-XX-XX
       (see: https://trac.torproject.org/projects/tor/ticket/6734)
     * improved english about:jondofox/about:jondobrowser translation (thanks to
       sovereignpress)
-    * bumped maxVersion to 17.0a2
+    * bumped maxVersion to 17.*
 
 Changes in version 0.2.23 - 2012-08-30
 
