@@ -216,6 +216,8 @@ var sslObservatory = {
               delete that.already_submitted[fps[0]];
           }
         } else {
+          // TODO: Think about the warning code path we could implement here as
+          // well.
           if (fps[0] in that.already_submitted)
             delete that.already_submitted[fps[0]];
           try {

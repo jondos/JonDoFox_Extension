@@ -4,6 +4,8 @@ Changes in version 0.2.24 - 2012-10-9
     * disabled "extensions.blocklist.enabled" in order to not allow Mozilla to
       disable one of our extensions and to avoid OS and kernel information leaks
       (see: https://trac.torproject.org/projects/tor/ticket/6734)
+    * slightly updated SSL Observatory code to match the the HTTPS Everywhere
+      3.0 release
     * improved english about:jondofox/about:jondobrowser translation (thanks to
       sovereignpress)
     * bumped maxVersion to 17.*
