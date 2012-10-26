@@ -1,0 +1,9 @@
+There are currently two kinds of tests in the test directory:
+
+1) Tests examining whether the hooks are applied at all (these include the
+  files testScreenHooks* and testWindowHooks*)
+2) Tests that try to break the existing hooks (these are all the other test
+  files)
+
+TODO: Mapping of Fleischer's tests to tests in tests/
+TODO: Some hints on setting up the test infrastructure
