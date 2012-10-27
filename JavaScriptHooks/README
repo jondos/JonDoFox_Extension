@@ -1,9 +1,20 @@
-There are currently two kinds of tests in the test directory:
+There are currently three kinds of tests in the test directory:
 
-1) Tests examining whether the hooks are applied at all (these include the
+1) It is tested whether the Tor Browser is starting with a dimension which is a
+muliple of 200/100 (testBrowserDimensionsStartup.js)
+1) Tests examining whether the fake values are applied at all (these include the
   files testScreenHooks* and testWindowHooks*)
-2) Tests that try to break the existing hooks (these are all the other test
-  files)
+2) Tests that try to find leaks (these are all the other test files)
+
+The tests reflect
+
+https://gitweb.torproject.org/torbrowser.git/blob/refs/heads/maint-2.2:/src/current-patches/firefox/0023-Do-not-expose-physical-screen-info.-via-window-and-w.patch
+
+and
+
+https://trac.torproject.org/projects/tor/ticket/7222#comment:1
 
 TODO: Mapping of Fleischer's tests to tests in tests/
 TODO: Some hints on setting up the test infrastructure
+TODO: Rename tests (delete the "hook" parts as the current implementation isno
+hooking anymore)

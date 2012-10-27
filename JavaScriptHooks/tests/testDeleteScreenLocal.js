@@ -23,9 +23,6 @@
 
 var setupModule = function (module) {
   module.controller = mozmill.getBrowserController();
-  // We should make sure the user does not already have a window with multiples
-  // of 50 by default.
-  controller.window.resizeTo(511, 432);
   // Test requesting local content. We can be sure that this very file exists
   // locally during executing, thus throwing the execption which should give
   // us the platform dependent filename. But as the test is executed inside
@@ -41,8 +38,9 @@ var setupModule = function (module) {
   // Trying to delete the hooked screen values.
   delete controller.testContentWin.screen;
 }
+
 /**
- * We test whether height has the same size as window.innerHeight.
+ * We test whether |height| has the same size as |window.innerHeight|.
  */
 var testScreenHeightHook = function() {
   controller.assert(function() {
@@ -52,7 +50,7 @@ var testScreenHeightHook = function() {
 }
 
 /**
- * We test whether width has the same size as window.innerWidth.
+ * We test whether |width| has the same size as |window.innerWidth|.
  */
 var testScreenWidthHook = function() {
   controller.assert(function() {
@@ -62,7 +60,7 @@ var testScreenWidthHook = function() {
 }
 
 /**
- * We test whether top is 0.
+ * We test whether |top| is 0.
  */
 var testScreenTopHook = function() {
   controller.assert(function() {
@@ -71,7 +69,7 @@ var testScreenTopHook = function() {
 }
 
 /**
- * We test whether left is 0.
+ * We test whether |left| is 0.
  */
 var testScreenLeftHook = function() {
   controller.assert(function() {
@@ -80,7 +78,7 @@ var testScreenLeftHook = function() {
 }
 
 /**
- * We test whether availTop is 0.
+ * We test whether |availTop| is 0.
  */
 var testScreenAvailTopHook = function() {
   controller.assert(function() {
@@ -89,7 +87,7 @@ var testScreenAvailTopHook = function() {
 }
 
 /**
- * We test whether availLeft is 0.
+ * We test whether |availLeft| is 0.
  */
 var testScreenAvailLeftHook = function() {
   controller.assert(function() {
@@ -98,7 +96,7 @@ var testScreenAvailLeftHook = function() {
 }
 
 /**
- * We test whether availHeight has the same size as window.innerHeight.
+ * We test whether |availHeight| has the same size as |window.innerHeight|.
  */
 var testScreenAvailHeightHook = function() {
   controller.assert(function() {
@@ -108,7 +106,7 @@ var testScreenAvailHeightHook = function() {
 }
 
 /**
- * We test whether availWidth has the same size as window.innerWidth.
+ * We test whether |availWidth| has the same size as |window.innerWidth|.
  */
 var testScreenAvailWidthHook = function() {
   controller.assert(function() {
@@ -118,5 +116,14 @@ var testScreenAvailWidthHook = function() {
 }
 
 /**
- * We do not test |colorDepth| and |pixelDepth| as these are not faked.
+ * We test whether |pixelDepth| is 24. 
+ */
+var testScreenPixelDepth = function() {
+  controller.assert(function() {
+    return controller.testContentWin.screen.pixelDepth === 24;
+  });
+}
+
+/**
+ * We do not test |colorDepth| as it is not faked.
  */
