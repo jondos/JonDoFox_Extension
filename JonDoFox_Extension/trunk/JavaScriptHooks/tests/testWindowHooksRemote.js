@@ -16,9 +16,6 @@
 
 var setupModule = function (module) {
   module.controller = mozmill.getBrowserController();
-  // We should make sure the user does not already have a window with multiples
-  // of 50 by default.
-  controller.window.resizeTo(511, 432);
   // Test requesting remote content.
   controller.open('https://www.torproject.org');
   controller.waitForPageLoad();
@@ -29,43 +26,27 @@ var setupModule = function (module) {
 }
 
 /**
- * We test whether innerHeight is a multiple of 50.
+ * We test whether |outerHeight| equals |innerHeight|.
  */
-var testWindowInnerHeightHook = function() {
+var testWindowOuterHeigthHook = function() {
   controller.assert(function() {
-    return controller.testContentWin.innerHeight % 50 === 0;
+    return controller.testContentWin.outerHeight === controller.testContentWin.
+      innerHeight;
   });
 }
 
 /**
- * We test whether innerWidth is a multiple of 50.
- */
-var testWindowInnerWidthHook = function() {
-  controller.assert(function() {
-    return controller.testContentWin.innerWidth % 50 === 0;
-  });
-}
-
-/**
- * We test whether outerHeight is a multiple of 50.
- */
-var testWindowOuterHeightHook = function() {
-  controller.assert(function() {
-    return controller.testContentWin.outerHeight % 50 === 0;
-  });
-}
-
-/**
- * We test whether outerWidth is a multiple of 50.
+ * We test whether |outerWidth| euqals |innerWidth|.
  */
 var testWindowOuterWidthHook = function() {
   controller.assert(function() {
-    return controller.testContentWin.outerWidth % 50 === 0;
+    return controller.testContentWin.outerWidth === controller.testContentWin.
+      innerWidth;
   });
 }
 
 /**
- * We test whether screenX is 0.
+ * We test whether |screenX| is 0.
  */
 var testWindowScreenXHook = function() {
   controller.assert(function() {
@@ -74,7 +55,7 @@ var testWindowScreenXHook = function() {
 }
 
 /**
- * We test whether screenY is 0.
+ * We test whether |screenY| is 0.
  */
 var testWindowScreenYHook = function() {
   controller.assert(function() {
@@ -82,3 +63,20 @@ var testWindowScreenYHook = function() {
   });
 }
 
+/**
+ * We test whether |mozInnerScreenX| is 0.
+ */
+var testWindowMozInnerScreenXHook = function() {
+  controller.assert(function() {
+    return controller.testContentWin.mozInnerScreenX === 0;
+  });
+}
+
+/**
+ * We test whether |mozInnerScreenY| is 0.
+ */
+var testWindowMozInnerScreenYHook = function() {
+  controller.assert(function() {
+    return controller.testContentWin.mozInnerScreenY === 0;
+  });
+}
