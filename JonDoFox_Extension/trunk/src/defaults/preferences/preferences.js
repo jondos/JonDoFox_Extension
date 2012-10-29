@@ -231,4 +231,4 @@ pref("extensions.jondofox.blocklist.enabled", false);
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
-pref("extensions.jondofox.jdb.version", "0.2");
+pref("extensions.jondofox.jdb.version", "0.2.2");
