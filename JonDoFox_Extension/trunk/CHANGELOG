@@ -1,3 +1,15 @@
+Changes in version 0.2.25 - XXXX-XX-XX
+
+  Minor improvement:
+    * disabled all plugins per default in JonDo mode if JonDoFox is used in
+      JonDoBrowser
+
+  Bugfix:
+    * added missing "extensions.jondofox.noscript_showDomain" preference 
+
+  Other:
+    * code clean-up
+
 Changes in version 0.2.24.2 - 2012-10-29
 
   * bumped JonDoBrowser version
