@@ -1200,8 +1200,12 @@ JDFManager.prototype = {
       for (var i = 0; i < plugins.length; i++) {
         var p=plugins[i];
         if (/^Shockwave.*Flash/i.test(p.name)) {
+          // We are disabling Flash if a user of the JonDoFox-Profile wanted to
+          // or if the JonDoBrowser is used.
           if (this.prefsHandler.
-              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
+              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode") ||
+              this.prefsHandler.
+              isPreferenceSet("extensions.jondofox.browser_version")) {
             p.disabled = true;
           } else {
             // We need this if we are coming from Tor mode
