@@ -269,29 +269,35 @@ RequestObserver.prototype = {
           }
         }
       }
-
-      // Set other headers here
-      // It is not enough to have the values only in the about:config! But in
-      // order to use them for all requests we must use setRequestHeader() and
-      // give them as an argument...
-      acceptHeader = this.prefsHandler.
-                         getStringPref("network.http.accept.default");
-      channel.setRequestHeader("Accept", acceptHeader, false);
-      // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
-      // See: http://donottrack.us
-      channel.setRequestHeader("DNT", 1, false);
-      // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
-      // actors like NoScript or AdBlock are supporting it.
-      // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
-      // We do not send the Accept-Charset header anymore due to FF6 doing this
-      // by default.
-      channel.setRequestHeader("Accept-Charset", null, false);
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!" + e);
       } else {
         log("modifyRequest(): " + e);
       }
+    }
+    // Set other headers here
+    // It is not enough to have the values only in the about:config! But in
+    // order to use them for all requests we must use setRequestHeader() and
+    // give them as an argument...
+    acceptHeader = this.prefsHandler.
+                       getStringPref("network.http.accept.default");
+    channel.setRequestHeader("Accept", acceptHeader, false);
+    // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
+    // See: http://donottrack.us
+    channel.setRequestHeader("DNT", 1, false);
+    // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
+    // actors like NoScript or AdBlock are supporting it.
+    // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
+    // We do not send the Accept-Charset header anymore due to FF6 doing this
+    // by default.
+    channel.setRequestHeader("Accept-Charset", null, false);
+    // We need to do this here as since FF17 there is no other way to disable
+    // the keep-alive.
+    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
+    if (this.jdfManager.getState() === "jondo") {
+      channel.setRequestHeader("Proxy-Connection", "close", false);
+      channel.setRequestHeader("Connection", "close", false);
     }
   },
 

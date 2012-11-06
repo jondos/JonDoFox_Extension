@@ -6,6 +6,9 @@ Changes in version 0.2.25 - XXXX-XX-XX
 
   Bugfix:
     * added missing "extensions.jondofox.noscript_showDomain" preference 
+    * made JonDoFox compatible with Firefox 17 as we ourselves need to care
+      care that no connection is kept alive now
+    * fixed wrong encoding header for Firefox < 4
 
   Other:
     * code clean-up

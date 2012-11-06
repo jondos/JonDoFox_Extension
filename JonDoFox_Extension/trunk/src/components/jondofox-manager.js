@@ -217,6 +217,9 @@ JDFManager.prototype = {
     'intl.charset.default':'extensions.jondofox.default_charset',
     'intl.accept_charsets':'extensions.jondofox.accept_charsets',
     'network.http.accept.default':'extensions.jondofox.accept_default',
+    // TODO: This one can get deleted if we do not support FF versions < 4
+    // anymore.
+    'network.http.accept-encoding':'extensions.jondofox.http.accept_encoding',
     'security.default_personal_cert':
     'extensions.jondofox.security.default_personal_cert'
   },
@@ -599,10 +602,6 @@ JDFManager.prototype = {
         // Disabling WebGL for security reasons
         this.boolPrefsMap['webgl.disabled'] =
                 'extensions.jondofox.webgl.disabled';
-        // Firefox 4 has a whitespace between the "," and "deflate". We need to 
-	// avoid that in order not to reduce our anonymity set.	
-	this.stringPrefsMap['network.http.accept-encoding'] =
-          'extensions.jondofox.http.accept_encoding';
 	this.boolPrefsMap['privacy.donottrackheader.enabled'] =
 	  'extensions.jondofox.donottrackheader.enabled';
         // Restricting the sessionhistory max_entries
@@ -1260,8 +1259,6 @@ JDFManager.prototype = {
   setUserAgent: function(startup, state) {
     var p;
     var userAgent;
-    var proxyKeepAlive = this.prefsHandler.
-      getBoolPref("network.http.proxy.keep-alive");
     var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
     log("Setting user agent and other stuff for: " + state);
     // First the plugin pref
@@ -1288,11 +1285,6 @@ JDFManager.prototype = {
         if (acceptLang !== "en-us") {
           this.settingLocationNeutrality("");
         }
-	// Check whether we had network.http.proxy.keep-alive on before. If so
-	// we switch it off.
-	if (proxyKeepAlive) {
-          this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", false);
-	}
         this.prefsHandler.setStringPref("network.http.accept.default",
           this.prefsHandler.
           getStringPref("extensions.jondofox.accept_default"));
@@ -1305,9 +1297,6 @@ JDFManager.prototype = {
         if (acceptLang !== "en-us, en") {
           this.settingLocationNeutrality("tor.");
         }
-	if (!proxyKeepAlive) {
-          this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
-	}
         this.prefsHandler.setStringPref("network.http.accept.default",
           this.prefsHandler.
           getStringPref("extensions.jondofox.tor.accept_default"));
@@ -1328,12 +1317,6 @@ JDFManager.prototype = {
           if (acceptLang !== "en-us") {
             this.settingLocationNeutrality("");
           }
-          // Check whether we had network.http.proxy.keep-alive on before. If so
-	  // we switch it off.
-	  if (proxyKeepAlive) {
-            this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
-              false);
-	  }
           this.prefsHandler.setStringPref("network.http.accept.default",
             this.prefsHandler.
             getStringPref("extensions.jondofox.accept_default"));
@@ -1345,10 +1328,6 @@ JDFManager.prototype = {
           if (acceptLang !== "en-us, en") {
             this.settingLocationNeutrality("tor.");
           }
-          if (!proxyKeepAlive) {
-            this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
-              true);
-	  }
           this.prefsHandler.setStringPref("network.http.accept.default",
             this.prefsHandler.
             getStringPref("extensions.jondofox.tor.accept_default"));
@@ -1360,19 +1339,12 @@ JDFManager.prototype = {
             this.prefsHandler.deletePreference(p);
           }
         }
-	this.prefsHandler.setBoolPref("network.http.proxy.keep-alive",
-	    this.prefsHandler.
-	    getBoolPref("extensions.jondofox.custom.proxyKeepAlive"));
-
         break;
       case (this.STATE_NONE):
 	this.clearPrefs();
         for (p in this.safebrowseMap) {
             this.prefsHandler.deletePreference(p);
           }
-	if (!proxyKeepAlive) {
-	  this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", true);
-	}
 	break;
       default:
 	log("We should not be here!");
