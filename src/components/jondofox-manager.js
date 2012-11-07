@@ -612,9 +612,6 @@ JDFManager.prototype = {
         this.checkExtensionsFF4();
 	// We do not want to ping Mozilla once per day for different updates
 	// of Add-On Metadata and other stuff (duration of last startup...).
-	this.prefsHandler.setBoolPref('extensions.update.autoUpdateDefault',
-        this.prefsHandler.
-	     getBoolPref('extensions.jondofox.update.autoUpdateDefault'));
         this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
         this.prefsHandler.
 	     getBoolPref('extensions.jondofox.getAddons.cache.enabled'));

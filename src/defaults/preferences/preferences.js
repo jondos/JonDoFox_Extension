@@ -173,7 +173,6 @@ pref("extensions.jondofox.delete_searchbar", true);
 // Only valid for FF4
 // No pinging of Mozilla once a day for Metadata updates or whatever
 // See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time 
-pref("extensions.jondofox.update.autoUpdateDefault", false);
 pref("extensions.jondofox.getAddons.cache.enabled", false);
 pref("extensions.jondofox.donottrackheader.enabled", true);
 
