@@ -106,7 +106,6 @@ RequestObserver.prototype = {
     wind = this.getDOMWindow(channel);
     if (wind) {
       try {
-        // TODO: Why should be want to have wind.window.top.location here?
         parentHost = wind.top.location.hostname;
         return parentHost;
       } catch (ex) {
@@ -118,7 +117,9 @@ RequestObserver.prototype = {
     // 1st party while the content is still 3rd party (from a bird's eye
     // view). Therefore...
     try {
-      parentHost = this.cookiePerm.getOriginatingURI(channel).host;
+      if (this.jdfManager.notFF18) {
+        parentHost = this.cookiePerm.getOriginatingURI(channel).host;
+      }
     } catch (e) {
       log("getOriginatingURI failed as well: " + e +
         "\nWe try our last resort the Referer...");
@@ -152,6 +153,7 @@ RequestObserver.prototype = {
 	channel.QueryInterface(CI.nsIHttpChannelInternal);
         channel.QueryInterface(CI.nsICachingChannel);
         parentHost = this.getParentHost(channel);
+        dump("Parent host is: " + parentHost + "\n\n");
         this.safeCache.safeCache(channel, parentHost);
       }
 
@@ -161,10 +163,15 @@ RequestObserver.prototype = {
         domWin = this.getDOMWindow(channel);
         // Determine the base domain of the request
         try {
-          baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+          if (this.jdfManager.notFF18) {
+            baseDomain = this.tldService.getBaseDomain(channel.URI, 0);
+          } else {
+            baseDomain = this.tldService.getBaseDomainFromHost(channel.URI.
+              host);
+          }
         } catch (e if e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
-          // It's an IP address
-          baseDomain = channel.URI.hostPort;
+          // It's an IP address. No port isolation, thus just the host.
+          baseDomain = channel.URI.host;
         }
         // ... the string to compare to
         try {
@@ -197,20 +204,29 @@ RequestObserver.prototype = {
 	// And, finally, the most important case: the Referer is set and the 
 	// user visits a new domain, we replace the old Referer with null.
         if (suffix && baseDomain !== suffix) {
-          try {
-            originatingDomain = this.cookiePerm.getOriginatingURI(channel);
-          } catch (e) {
-            log ("Getting the originating URI failed!");
-            originatingDomain = false;
+          if (this.jdfManager.notFF18) {
+            try {
+              originatingDomain = this.cookiePerm.getOriginatingURI(channel);
+            } catch (e) {
+              log ("Getting the originating URI failed!");
+              originatingDomain = false;
+            }
+          } else {
+            originatingDomain = parentHost;
           }
           if (originatingDomain) {
             try {
-              originatingDomain = this.tldService.
-                                     getBaseDomain(originatingDomain, 0);
+              if (this.jdfManager.notFF18) {
+                originatingDomain = this.tldService.
+                  getBaseDomain(originatingDomain, 0);
+              } else {
+                originatingDomain = this.tldService.
+                  getBaseDomainFromHost(channel.URI.host);
+              }
             } catch (e)  {
 	      if (e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
-                // It's an IP address
-                originatingDomain = originatingDomain.hostPort;
+                // It's an IP address. No port isolation, thus just the host.
+                originatingDomain = originatingDomain.host;
 	      } else {
                 originatingDomain = false;
 	        log("There occurred an error while trying to get the " +
@@ -251,8 +267,7 @@ RequestObserver.prototype = {
           // But we want to delete it only if the domain in the URL bar
           // changes. Let's therefore check whether we have 3rd party content
           // first.
-          origHostname = this.cookiePerm.getOriginatingURI(channel).hostname;
-          if (origHostname && origHostname !== channel.URI.host) {
+          if (parentHost && parentHost !== channel.URI.host) {
             // Do nothing here as we have a 3rd party scenario (e.g. mixed
             // content sites)...
           } else {

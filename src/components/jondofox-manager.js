@@ -93,16 +93,20 @@ JDFManager.prototype = {
   uninstall: false,
 
   // Do we have a FF4 or still a FF3?
-  ff4: true,
+  ff4: null,
 
   // If FF4, which version (the add-on bar exists since 4.0b7pre)
   ff4Version: "",
 
   // The NavigationTiming API we want to deactivate got introduced in FF7.
-  ff7: true,
+  ff7: null,
 
   // Can we use our improved HTTP Auth defense (available since FF12)?
-  ff12: true,
+  ff12: null,
+
+  // In FF 18 the central |getOriginatingURI()| method used to determine
+  // whether a resource is third party or not is gone :-/
+  notFF18 : null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -301,8 +305,8 @@ JDFManager.prototype = {
        CC['@mozilla.org/file/directory_service;1'].getService(CI.nsIProperties);
       this.envSrv = CC["@mozilla.org/process/environment;1"].
         getService(CI.nsIEnvironment);
-      // Determine whether we use FF4 or still some FF3
-      this.isFirefox4or7or12();
+      // Determine whether we use FF4 or 7 or 12 or 17 still some FF3
+      this.isFirefox4or7or12orNot18();
       if (this.ff4) {
         try {
           var extensionListener = {
@@ -1099,7 +1103,7 @@ JDFManager.prototype = {
     }
   },
 
-  isFirefox4or7or12: function() {
+  isFirefox4or7or12orNot18: function() {
     // Due to some changes in Firefox 4 (notably the replacement of the
     // nsIExtensionmanager by the AddonManager) we check the FF version now
     // to ensure compatibility.
@@ -1123,6 +1127,11 @@ JDFManager.prototype = {
       this.ff12 = true;
     } else {
       this.ff12 = false;
+    }
+    if (versComp.compare(ffVersion, "18.0a1") < 0) {
+      this.notFF18 = true;
+    } else {
+      this.notFF18 = false;
     }
   },
 
