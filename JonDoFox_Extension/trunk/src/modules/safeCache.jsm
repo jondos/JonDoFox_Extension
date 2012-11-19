@@ -223,7 +223,7 @@ let safeCache = {
   setCacheKey: function(channel, str) {
     let oldData = this.readCacheKey(channel.cacheKey);
     let newKey = this.newCacheKey(this.getHash(str) + oldData);
-    //channel.cacheKey = newKey;
+    channel.cacheKey = newKey;
     this.log("Set cache key to hash(" + str + ") = " + newKey.data + "\n for " +
       channel.URI.spec + "\n");
   },
@@ -245,7 +245,7 @@ let safeCache = {
   bypassCache: function(channel) {
     channel.loadFlags |= channel.LOAD_BYPASS_CACHE;  
       // INHIBIT_PERSISTENT_CACHING instead?
-    //channel.cacheKey = this.newCacheKey(0);
+    channel.cacheKey = this.newCacheKey(0);
     this.log("Bypassed cache for " + channel.URI.spec);
   },
 

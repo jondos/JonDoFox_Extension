@@ -310,6 +310,7 @@ RequestObserver.prototype = {
     // We need to do this here as since FF17 there is no other way to disable
     // the keep-alive.
     // See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
+    // TODO: What about WebSockets here!?
     if (this.jdfManager.getState() === "jondo") {
       channel.setRequestHeader("Proxy-Connection", "close", false);
       channel.setRequestHeader("Connection", "close", false);
