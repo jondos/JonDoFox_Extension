@@ -161,8 +161,7 @@ pref("extensions.jondofox.sanitize_onShutdown", true);
 // In order to be able to use NoScript's STS feature...
 pref("extensions.jondofox.clearOnShutdown_history", false);
 pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
-// Only valid for FF4
-pref("extensions.jondofox.websocket.enabled", false);
+// Only valid for FF4+
 pref("extensions.jondofox.indexedDB.enabled", false);
 // Only valid for FF3
 pref("extensions.jondofox.history_expire_days", 0);

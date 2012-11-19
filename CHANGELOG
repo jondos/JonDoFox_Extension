@@ -3,6 +3,8 @@ Changes in version 0.2.25 - XXXX-XX-XX
   Minor improvement:
     * disabled all plugins per default in JonDo mode if JonDoFox is used in
       JonDoBrowser
+    * enabled WebSockets as they don't bypass the proxy if used with an HTTP
+      proxy
 
   Bugfix:
     * added missing "extensions.jondofox.noscript_showDomain" preference 

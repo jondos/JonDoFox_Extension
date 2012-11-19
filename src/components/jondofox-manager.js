@@ -597,10 +597,6 @@ JDFManager.prototype = {
           this.boolPrefsMap['dom.enable_performance'] =
             'extensions.jondofox.navigationTiming.enabled';
         }
-	// Adding the websockets pref until we decided whether this
-	// feature is harmless.
-	this.boolPrefsMap['network.websocket.enabled'] =
-	        'extensions.jondofox.websocket.enabled';
         this.boolPrefsMap['dom.indexedDB.enabled'] =
                 'extensions.jondofox.indexedDB.enabled';
         // Disabling WebGL for security reasons
