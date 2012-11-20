@@ -308,12 +308,19 @@ RequestObserver.prototype = {
     // by default.
     channel.setRequestHeader("Accept-Charset", null, false);
     // We need to do this here as since FF17 there is no other way to disable
-    // the keep-alive.
-    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
-    // TODO: What about WebSockets here!?
-    // "At this point the HTTP connection breaks down and is replaced by the
-    // WebSocket connection over the same underlying TCP/IP connection." 
-    if (this.jdfManager.getState() === "jondo") {
+    // keep-alive. See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
+    // The exception we make is the WebSocket handshake that needs a keep-alive
+    // header: "At this point the HTTP connection breaks down and is replaced by
+    // the WebSocket connection over the same underlying TCP/IP connection." 
+    // http://www.websocket.org/aboutwebsocket.html section: The WebSocket
+    // Protocol
+    var reqHeader = null;
+    try {
+      reqHeader = channel.getRequestHeader("Sec-WebSocket-Version");
+    } catch (e) {}
+    // Indicating that we want to close the connection if we do not have a
+    // WebSocket upgrade request.
+    if (this.jdfManager.getState() === "jondo" && !reqHeader) {
       channel.setRequestHeader("Proxy-Connection", "close", false);
       channel.setRequestHeader("Connection", "close", false);
     }
@@ -410,12 +417,19 @@ RequestObserver.prototype = {
       }
       // For safety's sake we set the "close" header here as well as it looks
       // as if an attacker could let the connection open by sending a
-      // "Connection: keep-alive".
-      // TODO: What about WebSockets here!?
-      // "At this point the HTTP connection breaks down and is replaced by the
-      // WebSocket connection over the same underlying TCP/IP connection."
-      channel.setResponseHeader("Proxy-Connection", "close", false);
-      channel.setResponseHeader("Connection", "close", false);
+      // "Connection: keep-alive": https://mxr.mozilla.org/mozilla-central/
+      // source/netwerk/protocol/http/nsHttpConnection.cpp#703ff.
+      // Patrick aknowledges my reading of the code:
+      // mcmanus: we try and work with broken servers where we can..
+      // and in this instance we honor the reply
+      if (this.jdfManager.getState() === "jondo") {
+        // Just using "Connection: close" is not enough as an attacker could do
+        // some tricks with "Proxy-Connection: keep-alive" then. See:
+        // https://mxr.mozilla.org/mozilla-central/source/netwerk/protocol/
+        // http/nsHttpConnection.cpp#730ff. 
+        channel.setResponseHeader("Proxy-Connection", "close", false);
+        channel.setResponseHeader("Connection", "close", false);
+      }
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
     }
