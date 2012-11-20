@@ -1,4 +1,4 @@
-Changes in version 0.2.25 - XXXX-XX-XX
+Changes in version 0.2.25 - 2012-11-21
 
   Minor improvement:
     * disabled all plugins per default in JonDo mode if JonDoFox is used in
@@ -9,7 +9,7 @@ Changes in version 0.2.25 - XXXX-XX-XX
   Bugfix:
     * added missing "extensions.jondofox.noscript_showDomain" preference 
     * let add-ons get updated automatically to provide timely security updates
-    * made JonDoFox compatible with Firefox 17 as we ourselves need to care
+    * made JonDoFox compatible with Firefox 17 as we ourselves need to take
       care that no connection is kept alive now
     * fixed wrong encoding header for Firefox < 4
 
