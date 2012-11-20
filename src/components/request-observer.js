@@ -311,6 +311,8 @@ RequestObserver.prototype = {
     // the keep-alive.
     // See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
     // TODO: What about WebSockets here!?
+    // "At this point the HTTP connection breaks down and is replaced by the
+    // WebSocket connection over the same underlying TCP/IP connection." 
     if (this.jdfManager.getState() === "jondo") {
       channel.setRequestHeader("Proxy-Connection", "close", false);
       channel.setRequestHeader("Connection", "close", false);
@@ -406,6 +408,14 @@ RequestObserver.prototype = {
           } else {}
         }
       }
+      // For safety's sake we set the "close" header here as well as it looks
+      // as if an attacker could let the connection open by sending a
+      // "Connection: keep-alive".
+      // TODO: What about WebSockets here!?
+      // "At this point the HTTP connection breaks down and is replaced by the
+      // WebSocket connection over the same underlying TCP/IP connection."
+      channel.setResponseHeader("Proxy-Connection", "close", false);
+      channel.setResponseHeader("Connection", "close", false);
     } catch (e) {
       this.logger.warn("examineRespone(): " + e);
     }
