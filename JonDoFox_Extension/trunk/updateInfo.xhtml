@@ -6,20 +6,21 @@
 <body>
 <h1>JonDoFox - What's New</h1>
 <p>&nbsp;</p>
-<h2>What's New - 0.2.24</h2>
+<h2>What's New - 0.2.25</h2>
 <ul>
-  <li>disabled "extensions.blocklist.enabled" in order to not allow Mozilla to
-      disable one of our extensions and to avoid OS and kernel information leaks
-      (see: <a href="https://trac.torproject.org/projects/tor/ticket/6734">
-        https://trac.torproject.org/projects/tor/ticket/6734</a>)
+  <li>disabled all plugins per default in JonDo mode if JonDoFox is used in
+      JonDoBrowser
   </li>
-  <li>slightly updated SSL Observatory code to match the the HTTPS Everywhere
-      3.0 release
+  <li>enabled WebSockets as they don't bypass the proxy if used with an HTTP
+      proxy
   </li>
-  <li>improved english about:jondofox/about:jondobrowser translation (thanks to
-      sovereignpress)
+  <li>added missing "extensions.jondofox.noscript_showDomain" preference
   </li>
-  <li>bumped maxVersion to 17.*</li>
+  <li>let add-ons get updated automatically to provide timely security updates</li>
+  <li>made JonDoFox compatible with Firefox 17 as we ourselves need to take
+  care that no connection is kept alive now</li>
+  <li>fixed wrong encoding header for Firefox &lt; 4</li>
+  <li>code clean-up</li>
 </ul>
 </body>
 </html>
