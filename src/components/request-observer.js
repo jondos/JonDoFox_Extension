@@ -153,7 +153,6 @@ RequestObserver.prototype = {
 	channel.QueryInterface(CI.nsIHttpChannelInternal);
         channel.QueryInterface(CI.nsICachingChannel);
         parentHost = this.getParentHost(channel);
-        dump("Parent host is: " + parentHost + "\n\n");
         this.safeCache.safeCache(channel, parentHost);
       }
 
