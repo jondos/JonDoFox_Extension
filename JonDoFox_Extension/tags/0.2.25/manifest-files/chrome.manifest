@@ -1,0 +1,20 @@
+# Content (both lines are needed for compatibility to FF2)
+content jondofox jar:chrome/jondofox.jar!/content/
+content jondofox jar:chrome/jondofox.jar!/content/ contentaccessible=yes
+
+# Locales
+locale jondofox de-DE jar:chrome/jondofox.jar!/locale/de-DE/
+locale jondofox en-US jar:chrome/jondofox.jar!/locale/en-US/
+
+# Skin
+skin jondofox classic/1.0 jar:chrome/jondofox.jar!/skin/
+
+# Overlay
+overlay chrome://browser/content/browser.xul chrome://jondofox/content/jondofox-overlay.xul
+
+# Overrides
+override chrome://global/content/netError.xhtml chrome://jondofox/content/netError-ff3.xhtml appversion>=3.0
+override chrome://global/content/netError.xhtml chrome://jondofox/content/netError-ff2.xhtml appversion<3.0
+
+# TODO: Stylesheet
+#style chrome://global/skin/netError.css chrome://jondofox/skin/jondofox.css
