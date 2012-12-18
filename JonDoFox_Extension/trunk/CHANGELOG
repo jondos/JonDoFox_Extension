@@ -1,3 +1,17 @@
+Changes in version 0.2.26 - XXXX-XX-XX
+
+  Bugfix:
+    * worked around Authentication/Cache/Referer issue due to:
+      https://bugzilla.mozilla.org/show_bug.cgi?id=811669
+    * replaced removed |getOriginatingURI()| with custom code
+
+  Other:
+    * code clean-up
+
+Changes in version 0.2.25.1 - 2012-12-03
+
+  * bumped JonDoBrowser version
+
 Changes in version 0.2.25 - 2012-11-21
 
   Minor improvement:

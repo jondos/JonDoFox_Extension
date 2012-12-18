@@ -75,13 +75,15 @@ RequestObserver.prototype = {
 
   getDOMWindow: function(channel) {
     let notificationCallbacks;
+    let loadGroupNot = false;
     let wind = null;
     // Getting the content window for resetting window.name and history.length
     if (channel.notificationCallbacks) {
       notificationCallbacks = channel.notificationCallbacks;
     } else {
-      if (channel.loadGroup) {
+      if (channel.loadGroup && channel.loadGroup.notificiationCallbacks) {
         notificationCallbacks = channel.loadGroup.notificationCallbacks;
+        loadGroupNot = true;
       } else {
         notificationCallbacks = null;
       }
@@ -93,7 +95,20 @@ RequestObserver.prototype = {
         wind = notificationCallbacks.getInterface(CI.nsILoadContext).
           associatedWindow;
       } catch (e) {
-        log("Error while trying to get the Window: " + e);
+        // If we aren't here because the loadGroup notificationCallbacks got
+        // used and they exist check them. That is e.g. needed for CORS
+        // requests. See: https://trac.torproject.org/projects/tor/ticket/3739
+        if (!loadGroupNot && channel.loadGroup && channel.loadGroup.
+            notificationCallbacks) {
+          notificationCallbacks = channel.loadGroup.notificationCallbacks;
+          try {
+            wind = notificationCallbacks.getInterface(CI.nsILoadContext).
+              associatedWindow;
+          } catch (e) {
+            log("Error while trying to get the Window for the second time: " +
+              e);
+          }
+        }
       }
     }
     return wind;
@@ -119,13 +134,16 @@ RequestObserver.prototype = {
     try {
       if (this.jdfManager.notFF18) {
         parentHost = this.cookiePerm.getOriginatingURI(channel).host;
+        log("Used getOrigingURI! And parentHost is: " + parentHost + "\n");
+        return parentHost;
       }
     } catch (e) {
       log("getOriginatingURI failed as well: " + e +
         "\nWe try our last resort the Referer...");
+    } finally {
       // Getting the host via getOriginatingURI failed as well (e.g. due to
-      // browser-sourced favicon or safebrowsing requests). Resorting to
-      // the Referer.
+      // browser-sourced favicon or safebrowsing requests or the method not
+      // being available in Gecko > 17). Resorting to the Referer.
       if (channel.referrer) {
         parentHost = channel.referrer.host;
       } else {
