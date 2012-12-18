@@ -78,10 +78,11 @@ RequestObserver.prototype = {
     let loadGroupNot = false;
     let wind = null;
     // Getting the content window for resetting window.name and history.length
+    log("Trying to get the window for " + channel.URI.spec);
     if (channel.notificationCallbacks) {
       notificationCallbacks = channel.notificationCallbacks;
     } else {
-      if (channel.loadGroup && channel.loadGroup.notificiationCallbacks) {
+      if (channel.loadGroup) {
         notificationCallbacks = channel.loadGroup.notificationCallbacks;
         loadGroupNot = true;
       } else {
@@ -96,10 +97,10 @@ RequestObserver.prototype = {
           associatedWindow;
       } catch (e) {
         // If we aren't here because the loadGroup notificationCallbacks got
-        // used and they exist check them. That is e.g. needed for CORS
-        // requests. See: https://trac.torproject.org/projects/tor/ticket/3739
-        if (!loadGroupNot && channel.loadGroup && channel.loadGroup.
-            notificationCallbacks) {
+        // used and we get the loadGroup check them. That is e.g. needed for
+        // CORS requests. See:
+        // https://trac.torproject.org/projects/tor/ticket/3739
+        if (!loadGroupNot && channel.loadGroup) {
           notificationCallbacks = channel.loadGroup.notificationCallbacks;
           try {
             wind = notificationCallbacks.getInterface(CI.nsILoadContext).
