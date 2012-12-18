@@ -187,7 +187,7 @@ let safeCache = {
       if (!this.readCacheKey(channel.cacheKey) && channel.requestMethod !==
         "POST") {
         this.log("Could not find a cache key for: " + host);
-        this.setCacheKey(channel, host);
+        //this.setCacheKey(channel, host);
       } else {
         this.log("Leaving cache key unchanged.");
       }
@@ -223,9 +223,9 @@ let safeCache = {
   setCacheKey: function(channel, str) {
     let oldData = this.readCacheKey(channel.cacheKey);
     let newKey = this.newCacheKey(this.getHash(str) + oldData);
-    channel.cacheKey = newKey;
-    this.log("Set cache key to hash(" + str + ") = " + newKey.data + "\n for " +
-      channel.URI.spec + "\n");
+    //channel.cacheKey = newKey;
+    //this.log("Set cache key to hash(" + str + ") = " + newKey.data + "\n for " +
+    // channel.URI.spec + "\n");
   },
 
   // Read the integer data contained in a cache key
@@ -245,7 +245,7 @@ let safeCache = {
   bypassCache: function(channel) {
     channel.loadFlags |= channel.LOAD_BYPASS_CACHE;  
       // INHIBIT_PERSISTENT_CACHING instead?
-    channel.cacheKey = this.newCacheKey(0);
+    //channel.cacheKey = this.newCacheKey(0);
     this.log("Bypassed cache for " + channel.URI.spec);
   },
 
