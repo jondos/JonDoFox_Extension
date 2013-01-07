@@ -1,9 +1,9 @@
-Changes in version 0.2.26 - XXXX-XX-XX
+Changes in version 0.2.26 - 2013-01-08
 
   Bugfix:
     * worked around Authentication/Cache/Referer issue due to:
       https://bugzilla.mozilla.org/show_bug.cgi?id=811669
-    * replaced removed |getOriginatingURI()| with custom code
+    * replaced the removed |getOriginatingURI()| with custom code
 
   Other:
     * code clean-up
