@@ -73,7 +73,7 @@ pref("extensions.jondofox.jondo.buildID_override", "0");
 pref("extensions.jondofox.jondo.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.jondo.platform_override", "Win32");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/17.0 Firefox/17.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 
@@ -232,4 +232,4 @@ pref("extensions.jondofox.blocklist.enabled", false);
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
-pref("extensions.jondofox.jdb.version", "0.3.1");
+pref("extensions.jondofox.jdb.version", "0.4");
