@@ -18,9 +18,9 @@ findet sich ein entsprechender Hinweis darauf:">
 <!ENTITY jondobrowser.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
 von JonDoBrowser umgehen, was sie besonders gef&auml;hrlich beim anonymen Surfen
 macht. Daher werden im JonDo-Modus standardm&auml;&szlig;ig alle
-Plugins abgeschaltet. Lediglich Flash wird aktiv gelassen, was allein dessen
-weiter Verbreitung zuzuschreiben ist. Die Einstellung, die dieses Verhalten
+Plugins abgeschaltet. Die Einstellung, die dieses Verhalten
 regelt, findet man wiederum im JonDoFox-Einstellungsmen&uuml;:">
+<!ENTITY jondobrowser.features.plugins.picurl "chrome://jondofox/skin/plugins_de_jdb.png">
 <!ENTITY jondobrowser.features.certpatrol2 "Dadurch wird 
 es f&uuml;r den Nutzer zum einen sehr komfortabel, die Fingerabdr&uuml;cke der 
 Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei 
@@ -271,13 +271,12 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.cache "Cache-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
 <!ENTITY jondofox.dialogtab.options.plugins.label "Plugin-Einstellungen">
-<!ENTITY jondofox.dialogtab.options.plugins "Deaktiviere im JonDo-Modus alle Plugins außer Flash">
 <!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
 <!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "über">
 <!ENTITY jondofox.dialogtab.options.observatory.jondo "über JonDo">
-<!ENTITY jondofox.dialogtab.options.observatory.tor "über Tor"> 
+<!ENTITY jondofox.dialogtab.options.observatory.tor "über Tor">
 <!ENTITY jondofox.dialogtab.options.observatory.always "immer">
 <!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "immer über Proxy">
 <!ENTITY jondofox.dialogtab.options.observatory.never "nie">

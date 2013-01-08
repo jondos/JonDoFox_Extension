@@ -1,5 +1,8 @@
 Changes in version 0.2.26 - 2013-01-08
 
+  Minor improvement:
+    * updated about:jondobrowser help page
+
   Bugfix:
     * worked around Authentication/Cache/Referer issue due to:
       https://bugzilla.mozilla.org/show_bug.cgi?id=811669

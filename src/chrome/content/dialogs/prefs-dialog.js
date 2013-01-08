@@ -8,6 +8,8 @@
 const TABINDEX_GENERAL = 0;
 const TABINDEX_CUSTOMPROXY = 1;
 
+Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
+
 // Set the prefs handler, it will be needed
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
     getService().wrappedJSObject;
@@ -39,7 +41,7 @@ function onLoad() {
     loadPrefsCustomProxy(true);
     loadPrefsTempEmail();
   } catch (e) {
-    log("onLoad(): " + e);    
+    log("onLoad(): " + e);
   }
 }
 
@@ -48,7 +50,7 @@ function loadPrefsGeneral() {
   log("Loading general preferences");
   try {
     // 'set_referrer' is a checkbox
-    document.getElementById('checkbox_set_referrer').checked = 
+    document.getElementById('checkbox_set_referrer').checked =
         prefsHandler.getBoolPref('extensions.jondofox.set_referrer');
     // SafeCache's setting
     document.getElementById('checkbox_set_safecache').checked =
@@ -57,16 +59,16 @@ function loadPrefsGeneral() {
     // Plugin setting
     document.getElementById('checkbox_set_plugins').checked =
         prefsHandler.
-	getBoolPref('extensions.jondofox.plugin-protection_enabled'); 
+	getBoolPref('extensions.jondofox.plugin-protection_enabled');
     // Certificate Patrol setting
-    document.getElementById('checkbox_set_certpatrol').checked = 
+    document.getElementById('checkbox_set_certpatrol').checked =
         prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
     // SSL observatory setting
     var obProxy = document.getElementById('observatoryProxy');
     var customProxy = obProxy.getItemAtIndex(2);
     customProxy.setAttribute("label", customProxy.getAttribute("label") + " " +
       getLabel(jdfManager.STATE_CUSTOM));
-    obProxy.selectedIndex = 
+    obProxy.selectedIndex =
         prefsHandler.getIntPref('extensions.jondofox.observatory.proxy');
     // Adblock setting
     //document.getElementById('checkbox_set_adblock').checked =
@@ -75,22 +77,27 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_update_warning').checked =
         prefsHandler.getBoolPref('extensions.jondofox.update_warning');
     document.getElementById('checkbox_preferences_warning').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.preferences_warning'); 
+        prefsHandler.getBoolPref('extensions.jondofox.preferences_warning');
     document.getElementById('checkbox_proxy_warning').checked =
         prefsHandler.getBoolPref('extensions.jondofox.proxy_warning');
     // Advanced menu in JonDoBrowser
     // TODO: We do not get the jondofox.withinJonDoBrowser from jondofox-gui.js
-    // but why other functions work fine?
+    // but why do other functions work fine?
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
       document.getElementById('jondofox-menu-row').hidden = false;
       document.getElementById('checkbox_advanced_menu').checked =
         prefsHandler.getBoolPref('extensions.jondofox.advanced_menu');
+      document.getElementById('checkbox_set_plugins').label = jdfUtils.
+        getString('jondofox.dialogtab.options.plugins_jdb');
+    } else {
+      document.getElementById('checkbox_set_plugins').label = jdfUtils.
+        getString('jondofox.dialogtab.options.plugins');
     }
     // 'no_proxies_on'
-    document.getElementById('no_proxies_on').value = 
+    document.getElementById('no_proxies_on').value =
         prefsHandler.getStringPref('extensions.jondofox.no_proxies_on');
   } catch (e) {
-    log("loadPrefsGeneral(): " + e);    
+    log("loadPrefsGeneral(): " + e);
   }
 }
 
@@ -101,15 +108,14 @@ function writePrefsGeneral() {
     prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
         document.getElementById('checkbox_set_referrer').checked);
     prefsHandler.setBoolPref('extensions.jondofox.stanford-safecache_enabled',
-        document.getElementById('checkbox_set_safecache').checked); 
+        document.getElementById('checkbox_set_safecache').checked);
     prefsHandler.
 	setBoolPref('extensions.jondofox.plugin-protection_enabled',
-      document.getElementById('checkbox_set_plugins').checked); 
+      document.getElementById('checkbox_set_plugins').checked);
     prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
         document.getElementById('checkbox_set_certpatrol').checked);
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
-        document.getElementById('observatoryProxy').selectedIndex); 
-         
+        document.getElementById('observatoryProxy').selectedIndex);
     //prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
 //	document.getElementById('checkbox_set_adblock').checked);
     // Now the settings concerning different warnings
@@ -121,9 +127,9 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_proxy_warning').checked);
      // Advanced menu in JonDoBrowser
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
-      prefsHandler.setBoolPref('extensions.jondofox.advanced_menu', 
+      prefsHandler.setBoolPref('extensions.jondofox.advanced_menu',
         document.getElementById('checkbox_advanced_menu').checked);
-    } 
+    }
     // Setting 'no_proxies_on'
     prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
         document.getElementById('no_proxies_on').value);
@@ -131,13 +137,13 @@ function writePrefsGeneral() {
     log("writePrefsGeneral(): " + e);
   }
 }
- 
+
 // Load custom proxy preferences into the dialog
 function loadPrefsCustomProxy(onLoad) {
   log("Loading custom proxy preferences");
   try {
     // Get the custom proxy label
-    var label = prefsHandler.getStringPref(customPrefix + 'label');    
+    var label = prefsHandler.getStringPref(customPrefix + 'label');
     if (label == "") {
       // If label is empty, get the default label
       label = jdfUtils.getString('jondofox.statusbar.label.custom');
@@ -157,48 +163,48 @@ function loadPrefsCustomProxy(onLoad) {
           document.getElementById('normalUA');
     }
     // Get the proxy keep-alive status
-    document.getElementById('proxyKeepAlive').checked = 
+    document.getElementById('proxyKeepAlive').checked =
         prefsHandler.getBoolPref(customPrefix + 'proxyKeepAlive');
     // Get host and port settings for different protocols
     document.getElementById('http_host').value =
         prefsHandler.getStringPref(customPrefix + 'http_host');
-    document.getElementById('http_port').value = 
+    document.getElementById('http_port').value =
         prefsHandler.getIntPref(customPrefix + 'http_port');
-    document.getElementById('ssl_host').value = 
+    document.getElementById('ssl_host').value =
         prefsHandler.getStringPref(customPrefix + 'ssl_host');
-    document.getElementById('ssl_port').value = 
-        prefsHandler.getIntPref(customPrefix + 'ssl_port'); 
-    document.getElementById('ftp_host').value = 
+    document.getElementById('ssl_port').value =
+        prefsHandler.getIntPref(customPrefix + 'ssl_port');
+    document.getElementById('ftp_host').value =
       prefsHandler.getStringPref(customPrefix + 'ftp_host');
-    document.getElementById('ftp_port').value = 
+    document.getElementById('ftp_port').value =
         prefsHandler.getIntPref(customPrefix + 'ftp_port');
     // The proxy dialog in FF4 has no Gopher settings anymore. Thus,
     // we remove (i.e. hide) them as well in this case.
     if (jdfManager.ff4) {
       document.getElementById('gopher_row').collapsed = true;
     } else {
-      document.getElementById('gopher_host').value = 
+      document.getElementById('gopher_host').value =
         prefsHandler.getStringPref(customPrefix + 'gopher_host');
-      document.getElementById('gopher_port').value = 
-        prefsHandler.getIntPref(customPrefix + 'gopher_port'); 
+      document.getElementById('gopher_port').value =
+        prefsHandler.getIntPref(customPrefix + 'gopher_port');
     }
-    document.getElementById('socks_host').value = 
+    document.getElementById('socks_host').value =
         prefsHandler.getStringPref(customPrefix + 'socks_host');
-    document.getElementById('socks_port').value = 
-        prefsHandler.getIntPref(customPrefix + 'socks_port');        
+    document.getElementById('socks_port').value =
+        prefsHandler.getIntPref(customPrefix + 'socks_port');
     // Get socks version
     var version = prefsHandler.getIntPref(customPrefix + 'socks_version');
     if (version == 4) {
-      document.getElementById('socks_version').selectedItem = 
+      document.getElementById('socks_version').selectedItem =
           document.getElementById('version4');
     } else {
-      document.getElementById('socks_version').selectedItem = 
+      document.getElementById('socks_version').selectedItem =
           document.getElementById('version5');
     }
     // Get 'custom.share_proxy_settings' and enable/disable components
-    document.getElementById('checkbox_all_protocols').checked = 
+    document.getElementById('checkbox_all_protocols').checked =
         prefsHandler.getBoolPref(customPrefix + 'share_proxy_settings');
-    shareProxySettings(onLoad); 
+    shareProxySettings(onLoad);
   } catch (e) {
     log("loadPrefsCustomProxy(): " + e);
   }
@@ -206,41 +212,41 @@ function loadPrefsCustomProxy(onLoad) {
 
 // Store the values
 function writePrefsCustomProxy() {
-  log("Write prefs custom proxy"); 
+  log("Write prefs custom proxy");
   try {
     // Set the label
     prefsHandler.setStringPref(customPrefix + 'label',
         document.getElementById('textbox_custom_label').value);
     // Set the user agent
-    prefsHandler.setStringPref(customPrefix + 'user_agent', 
+    prefsHandler.setStringPref(customPrefix + 'user_agent',
         document.getElementById('user_agent').selectedItem.value);
     // Set proxy.keep-alive
     prefsHandler.setBoolPref(customPrefix + 'proxyKeepAlive',
 	document.getElementById('proxyKeepAlive').checked);
     // Set single proxies
-    prefsHandler.setStringPref(customPrefix + 'http_host', 
+    prefsHandler.setStringPref(customPrefix + 'http_host',
         document.getElementById('http_host').value);
-    prefsHandler.setIntPref(customPrefix + 'http_port', 
+    prefsHandler.setIntPref(customPrefix + 'http_port',
         document.getElementById('http_port').value);
     //shareProxySettings();
-    prefsHandler.setStringPref(customPrefix + 'ssl_host', 
+    prefsHandler.setStringPref(customPrefix + 'ssl_host',
         document.getElementById('ssl_host').value);
-    prefsHandler.setIntPref(customPrefix + 'ssl_port', 
+    prefsHandler.setIntPref(customPrefix + 'ssl_port',
         document.getElementById('ssl_port').value);
-    prefsHandler.setStringPref(customPrefix + 'ftp_host', 
+    prefsHandler.setStringPref(customPrefix + 'ftp_host',
         document.getElementById('ftp_host').value);
-    prefsHandler.setIntPref(customPrefix + 'ftp_port', 
+    prefsHandler.setIntPref(customPrefix + 'ftp_port',
         document.getElementById('ftp_port').value);
-    prefsHandler.setStringPref(customPrefix + 'gopher_host', 
+    prefsHandler.setStringPref(customPrefix + 'gopher_host',
         document.getElementById('gopher_host').value);
-    prefsHandler.setIntPref(customPrefix + 'gopher_port', 
+    prefsHandler.setIntPref(customPrefix + 'gopher_port',
         document.getElementById('gopher_port').value);
-    prefsHandler.setStringPref(customPrefix + 'socks_host', 
+    prefsHandler.setStringPref(customPrefix + 'socks_host',
         document.getElementById('socks_host').value);
-    prefsHandler.setIntPref(customPrefix + 'socks_port', 
-        document.getElementById('socks_port').value);        
+    prefsHandler.setIntPref(customPrefix + 'socks_port',
+        document.getElementById('socks_port').value);
     // Set socks version
-    prefsHandler.setIntPref(customPrefix + 'socks_version', 
+    prefsHandler.setIntPref(customPrefix + 'socks_version',
         document.getElementById('socks_version').selectedItem.value);
     // Set the preference according to checkbox state
     prefsHandler.setBoolPref(customPrefix + 'share_proxy_settings',
@@ -249,24 +255,24 @@ function writePrefsCustomProxy() {
     // Without that, the backup values are displayed all the time.
     var checked = document.getElementById('checkbox_all_protocols').checked;
     if(!checked) {
-      prefsHandler.setStringPref(customPrefix + 'backup.ssl_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.ssl_host',
         document.getElementById('ssl_host').value);
-      prefsHandler.setIntPref(customPrefix + 'backup.ssl_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.ssl_port',
         document.getElementById('ssl_port').value);
-      prefsHandler.setStringPref(customPrefix + 'backup.ftp_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.ftp_host',
         document.getElementById('ftp_host').value);
-      prefsHandler.setIntPref(customPrefix + 'backup.ftp_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.ftp_port',
         document.getElementById('ftp_port').value);
-      prefsHandler.setStringPref(customPrefix + 'backup.gopher_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.gopher_host',
         document.getElementById('gopher_host').value);
-      prefsHandler.setIntPref(customPrefix + 'backup.gopher_port', 
+      prefsHandler.setIntPref(customPrefix + 'backup.gopher_port',
         document.getElementById('gopher_port').value);
-      prefsHandler.setStringPref(customPrefix + 'backup.socks_host', 
+      prefsHandler.setStringPref(customPrefix + 'backup.socks_host',
         document.getElementById('socks_host').value);
-      prefsHandler.setIntPref(customPrefix + 'backup.socks_port', 
-        document.getElementById('socks_port').value);        
+      prefsHandler.setIntPref(customPrefix + 'backup.socks_port',
+        document.getElementById('socks_port').value);
       // Set socks version
-      prefsHandler.setIntPref(customPrefix + 'backup.socks_version', 
+      prefsHandler.setIntPref(customPrefix + 'backup.socks_version',
         document.getElementById('socks_version').selectedItem.value);
     }
       // Check if the relevant values are okay for using JonDo, i.e. not
@@ -279,7 +285,7 @@ function writePrefsCustomProxy() {
          prefsHandler.getStringPref(customPrefix + 'ftp_host') &&
           prefsHandler.getIntPref(customPrefix + 'ftp_port')) ||
 	(prefsHandler.getStringPref(customPrefix + 'socks_host') &&
-	  prefsHandler.getIntPref(customPrefix + 'socks_port') && 
+	  prefsHandler.getIntPref(customPrefix + 'socks_port') &&
 	  prefsHandler.getIntPref(customPrefix + 'socks_version') === 5)) {
       prefsHandler.setBoolPref(customPrefix + 'empty_proxy', false);
     } else {
@@ -291,31 +297,31 @@ function writePrefsCustomProxy() {
 }
 
 // Use proxy server for all protocols 
-function shareProxySettings(onLoad) { 
+function shareProxySettings(onLoad) {
   try {
-    var checked = document.getElementById('checkbox_all_protocols').checked; 
+    var checked = document.getElementById('checkbox_all_protocols').checked;
     if (checked) {
       if (!onLoad) {
         // Mirroring Firefox' behaviour, we save the old proxy values first
         // but not during startup... 
-        prefsHandler.setStringPref(customPrefix + 'backup.ssl_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.ssl_host',
             document.getElementById('ssl_host').value);
-        prefsHandler.setIntPref(customPrefix + 'backup.ssl_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.ssl_port',
             document.getElementById('ssl_port').value);
-        prefsHandler.setStringPref(customPrefix + 'backup.ftp_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.ftp_host',
             document.getElementById('ftp_host').value);
-        prefsHandler.setIntPref(customPrefix + 'backup.ftp_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.ftp_port',
             document.getElementById('ftp_port').value);
-        prefsHandler.setStringPref(customPrefix + 'backup.gopher_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.gopher_host',
             document.getElementById('gopher_host').value);
-        prefsHandler.setIntPref(customPrefix + 'backup.gopher_port', 
+        prefsHandler.setIntPref(customPrefix + 'backup.gopher_port',
             document.getElementById('gopher_port').value);
-        prefsHandler.setStringPref(customPrefix + 'backup.socks_host', 
+        prefsHandler.setStringPref(customPrefix + 'backup.socks_host',
             document.getElementById('socks_host').value);
-        prefsHandler.setIntPref(customPrefix + 'backup.socks_port', 
-            document.getElementById('socks_port').value);        
+        prefsHandler.setIntPref(customPrefix + 'backup.socks_port',
+            document.getElementById('socks_port').value);
         // and save socks version...
-        prefsHandler.setIntPref(customPrefix + 'backup.socks_version', 
+        prefsHandler.setIntPref(customPrefix + 'backup.socks_version',
             document.getElementById('socks_version').selectedItem.value);
       }
       var host = document.getElementById("http_host").value;
@@ -348,36 +354,36 @@ function shareProxySettings(onLoad) {
       document.getElementById("socks_host").disabled = false;
       document.getElementById("socks_port").disabled = false;
       // And now we are going to restore everything...
-      document.getElementById('ssl_host').value = 
+      document.getElementById('ssl_host').value =
         prefsHandler.getStringPref(customPrefix + 'backup.ssl_host');
-      document.getElementById('ssl_port').value = 
-        prefsHandler.getIntPref(customPrefix + 'backup.ssl_port'); 
-      document.getElementById('ftp_host').value = 
+      document.getElementById('ssl_port').value =
+        prefsHandler.getIntPref(customPrefix + 'backup.ssl_port');
+      document.getElementById('ftp_host').value =
         prefsHandler.getStringPref(customPrefix + 'backup.ftp_host');
-      document.getElementById('ftp_port').value = 
+      document.getElementById('ftp_port').value =
         prefsHandler.getIntPref(customPrefix + 'backup.ftp_port');
-      document.getElementById('gopher_host').value = 
+      document.getElementById('gopher_host').value =
         prefsHandler.getStringPref(customPrefix + 'backup.gopher_host');
-      document.getElementById('gopher_port').value = 
-        prefsHandler.getIntPref(customPrefix + 'backup.gopher_port'); 
-      document.getElementById('socks_host').value = 
+      document.getElementById('gopher_port').value =
+        prefsHandler.getIntPref(customPrefix + 'backup.gopher_port');
+      document.getElementById('socks_host').value =
         prefsHandler.getStringPref(customPrefix + 'backup.socks_host');
-      document.getElementById('socks_port').value = 
-        prefsHandler.getIntPref(customPrefix + 'backup.socks_port');        
+      document.getElementById('socks_port').value =
+        prefsHandler.getIntPref(customPrefix + 'backup.socks_port');
       // At last we restore the socks version
       var version = prefsHandler.getIntPref(customPrefix +
         'backup.socks_version');
       if (version == 4) {
-        document.getElementById('socks_version').selectedItem = 
+        document.getElementById('socks_version').selectedItem =
           document.getElementById('version4');
       } else {
-        document.getElementById('socks_version').selectedItem = 
+        document.getElementById('socks_version').selectedItem =
           document.getElementById('version5');
       }
     }
   } catch (e) {
     log("shareProxySettings(): " + e);
-  } 
+  }
 }
 
 function loadPrefsTempEmail() {
@@ -389,7 +395,7 @@ function loadPrefsTempEmail() {
   Components.utils.import("resource://jondofox/bloodyVikingsServices.jsm");
   let aboutText = jdfUtils.getString("jondofox.about.label");
   let langText = jdfUtils.getString("jondofox.supported.languages.label");
-  let serviceGroup = document.getElementById("selectedService"); 
+  let serviceGroup = document.getElementById("selectedService");
 
   var i = 1;
 
@@ -410,13 +416,13 @@ function loadPrefsTempEmail() {
         radio.setAttribute("value", name);
         radio.setAttribute("label", name + ((service.recommended)?" *":""));
 	radio.setAttribute("id", "radio" + i);
-        
+
         if (service.recommended && serviceActivated) {
           radio.setAttribute("class", "bloodyvikingsRecommended");
         } else if (service.recommended && !serviceActivated) {
           radio.setAttribute("class", "bloodyvikingsRecDeactivated");
 	}
-        
+
         let tooltip = "";
         if (service.languages) {
             for (let lang in service.languages) {
@@ -429,11 +435,11 @@ function loadPrefsTempEmail() {
         } else {
             tooltip = " " + service.defaultLanguage;
         }
-        
+
         radio.setAttribute("tooltiptext", langText + tooltip);
         // radio.disabled does not work here, why?
-        radio.setAttribute("disabled", 
-	    !document.getElementById("tempEmailService").checked); 
+        radio.setAttribute("disabled",
+	    !document.getElementById("tempEmailService").checked);
 
         spacer.setAttribute("flex", 1);
 
@@ -451,20 +457,20 @@ function loadPrefsTempEmail() {
 	i = i + 1;
     }
 
-    serviceGroup.value = 
+    serviceGroup.value =
       prefsHandler.getStringPref("extensions.jondofox.temp.email.selected");
   } catch (e) {
     dump("Error: " + e + "\n");
-  } 
+  }
 }
 
 function writePrefsTempEmail() {
   var radioElement;
-  var serviceGroup = document.getElementById("selectedService"); 
+  var serviceGroup = document.getElementById("selectedService");
   var serviceActivated = document.getElementById("tempEmailService").checked;
-  prefsHandler.setStringPref("extensions.jondofox.temp.email.selected", 
+  prefsHandler.setStringPref("extensions.jondofox.temp.email.selected",
     serviceGroup.value);
-  prefsHandler.setBoolPref("extensions.jondofox.temp.email.activated", 
+  prefsHandler.setBoolPref("extensions.jondofox.temp.email.activated",
     serviceActivated);
   for (var i = 1; i <= 5; i++) {
     radioElement = document.getElementById("radio" + i);
@@ -472,10 +478,10 @@ function writePrefsTempEmail() {
     if (radioElement.getAttribute("class") === "bloodyvikingsRecommended" &&
 	!serviceActivated) {
       radioElement.setAttribute("class", "bloodyvikingsRecDeactivated");
-    } else if (radioElement.getAttribute("class") === 
+    } else if (radioElement.getAttribute("class") ===
       "bloodyvikingsRecDeactivated" && serviceActivated) {
-      radioElement.setAttribute("class", "bloodyvikingsRecommended");  
-    } 
+      radioElement.setAttribute("class", "bloodyvikingsRecommended");
+    }
   }
 }
 
@@ -487,12 +493,12 @@ function onAccept() {
     writePrefsCustomProxy();
     writePrefsTempEmail();
     // Act according to the plugin checkbox
-    jdfManager.enforcePluginPref(jdfManager.getState()); 
+    jdfManager.enforcePluginPref(jdfManager.getState());
     // Set proxy exceptions to FF
     proxyManager.setExceptions(prefsHandler.getStringPref(
         'extensions.jondofox.no_proxies_on'));
     // If the current state is 'custom': reset it
-    if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 
+    if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') ==
         'custom') {
       setCustomProxy();
     }
@@ -513,7 +519,7 @@ function onApply() {
       writePrefsGeneral();
       //
       // Act according to the plugin checkbox
-      jdfManager.enforcePluginPref(jdfManager.getState()); 
+      jdfManager.enforcePluginPref(jdfManager.getState());
       // Set proxy exceptions to FF
       proxyManager.setExceptions(prefsHandler.getStringPref(
           'extensions.jondofox.no_proxies_on'));
@@ -537,7 +543,7 @@ function onApply() {
 var openFilterListWindow = function() {
   var win = Components.classes['@mozilla.org/appshell/window-mediator;1'].
                  getService(Components.interfaces.nsIWindowMediator).
-                 getMostRecentWindow('jondofox:filter-window'); 
+                 getMostRecentWindow('jondofox:filter-window');
   if (!win) {
     // No additional parameters needed WRONG: we need at least centerscreen
     // otherwise the dialog is shown in the left upper corner using JDF 
@@ -546,7 +552,7 @@ var openFilterListWindow = function() {
       "filter-window", "centerscreen,width=640,height=480");
   } else {
     // We have already one window open, focus it!
-    win.focus(); 
+    win.focus();
   }
 }
 
@@ -556,4 +562,4 @@ var contextHelp = function(aString) {
   // to use the generic hidePopup() call.
   aString = aString.replace("API", "");
   document.getElementById(aString + "Help").hidePopup(); // hide the help popup
-} 
+}
