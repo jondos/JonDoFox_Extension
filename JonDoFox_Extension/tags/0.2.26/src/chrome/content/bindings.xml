@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<!--
+   - Bloody Vikings!
+   - Copyright (C) 2012  Florian Fieber
+   -
+   - This file is part of Bloody Vikings.
+   -
+   - Bloody Vikings is free software: you can redistribute it and/or modify
+   - it under the terms of the GNU General Public License as published by
+   - the Free Software Foundation, either version 3 of the License, or
+   - (at your option) any later version.
+   -
+   - Bloody Vikings is distributed in the hope that it will be useful,
+   - but WITHOUT ANY WARRANTY; without even the implied warranty of
+   - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   - GNU General Public License for more details.
+   -
+   - You should have received a copy of the GNU General Public License
+   - along with Bloody Vikings.  If not, see <http://www.gnu.org/licenses/>.
+   -
+   -->
+
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:xbl="http://www.mozilla.org/xbl"
+          xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <binding id="bvsplitmenu">
+    <content>
+      <xul:menuitem class="bvsplitmenu-menuitem menuitem-iconic" flex="1" xbl:inherits="label, image, oncommand=bvoncommand"/>
+      <xul:menu class="bvsplitmenu-menu">
+        <children includes="menupopup"/>
+      </xul:menu>
+    </content>
+  </binding>
+</bindings>
