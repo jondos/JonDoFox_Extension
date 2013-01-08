@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <?xml-stylesheet href="chrome://jondofox/skin/jondofox.css" type="text/css"?>
-  
+
 <!DOCTYPE overlay SYSTEM "chrome://jondofox/locale/jondofox.dtd">
 
 <dialog id="prefs-dialog" 
@@ -22,22 +22,22 @@
           src="chrome://jondofox/content/dialogs/prefs-dialog.js"></script>
   <!-- We need some funtions of it here as well -->
   <script type="application/x-javascript"
-          src="chrome://jondofox/content/jondofox-gui.js"></script> 
+          src="chrome://jondofox/content/jondofox-gui.js"></script>
 
   <!-- Create command element -->
   <command id="share_proxy_settings" oncommand="shareProxySettings(false);"/>
 
   <!-- Always pre-select the first tab -->
   <tabbox id="tab-box" selectedIndex="0">
-  
+
     <!-- Pre-define tabs -->
     <tabs>
       <tab label="&jondofox.dialogtab.options.title;"/>
       <tab label="&jondofox.dialogtab.custom.title;"/>
       <tab label="&jondofox.temp.email.title;"/>
     </tabs>
- 
-    <!-- Re-define the single tabs --> 
+
+    <!-- Re-define the single tabs -->
     <tabpanels>
 
       <!-- First tabpanel -->
@@ -50,7 +50,7 @@
             <column flex="1"/>
           </columns>
 
-          <!-- Define rows -->      
+          <!-- Define rows -->
           <rows>
 
             <!-- Header preferences -->
@@ -78,7 +78,7 @@
 		</box>
               </groupbox>
             </row>
-  
+
             <!-- Plugin preference -->
             <row align="center">
               <groupbox>
@@ -86,11 +86,11 @@
 		<box>
 		  <!-- Checkbox to activate/deactivate plugin protection  -->
                   <checkbox id="checkbox_set_plugins" 
-                          label="&jondofox.dialogtab.options.plugins;"
+                          label=""
                           accesskey="G"/>
 		</box>
               </groupbox>
-            </row> 
+            </row>
 
             <!-- SSL preferences -->
             <row align="center">
