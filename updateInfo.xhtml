@@ -6,20 +6,15 @@
 <body>
 <h1>JonDoFox - What's New</h1>
 <p>&nbsp;</p>
-<h2>What's New - 0.2.25</h2>
+<h2>What's New - 0.2.26</h2>
 <ul>
-  <li>disabled all plugins per default in JonDo mode if JonDoFox is used in
-      JonDoBrowser
+  <li>updated about:jondobrowser help page</li>
+  <li>worked around Authentication/Cache/Referer issue due to:
+    <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=811669">
+      https://bugzilla.mozilla.org/show_bug.cgi?id=811669</a>
   </li>
-  <li>enabled WebSockets as they don't bypass the proxy if used with an HTTP
-      proxy
+  <li>replaced the removed getOriginatingURI() method with custom code
   </li>
-  <li>added missing "extensions.jondofox.noscript_showDomain" preference
-  </li>
-  <li>let add-ons get updated automatically to provide timely security updates</li>
-  <li>made JonDoFox compatible with Firefox 17 as we ourselves need to take
-  care that no connection is kept alive now</li>
-  <li>fixed wrong encoding header for Firefox &lt; 4</li>
   <li>code clean-up</li>
 </ul>
 </body>

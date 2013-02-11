@@ -109,7 +109,7 @@
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.jondo;"/>
                       <menuitem
-                        label="&jondofox.dialogtab.options.observatory.tor;"/> 
+                        label="&jondofox.dialogtab.options.observatory.tor;"/>
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.proxy;"/>
                       <menuitem
@@ -121,7 +121,7 @@
                     </menupopup>
                   </menulist>
                   <toolbarbutton class="jondofox-ref" popup="observatoryHelp"
-                           tooltiptext="&jondofox.contextHelp;"/> 
+                           tooltiptext="&jondofox.contextHelp;"/>
                 </box>
               </groupbox>
             </row>
@@ -149,8 +149,7 @@
 		</box>
               </groupbox>
 	    </row>-->
- 
- 
+
             <!-- Warning preferences -->
             <row align="center">
               <groupbox>
@@ -172,7 +171,7 @@
                           accesskey="p"/>
 		</box>
               </groupbox>
-            </row> 
+            </row>
 
             <!-- Global proxy exceptions -->
             <row align="center">
@@ -193,7 +192,12 @@
                   <checkbox id="checkbox_advanced_menu"
                     label="&jondofox.dialogtab.options.menu;"
                     accesskey="w"/>
-		</box> 
+		</box>
+                <box>
+                  <checkbox hidden="true" id="checkbox_update_jondonym"
+                    label="&jondofox.dialogtab.options.update;"
+                    accesskey="u"/>
+                </box>
               </groupbox>
             </row>
           </rows>
@@ -207,7 +211,7 @@
           <columns>
             <column/>
           </columns>
-    
+
           <rows>
             <row>
 
@@ -225,8 +229,8 @@
                     <label value="&jondofox.dialogtab.custom.name;:"/>
                   </box>
                   <box>
-                    <textbox id="textbox_custom_label" flex="1"/>          
-                  </box>            
+                    <textbox id="textbox_custom_label" flex="1"/>
+                  </box>
                 </row>
 
                 <row>
@@ -244,12 +248,12 @@
 		<row>
                   <box align="center" pack="end">
                     <label value="&jondofox.dialogtab.custom.connection;:" />
-                  </box> 
+                  </box>
 		  <box>
 		    <checkbox id="proxyKeepAlive" label="Proxy Keep-Alive"/>
 		    <!-- Thanks to FoxyProxy for this idea. -->
 		    <toolbarbutton class="jondofox-ref" popup="keepAliveHelp"
-                           tooltiptext="&jondofox.contextHelp;"/> 
+                           tooltiptext="&jondofox.contextHelp;"/>
                   </box>
 		</row>
 
@@ -337,7 +341,7 @@
 
       <!-- Third tabpanel -->
       <tabpanel>
-	<vbox flex="1"> 
+	<vbox flex="1">
 	  <box>
 	    <checkbox id="tempEmailService" 
                       label="&jondofox.temp.email.activated;" />
@@ -355,9 +359,9 @@
           <description>&jondofox.temp.email.wiki1;
             <html:a class="link"  
               onclick="openPageNewTab('tempWiki');">
-            &jondofox.temp.email.wiki2;</html:a>.  
+            &jondofox.temp.email.wiki2;</html:a>.
           </description>
-        </vbox> 
+        </vbox>
       </tabpanel>
     </tabpanels>
   </tabbox>
@@ -369,7 +373,7 @@
           &jondofox.dialogtab.proxy.keepAlive.help;
 	  <html:a class="link"  
 	          onclick="contextHelp('keepAlive');">
-            &jondofox.here.label;</html:a>. 
+            &jondofox.here.label;</html:a>.
 	</description>
       </vbox>
     </menupopup>
