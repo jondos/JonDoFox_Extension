@@ -14,6 +14,9 @@ Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
 var prefsHandler = Components.classes['@jondos.de/preferences-handler;1'].
     getService().wrappedJSObject;
 
+var XULRuntime = Components.classes["@mozilla.org/xre/app-info;1"].
+  getService(Components.interfaces.nsIXULRuntime);
+
 // Set the proxy manager (only for setting proxy exceptions)
 // TODO: Set proxies using the proxy manager and do not edit prefs directly
 var proxyManager = Components.classes['@jondos.de/proxy-manager;1'].
@@ -85,8 +88,14 @@ function loadPrefsGeneral() {
     // but why do other functions work fine?
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
       document.getElementById('jondofox-menu-row').hidden = false;
+      var updateCheckbox = document.getElementById('checkbox_update_jondonym');
+      if (XULRuntime.OS === "Linux") {
+        updateCheckbox.hidden = false;
+      }
       document.getElementById('checkbox_advanced_menu').checked =
         prefsHandler.getBoolPref('extensions.jondofox.advanced_menu');
+      updateCheckbox.checked = prefsHandler.
+        getBoolPref('extensions.jondofox.update_jondonym');
       document.getElementById('checkbox_set_plugins').label = jdfUtils.
         getString('jondofox.dialogtab.options.plugins_jdb');
     } else {
@@ -125,10 +134,12 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_preferences_warning').checked);
     prefsHandler.setBoolPref('extensions.jondofox.proxy_warning',
         document.getElementById('checkbox_proxy_warning').checked);
-     // Advanced menu in JonDoBrowser
+     // Advanced menu etc. in JonDoBrowser
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
       prefsHandler.setBoolPref('extensions.jondofox.advanced_menu',
         document.getElementById('checkbox_advanced_menu').checked);
+      prefsHandler.setBoolPref('extensions.jondofox.update_jondonym',
+        document.getElementById('checkbox_update_jondonym').checked);
     }
     // Setting 'no_proxies_on'
     prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
