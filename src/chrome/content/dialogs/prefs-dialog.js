@@ -89,9 +89,9 @@ function loadPrefsGeneral() {
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
       document.getElementById('jondofox-menu-row').hidden = false;
       var updateCheckbox = document.getElementById('checkbox_update_jondonym');
-      if (XULRuntime.OS === "Linux") {
-        updateCheckbox.hidden = false;
-      }
+      //if (XULRuntime.OS === "Linux") {
+      //  updateCheckbox.hidden = false;
+      //}
       document.getElementById('checkbox_advanced_menu').checked =
         prefsHandler.getBoolPref('extensions.jondofox.advanced_menu');
       updateCheckbox.checked = prefsHandler.
