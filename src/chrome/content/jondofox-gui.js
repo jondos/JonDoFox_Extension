@@ -813,28 +813,33 @@ function startupChecks() {
   // If the user should update the profile and has not disabled the update
   // warning, help her and show the JonDoFox homepage after startup. But first
   // we check whether the user is deploying our JonDoBrowser...
-  if (!prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
+  if (!prefsHandler.isPreferenceSet('jondobrowser.version') && !prefsHandler.
+      isPreferenceSet('extensions.jondofox.browser_version')) {
     if (jdfManager.checkProfileUpdate()) {
       openPageNewTab("homepage");
-    } 
+    }
   } else {
     // We are within JonDoBrowser...
     // Check if we are up-to-date and first whether we did that check already
     // (i.e. in an other window).
-    if (!jdfManager.jdbCheck) {
-      if (prefsHandler.getStringPref("extensions.jondofox.jdb.version") ===
-          prefsHandler.getStringPref("extensions.jondofox.browser_version")) {
-        // Everything is fine, JonDoBrowser is up-to-date.
-      } else {
-        if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
-          jdfUtils.showAlertCheck(jdfUtils.
-            getString('jondofox.dialog.attention'), jdfUtils.
-            getString("jondofox.browser.update"), 'update');
-          openPageNewTab("jdb");
+    if (!prefsHandler.isPreferenceSet('jondobrowser.version')) {
+      // We don't have the updater available. Take the old fallback if we have
+      // not checked yet whether a new version exists.
+      if (!jdfManager.jdbCheck) {
+        if (prefsHandler.getStringPref("extensions.jondofox.jdb.version") ===
+            prefsHandler.getStringPref("extensions.jondofox.browser_version")) {
+          // Everything is fine, JonDoBrowser is up-to-date.
+        } else {
+          if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
+            jdfUtils.showAlertCheck(jdfUtils.
+              getString('jondofox.dialog.attention'), jdfUtils.
+              getString("jondofox.browser.update"), 'update');
+            openPageNewTab("jdb");
+          }
         }
+        // Having the message in one window is enough...
+        jdfManager.jdbCheck = true;
       }
-      // Having the message in one window is enough...
-      jdfManager.jdbCheck = true;
     }
     jondofox.withinJonDoBrowser = true;
     // Adapt our menu according to the user settings and monitor the respective
@@ -845,7 +850,6 @@ function startupChecks() {
     prefsHandler.prefs.addObserver(MENU_PREF, prefsObserver, false);
   }
 }
- 
 
 ///////////////////////////////////////////////////////////////////////////////
 // The method 'initWindow()' is called on the 'load' event + observers
