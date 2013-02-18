@@ -31,10 +31,18 @@ var appInfo = Cc['@mozilla.org/xre/app-info;1'].getService(Ci.nsIXULAppInfo);
 
 var versionPref;
 var jondosApp;
-// Get both of the version strings and the application's name
-if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
-  versionPref = "extensions.jondofox.browser_version";
+var jdbUpdater = prefsHandler.isPreferenceSet('jondobrowser.version');
+var jdbNoUpdater = prefsHandler.
+  isPreferenceSet('extensions.jondofox.browser_version');
+  // Get both of the version strings and the application's name
+if (jdbUpdater || jdbNoUpdater) {
   jondosApp = "JonDoBrowser";
+  if (jdbUpdater) {
+    // We are having a JonDoBrowser with an updater.
+    versionPref = "jondobrowser.version";
+  } else {
+    versionPref = "extensions.jondofox.browser_version";
+  }
 } else {
   versionPref = "extensions.jondofox.profile_version";
   jondosApp = "JonDoFox";
@@ -44,7 +52,7 @@ var appVersion = appInfo.version;
 var appName = appInfo.name;
 
 // Create an appendix for the title string
-const titleString = jondosApp + " " + profileVersion + " (" + appName + " " + 
+const titleString = jondosApp + " " + profileVersion + " (" + appName + " " +
   appVersion + ")";
 
 // Set the title modifier
@@ -70,13 +78,13 @@ function setTitleModifier() {
 function initTitleListener() {
   try {
     // Add event listener to the content element
-    document.getElementById("content").addEventListener("DOMTitleChanged", 
+    document.getElementById("content").addEventListener("DOMTitleChanged",
                                           setTitleModifier, false);
-  
+
     // XXX: Not needed? .. mTabContainer ..
     //gBrowser.addEventListener("DOMNodeInserted", setTitleModifier, true);
     //gBrowser.addEventListener("DOMNodeRemoved", setTitleModifier, true);
- 
+
   } catch (e) {
     log("initTitleListener(): " + e);
   }
