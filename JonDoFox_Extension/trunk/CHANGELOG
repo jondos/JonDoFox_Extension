@@ -3,6 +3,9 @@ Changes in version 0.2.27 - 2013-02-19
   Minor improvement:
     * prepared JonDoFox to work with automatic JonDoBrowser updates on Linux
 
+  Other:
+    * code clean-up
+
 Changes in version 0.2.26 - 2013-01-08
 
   Minor improvement:
