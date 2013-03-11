@@ -80,11 +80,11 @@ pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 // Tor settings
 pref("extensions.jondofox.tor.appname_override","Netscape");
 pref("extensions.jondofox.tor.appversion_override","5.0 (Windows)");
-pref("extensions.jondofox.tor.platform_override","Win32");
-pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
-pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:10.0) Gecko/20100101 Firefox/10.0");
-pref("extensions.jondofox.tor.productsub_override","20100101");
 pref("extensions.jondofox.tor.buildID_override","0");
+pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
+pref("extensions.jondofox.tor.platform_override","Win32");
+pref("extensions.jondofox.tor.productsub_override","20100101");
+pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:17.0) Gecko/20100101 Firefox/17.0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 
@@ -233,4 +233,4 @@ pref("extensions.jondofox.blocklist.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.5");
+pref("extensions.jondofox.jdb.version", "0.5.1");
