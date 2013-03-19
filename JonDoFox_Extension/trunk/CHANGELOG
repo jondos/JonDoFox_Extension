@@ -3,6 +3,7 @@ Changes in version 0.2.28 - 2013-XX-XX
   Minor improvement:
     * added UnPlug icon to the toolbar
     * add-on bar is collapsed by default on Firefox >= 4
+    * disabled no-proxy-warning on start-up if JonDoBrowser is used
 
   Other:
     * code clean-up
