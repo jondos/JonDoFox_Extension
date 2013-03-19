@@ -8,8 +8,8 @@
   <!-- Include jondofox-title.js and jondofox-gui.js -->
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-title.js" />
   <script type="application/x-javascript" src="chrome://jondofox/content/jondofox-gui.js" />
-  <script type="application/x-javascript" src="chrome://jondofox/content/certpatrol/CertPatrol.js" /> 
-    
+  <script type="application/x-javascript" src="chrome://jondofox/content/certpatrol/CertPatrol.js" />
+
   <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton id="jondofox-toolbar-button"
                    class="toolbarbutton-1 chromeclass-toolbar-additional"
@@ -17,9 +17,9 @@
                    popup="jondofox-proxy-list"
 		   context="jondofox-proxy-list" 
                    tooltiptext="&jondofox.dialog.preferences.title;"/>
-  </toolbarpalette> 
+  </toolbarpalette>
 
-  <statusbar id="status-bar"> 
+  <statusbar id="status-bar">
     <!-- Indicate current status in the statusbar -->
     <statusbarpanel id="jondofox-proxy-status" 
 	            style="cursor: pointer"
@@ -57,7 +57,7 @@
               oncommand="noProxyListRemove(gContextMenu.linkURL);"
               insertbefore="context-savelink"
               hidden="true" />
-  </menupopup> 
+  </menupopup>
 
   <!-- XXX: Why do I need a <popupset> tag here?? -->
   <popupset>
@@ -110,7 +110,7 @@
                 observes="enhanced-menu-selected"
                 name="proxy-settings" />
 
-    </menupopup> 
+    </menupopup>
   </popupset>
 
   <broadcasterset>
@@ -127,5 +127,5 @@
     }
 
   ]]></script>
- 
+
 </overlay>

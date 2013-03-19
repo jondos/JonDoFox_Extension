@@ -12,9 +12,6 @@ pref("extensions.jondofox.firstStart", true);
 // Autostart of JonDo
 // pref("extensions.jondofox.autostartJonDo", false);
 
-// We still need that as Cookie Monster has no toolbar icon as in 1.0.5
-pref("extensions.jondofox.showAddon-bar", true);
-
 // Helping the EFF and its observatory
 pref("extensions.jondofox.observatory.cache_submitted", true);
 pref("extensions.jondofox.observatory.proxy", 0);
