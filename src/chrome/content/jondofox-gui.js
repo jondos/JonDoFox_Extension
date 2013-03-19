@@ -268,25 +268,30 @@ function setCustomProxy() {
 // We are showing a warning if the user wants to start surfing either without
 // any proxy at all or without a valid custom one. Maybe she has just forgotten 
 // to activate it. The true flag indicates that we have a dialog shown on
-// startup leading to an other default button.
+// startup leading to an other default button. That is not the case for
+// JonDoBrowser users as we made it intentionally hard for them to shoot
+// themselves into the foot. If they chose no proxy then we assume that is done
+// intentionally and avoid the warning.
 
 function isProxyDisabled() {
   var disableJonDo = null;
-  if (prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
-    if (jdfManager.getState() == jdfManager.STATE_NONE) {
-      disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
-        getString('jondofox.dialog.attention'), jdfUtils.
-        getString('jondofox.dialog.message.proxyoff'), 'proxy', true);
-    }
-    else if (jdfManager.getState() == jdfManager.STATE_CUSTOM) {
-      if (prefsHandler.getBoolPref(customPrefix + 'empty_proxy')) {
+  if (!prefsHandler.isPreferenceSet('jondobrowser.version') && !prefsHandler.
+      isPreferenceSet('extensions.jondofox.browser_version')) {
+    if (prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
+      if (jdfManager.getState() == jdfManager.STATE_NONE) {
         disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
           getString('jondofox.dialog.attention'), jdfUtils.
-          getString('jondofox.dialog.message.nocustomproxy'), 'proxy', true);
+          getString('jondofox.dialog.message.proxyoff'), 'proxy', true);
+      } else if (jdfManager.getState() == jdfManager.STATE_CUSTOM) {
+        if (prefsHandler.getBoolPref(customPrefix + 'empty_proxy')) {
+          disableJonDo = jdfUtils.showConfirmEx(jdfUtils.
+            getString('jondofox.dialog.attention'), jdfUtils.
+            getString('jondofox.dialog.message.nocustomproxy'), 'proxy', true);
+        }
       }
-    }
-    if (disableJonDo !== null && !disableJonDo) {
-      setProxy('jondo');
+      if (disableJonDo !== null && !disableJonDo) {
+        setProxy('jondo');
+      }
     }
   }
 }
