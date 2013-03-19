@@ -37,24 +37,24 @@ jondofox = {
         if (gContextMenu.onLink && isProxyActive()) {
 	  // Hide temp email
           document.getElementById("bypass-proxy").hidden = false;
-	  document.getElementById("tempEmailContext").hidden = true; 
+	  document.getElementById("tempEmailContext").hidden = true;
         } else if (gContextMenu.onTextInput) {
            // Hide proxy
           document.getElementById("bypass-proxy").hidden = true;
 	  if (prefsHandler.
               getBoolPref("extensions.jondofox.temp.email.activated")) {
-            document.getElementById("tempEmailContext").hidden = false; 
+            document.getElementById("tempEmailContext").hidden = false;
 	  } else {
-            document.getElementById("tempEmailContext").hidden = true; 
+            document.getElementById("tempEmailContext").hidden = true;
 	  }
         } else {
 	  // Hide both
           document.getElementById("bypass-proxy").hidden = true;
-	  document.getElementById("tempEmailContext").hidden = true; 
-	} 
+	  document.getElementById("tempEmailContext").hidden = true;
+	}
       } else {
         log("gContextMenu is null!");
-      } 
+      }
     } catch (e) {
       log("showMenuItem(): " + e);
     }
@@ -92,7 +92,7 @@ jondofox.bloodyVikings = {
         gBrowser,
         function(address, inboxUrl, cookies) {
           if (field.localName.toLowerCase() === "textarea") {
-            field.value = field.value.substr(0, field.selectionStart) + 
+            field.value = field.value.substr(0, field.selectionStart) +
 	                  address + field.value.substr(field.selectionEnd);
           } else {
             field.value = address;
@@ -101,8 +101,8 @@ jondofox.bloodyVikings = {
         function(name, e) {
 	  jdfUtils.showAlert(jdfUtils.
 	    getString("jondofox.temp.email.incompatibility.title"), jdfUtils.
-	    formatString("jondofox.temp.email.incompatibility.message", 
-	      [name, e.name, e.message])); 
+	    formatString("jondofox.temp.email.incompatibility.message",
+	      [name, e.name, e.message]));
         }
       );
     } catch(e) {
@@ -138,7 +138,6 @@ jondofox.bloodyVikings = {
 // Get the preferences handler
 var prefsHandler = Cc['@jondos.de/preferences-handler;1'].
                                  getService().wrappedJSObject;
-    
 // Get the JDFManager
 var jdfManager = Cc['@jondos.de/jondofox-manager;1'].
                                  getService().wrappedJSObject;
@@ -189,7 +188,7 @@ function setProxy(state) {
     // Actively hide the 'menupopup'
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser'); 
+                 getMostRecentWindow('navigator:browser');
     win.document.getElementById('jondofox-proxy-list').hidePopup();
   }
 }
@@ -200,14 +199,14 @@ function setProxyNone() {
     // Hide 'menupopup'
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser'); 
+                 getMostRecentWindow('navigator:browser');
     win.document.getElementById('jondofox-proxy-list').hidePopup();
     // Request user confirmation if she has not disabled the warning
     var keepProxyEnabled;
     if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
-      keepProxyEnabled = false; 
+      keepProxyEnabled = false;
     }
-    else {  
+    else {
       log("Asking for confirmation ..");
       keepProxyEnabled = jdfUtils.showConfirmEx(jdfUtils.
                   getString('jondofox.dialog.warning'), jdfUtils.
@@ -237,13 +236,12 @@ function setCustomProxy() {
     // the browser window.
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser'); 
+                 getMostRecentWindow('navigator:browser');
     win.document.getElementById('jondofox-proxy-list').hidePopup();
     // Check whether one of the relevant preferences is zero
-    
     if (prefsHandler.getBoolPref(customPrefix + 'empty_proxy')) {
       if (!prefsHandler.getBoolPref('extensions.jondofox.proxy_warning')) {
-        keepProxyEnabled = false; 
+        keepProxyEnabled = false;
       }
       else {
         // Request user confirmation
@@ -336,18 +334,18 @@ function refresh() {
     var label = getLabel(state);
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser'); 
+                 getMostRecentWindow('navigator:browser');
     var statusbar = win.document.getElementById('jondofox-proxy-status');
     // No statusbar. Let's try the add-on bar...
-    if (!statusbar) { 
+    if (!statusbar) {
       log("We try the addon-bar!");
-      statusbar = win.document.getElementById('addon-bar'); 
+      statusbar = win.document.getElementById('addon-bar');
     }
     var emptyCustomProxy = prefsHandler.getBoolPref(customPrefix + 'empty_proxy');
     if (statusbar) {
       // Set the text color; if we have proxy state custom and an empty proxy
       // then change the text color as well...
-      if (state == jdfManager.STATE_NONE || 
+      if (state == jdfManager.STATE_NONE ||
           (state == jdfManager.STATE_CUSTOM && emptyCustomProxy)) {
         statusbar.style.color = "#F00";
       } else {
@@ -360,7 +358,7 @@ function refresh() {
     win.document.getElementById('custom-radio').label = getLabel(jdfManager.
                                                        STATE_CUSTOM);
     // Checking the proper menuitem here.
-    win.document.getElementById(state + "-radio").setAttribute("checked", "true"); 
+    win.document.getElementById(state + "-radio").setAttribute("checked", "true");
     // Refresh context menu: Set the label of 'bypass-proxy'
     win.document.getElementById('bypass-proxy').label = jdfUtils.
        formatString("jondofox.contextmenu.bypass.label", [label]);
@@ -376,16 +374,16 @@ function refreshToolbarButton() {
   var label = getLabel(state);
   var tbButton = document.getElementById("jondofox-toolbar-button");
   if (tbButton) {
-    var emptyCustomProxy = prefsHandler.getBoolPref(customPrefix + 'empty_proxy'); 
+    var emptyCustomProxy = prefsHandler.getBoolPref(customPrefix + 'empty_proxy');
     tbButton.setAttribute("proxy", state);
-    tbButton.setAttribute("label", "Proxy: " + label); 
-    if (state == jdfManager.STATE_NONE || 
+    tbButton.setAttribute("label", "Proxy: " + label);
+    if (state == jdfManager.STATE_NONE ||
         (state == jdfManager.STATE_CUSTOM && emptyCustomProxy)) {
       tbButton.style.color = "#F00";
     } else {
       tbButton.style.color = "#000";
-    }  
-  }  
+    }
+  }
 }
 
 // Return false if state is NONE or CUSTOM with no valid proxy
@@ -417,25 +415,25 @@ function openPageNewTab(aString) {
           'current');
       } else {
         win.openUILinkIn(jdfUtils.getString('jondofox.anontest.url'), 'tab');
-      } 
+      }
     } else if (aString === "homepage") {
-      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab'); 
+      win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
     } else if (aString === "noScript") {
       win.openUILinkIn('http://noscript.net', 'tab');
     } else if (aString === "cookieMonster") {
       var cm = 'https://addons.mozilla.org/en-US/firefox/addon/cookie-monster';
-      win.openUILinkIn(cm, 'tab'); 
+      win.openUILinkIn(cm, 'tab');
     } else if (aString === "about") {
       if (win.gBrowser.getBrowserForTab(win.gBrowser.selectedTab).
 	  currentURI.spec === 'about:blank') {
-        win.openUILinkIn('about:jondofox', 'current'); 
+        win.openUILinkIn('about:jondofox', 'current');
       } else {
         win.openUILinkIn('about:jondofox', 'tab');
       }
     } else if (aString === "observatory") {
-      win.openUILinkIn("https://www.eff.org/observatory", 'tab'); 
+      win.openUILinkIn("https://www.eff.org/observatory", 'tab');
     } else if (aString === "observatoryAPI") {
-      win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/doc/HTTPSEverywhere/SSLObservatorySubmission", 'tab'); 
+      win.openUILinkIn("https://trac.torproject.org/projects/tor/wiki/doc/HTTPSEverywhere/SSLObservatorySubmission", 'tab');
     } else if (aString === "tempWiki") {
       win.openUILinkIn(jdfUtils.getString("jondofox.temp.email.wikiURL"), 'tab');
     } else if (aString === "jdb") {
@@ -452,7 +450,7 @@ function openDialogPreferences() {
   try {
     var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('jondofox:prefs-dialog'); 
+                 getMostRecentWindow('jondofox:prefs-dialog');
     if (!win) {
       // No additional parameters needed WRONG: we need at least centerscreen
       // otherwise the dialog is shown in the left upper corner using JDF 
@@ -519,7 +517,7 @@ function clearingSearchbar(e) {
       // we erase the searchbar value to protect against someone looking over 
       // the user's shoulder.
       if (e.keyCode === 13 || e.type === "drop" ||
-       	(e.type === "click" && e.button !== 2)) {
+          (e.type === "click" && e.button !== 2)) {
         var searchbar = window.document.getElementById("searchbar");
         if (searchbar && searchbar.value) {
           log("We found some searchbar value to erase...");
@@ -527,7 +525,7 @@ function clearingSearchbar(e) {
         } else {
           log("We found no searchbar(value), thus deleting nothing!");
         }
-      } 
+      }
     }
   } catch (e) {
     log("Something went wrong while clearing the searchbar: " + e);
@@ -552,19 +550,19 @@ function clearingSearchbarHistory() {
 function openJDFFeaturePage() {
   var win = Cc['@mozilla.org/appshell/window-mediator;1'].
                  getService(Ci.nsIWindowMediator).
-                 getMostRecentWindow('navigator:browser'); 
+                 getMostRecentWindow('navigator:browser');
   // TODO: That does not take into account the scenario of having different
   // tabs open and updating + restarting an extension! Test with more than one
   // windows as well. Test again with newVersion flag set to false (see below)!
   if (prefsHandler.getIntPref("browser.startup.page") === 0 ||
       (prefsHandler.getIntPref("browser.startup.page") === 1 && prefsHandler.
        getStringPref("browser.startup.homepage") === "about:blank")) {
-    win.openUILinkIn('about:jondofox', 'current'); 
+    win.openUILinkIn('about:jondofox', 'current');
   } else {
     // We know that the user had an other page as her default start page.
     // We therefore load the feature page in a new tab to not get blamed for 
     // overwriting the default one.
-    win.openUILinkIn('about:jondofox', 'tab'); 
+    win.openUILinkIn('about:jondofox', 'tab');
   }
 }
 
@@ -600,7 +598,7 @@ function errorPageCheck() {
       reqURL = reqURL.replace("https://", "http://");
       // We just want to send the domain for safety's sake, thus...
       if (reqURL.indexOf("/", 7) !== -1) {
-        reqURL = reqURL.slice(0, reqURL.indexOf("/", 7)); 
+        reqURL = reqURL.slice(0, reqURL.indexOf("/", 7));
         log("reqURL is: " + reqURL);
       }
       var request = new XMLHttpRequest();
@@ -617,7 +615,7 @@ function errorPageCheck() {
                 if (aElems[i].getAttribute("id") === "JonDoProxy") {
                   aElems[i].setAttribute("href", gURLBar.value);
                 }
-              }  
+              }
               var titleElem = contDoc.createElement("title");
               var titleText = contDoc.createTextNode("JAP/JonDo");
               titleElem.appendChild(titleText);
@@ -638,11 +636,11 @@ function errorPageCheck() {
       request.open("GET", reqURL, true);
       // For safety's sake...
       request.setRequestHeader("Cookie", null);
-      request.setRequestHeader("Authorization", null); 
+      request.setRequestHeader("Authorization", null);
       request.send(null);
     }
-    var longContentElem = contDoc.getElementById("errorLongContent"); 
-    if (jdfManager.isJondoInstalled) { 
+    var longContentElem = contDoc.getElementById("errorLongContent");
+    if (jdfManager.isJondoInstalled) {
       if (!jdfManager.jondoProcess.isRunning) {
         var buttonShortDesc = contDoc.createElement("div");
         buttonShortDesc.setAttribute("id", "errorShortDesc");
@@ -665,9 +663,9 @@ function errorPageCheck() {
         jondoIsStarting.setAttribute("id", "errorShortDesc");
         var pNode = contDoc.createElement("p");
         pNode.setAttribute("id", "errorShortDescText");
-        pNode.setAttribute("style", "color:green;"); 
+        pNode.setAttribute("style", "color:green;");
         var textNode = contDoc.createTextNode(jdfUtils.
-          getString("jondofox.jondo.isStarting")); 
+          getString("jondofox.jondo.isStarting"));
         pNode.appendChild(textNode);
         jondoIsStarting.appendChild(pNode);
         longContentElem.appendChild(jondoIsStarting);
@@ -691,39 +689,39 @@ function errorPageCheck() {
       pNode.setAttribute("id", "errorShortDescText");
       if (jdfManager.os === "windows") {
         jondoURI = jdfUtils.
-          getString("jondofox.jondo.windows"); 
+          getString("jondofox.jondo.windows");
       } else if (jdfManager.os === "linux") {
         jondoURI = jdfUtils.
-          getString("jondofox.jondo.linux"); 
+          getString("jondofox.jondo.linux");
       } else if (jdfManager.os === "darwin") {
         jondoURI = jdfUtils.
-          getString("jondofox.jondo.mac"); 
+          getString("jondofox.jondo.mac");
       } else {
         jondoURI = jdfUtils.
-          getString("jondofox.jondo.unsupported"); 
+          getString("jondofox.jondo.unsupported");
       }
-      refNode.setAttribute("href", jondoURI); 
+      refNode.setAttribute("href", jondoURI);
       textNode = contDoc.createTextNode(jondoURI);
-      refNode.appendChild(textNode); 
+      refNode.appendChild(textNode);
       pNode.appendChild(refNode);
       pHintNode = contDoc.createElement("p");
       pHintNode.setAttribute("id", "errorShortDescText");
       hintTextNode = contDoc.createTextNode(jdfUtils.
         getString("jondofox.jondo.hint"));
-      pHintNode.appendChild(hintTextNode); 
+      pHintNode.appendChild(hintTextNode);
       pHintNode2 = contDoc.createElement("p");
       pHintNode2.setAttribute("id", "errorShortDescText");
       hintTextNode2 = contDoc.createTextNode(jdfUtils.
         getString("jondofox.jondo.hint2"));
       pHintNode2.appendChild(hintTextNode2);
       pHintNode3 = contDoc.createElement("p");
-      pHintNode3.setAttribute("id", "errorShortDescText"); 
+      pHintNode3.setAttribute("id", "errorShortDescText");
       imgNode = contDoc.createElement("img");
       imgNode.setAttribute("src", jdfUtils.
         getString("jondofox.jondo.hint.image"));
       pHintNode3.appendChild(imgNode);
       pHintNode3.setAttribute("style", "text-align:center;");
-      downloadLink.appendChild(pHintNode); 
+      downloadLink.appendChild(pHintNode);
       downloadLink.appendChild(pNode);
       downloadLink.appendChild(pHintNode2);
       downloadLink.appendChild(pHintNode3);
@@ -734,7 +732,7 @@ function errorPageCheck() {
         pHintNode4.appendChild(hintTextNode4);
         downloadLink.appendChild(pHintNode4);
       }
-      longContentElem.appendChild(downloadLink); 
+      longContentElem.appendChild(downloadLink);
 
       if (reqObs.firstRequest) {
         noProxyListAdd(jondoURI);
@@ -753,13 +751,13 @@ function startJondoAgain(e) {
   // there as well (with a new click listener).
   e.target.removeEventListener("click", startJondoAgain, false);
   if (e.button !== 2) {
-    jdfManager.startJondo(); 
+    jdfManager.startJondo();
   }
 }
 
 function findToolbarIcon() {
   if (typeof(gNavToolbox) == "undefined") {
-    return; 
+    return;
   }
   var toolbox = gNavToolbox ? gNavToolbox.customizeChange /* 3.5+ */ : getNavToolbox().customizeChange /* 3.0.x */;
   /* Save the original function, prefixed with our name in case other addons are doing the same thing */
@@ -770,8 +768,8 @@ function findToolbarIcon() {
       refreshToolbarButton();
     }
     getNavToolbox.jondofoxCustomizeChange();
-  }    
-} 
+  }
+}
 
 function startupChecks() {
   // Let's check if NoScript and Cookie Monster are installed
@@ -780,11 +778,11 @@ function startupChecks() {
   // if it is missing. We do this here using a flag because either
   // (FF3) the window is not ready when we check it or (FF4) the
   // callback returns so late.
-  log("Checking for NoScript and CM....."); 
+  log("Checking for NoScript and CM.....");
   if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
     if (!jdfManager.isNoScriptInstalled) {
       jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
-        jdfUtils.formatString('jondofox.dialog.message.necessaryExtension', 
+        jdfUtils.formatString('jondofox.dialog.message.necessaryExtension',
         ['NoScript']), 'update');
       openPageNewTab("noScript");
     } else if (!jdfManager.isNoScriptEnabled) {
@@ -792,16 +790,16 @@ function startupChecks() {
         jdfUtils.formatString('jondofox.dialog.message.enableExtension',
         ['NoScript']), 'update');
     }
-  } 
+  }
   // The user could have disabled the update warning already in the 
   // NoScript popup (if that is missing or disabled). Thus, we check
   // it here again.
-  if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) { 
+  if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
     if (!jdfManager.isCMInstalled) {
       jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
-        jdfUtils.formatString('jondofox.dialog.message.necessaryExtension', 
+        jdfUtils.formatString('jondofox.dialog.message.necessaryExtension',
         ['Cookie Monster']), 'update');
-      openPageNewTab("cookieMonster"); 
+      openPageNewTab("cookieMonster");
     } else if (!jdfManager.isCMEnabled) {
       jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
         jdfUtils.formatString('jondofox.dialog.message.enableExtension',
@@ -864,14 +862,14 @@ var prefsObserver = {
         // log(topic + " --> " + data);        
         // If someone disables the proxy in FF ..
         if (data === PROXY_PREF) {
-          if (prefsHandler.getIntPref(PROXY_PREF) == 0 && 
+          if (prefsHandler.getIntPref(PROXY_PREF) == 0 &&
                  jdfManager.getState() != jdfManager.STATE_NONE) {
             log("Detected 'network.proxy.type' == 0, set state to 'none' ..");
             // .. set the state to 'none'
             jdfManager.setState(jdfManager.STATE_NONE);
             jdfManager.setUserAgent(false, jdfManager.STATE_NONE);
           }
-        } 
+        }
         else if (data === VERSION_PREF && jdfManager.ff4) {
             log("Detected last version change in FF4.")
 	    openJDFFeaturePage();
@@ -879,11 +877,11 @@ var prefsObserver = {
                 'extensions.jondofox.noscript_showDomain')) {
                 prefsHandler.
 		  setBoolPref('noscript.showDomain', false);
-            } 
-	  } 
+            }
+	  }
         else if (data === MENU_PREF) {
           let menuObserver = document.getElementById("enhanced-menu-selected");
-          if (prefsHandler.getBoolPref(MENU_PREF)) { 
+          if (prefsHandler.getBoolPref(MENU_PREF)) {
             menuObserver.hidden = false;
           } else {
             menuObserver.hidden = true;
@@ -936,7 +934,7 @@ var overlayObserver = {
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
             log("New window is ready");
 
-            gBrowser.addEventListener("DOMContentLoaded", errorPageCheck, 
+            gBrowser.addEventListener("DOMContentLoaded", errorPageCheck,
               false);
 
             // We have to tweak the code here as it is not working reliable for
@@ -966,7 +964,7 @@ var overlayObserver = {
                   'extensions.jondofox.noscript_showDomain')) {
                   prefsHandler.setBoolPref('noscript.showDomain', false);
                 }
-              } 
+              }
               // Assuming we have a FF > 4 we detected the new version once and
               // need to set the flag to false now. Otherwise we are getting
               // always the about:jondofox page shown in the first session after
@@ -974,16 +972,16 @@ var overlayObserver = {
               // Live-CD!) if a new window is opened (e.g. due to a login window
               // of a bank).
               jdfManager.newVersionDetected = false;
-	    } 
-	    
+	    }
+
             setTimeout(function() {startupChecks()}, 100);
 
-            if (jdfManager.ff4) { 
+            if (jdfManager.ff4) {
               // First, setting the toolbar button on first startup...
               if (prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
                 prefsHandler.setBoolPref("extensions.jondofox.firstStart",
                    false);
-                var navBar = document.getElementById("nav-bar"); 
+                var navBar = document.getElementById("nav-bar");
                 if (navBar) {
                   var curSet = navBar.currentSet.split(",");
                   if (curSet.indexOf("jondofox-toolbar-button") === -1) {
@@ -995,7 +993,7 @@ var overlayObserver = {
                     navBar.setAttribute("currentset", set.join(","));
                     navBar.currentSet = set.join(",");
                     document.persist(navBar.id, "currentset");
-          
+
                     try {
                       BrowserToolboxCustomizeDone(true);
                     } catch (e) {}
@@ -1013,28 +1011,20 @@ var overlayObserver = {
 	              getString('jondofox.dialog.attention'), jdfUtils.
                       formatString('jondofox.dialog.message.uninstallExtension',
                       [exFound[i]]));
-	        } 
-                appStart = 
+	        }
+                appStart =
 		   Cc['@mozilla.org/toolkit/app-startup;1'].
 			      getService(Ci.nsIAppStartup);
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
 	      }
-              // Third, activating the add-on bar if the user wants that
-              if (prefsHandler.
-                  getBoolPref("extensions.jondofox.showAddon-bar")) {
-                var addonBar = document.getElementById("addon-bar");
-                if (addonBar && addonBar.collapsed) {
-	          addonBar.collapsed = false;
-                } 
-              }
             }
 	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but
 	    // per session. 
 	    if (!jdfManager.isClearingSearchhistoryEnabled) {
 	      jdfManager.isClearingSearchhistoryEnabled = true;
-	      var intervalHID = window.setInterval(clearingSearchbarHistory, 
+	      var intervalHID = window.setInterval(clearingSearchbarHistory,
 			    1800000);
 	    }
 	    // We set listeners to the search bar text box as well as to 
@@ -1043,15 +1033,15 @@ var overlayObserver = {
 	    var searchbar = document.getElementById("searchbar");
 	    document.getElementById("PopupAutoComplete").
 		    addEventListener("click", clearingSearchbar, false);
-	    searchbar.textbox.addEventListener("keypress", 
-			    clearingSearchbar, true); 
+	    searchbar.textbox.addEventListener("keypress",
+			    clearingSearchbar, true);
 	    // Yes, seems "bubble-sensitiv" across FF3/4... But just this one.
 	    if (jdfManager.ff4) {
 	      searchbar.textbox.
 		addEventListener("drop", clearingSearchbar, false);
 	    } else {
               searchbar.textbox.
-		addEventListener("drop", clearingSearchbar, true); 
+		addEventListener("drop", clearingSearchbar, true);
 	    }
 	    document.getAnonymousElementByAttribute(searchbar,
 			    "anonid", "search-go-button").addEventListener(
@@ -1076,7 +1066,7 @@ function shutdown() {
     window.removeEventListener("load", initWindow, true);
     window.removeEventListener("unload", shutdown, false);
     window.removeEventListener("load", initTitleListener, false);
-    window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); }, 
+    window.removeEventListener("load", function(e) { CertPatrol.onLoad(e); },
            false);
     document.getElementById("PopupAutoComplete").
             removeEventListener("click", clearingSearchbar, false);
@@ -1087,25 +1077,25 @@ function shutdown() {
 	    removeEventListener("drop", clearingSearchbar, false);
     } else {
       document.getElementById("searchbar").textbox.
-	    removeEventListener("drop", clearingSearchbar, true); 
+	    removeEventListener("drop", clearingSearchbar, true);
     }
     document.getAnonymousElementByAttribute(document.
 	getElementById("searchbar"), "anonid", "search-go-button").
 	    removeEventListener("click", clearingSearchbar, true);
-    document.getElementById("content").removeEventListener("DOMTitleChanged", 
+    document.getElementById("content").removeEventListener("DOMTitleChanged",
 		    setTitleModifier, false);
     // TODO: Does not work as this is an anonymous function!
     document.getElementById("content").removeEventListener("load",
 		    CertPatrol.onPageLoad, true);
     document.getElementById("contentAreaContextMenu").
-	    removeEventListener("popupshowing", 
+	    removeEventListener("popupshowing",
 		jondofox.updateContextMenuEntry, false);
     gBrowser.removeEventListener("DOMContentLoaded", errorPageCheck, false);
     prefsHandler.prefs.removeObserver(VERSION_PREF, prefsObserver, false);
     prefsHandler.prefs.removeObserver(STATE_PREF, prefsObserver, false);
     prefsHandler.prefs.removeObserver(PROXY_PREF, prefsObserver, false);
     prefsHandler.prefs.removeObserver(CUSTOM_LABEL, prefsObserver, false);
-    prefsHandler.prefs.removeObserver(EMPTY_PROXY, prefsObserver, false); 
+    prefsHandler.prefs.removeObserver(EMPTY_PROXY, prefsObserver, false);
     if (jondofox.withinJonDoBrowser) {
       prefsHandler.prefs.removeObserver(MENU_PREF, prefsObserver, false);
     }
@@ -1133,11 +1123,11 @@ function initWindow() {
     // setTimeout(code, 800);
 
     // This should work unexceptionally if bug #330458 is fixed.
-    document.loadOverlay('chrome://jondofox/content/jondofox-gui.xul', 
+    document.loadOverlay('chrome://jondofox/content/jondofox-gui.xul',
                 overlayObserver);
     var contextMenu = document.getElementById("contentAreaContextMenu");
     if (contextMenu) {
-      contextMenu.addEventListener("popupshowing", 
+      contextMenu.addEventListener("popupshowing",
 	jondofox.updateContextMenuEntry, false);
     }
   } catch (e) {
