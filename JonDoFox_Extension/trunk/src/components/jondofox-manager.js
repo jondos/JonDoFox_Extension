@@ -1415,7 +1415,8 @@ JDFManager.prototype = {
                        this.jdfUtils.getString('jondofox.audiofeed'),
                        this.jdfUtils.getString('jondofox.videofeed')];
       var feedArray = ["feeds", "audioFeeds", "videoFeeds"];
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.new_profile')) {
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.firstStart')) {
+        log("New profile, calling correctExternalApplications with |true|\n");
         this.correctExternalApplications(true);
         for (i = 0; i < 3; i++) {
           if (this.prefsHandler.getStringPref(
@@ -1426,7 +1427,6 @@ JDFManager.prototype = {
               'browser.'+ feedArray[i] + '.handler', "bookmarks");
 	  }
         }
-        this.prefsHandler.setBoolPref('extensions.jondofox.new_profile', false);
       } else {
         this.correctExternalApplications(false);
         for (i = 0; i < 3; i++) {
@@ -1473,14 +1473,14 @@ JDFManager.prototype = {
       var type = this.document.getElementById("type");
       var handlerInfo;
       if (checkbox && radioOpen) {
-	  // FIXME: type.value does not work because it is not the holder of
-	  // the value!! See: textboxContent and rewrite the whole code here!
-          // We need a Timeout here because type.value or getting the 
-          // MIME-/filetype via the filename gives null back if executed at 
-          // once. But without getting the type we cannot discriminate between
-          // showing the different overlays...
-	  this.setTimeout(JDFManager.prototype.showUnknownContentTypeWarnings, 5,
-                          type, checkbox, radioOpen, radioSave, this);
+        // FIXME: type.value does not work because it is not the holder of
+        // the value!! See: textboxContent and rewrite the whole code here!
+        // We need a Timeout here because type.value or getting the 
+        // MIME-/filetype via the filename gives null back if executed at 
+        // once. But without getting the type we cannot discriminate between
+        // showing the different overlays...
+        this.setTimeout(JDFManager.prototype.showUnknownContentTypeWarnings, 5,
+                        type, checkbox, radioOpen, radioSave, this);
       } else if (checkboxNews) {
         // 10 arguments are passed to this external app window. We take the
         // seventh, the handlerInfo to show the file type to the user. For 
@@ -1506,10 +1506,10 @@ JDFManager.prototype = {
                                            radioSave, window) {
     try {
       var normalBox = window.document.getElementById("normalBox").
-	      getAttribute("collapsed");
+        getAttribute("collapsed");
       var textbox = window.document.getElementById("type");
       var textboxContent = window.document.
-	      getAnonymousElementByAttribute(textbox, "anonid", "input").value;
+        getAnonymousElementByAttribute(textbox, "anonid", "input").value;
 
       // We cannot just use the MIME-Type here because it is set according
       // to the delivered content-type header and some other sophisticated means
@@ -1642,14 +1642,21 @@ JDFManager.prototype = {
 	  var newTargetValue = aNewTarget.QueryInterface(CI.nsIRDFLiteral).Value;
           if (aProp.Value === "http://home.netscape.com/NC-rdf#alwaysAsk" &&
               newTargetValue === "false") {
-	    correctedValue = JDFManager.prototype.
+            if (JDFManager.prototype.prefsHandler.
+                getBoolPref('extensions.jondofox.firstStart')) {
+	      correctedValue = JDFManager.prototype.
+		    correctExternalApplications(true);
+            } else {
+	      correctedValue = JDFManager.prototype.
 		    correctExternalApplications(false);
+            }
             if (correctedValue) {
 	      wm = CC['@mozilla.org/appshell/window-mediator;1']
 		          .getService(CI.nsIWindowMediator);
               applicationPane = wm.getMostRecentWindow(null);
               // Is the recent window really the application pane?
-              if (applicationPane.document.getElementById("handlersView")) {
+              if (applicationPane && applicationPane.document.
+                  getElementById("handlersView")) {
                 applicationPane.addEventListener("unload", function()
                     {JDFManager.prototype.appPaneReload(applicationPane);}, false);
                 applicationPane.close();
@@ -1694,12 +1701,14 @@ JDFManager.prototype = {
       var handlerService = CC['@mozilla.org/uriloader/handler-service;1'].
 	                       getService(CI.nsIHandlerService);
       var handledMimeTypes = handlerService.enumerate();
+      log("First start is: " + firstProgramStart + "\n");
       while (handledMimeTypes.hasMoreElements()) {
         var handledMimeType = handledMimeTypes.getNext().
             QueryInterface(CI.nsIHandlerInfo);
         var mimeType = handledMimeType.type;
         if (!handledMimeType.alwaysAskBeforeHandling &&
             mimeType !== "mailto" && handledMimeType.preferredAction > 1) {
+          log("MIME type is: " + mimeType + "\n");
 	  if (!firstProgramStart) {
             this.jdfUtils.showAlert(this.jdfUtils.
               getString('jondofox.dialog.attention'), this.jdfUtils.
