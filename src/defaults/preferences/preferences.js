@@ -226,6 +226,9 @@ pref("extensions.jondofox.noscript_showDomain", false);
 // Mozilla shall not be able to deactivate one of our extensions
 pref("extensions.jondofox.blocklist.enabled", false);
 
+// No WebRTC UDP sockets for JonDoFox user
+pref("extensions.jondofox.peerconnection.enabled", false);
+
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);

@@ -255,7 +255,8 @@ JDFManager.prototype = {
     'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
     'browser.pagethumbnails.capturing_disabled':
     'extensions.jondofox.pagethumbnails.disabled',
-    'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled'
+    'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled',
+    'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled'
   },
 
   //This map of integer preferences is given to the prefsMapper

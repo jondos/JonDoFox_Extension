@@ -4,10 +4,10 @@ Changes in version 0.2.28 - 2013-XX-XX
     * added UnPlug icon to the toolbar
     * add-on bar is collapsed by default on Firefox >= 4
     * disabled no-proxy-warning on start-up if JonDoBrowser is used
+    * disable WebRTC for JonDoFox users as it may compromise the anonymity
 
   Bugfix:
-    * disable pdf/application MIME type already on first start of the new
-      profile if used with Firefox > 17
+    * disable pdf/application MIME type already on first start of a new profile
 
   Other:
     * code clean-up

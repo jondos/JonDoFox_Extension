@@ -17,7 +17,7 @@ fi
 # Unzipping the unsigned .xpi and signing the files
 mkdir signdir
 unzip -d signdir xpi/jondofox.xpi
-signtool -d ${HOME}/.mozilla/firefox/profile -k "Importiertes Zertifikat" signdir
+signtool -d ${HOME}/.mozilla/firefox/profile -k "Imported Certificate" signdir
 
 # Finally zipping the signed files again to get a .xpi
 cd signdir
