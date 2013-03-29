@@ -166,15 +166,15 @@ RequestObserver.prototype = {
     var parentHost;
     var domWin;
     try {
+      // Getting the parent host
+      parentHost = this.getParentHost(channel);
       // Perform safecache
       if (this.prefsHandler.
 	    getBoolPref('extensions.jondofox.stanford-safecache_enabled')) {
 	channel.QueryInterface(CI.nsIHttpChannelInternal);
         channel.QueryInterface(CI.nsICachingChannel);
-        parentHost = this.getParentHost(channel);
         this.safeCache.safeCache(channel, parentHost);
       }
-
       // Forge the referrer if necessary
       if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
         // Getting the associated window if available.
@@ -208,7 +208,7 @@ RequestObserver.prototype = {
           log("Comparing " + baseDomain + " to " + suffix);
         } catch (e if e.name === "NS_ERROR_NOT_AVAILABLE") {
           // The header is not set
-          log("Referrer is not set!");
+          log("Referer is not set!");
         }
 
 	// We leave the Referer in the case that we have one and it's domain is
@@ -235,11 +235,14 @@ RequestObserver.prototype = {
           if (originatingDomain) {
             try {
               if (this.jdfManager.notFF18) {
+                // |getOriginatingURI()| gives an URI back to
+                // |originatingDomain|.
                 originatingDomain = this.tldService.
                   getBaseDomain(originatingDomain, 0);
               } else {
+                // |originatingDomain| already contains a string here. 
                 originatingDomain = this.tldService.
-                  getBaseDomainFromHost(channel.URI.host);
+                  getBaseDomainFromHost(originatingDomain);
               }
             } catch (e)  {
 	      if (e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {

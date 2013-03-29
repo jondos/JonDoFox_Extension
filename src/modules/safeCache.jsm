@@ -119,6 +119,9 @@ let safeCache = {
           "browser") {
         this.log("Deleting Authorization header for 3rd party content, if any" +
           "  ...");
+        if (authHeader) {
+          this.log("There is one!");
+        }
         // We need both the header normalization and the LOAD_ANONYMOUS flag.
         // The first because the headers got added before
         // http-on-modify-request got called. The second to avoid the auth
