@@ -50,6 +50,7 @@ RequestObserver.prototype = {
   safeCache: null,
   tldService: null,
   cookiePerm: null,
+  thirdPartyUtil: null,
   logger: null,
 
   firstRequest: true,
@@ -64,6 +65,8 @@ RequestObserver.prototype = {
           getService(Components.interfaces.nsIEffectiveTLDService);
       this.cookiePerm = CC['@mozilla.org/cookie/permission;1'].
           getService(Components.interfaces.nsICookiePermission);
+      this.thirdPartyUtil = CC["@mozilla.org/thirdpartyutil;1"].
+          getService(CI.mozIThirdPartyUtil);
       this.logger = this.jdfManager.Log4Moz.repository.
         getLogger("JonDoFox Observer");
       this.logger.level = this.jdfManager.Log4Moz.Level["Warn"];
@@ -165,6 +168,7 @@ RequestObserver.prototype = {
     var acceptHeader;
     var parentHost;
     var domWin;
+    var isThirdParty;
     try {
       // Getting the parent host
       parentHost = this.getParentHost(channel);
@@ -226,24 +230,21 @@ RequestObserver.prototype = {
             try {
               originatingDomain = this.cookiePerm.getOriginatingURI(channel);
             } catch (e) {
-              log ("Getting the originating URI failed!");
+              log("Getting the originating URI failed!");
               originatingDomain = false;
             }
           } else {
-            originatingDomain = parentHost;
-          }
-          if (originatingDomain) {
             try {
-              if (this.jdfManager.notFF18) {
-                // |getOriginatingURI()| gives an URI back to
-                // |originatingDomain|.
-                originatingDomain = this.tldService.
-                  getBaseDomain(originatingDomain, 0);
-              } else {
-                // |originatingDomain| already contains a string here. 
-                originatingDomain = this.tldService.
-                  getBaseDomainFromHost(originatingDomain);
-              }
+              isThirdParty = thirdPartyUtil.isThirdPartyChannel(channel);
+            } catch (ex) {
+              log("Getting third party status failed!");
+              isThirdParty = false;
+            }
+          }
+          if (this.jdfManager.notFF18 && originatingDomain) {
+            try {
+              originatingDomain = this.tldService.
+                getBaseDomain(originatingDomain, 0);
             } catch (e)  {
 	      if (e.name === "NS_ERROR_HOST_IS_IP_ADDRESS") {
                 // It's an IP address. No port isolation, thus just the host.
@@ -255,23 +256,29 @@ RequestObserver.prototype = {
 	      }
             }
           }
-          log ("Originating URI is: " + originatingDomain);
-          if (baseDomain === originatingDomain || !originatingDomain) {
-            channel.setRequestHeader("Referer", null, false);
-	    try {
-	      log("Referrer (modified): " +
-			      channel.getRequestHeader("Referer"));
-	    } catch (e if e.name === "NS_ERROR_NOT_AVAILABLE") {
-              // The header is not set. That's good as deleting the old one
-	      // was successful!
-              log("Referer is not set!");
-	      if (domWin && domWin.name !== '') {
-                log("Found (first) window.name id: " + domWin.name);
-		log("window.name was set! Set it back to default (null)...");
+          if (this.jdfManager.notFF18) {
+            log ("Originating URI is: " + originatingDomain);
+            if (baseDomain === originatingDomain || !originatingDomain) {
+              channel.setRequestHeader("Referer", null, false);
+            }
+          } else if (!isThirdParty) {
+              // Could be third party though, if |isThirdPartyChannel()| threw.
+              // Resetting the Referer here though... 
+              channel.setRequestHeader("Referer", null, false);
+          }
+          try {
+            log("Referer (new): " + channel.getRequestHeader("Referer"));
+          } catch (e if e.name === "NS_ERROR_NOT_AVAILABLE") {
+            // The header is not set. That's good as deleting the old one
+            // was successful!
+            log("Referer is not set!");
+            if (domWin && domWin.name !== '') {
+              log("Found (first) window.name id: " + domWin.name);
+              log("window.name was set! Set it back to default (null)...");
                 domWin.name = '';
-	      }
-	    }
-          } else {
+            }
+          }
+          if (this.jdfManager.notFF18) {
             if (originatingDomain !== "false") {
               log("3rd party content, Referrer not modified");
             } else {
