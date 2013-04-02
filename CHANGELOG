@@ -1,4 +1,4 @@
-Changes in version 0.2.28 - 2013-XX-XX
+Changes in version 0.2.28 - 2013-04-02
 
   Minor improvement:
     * added UnPlug icon to the toolbar
@@ -12,6 +12,7 @@ Changes in version 0.2.28 - 2013-XX-XX
 
   Other:
     * code clean-up
+    * updated SSL Observatory certificate whitelist
 
 Changes in version 0.2.27.1 - 2013-03-11
 
