@@ -232,4 +232,4 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.5.1");
+pref("extensions.jondofox.jdb.version", "0.6");
