@@ -319,13 +319,7 @@ RequestObserver.prototype = {
         log("modifyRequest(): " + e);
       }
     }
-    // Set other headers here
-    // It is not enough to have the values only in the about:config! But in
-    // order to use them for all requests we must use setRequestHeader() and
-    // give them as an argument...
-    acceptHeader = this.prefsHandler.
-                       getStringPref("network.http.accept.default");
-    channel.setRequestHeader("Accept", acceptHeader, false);
+    // Set other headers here...
     // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
     // See: http://donottrack.us
     channel.setRequestHeader("DNT", 1, false);
@@ -339,7 +333,7 @@ RequestObserver.prototype = {
     // keep-alive. See: https://bugzilla.mozilla.org/show_bug.cgi?id=770331
     // The exception we make is the WebSocket handshake that needs a keep-alive
     // header: "At this point the HTTP connection breaks down and is replaced by
-    // the WebSocket connection over the same underlying TCP/IP connection." 
+    // the WebSocket connection over the same underlying TCP/IP connection."
     // http://www.websocket.org/aboutwebsocket.html section: The WebSocket
     // Protocol
     var reqHeader = null;
