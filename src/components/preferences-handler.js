@@ -2,7 +2,7 @@
  * Copyright (c) 2008-2012, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
- * This is a general purpose XPCOM component that transparently encapsulates 
+ * This is a general purpose XPCOM component that transparently encapsulates
  * handling of user preferences in Firefox using the nsIPrefService.
  *****************************************************************************/
 
@@ -35,14 +35,14 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 // Class constructor
 var PreferencesHandler = function() {
   // Set the main pref branch
-  this.prefs = this.getPrefsBranch("");  
-  // Set the wrappedJSObject 
+  this.prefs = this.getPrefsBranch("");
+  // Set the wrappedJSObject
   this.wrappedJSObject = this;
 };
 
 // Class definition
 PreferencesHandler.prototype = {
-  
+
   // The main preferences branch
   prefs: null,
 
@@ -78,7 +78,7 @@ PreferencesHandler.prototype = {
   },
 
   // Delete a given preference respectively reset to default
-  deletePreference: function(preference) {    
+  deletePreference: function(preference) {
     if (preference) {
       try {
         // If a user preference is set
@@ -91,17 +91,17 @@ PreferencesHandler.prototype = {
       }
     }
   },
-  
+
   // Set a string preference
   setStringPref: function(preference, value) {
     log("Setting '" + preference + "' --> '" + value + "'");
-    if(preference) {   
+    if(preference) {
       var supportsStringInterface = CI.nsISupportsString;
       var string = CC["@mozilla.org/supports-string;1"].
                       createInstance(supportsStringInterface);
       string.data = value;
       // Set value
-      this.prefs.setComplexValue(preference, supportsStringInterface, 
+      this.prefs.setComplexValue(preference, supportsStringInterface,
                        string);
     }
   },
@@ -112,7 +112,7 @@ PreferencesHandler.prototype = {
     if (preference) {
       try {
         log("Getting '" + preference + "'");
-        return this.prefs.getComplexValue(preference, 
+        return this.prefs.getComplexValue(preference,
                              CI.nsISupportsString).data;
       } catch(e) {
         log("getStringPref(): " + e);
@@ -160,7 +160,7 @@ PreferencesHandler.prototype = {
   getBoolPref: function(preference) {
     // If preference is not null
     if(preference) {
-      log("Getting '" + preference); 
+      log("Getting '" + preference);
       try {
         return this.prefs.getBoolPref(preference);
       } catch(exception) {
@@ -174,7 +174,7 @@ PreferencesHandler.prototype = {
   classID:          Components.ID("{0fa6df5b-815d-413b-ad76-edd44ab30b74}"),
   contractID:       "@jondos.de/preferences-handler;1",
 
-  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports]) 
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
