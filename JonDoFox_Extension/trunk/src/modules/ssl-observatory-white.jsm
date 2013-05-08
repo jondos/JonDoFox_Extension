@@ -1,5 +1,5 @@
 // These are SHA256 fingerprints for the most common chains observed by the
-// Decentralized SSL Observatory.  These should not be resubmitted.  
+// Decentralized SSL Observatory.  These should not be resubmitted.
 
 const EXPORTED_SYMBOLS = ["X509ChainWhitelist"];
 

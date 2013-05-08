@@ -1,5 +1,9 @@
 Changes in version 0.2.29 - XXXX-XX-XX
 
+  Minor improvement:
+    * removed query string in third party Referer headers due to possible
+      information leaks
+
   Bugfix:
     * fixed broken image loading due to bad Accept header
 
