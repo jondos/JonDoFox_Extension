@@ -197,15 +197,14 @@ RequestObserver.prototype = {
         }
         // ... the string to compare to
         try {
-          // ... the value of the referer header
+          // ... the value of the Referer header
           oldRef = channel.getRequestHeader("Referer");
-          // Cut off the path from the referer
+          // Cut off the path from the Referer
           log("Referrer (unmodified): " + oldRef);
           refDomain = oldRef.split("/", 3)[2];
           // We have to make sure that no port value interferes with the
           // comparison.
           refDomain = refDomain.replace(/(?::\d+)/, "");
-          //log("Referrer (domain): " + refDomain);  
           // Take a substring with the length of the base domain for comparison
           suffix = refDomain.substr(
               refDomain.length - baseDomain.length, refDomain.length);
@@ -216,14 +215,14 @@ RequestObserver.prototype = {
         }
 
 	// We leave the Referer in the case that we have one and it's domain is
-	// the same we came from. We leave it as well if we found 3rd party 
-	// content. Additionally, if no Referer is set we imitate Firefox' 
+	// the same we came from. We leave it as well if we found 3rd party
+	// content. Additionally, if no Referer is set we imitate Firefox'
 	// behavior and do not set one as well. If we have a Referer indicating
-	// the user came from a different domain and do not get an originating 
-	// URI we set the Referer for security's sake to null. The same holds 
-	// for the case where the user came from a different domain and we got 
+	// the user came from a different domain and do not get an originating
+	// URI we set the Referer for security's sake to null. The same holds
+	// for the case where the user came from a different domain and we got
 	// a originating URI but found no 3rd party content.
-	// And, finally, the most important case: the Referer is set and the 
+	// And, finally, the most important case: the Referer is set and the
 	// user visits a new domain, we replace the old Referer with null.
         if (suffix && baseDomain !== suffix) {
           if (this.jdfManager.notFF18) {
@@ -260,10 +259,12 @@ RequestObserver.prototype = {
             log ("Originating URI is: " + originatingDomain);
             if (baseDomain === originatingDomain || !originatingDomain) {
               channel.setRequestHeader("Referer", null, false);
+              // Probably no third party content.
+              originatingDomain = false;
             }
           } else if (!isThirdParty) {
               // Could be third party though, if |isThirdPartyChannel()| threw.
-              // Resetting the Referer here though... 
+              // Resetting the Referer here though...
               channel.setRequestHeader("Referer", null, false);
           }
           try {
@@ -280,17 +281,21 @@ RequestObserver.prototype = {
           }
           if (this.jdfManager.notFF18) {
             if (originatingDomain !== "false") {
-              log("3rd party content, Referrer not modified");
+              log("3rd party content");
+              this.cleanReferer(channel);
             } else {
               log("We got a referer but no originating URI!\n" +
 	          "Modify the referer, although it may be 3rd party content!");
 	      channel.setRequestHeader("Referer", null, false);
             }
+          } else if (isThirdParty) {
+              log("3rd party content");
+              this.cleanReferer(channel);
           }
         } else {
           log("Referer not modified");
 	  // We have to check this here as well because the window identifier
-	  // could be existent even if no referrer was ever sent (i.e. in
+	  // could be existent even if no Referer was ever sent (i.e. in
 	  // the case where the user deploys bookmarks or HTTPS -> HTTP)...
           // But we want to delete it only if the domain in the URL bar
           // changes. Let's therefore check whether we have 3rd party content
@@ -303,11 +308,6 @@ RequestObserver.prototype = {
               log("Found domWin.content.name id. It is: " + domWin.name);
               domWin.name = '';
               log("window.name was set! (else-clause). Set it back to default ('')...");
-              log("domWin.content.name is now again: " + domWin.content.name);
-              log("domwin.content.window.name is: " + domWin.content.window.
-                name);
-              log("Another one still is: " + domWin.name);
-              log("Win.top is: " + domWin.top.name);
 	    }
           }
         }
@@ -346,6 +346,20 @@ RequestObserver.prototype = {
       channel.setRequestHeader("Proxy-Connection", "close", false);
       channel.setRequestHeader("Connection", "close", false);
     }
+  },
+
+  cleanReferer: function(channel) {
+    var newReferer;
+    try {
+      newReferer = channel.getRequestHeader("Referer");
+    } catch (e) {}
+    if (newReferer && newReferer.indexOf("?") !== -1) {
+      log("Found query string! Orig Referer: " + newReferer + "\n");
+      newReferer = newReferer.slice(0, newReferer.indexOf("?"));
+      log("New Referer: " + newReferer + "\n");
+      channel.setRequestHeader("Referer", newReferer, null);
+    }
+    return;
   },
 
   // Call the forgery on every request
