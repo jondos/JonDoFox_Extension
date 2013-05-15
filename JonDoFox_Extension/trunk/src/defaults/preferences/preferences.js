@@ -2,7 +2,7 @@
 pref("extensions.jondofox.last_version", "");
 // Debug pref
 pref("extensions.jondofox.debug.enabled", false);
-// Proxy state 
+// Proxy state
 pref("extensions.jondofox.proxy.state", "jondo");
 pref("extensions.jondofox.alwaysUseJonDo", false);
 
@@ -167,11 +167,11 @@ pref("extensions.jondofox.search_suggest_enabled", false);
 pref("extensions.jondofox.delete_searchbar", true);
 // Only valid for FF4
 // No pinging of Mozilla once a day for Metadata updates or whatever
-// See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time 
+// See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time
 pref("extensions.jondofox.getAddons.cache.enabled", false);
 pref("extensions.jondofox.donottrackheader.enabled", true);
 
-// See: http://www.contextis.com/resources/blog/webgl/ 
+// See: http://www.contextis.com/resources/blog/webgl/
 pref("extensions.jondofox.webgl.disabled", true);
 
 // No document fonts to avoid this fingerprint means
@@ -232,4 +232,4 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.6");
+pref("extensions.jondofox.jdb.version", "0.7");

@@ -1,4 +1,4 @@
-Changes in version 0.2.29 - XXXX-XX-XX
+Changes in version 0.2.29 - 2013-05-15
 
   Minor improvement:
     * removed query string in third party Referer headers due to possible
