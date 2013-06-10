@@ -1114,16 +1114,16 @@ function initWindow() {
   log("New browser window ..");
   try {
     window.addEventListener("unload", shutdown, false);
-    // FIXME: Due to bug #330458 subsequent calls to loadOverlay() do not work. 
+    // FIXME: Due to bug #330458 subsequent calls to loadOverlay() do not work.
     // Few other extensions (CuteMenus) also load overlays dynamically and can
-    // therefore cause this call to fail. For further information, please see    
+    // therefore cause this call to fail. For further information, please see
     // http://developer.mozilla.org/en/DOM/document.loadOverlay and
     // https://bugzilla.mozilla.org/show_bug.cgi?id=330458
-    // Additionally, loading an overlay with the same URI twice is also not 
+    // Additionally, loading an overlay with the same URI twice is also not
     // supported. A polling approach is therefore not practicable.
 
     // Possible workaround: Dynamically load the GUI overlay using a timeout
-    // var code = 'document.loadOverlay(\"chrome://jondofox/content/' + 
+    // var code = 'document.loadOverlay(\"chrome://jondofox/content/' +
     //           'jondofox-gui.xul\", overlayObserver)';
     // setTimeout(code, 800);
 

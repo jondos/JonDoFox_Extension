@@ -3,13 +3,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /* The functions safeCache(), setCacheKey(), readCacheKey(), bypassCache(),
- * getCookieBehavior(), newCacheKey() and getHash() are shipped with the 
+ * getCookieBehavior(), newCacheKey() and getHash() are shipped with the
  * following license:
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- *  * Redistributions of source code must retain the above copyright notice, 
+ *  * Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  *  * Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
@@ -18,16 +18,16 @@
  *    may be used to endorse or promote products derived from this software with
  *    out specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * These functions were written by Collin Jackson, other contributors were
@@ -45,7 +45,7 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 
 let safeCache = {
-  
+
   cryptoHash : null,
   converter : null,
   reqObs : null,
@@ -56,11 +56,11 @@ let safeCache = {
   REJECT_COOKIES : 2,
 
   debug : false,
-  
+
   init : function() {
     this.debug = Cc["@mozilla.org/preferences-service;1"].
       getService(Ci.nsIPrefService).getBranch("extensions.jondofox.").
-      getBoolPref("debug.enabled"); 
+      getBoolPref("debug.enabled");
     this.cryptoHash = Cc["@mozilla.org/security/hash;1"].
       createInstance(Ci.nsICryptoHash);
     this.converter = Cc["@mozilla.org/intl/scriptableunicodeconverter"].
@@ -87,7 +87,7 @@ let safeCache = {
     if (parentHost && parentHost !== host) {
       this.log("Segmenting " + host + " content loaded by " + parentHost);
       this.setCacheKey(channel, parentHost);
-      
+
       // We currently do not get headers here in all cases. WTF!? Why?
       // AND: Setting them to null does not do anything in some cases: The
       // Auth information is still sent!
@@ -96,7 +96,7 @@ let safeCache = {
       // can do here without fixing it in the source (nsHttpChannel.cpp).
       // Update: That got fixed in FF 12.
       let authHeader;
-      try { 
+      try {
         authHeader = channel.getRequestHeader("Authorization");
       } catch (e) {
         authHeader = false;
@@ -246,7 +246,7 @@ let safeCache = {
   },
 
   bypassCache: function(channel) {
-    channel.loadFlags |= channel.LOAD_BYPASS_CACHE;  
+    channel.loadFlags |= channel.LOAD_BYPASS_CACHE;
       // INHIBIT_PERSISTENT_CACHING instead?
     //channel.cacheKey = this.newCacheKey(0);
     this.log("Bypassed cache for " + channel.URI.spec);
