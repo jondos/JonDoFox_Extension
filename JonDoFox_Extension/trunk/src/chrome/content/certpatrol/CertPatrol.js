@@ -11,7 +11,7 @@
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
- *  
+ *
  * Software distributed under the License is distributed on an "AS IS" basis,
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  * for the specific language governing rights and limitations under the
@@ -25,14 +25,14 @@
  * under the terms of either the GPL or the LGPL, and not to allow others to
  * use your version of this file under the terms of the MPL, indicate your
  * decision by deleting the provisions above and replace them with the notice
- * and other provisions required by the GPL or the LGPL. If you do not delete 
+ * and other provisions required by the GPL or the LGPL. If you do not delete
  * the provisions above, a recipient may use your version of this file under
  * the terms of any one of the MPL, the GPL or the LGPL.
- *                              
+ *
  * ***** END LICENSE BLOCK ***** */
 
-// The original Certificate Patrol code was slightly adapted by Georg Koppen, 
-// JonDos GmbH 2010. The wildcard certificate functionality was developed by 
+// The original Certificate Patrol code was slightly adapted by Georg Koppen,
+// JonDos GmbH 2010. The wildcard certificate functionality was developed by
 // Georg Koppen, JonDos GmbH 2010.
 
 var CertPatrol = {
@@ -42,22 +42,22 @@ var CertPatrol = {
     this.initialized = true;
     this.jdfManager = Cc['@jondos.de/jondofox-manager;1'].
 	            getService().wrappedJSObject;
-    // We check whether the original Certificate Patrol extension should be 
-    // used. If so, we avoid using as much of our adapted CertPatrol code as 
-    // possible, especially we try to avoid registering event listeners twice 
-    // (those in our init() code additionally to the ones in the CertPatrol 
+    // We check whether the original Certificate Patrol extension should be
+    // used. If so, we avoid using as much of our adapted CertPatrol code as
+    // possible, especially we try to avoid registering event listeners twice
+    // (those in our init() code additionally to the ones in the CertPatrol
     // init() code).
     if (!jdfManager.certPatrol) {
       Components.utils.import("resource://jondofox/jdfUtils.jsm", this);
       this.prefsHandler = Cc['@jondos.de/preferences-handler;1'].
                     getService().wrappedJSObject;
       this.version = prefsHandler.
-        getStringPref("extensions.jondofox.last_version"); 
+        getStringPref("extensions.jondofox.last_version");
       this.dbinit();
       this.init();
     }
   },
-          
+
   onUnload: function() {
     this.unregisterObserver("http-on-examine-response");
   },

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2008-2012 JonDos GmbH
+ * Copyright 2008-2013 JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
  * This component is instantiated once on app-startup and does the following:
@@ -462,7 +462,7 @@ RequestObserver.prototype = {
         // Just using "Connection: close" is not enough as an attacker could do
         // some tricks with "Proxy-Connection: keep-alive" then. See:
         // https://mxr.mozilla.org/mozilla-central/source/netwerk/protocol/
-        // http/nsHttpConnection.cpp#730ff. 
+        // http/nsHttpConnection.cpp#730ff.
         channel.setResponseHeader("Proxy-Connection", "close", false);
         channel.setResponseHeader("Connection", "close", false);
       }
