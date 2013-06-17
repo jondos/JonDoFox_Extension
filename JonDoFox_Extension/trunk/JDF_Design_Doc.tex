@@ -4,78 +4,105 @@
 \usepackage [colorlinks=true,urlcolor=blue,hyperfootnotes=false]{hyperref}
 
 %opening
-\title{Attacker model of JonDoFox}
+\title{JonDoFox-Erweiterung}
 \author{Georg Koppen}
 
 \begin{document}
   \maketitle
-  \section{Motivation}
-    In order to provide a proper security extension we have to define an 
-    attacker model first. Otherwise we would not know exactly against whom our
-    extension would defend a user and above all how we could implement 
-    different features properly. The following of this document is solely 
-    dedicated to this task\footnote{This document is heavily inspired by the
-    very good Torbutton design document. See: 
-    \url{https://www.torproject.org/torbutton/en/design/}}.
-  \section{The Attacker}
-    The attacker can be located at different positions between the user's 
-    browser and the targeting website. This is reflected in section 
-    \ref{attacklocation}. While there is just one goal for an adversary, i.e.
-    identifiying\footnote{``Identification'' here and 
-    througout this documentation means getting the IP address of a user. But 
-    even if an attacker succeeds therein it does not necessarily mean the user 
-    is identified in reality as this depends on a lot of other contextual 
-    information.} a user of JonDoFox, he can try to achieve this in more than one
-    way as outlined in section \ref{attackways}. The means available to 
-    accomplish the deanonymization are listed in section \ref{attackmeans}.
-    \subsection{Location}\label{attacklocation}
-      \begin{enumerate}
-        \item \textbf{Malicious Websites}: could be a source of attack. That does 
-          not necessarily mean that this behavior is intentional. Maybe the 
-          websites got hacked or include third party content that is inserted by
-	  an attacker.
-        \item \textbf{Exit Mixes and Upstream Router} could be controlled by an
-          attacker.
-        \item \textbf{ISP/Local Network/Upstream Router} could try to correlate
-	  JonDonym and non-JonDonym activity trying to deanonyize users.
-      \end{enumerate}
-    \subsection{Goals}\label{attackways}
-      \begin{enumerate}
-        \item \textbf{Bypassing proxy settings}: The easiest way to identify a
-          user is to let her connect directly, without using JonDonym, to a 
-          server controlled by the adversary.
-        \item \textbf{Correlation of JonDonym/Non-JonDonym traffic}: If 
-          bypassing the proxy is not possible an attacker may try to correlate 
-          JonDonym and Non-JonDonym traffic in order to deduce the identity of 
-          the former out of the latter.
-        \item \textbf{Getting location information}: If neither of the former 
-          succeeds the adversary may try to get some general location 
-          information that helps him to narrow down the region the user is 
-          surfing from.
-        \item \textbf{History disclosure}: Knowing which websites a user is/was
-          visiting could be helpful irrespective if one of the above mentioned
-          means resulted in an identification of the user. The browser history
-          could even be a missing link leading to the deanonymization depending
-          on the already available information the attacker collected.
-        \item \textbf{Anonymity set reduction}: Finally, an attacker could try
-          to reduce the anonymity set first in order to make it easier to 
-          monitor particular users or even reduce the group so far that he can
-	  identify them using information otherwise collected. 
-      \end{enumerate}
-    \subsection{Means}\label{attackmeans}
-      \begin{enumerate}
-        \item \textbf{Inserting JavaScript}: Even though JavaScript is not 
-          capable of circumventing proxy settings directly it can be used in
-          numerous ways to achieve the goals in the afroementioned section. E.g. 
-          an adversary could try to register event handlers to correlate
-          JonDonym and Non-JonDonym traffic or it can be used to disclose the
-	  browser history in Firefox up to version 4\footnote{See: 
-	  \url{http://jeremiahgrossman.blogspot.com/2006/08/i-know-where-youve-been.html}.}.
-        \item \textbf{Inserting CSS}: Next to JavaScript may the attacker 
-          insert CSS code. That may lead as well to history disclosure 
-          attacks even if JavaScript is disabled. Furthermore, there may
-          as well be a correlation between JonDonym and Non-JonDonym state 
-	  via so-called CSS popups (See: 
-	  \url{http://meyerweb.com/eric/css/edge/popups/demo2.html}).
-      \end{enumerate}
+  \section{Vogelperspektive}
+  Aus der Vogelperspektive betrachtet besteht JonDoFox aus zwei Teilen: Einem,
+  der für das GUI zuständig ist und einem anderen, der davon unabhängig und m
+  Wesentlichen für die Schutzmaßnahmen verantwortlich ist.
+  Ersterer ist in dem /chrome-Order, letzterer in /components bzw. /modules
+  angesiedelt.
+  \section{Details - Stufe 1}
+    \subsection{GUI}
+      Das GUI wird mittels XUL (Markup-Sprache) und JavaScript gebaut und
+      betrifft folgende Elemente:
+      \begin{itemize}
+        \item Toolbarbutton: Der relevante Code befindet sich in jondofox-gui.js
+          in den Funktionen openPageNewTab(), openDialogPreferences(),
+          setProxyNone(), setCustomProxy() und setProxy() für den XUL-Teil siehe
+          das toolbarpalette-Element in jondofox-overlay.xul.
+        \item Kontextmenü: Im Kontext-Menü sind zwei verschiedene Features
+          untergebracht. Zum einen die Möglichkeit, spezielle Links am Proxy
+          vorbei herunterzuladen, zum anderen die Möglichkeit, bequem temporäre
+          E-Mail-Adressen zu bekommen. Der relevante Code für das erstere findet
+          sich in bypassProxyAndSave(), proxyListAdd() und
+          noProxyListAdd(). Für das zweite Feature sind die Methoden im
+          jondofox.bloodyVikings-Namensraum und die bindings.xml relevant. Für
+          beide ist updateContextMenuEntry() wichtig, um die Features im
+          Kontextmenü gegebenenfalls zu verstecken oder sichtbar zu machen.
+        \item Statusleiste: Für die Statusleiste (die in neueren
+          Firefox-Versionen standardmäßig ausgeblendet ist) gilt das Gleiche wie
+          oben unter \textit{Toolbarbutton} gesagt mit dem Unterschied, dass
+          hier das statusbar-Element relevant ist.
+        \item Optionsdialog: Das ist die zentrale Mögichkeit JonDoFox anzupassen
+          (abgesehen von der Änderung von about:config-Einträgen). Der Code
+          gefindet sich in /chrome/content/dialogs/prefs-dialogs.js sowie in der
+          zugehörigen XUL-Datei.
+      \end{itemize}
+    \subsection{Module und Komponenten}
+      \begin{itemize}
+        \item Module:
+        \begin{itemize}
+          \item Adblocker: Die adblock*.js-Dateien werden gegenwärtig nicht
+            genutzt (siehe auch die adBlocking.*-Dateien im GUI-Bereich),
+            sondern waren als Vorbereitung für eine eigene, zentrale
+            Adblock-Liste gedacht.
+          \item Bloody Vikings: Die bloodyVikings*.jsm-Dateien enthalten den
+            Code dieses Features, der nichts mit dem GUI zu tun hat.
+          \item SSL Observatory: Die ssl-observatory*-Dateien enthalten die
+            Kern-Funk\-tio\-na\-li\-tät dieses Features (Whitelist,
+            CA-Fingerabdrücke und Zertifikat-Extraktion/-Meldung). Ob
+            Zertifikate an die EFF geschickt werden, entscheidet allerdings Code
+            in request-observer.js abhängig von den GUI-Einstellungen (siehe
+            Zeile 405ff.).
+          \item Logger: Der zukünftig erweiterungsweit zu benutzende
+            Log-Mechanismus ist in log4moz.js zu finden und wird teilweise schon
+            eingesetzt.
+          \item Utils: In jdfUtils.jsm sollte nach und nach jegliche
+            Funktionalität integriert werden, die von mehreren Code-Teilen
+            benötigt wird. Gegenwärtig sind dies Methoden zur Anzeige von
+            Dialogen und Methoden zur Behandlung von sprachabhängigen
+            Textbausteinen sowie die alte Log-Funktionalität.
+          \item SafeCache: safeCache.jsm enthält zwei zentrale
+            Sicherheitsfeatures. Zum einen werden Elemente von Drittseiten nicht
+            aus dem Cache bezogen (falls diese dort vorhanden sind) und zum
+            anderen wird ein Tracking mittels Authorization-Header durch
+            Drittseiten unterbunden. Die Einbindung erfolgt ebenfalls in
+            request-observer.js
+        \end{itemize}
+        \item Komponenten:
+        \begin{itemize}
+          \item About: jondofox-about.js implementiert einen Protokoll-Handler
+            für about:jondofox, so dass man bequem (neue) Features etc. anzeigen
+            kann. Dazu gehört noch die jondofox-features.xhtml in
+            /chrome/content.
+          \item PrefMapper: preferences-mapper.js ist dafür da, um die zu
+            verändernden Firefox-Einstellungen mit den entsprechenden Werten zu
+            versorgen, so wie sie in defaults/preferences/preferences.js gegeben
+            sind und um dies wieder rückgängig zu machen, falls JonDoFox z.B.
+            deinstalliert wird.
+          \item PrefHandler: preferences-handler.js stellt die ganzen Methoden
+            bereit, um mit Einstellungen zu arbeiten (ist im Prinzip ``nur'' ein
+            Wrapper von Mozillas eigener Komponente, welche die Manipulation von
+            Einstellungen zum Gegenstand hat).
+          \item ProxyManager: proxy-manager.js sorgt dafür, dass die
+            entsprechenden Proxy-Einstellungen (Keiner, JonDo, Tor,
+            Benutzerdefiniert, Proxy-Ausnahmen\ldots) auf die relevanten
+            Einstellungen im Firefox übertragen werden.
+          \item RequestObserver: request-observer.js hat eine Reihe von Aufgaben
+            neben der Einbindung von safeCache.jsm und dem SSL Observatory-Code.
+            Was die Modifikation der Anfrage an den Server angeht, so werden in
+            modifyRequest() die Referer-Spoofing-Logik implementiert sowie die
+            nötigen Header gesetzt/entfernt. Dies gilt allen voran für die
+            Vermeidung von keep-alive-Headern. examineResponse() enthält neben
+            der Steuerung von SSL Observatory-Code noch die wichtige Aufgabe,
+            wirklich sicher zu gehen, dass die Verbindung geschlossen wird sowie
+            kleinere Features (etwas besserer Schutz vor Tracking mittels
+            Authorization-Header in Firefox $<$ 12 sowie verbesserte
+            Möglichkeiten, Inhalte am Proxy vorbei herunterzuladen).
+        \end{itemize}
+      \end{itemize}
 \end{document}

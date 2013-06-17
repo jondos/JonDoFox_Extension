@@ -4,7 +4,7 @@
  *
  * JonDoFox extension utilities
  *****************************************************************************/
- 
+
 "use strict";
 
 let EXPORTED_SYMBOLS = ["jdfUtils"];
@@ -77,7 +77,7 @@ let jdfUtils = {
       this.log("showAlert(): " + e);
     }
   },
-  
+
   // Show a confirm dialog with a checkbox and custom buttons
   // using the prompt service.
   showConfirmEx : function(title, text, type, bIsStartup) {

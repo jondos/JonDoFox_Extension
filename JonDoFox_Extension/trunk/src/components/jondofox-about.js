@@ -2,17 +2,17 @@
 //to see our JonDoFox feature page. The code is retrived from:
 //https://developer.mozilla.org/en/Code_snippets/JS_XPCOM section XPCOMUtils -
 //About protocol handler. According to
-//https://developer.mozilla.org/Project:Copyrights the license of the following 
-//code is the MIT License which may be found here: 
-//http://www.ibiblio.org/pub/Linux/LICENSES/mit.license  
+//https://developer.mozilla.org/Project:Copyrights the license of the following
+//code is the MIT License which may be found here:
+//http://www.ibiblio.org/pub/Linux/LICENSES/mit.license
 
 //Minor modifications made by Georg Koppen, JonDos GmbH 2010.
 
-//We could do the registration of the about:jondofox as well without using JS 
+//We could do the registration of the about:jondofox as well without using JS
 //code modules solely within the content folder in order to increase the startup
 //time. (see the relevant code in Firesomething:
 //https://addons.mozilla.org/en-US/firefox/addon/31/ that has to be patched
-//(adding the getURIFlags function)) BUT: The huge disadvantage is that the 
+//(adding the getURIFlags function)) BUT: The huge disadvantage is that the
 //user would not be able to set about:jondofox as a startup page if she would
 //want that because its load is triggered before the URL would be registered.
 
