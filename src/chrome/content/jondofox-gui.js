@@ -9,7 +9,7 @@
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
 
-// Enable/disable debug messages here, do not forget 
+// Enable/disable debug messages here, do not forget
 // to create 'browser.dom.window.dump.enabled' first!
 var mDebug = true;
 
@@ -160,7 +160,7 @@ var EMPTY_PROXY = 'extensions.jondofox.custom.empty_proxy';
 var VERSION_PREF = 'extensions.jondofox.last_version';
 var MENU_PREF = 'extensions.jondofox.advanced_menu';
 
-// Set the extension into a certain state, 
+// Set the extension into a certain state,
 // pass one of the jdfManager.STATE_XXXs
 function setProxy(state) {
   log("Started helper function for setting proxy state to '" + state + "'");
@@ -254,7 +254,7 @@ function setCustomProxy() {
         // Call the setProxy-method
 	setProxy(jdfManager.STATE_CUSTOM);
       } else {
-          // Refresh the statusbar 
+          // Refresh the statusbar
 	  refresh();
       }
     } else {
@@ -266,7 +266,7 @@ function setCustomProxy() {
 }
 
 // We are showing a warning if the user wants to start surfing either without
-// any proxy at all or without a valid custom one. Maybe she has just forgotten 
+// any proxy at all or without a valid custom one. Maybe she has just forgotten
 // to activate it. The true flag indicates that we have a dialog shown on
 // startup leading to an other default button. That is not the case for
 // JonDoBrowser users as we made it intentionally hard for them to shoot
@@ -458,7 +458,7 @@ function openDialogPreferences() {
                  getMostRecentWindow('jondofox:prefs-dialog');
     if (!win) {
       // No additional parameters needed WRONG: we need at least centerscreen
-      // otherwise the dialog is shown in the left upper corner using JDF 
+      // otherwise the dialog is shown in the left upper corner using JDF
       // portable
       window.openDialog("chrome://jondofox/content/dialogs/prefs-dialog.xul",
         "prefs-dialog", "centerscreen");
@@ -487,6 +487,7 @@ function bypassProxyAndSave(uri) {
 }
 
 // Check if a given URI is on the 'no proxy list'
+// TODO: Might get removed...
 function noProxyListContains(uri) {
   return jdfManager.noProxyListContains(uri);
 }
@@ -519,7 +520,7 @@ function clearingSearchbar(e) {
       // If the user searched something (either via pressing return or
       // clicking on the search icon or dragging something into the serachbar or
       // choosing a value by mouseclick or return key out of her search history)
-      // we erase the searchbar value to protect against someone looking over 
+      // we erase the searchbar value to protect against someone looking over
       // the user's shoulder.
       if (e.keyCode === 13 || e.type === "drop" ||
           (e.type === "click" && e.button !== 2)) {
@@ -565,7 +566,7 @@ function openJDFFeaturePage() {
     win.openUILinkIn('about:jondofox', 'current');
   } else {
     // We know that the user had an other page as her default start page.
-    // We therefore load the feature page in a new tab to not get blamed for 
+    // We therefore load the feature page in a new tab to not get blamed for
     // overwriting the default one.
     win.openUILinkIn('about:jondofox', 'tab');
   }
@@ -676,7 +677,7 @@ function errorPageCheck() {
         longContentElem.appendChild(jondoIsStarting);
       }
     } else {
-      // We found the error page but no JonDo we could start therefore 
+      // We found the error page but no JonDo we could start therefore
       // checking if we can safely whitelist and display the download links...
       var textNode;
       var pHintNode;
@@ -778,8 +779,8 @@ function findToolbarIcon() {
 
 function startupChecks() {
   // Let's check if NoScript and Cookie Monster are installed
-  // and enabled. If not remind the user of the importance to do so 
-  // and load the NoScript (or Cookie Monster) homepage 
+  // and enabled. If not remind the user of the importance to do so
+  // and load the NoScript (or Cookie Monster) homepage
   // if it is missing. We do this here using a flag because either
   // (FF3) the window is not ready when we check it or (FF4) the
   // callback returns so late.
@@ -796,7 +797,7 @@ function startupChecks() {
         ['NoScript']), 'update');
     }
   }
-  // The user could have disabled the update warning already in the 
+  // The user could have disabled the update warning already in the
   // NoScript popup (if that is missing or disabled). Thus, we check
   // it here again.
   if (prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
@@ -864,7 +865,7 @@ var prefsObserver = {
   observe: function(subject, topic, data) {
     switch (topic) {
       case 'nsPref:changed':
-        // log(topic + " --> " + data);        
+        // log(topic + " --> " + data);
         // If someone disables the proxy in FF ..
         if (data === PROXY_PREF) {
           if (prefsHandler.getIntPref(PROXY_PREF) == 0 &&
@@ -930,10 +931,10 @@ var overlayObserver = {
             prefsHandler.prefs.addObserver(PROXY_PREF, prefsObserver, false);
             prefsHandler.prefs.addObserver(CUSTOM_LABEL, prefsObserver, false);
 
-            // We need to observe this preference because otherwise there 
-	    // would be no refreshing of the status bar if we had already 
-	    // 'custom' as a our proxy state: the correct writing of 'custom' 
-	    // with either red or black letters would not work if we accepted 
+            // We need to observe this preference because otherwise there
+	    // would be no refreshing of the status bar if we had already
+	    // 'custom' as a our proxy state: the correct writing of 'custom'
+	    // with either red or black letters would not work if we accepted
 	    // or applied new settings.
 
             prefsHandler.prefs.addObserver(EMPTY_PROXY, prefsObserver, false);
@@ -944,14 +945,14 @@ var overlayObserver = {
 
             // We have to tweak the code here as it is not working reliable for
 	    // FF 4. The funny thing is that the version check works well for
-	    // the first times of a FF4 start. But afterwards the async method 
-	    // is always returning too late. Thus, the pref check returns NULL 
-	    // and the feature page is always shown. Thus, we set the correct 
-	    // pref directly in the jondofox-manager but the call to open a new 
-	    // tab is done here. Once using the prefObserver (if the async 
-	    // method is returning later, after the overlayobserver-code was 
-	    // processed) and once on the following code if the aysnc-method is 
-	    // returning earlier using a variable set by the Addon-Manager call. 
+	    // the first times of a FF4 start. But afterwards the async method
+	    // is always returning too late. Thus, the pref check returns NULL
+	    // and the feature page is always shown. Thus, we set the correct
+	    // pref directly in the jondofox-manager but the call to open a new
+	    // tab is done here. Once using the prefObserver (if the async
+	    // method is returning later, after the overlayobserver-code was
+	    // processed) and once on the following code if the aysnc-method is
+	    // returning earlier using a variable set by the Addon-Manager call.
 	    // Fun.
 	    if (!jdfManager.ff4 || jdfManager.newVersionDetected) {
 	      // Get the last version property
@@ -1026,14 +1027,14 @@ var overlayObserver = {
             }
 	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but
-	    // per session. 
+	    // per session.
 	    if (!jdfManager.isClearingSearchhistoryEnabled) {
 	      jdfManager.isClearingSearchhistoryEnabled = true;
 	      var intervalHID = window.setInterval(clearingSearchbarHistory,
 			    1800000);
 	    }
-	    // We set listeners to the search bar text box as well as to 
-	    // the Go-Button and the search history popup to erase the search 
+	    // We set listeners to the search bar text box as well as to
+	    // the Go-Button and the search history popup to erase the search
 	    // query immediately after or during submitting...
 	    var searchbar = document.getElementById("searchbar");
 	    document.getElementById("PopupAutoComplete").

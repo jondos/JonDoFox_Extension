@@ -15,17 +15,17 @@
                    class="toolbarbutton-1 chromeclass-toolbar-additional"
                    label="JonDo"
                    popup="jondofox-proxy-list"
-		   context="jondofox-proxy-list" 
+		   context="jondofox-proxy-list"
                    tooltiptext="&jondofox.dialog.preferences.title;"/>
   </toolbarpalette>
 
   <statusbar id="status-bar">
     <!-- Indicate current status in the statusbar -->
-    <statusbarpanel id="jondofox-proxy-status" 
+    <statusbarpanel id="jondofox-proxy-status"
 	            style="cursor: pointer"
                     insertbefore="statusbar-updates"
                     label=""
-                    class="statusbarpanel-iconic-text"        
+                    class="statusbarpanel-iconic-text"
                     popup="jondofox-proxy-list"
 		    context="jondofox-proxy-list"
 		    tooltiptext="&jondofox.statusbar.tooltiptext;" />
@@ -39,7 +39,7 @@
               insertafter="context-savelink" />
     <bvsplitmenu id="tempEmailContext"
               label="&jondofox.temp.email;"
-              image="chrome://jondofox/skin/mail-16x16.png" 
+              image="chrome://jondofox/skin/mail-16x16.png"
               insertafter="context-delete"
               bvoncommand="jondofox.bloodyVikings.insertAddress(document.popupNode);"
               hidden="true">
@@ -47,12 +47,12 @@
                onpopupshowing="if (event.target === this) jondofox.bloodyVikings.populateContextServicePopup(this);"/>
     </bvsplitmenu>
     <!-- These are entries to add or remove URIs, currently hidden -->
-    <menuitem id="noproxy-add" 
+    <menuitem id="noproxy-add"
               label="&jondofox.contextmenu.noproxylist.add;"
               oncommand="noProxyListAdd(gContextMenu.linkURL);"
-              insertbefore="context-savelink" 
+              insertbefore="context-savelink"
               hidden="true" />
-    <menuitem id="noproxy-remove" 
+    <menuitem id="noproxy-remove
               label="&jondofox.contextmenu.noproxylist.remove;"
               oncommand="noProxyListRemove(gContextMenu.linkURL);"
               insertbefore="context-savelink"

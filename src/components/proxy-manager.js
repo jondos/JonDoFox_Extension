@@ -2,7 +2,7 @@
  * Copyright (c) 2008-2012, JonDos GmbH
  * Author: Johannes Renner, Georg Koppen
  *
- * This component implements a proxy manager interface offering methods to set 
+ * This component implements a proxy manager interface offering methods to set
  * proxies for certain protocols, as well as enabling and disabling a proxy.
  *****************************************************************************/
 
@@ -35,16 +35,16 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 // Class constructor
 var ProxyManager = function() {
-  // Init the prefsHandler  
+  // Init the prefsHandler
   this.ph = CC['@jondos.de/preferences-handler;1'].
-                          getService().wrappedJSObject; 
+                          getService().wrappedJSObject;
   // Set wrappedJSObject
   this.wrappedJSObject = this;
 };
 
 // Class definition
 ProxyManager.prototype = {
-    
+
   // The prefs handler object
   ph: null,
 
@@ -58,8 +58,8 @@ ProxyManager.prototype = {
       log("setProxyHTTP(): " + e);
     }
   },
-  
-  // Set the SSL proxy host and port 
+
+  // Set the SSL proxy host and port
   setProxySSL: function(host, port) {
     log("SSL proxy --> " + host + ":" + port);
     try {
@@ -69,8 +69,8 @@ ProxyManager.prototype = {
       log("setProxySSL(): " + e);
     }
   },
-  
-  // Set the FTP proxy host and port 
+
+  // Set the FTP proxy host and port
   setProxyFTP: function(host, port) {
     log("FTP proxy --> " + host + ":" + port);
     try {
@@ -78,10 +78,11 @@ ProxyManager.prototype = {
       this.ph.setIntPref("network.proxy.ftp_port", port);
     } catch (e) {
       log("setProxyFTP(): " + e);
-    } 
+    }
   },
-  
-  // Set the Gopher proxy host and port 
+
+  // Set the Gopher proxy host and port
+  // TODO: Obsolete since FF4
   setProxyGopher: function(host, port) {
     log("Gopher proxy --> " + host + ":" + port);
     try {
@@ -89,7 +90,7 @@ ProxyManager.prototype = {
       this.ph.setIntPref("network.proxy.gopher_port", port);
     } catch (e) {
       log("setProxyGopher(): " + e);
-    } 
+    }
   },
 
   // Set all proxies but SOCKS
@@ -99,7 +100,7 @@ ProxyManager.prototype = {
     this.setProxyFTP(host, port);
     this.setProxyGopher(host, port);
   },
-  
+
   // Handle SOCKS independently from the other protocols
   setProxySOCKS: function(host, port, version) {
     log("SOCKS proxy (version " + version + ") --> " + host + ":" + port);
@@ -109,9 +110,9 @@ ProxyManager.prototype = {
       this.ph.setIntPref("network.proxy.socks_version", version);
     } catch (e) {
       log("setProxySOCKS(): " + e);
-    } 
+    }
   },
-   
+
   // Set 'network.proxy.socks_remote_dns'
   setSocksRemoteDNS: function(value) {
     // Set 'network.proxy.socks_remote_dns' --> value
@@ -157,7 +158,7 @@ ProxyManager.prototype = {
       log("getProxyStatus(): " + e);
     }
   },
-    
+
   // Set 'network.proxy.type' --> 1
   enableProxy: function() {
     log("Enable proxy");
@@ -167,7 +168,7 @@ ProxyManager.prototype = {
       log("enableProxy(): " + e);
     }
   },
-    
+
   // Reset ... to 0
   disableProxy: function() {
     log("Disable proxy");
@@ -182,7 +183,7 @@ ProxyManager.prototype = {
   classID:          Components.ID("{44b042a6-5e0b-4d62-b8ce-df7fc36eb8b6}"),
   contractID:       "@jondos.de/proxy-manager;1",
 
-  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports]) 
+  QueryInterface: XPCOMUtils.generateQI([CI.nsISupports])
 };
 
 // XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).

@@ -35,22 +35,22 @@ Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 var PrefsMapper = function() {
   // Init the prefs handler
   this.prefsHandler = CC['@jondos.de/preferences-handler;1'].getService().
-    wrappedJSObject; 
+    wrappedJSObject;
   // Init the JSObject
   this.wrappedJSObject = this;
 };
 
 // Class definition
 PrefsMapper.prototype = {
- 
+
   // Reference to the prefs handler object
   prefsHandler: null,
 
   // Arrays containing preferences mappings for each data type
-  stringPrefs: null,  
+  stringPrefs: null,
   //intPrefs: null,
   //boolPrefs: null,
- 
+
   // Set string pref mappings
   setStringPrefs: function(stringPrefsMap) {
     log("Set string preferences map");

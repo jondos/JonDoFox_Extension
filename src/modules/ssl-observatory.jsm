@@ -203,7 +203,7 @@ var sslObservatory = {
     req.setRequestHeader("Accept-Encoding", "");
     req.setRequestHeader("Accept-Charset", "");
 
-    let that = this; 
+    let that = this;
     // XXX: Not onreadystatechange due to performance reasons!
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
@@ -221,7 +221,7 @@ var sslObservatory = {
           if (fps[0] in that.already_submitted)
             delete that.already_submitted[fps[0]];
           try {
-            that.logger.warn("Cert submission failure " + req.status + 
+            that.logger.warn("Cert submission failure " + req.status +
               ": " + req.responseText);
           } catch(e) {
             that.logger.warn("Cert submission failure and exception: " + e);
@@ -234,5 +234,5 @@ var sslObservatory = {
     // elements.
     that.already_submitted[fps[0]] = true;
     req.send(params);
-  } 
+  }
 }
