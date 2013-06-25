@@ -38,7 +38,7 @@ var JDFManager = function() {
   this.wrappedJSObject = this;
   // That CU call has to be here, otherwise it would not work. See:
   // https://developer.mozilla.org/en/JavaScript/Code_modules/Using section
-  // "Custom modules and XPCOM components" 
+  // "Custom modules and XPCOM components"
   CU.import("resource://jondofox/log4moz.js", this);
   CU.import("resource://jondofox/jdfUtils.jsm", this);
   this.jdfUtils.init();
@@ -46,7 +46,7 @@ var JDFManager = function() {
   var root = this.Log4Moz.repository.rootLogger;
   log("Created a rootLogger!\n");
   if (m_debug) {
-    // We want to have output to standard out. 
+    // We want to have output to standard out.
     var dapp = new this.Log4Moz.DumpAppender(formatter);
     dapp.level = this.Log4Moz.Level["Debug"];
     root.addAppender(dapp);
@@ -61,7 +61,7 @@ var JDFManager = function() {
   this.logger.level = this.Log4Moz.Level["Debug"];
   //Components.utils.import("resource://jondofox/adblockModule.js", this);
   //Components.utils.import("resource://jondofox/adblockFilter.js", this);
-  //Components.utils.import("resource://jondofox/adblockMatcher.js", this);  
+  //Components.utils.import("resource://jondofox/adblockMatcher.js", this);
 };
 
 JDFManager.prototype = {
@@ -85,8 +85,8 @@ JDFManager.prototype = {
   // Set this to indicate that cleaning up is necessary
   clean: false,
 
-  // This is set to true if Certificate Patrol is found and our respective 
-  // checkbox not checked. It helps to optimize the incorporation of Certificate  // Patrol code. 
+  // This is set to true if Certificate Patrol is found and our respective
+  // checkbox not checked. It helps to optimize the incorporation of Certificate  // Patrol code.
   certPatrol: false,
 
   // Remove jondofox preferences branch on uninstall only
@@ -116,8 +116,8 @@ JDFManager.prototype = {
   newVersionDetected: false,
 
   // In FF4 the asynchronous AddOn-Manager leads to the problem that the found-
-  // extensions-dialog appears in the background of the browser window. Thus, 
-  // we avoid starting the dialog as early as in FF < 4 but save the found 
+  // extensions-dialog appears in the background of the browser window. Thus,
+  // we avoid starting the dialog as early as in FF < 4 but save the found
   // extensions' names in an array that is checked after the browser window is
   // loaded. If we have extensions that are incompatible we show them in one
   // window and restarting the browser to uninstall them finally after the user
@@ -186,7 +186,7 @@ JDFManager.prototype = {
     'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub'
   },
 
-  // Adding a uniform URLs concerning safebrowsing functionality to not 
+  // Adding a uniform URLs concerning safebrowsing functionality to not
   // leak information.
   safebrowseMap: {
     'browser.safebrowsing.provider.0.gethashURL':
@@ -347,7 +347,7 @@ JDFManager.prototype = {
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
       //this.adBlock.init();
-      //this.loadFilterList(); 
+      //this.loadFilterList();
     } catch (e) {
       log('init(): ' + e);
     }

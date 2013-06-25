@@ -103,6 +103,49 @@
             kleinere Features (etwas besserer Schutz vor Tracking mittels
             Authorization-Header in Firefox $<$ 12 sowie verbesserte
             Möglichkeiten, Inhalte am Proxy vorbei herunterzuladen).
+          \item JDFManager: Das ist das zentrale Stück Code, dass alle Teile im
+            Wesentlichen zusammen hält und für die Initialisierung der
+            notwendigen anderen Komponenten verantwortlich ist. Teile von dessen
+            Code werden zuallererst ausgeführt, nachdem Firefox gestartet wurde
+            (siehe: onUIStartup()). Darüber hinaus nimmt der JDFManager noch
+            folgende wichtige Funktionen wahr:
+            \begin{itemize}
+              \item Einstellungs-Observer: Es werden zentrale Einstellungen
+                beobachtet, um gegenenfalls eine Warnung anzeigen zu können,
+                wenn der Nutzer versucht, sich in den Fuß zu schießen (siehe:
+                nsPref:changed-Topic in observe()).
+              \item Add-On-Listener: Es werden die gängigen Ereignisse bzgl. des
+                Zustandes der JonDoFox-Erweiterung beobachtet, um z.B. extra
+                Code aufzurufen, falls die Erweiterung deinstalliert wird (dann
+                werden z.B. die JonDoFox-Einstellungen entfernt).
+              \item Extension-Kompat: Es wird überprüft, ob die notwendigen
+                Erweiterungen des Profils installiert und aktiv sind bzw. ob
+                inkompatible Erweiterungen vorhanden sind (siehe
+                checkExtensions() und checkExtensionsFF4()).
+              \item Plugins: Es werden alle Plugins (im JonDoFox-Profil bis auf
+                Flash) deaktiviert (enforcePluginPref()).
+              \item Zeitzonenfake: setTimezone() stellt sicher, dass die
+                Zeitzone, die im Browser sichtbar ist, auf UTC gesetzt wird.
+              \item User Agent: setUserAgent() ist die zentrale Methode, um
+                Anpassungen rund um den User Agent umzusetzen. Dabei wird nicht
+                nur der User Agent an den jeweiligen Anonymitätsmodus angepasst,
+                sondern es wird auch versucht andere relevante HTTP-Header
+                korrekt zu setzen.
+              \item MIME-Types: Zum Schutz vor Deanonymisierung durch externe
+                Anwendungen gibt es die Methoden firstMimeTypeCheck() und
+                getUnknownContentDialog(), correctExternalApplications() sowie
+                showUnknownContentTypeWarnings(). Dabei wird zum einen sicher
+                gestellt, dass externe Anwendungen nicht automatisch zum Laden
+                von Dateien genutzt werden. Zum anderen wird in dem
+                entpsrechenden Firefox-Dialog ein roter Hinweis eingebunden,
+                dass exterene Anwenwendungen die Anonymität kompromittieren
+                können.
+              \item Proxyeinstellungen: setProxy() ist dafür zuständig die
+                entsprechenden Einstellungen rund um den Proxy-Modus an den
+                Proxy-Manager weiterzugeben, der dann die eigentlichen
+                Änderungen vornimmt.
+            \end{itemize}
         \end{itemize}
       \end{itemize}
+  \subsection{Details - Stufe 2 (Zusammenspiel)}
 \end{document}
