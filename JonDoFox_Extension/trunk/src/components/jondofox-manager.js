@@ -1170,6 +1170,8 @@ JDFManager.prototype = {
             'extensions.jondofox.profile_version') !== "2.6.13" &&
           this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.6.14" &&
+          this.prefsHandler.getStringPref(
+            'extensions.jondofox.profile_version') !== "2.6.15" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
