@@ -52,7 +52,7 @@
               oncommand="noProxyListAdd(gContextMenu.linkURL);"
               insertbefore="context-savelink"
               hidden="true" />
-    <menuitem id="noproxy-remove
+    <menuitem id="noproxy-remove"
               label="&jondofox.contextmenu.noproxylist.remove;"
               oncommand="noProxyListRemove(gContextMenu.linkURL);"
               insertbefore="context-savelink"
