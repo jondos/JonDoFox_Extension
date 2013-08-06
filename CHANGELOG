@@ -1,3 +1,7 @@
+Changes in version 0.2.31 - 2013-08-05
+  * updated ssl-observatory-white.js and  (HTTPS-Everywhere 3.3.1)
+  * code cleanup
+
 Changes in version 0.2.30 - 2013-06-26
   * code clean-up
 
