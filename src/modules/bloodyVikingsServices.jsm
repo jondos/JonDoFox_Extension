@@ -244,41 +244,14 @@ function initServices() {
   );
 
   new BloodyVikings.Service (
-    "mailinator.com",
-    "http://www.mailinator.com/maildir.jsp?email=${alias}",
-    "http://www.mailinator.com/",
-    null,
-    'en',
-    function(gBrowser, callbackSuccess, callbackError) {
-      let inboxAlias = BloodyVikings.Utils.createRandomString(24);
-      let mailboxTab = this.openMailboxTab(gBrowser, {alias: inboxAlias});
-      let that = this;
-      mailboxTab.addEventListener("DOMContentLoaded",
-        function() {
-          mailboxTab.removeEventListener("DOMContentLoaded", 
-	    arguments.callee, true);
-          let alias;
-          try {
-            let aliasNode;
-            [aliasNode,] = mailboxTab.contentDocument.
-	      getElementsByTagName("font");
-            alias = aliasNode.textContent.replace(/\s/g, "");
-
-            if (alias.substr(0, 4) != "M8R-") {
-              throw new BloodyVikings.Utils.
-	        IncompatibilityException("Couldn't locate alternative address");
-            }
-          } catch (e) {
-            // if the alternate address can't be located, fall back to the 
-	    // 'normal' address
-            alias = inboxAlias;
-          }
-
-          callbackSuccess(alias + "@" + that._name, 
-	    that.getInboxUrl({alias: inboxAlias}));
-        }, true);
-    }
+        "dispostable.com",
+        "http://www.dispostable.com/inbox/${alias}/",
+        "http://www.dispostable.com/",
+        null,
+        'en',
+        null
   );
+
 
   new BloodyVikings.Service (
     "mailforspam.com",
@@ -298,6 +271,15 @@ function initServices() {
     null,
     'en',
     null
+  );
+  
+  new BloodyVikings.Service (
+        "trash-mail.com",
+        "http://trash-mail.com/index.php?mail=${alias}",
+        "http://trash-mail.com/",
+        null,
+        'de',
+        null
   );
 }
 
