@@ -179,8 +179,29 @@ function setProxy(state) {
       // The state has changed --> set the user agent and clear cookies
       jdfManager.setUserAgent(false, state);
       jdfManager.clearAllCookies();
+	  jdfManager.closeAllTabsAndWindows();
       // Setting already_submitted object back to avoid tracking risks
       reqObs.sslObservatory.already_submitted = {};
+	  // clear HTTP-Auth
+	  var authMgr = Cc["@mozilla.org/network/http-auth-manager;1"].getService(Ci.nsIHttpAuthManager);
+      if(authMgr) {
+		  authMgr.clearAll();
+	  }
+	  // clear crypto tokens
+	  var secMgr = Cc["@mozilla.org/security/crypto;1"].getService(Ci.nsIDOMCrypto);
+      if(secMgr) {
+		secMgr.logout();
+	  }
+	  // clear Image Cache
+	  var imgCache = Cc["@mozilla.org/image/cache;1"].getService(Ci.imgICache);
+      if (imgCache) {
+		imgCache.clearCache(false);
+	  }
+	  // clear Cache
+	  var cacheMgr = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
+	  if(cacheMgr) {
+          cacheMgr.evictEntries();
+      }
      }
   } catch (e) {
     log("setProxy(): " + e);
