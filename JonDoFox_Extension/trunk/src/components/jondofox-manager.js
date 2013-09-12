@@ -1939,6 +1939,40 @@ JDFManager.prototype = {
       log("clearAllCookies(): " + e);
     }
   },
+  
+   // Close all browser windows and tabs
+  closeAllTabsAndWindows: function() {
+	  
+	  var wm = CC["@mozilla.org/appshell/window-mediator;1"].getService(CI.nsIWindowMediator);
+	  var aktivewindow = wm.getMostRecentWindow(null);
+      var enumerator = wm.getEnumerator("navigator:browser");
+      var closeWins = new Array();
+	  
+      while(enumerator.hasMoreElements()) {
+        var win = enumerator.getNext();
+        var browser = win.getBrowser();
+        if(!browser) {
+          continue;
+        }
+        var tabs = browser.browsers.length;
+        var remove = new Array();
+        for(var i = 0; i < tabs; i++) {
+            remove.push(browser.browsers[i]);
+        }
+        if(browser.browsers.length == remove.length) {
+            browser.addTab("about:blank");
+            if(win != aktivewindow) {
+                closeWins.push(win);
+            }
+        }
+        for(var i = 0; i < remove.length; i++) {
+            remove[i].contentWindow.close();
+        }
+      }
+      for(var i = 0; i < closeWins.length; ++i) {
+            closeWins[i].close();
+	  }			
+  },
 
   // Implement nsIObserver ////////////////////////////////////////////////////
 
