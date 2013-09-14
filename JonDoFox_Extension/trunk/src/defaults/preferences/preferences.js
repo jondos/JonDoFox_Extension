@@ -148,7 +148,6 @@ pref("extensions.jondofox.browser.zoom.siteSpecific", false);
 // UA locale spoofing
 pref("extensions.jondofox.useragent_locale", "en-US");
 pref("extensions.jondofox.source_editor_external", false);
-pref("extensions.jondofox.dom_storage_enabled", false);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
 pref("extensions.jondofox.cookieBehavior", 2);
