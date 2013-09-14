@@ -1934,6 +1934,12 @@ JDFManager.prototype = {
     } catch (e) {
       log("clearAllCookies(): " + e);
     }
+    try {
+      CC["@mozilla.org/dom/storagemanager;1"].getService(CI.nsIDOMStorageManager).
+                                            clearOfflineApps();
+	} catch (e) {
+      log("clearOfflineApps(): " + e);
+    }
   },
   
    // Close all browser windows and tabs
