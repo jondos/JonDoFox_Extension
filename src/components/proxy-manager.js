@@ -81,24 +81,11 @@ ProxyManager.prototype = {
     }
   },
 
-  // Set the Gopher proxy host and port
-  // TODO: Obsolete since FF4
-  setProxyGopher: function(host, port) {
-    log("Gopher proxy --> " + host + ":" + port);
-    try {
-      this.ph.setStringPref("network.proxy.gopher", host);
-      this.ph.setIntPref("network.proxy.gopher_port", port);
-    } catch (e) {
-      log("setProxyGopher(): " + e);
-    }
-  },
-
   // Set all proxies but SOCKS
   setProxyAll: function(host, port) {
     this.setProxyHTTP(host, port);
     this.setProxySSL(host, port);
     this.setProxyFTP(host, port);
-    this.setProxyGopher(host, port);
   },
 
   // Handle SOCKS independently from the other protocols

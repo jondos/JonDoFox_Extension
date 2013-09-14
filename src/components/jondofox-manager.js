@@ -160,7 +160,7 @@ JDFManager.prototype = {
   },
 
   // The user agent maps...
-  // If JonDo is set as proxy take these UA-settings
+  // If JonDo is set as proxy take these UA-settings and DNT
   jondoUAMap: {
     'general.appname.override':'extensions.jondofox.jondo.appname_override',
     'general.appversion.override':'extensions.jondofox.jondo.appversion_override',
@@ -173,7 +173,7 @@ JDFManager.prototype = {
     'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub'
   },
 
-  // If Tor is set as proxy take these UA-settings
+  // If Tor is set as proxy take these UA-settings and DNT
   torUAMap: {
     'general.appname.override':'extensions.jondofox.tor.appname_override',
     'general.appversion.override':'extensions.jondofox.tor.appversion_override',
@@ -233,7 +233,6 @@ JDFManager.prototype = {
     'browser.zoom.siteSpecific':'extensions.jondofox.browser.zoom.siteSpecific',
     'plugin.expose_full_path':'extensions.jondofox.plugin.expose_full_path',
     'browser.send_pings':'extensions.jondofox.browser_send_pings',
-    'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
@@ -603,24 +602,24 @@ JDFManager.prototype = {
         // Disabling WebGL for security reasons
         this.boolPrefsMap['webgl.disabled'] =
                 'extensions.jondofox.webgl.disabled';
-	this.boolPrefsMap['privacy.donottrackheader.enabled'] =
-	  'extensions.jondofox.donottrackheader.enabled';
+        this.boolPrefsMap['privacy.donottrackheader.enabled'] =
+                'extensions.jondofox.donottrackheader.enabled';
         // Restricting the sessionhistory max_entries
         this.intPrefsMap['browser.sessionhistory.max_entries'] =
            'extensions.jondofox.sessionhistory.max_entries';
-	// For clearity of code we implement a different method to check the
-	// installed extension in Firefox4
+        // For clearity of code we implement a different method to check the
+        // installed extension in Firefox4
         this.checkExtensionsFF4();
-	// We do not want to ping Mozilla once per day for different updates
-	// of Add-On Metadata and other stuff (duration of last startup...).
+        // We do not want to ping Mozilla once per day for different updates
+        // of Add-On Metadata and other stuff (duration of last startup...).
         this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
         this.prefsHandler.
 	     getBoolPref('extensions.jondofox.getAddons.cache.enabled'));
       } else {
         // In order to avoid unnecessary error messages we just add it to the
-	// prefs map if we have a FF3 as it does not exist anymore in FF4.
-	this.intPrefsMap['browser.history_expire_days'] =
-		'extensions.jondofox.history_expire_days';
+        // prefs map if we have a FF3 as it does not exist anymore in FF4.
+        this.intPrefsMap['browser.history_expire_days'] =
+              'extensions.jondofox.history_expire_days';
         // FF3-check for incompatible extensions and whether the necessary ones
         // are installed and enabled.
         this.checkExtensions();
@@ -637,7 +636,7 @@ JDFManager.prototype = {
       // fine-grained warnings if the prefs are changed by the user.
       log("Adding externalAppWarnings to boolean preferences map ..");
       for (p in this.externalAppWarnings) {
-	this.boolPrefsMap[p] = this.externalAppWarnings[p];
+         this.boolPrefsMap[p] = this.externalAppWarnings[p];
       }
       this.prefsMapper.setIntPrefs(this.intPrefsMap);
       this.prefsMapper.map();
@@ -658,16 +657,15 @@ JDFManager.prototype = {
       this.observeMimeTypes();
       // We need to save the mode of all plugins in order to get them properly
       // set after switching to No-Proxy mode.
-      if (!this.prefsHandler.
-        getStringPref('extensions.jondofox.saved_plugin_settings')) {
-        this.savePluginSettings();
+      if (!this.prefsHandler.getStringPref('extensions.jondofox.saved_plugin_settings')) {
+         this.savePluginSettings();
       }
       log("Setting initial proxy state ..");
       // If somebody wants to have always JonDo as a proxy she gets it and the 
       // corresponding User Agent setting. Otherwise the last used proxy will be
       // set.
       if (this.prefsHandler.getBoolPref('extensions.jondofox.alwaysUseJonDo')) {
-	this.setProxy('jondo');
+          this.setProxy('jondo');
       } else {
         this.setProxy(this.getState());
       }
@@ -1305,7 +1303,8 @@ JDFManager.prototype = {
         this.prefsHandler.setStringPref("network.http.accept.default",
           this.prefsHandler.
           getStringPref("extensions.jondofox.accept_default"));
-	break;
+        
+        break;
       case (this.STATE_TOR):
         for (p in this.torUAMap) {
           this.prefsHandler.setStringPref(p,
@@ -1317,9 +1316,10 @@ JDFManager.prototype = {
         this.prefsHandler.setStringPref("network.http.accept.default",
           this.prefsHandler.
           getStringPref("extensions.jondofox.tor.accept_default"));
+        
         break;
       case (this.STATE_CUSTOM):
-	userAgent = this.prefsHandler.getStringPref(
+        userAgent = this.prefsHandler.getStringPref(
 			       'extensions.jondofox.custom.user_agent');
         if (userAgent === 'jondo') {
           for (p in this.jondoUAMap) {
@@ -1337,31 +1337,34 @@ JDFManager.prototype = {
           this.prefsHandler.setStringPref("network.http.accept.default",
             this.prefsHandler.
             getStringPref("extensions.jondofox.accept_default"));
+          
         } else if (userAgent === 'tor') {
           for (p in this.torUAMap) {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
-	  }
+          }
           if (acceptLang !== "en-us, en") {
             this.settingLocationNeutrality("tor.");
           }
           this.prefsHandler.setStringPref("network.http.accept.default",
             this.prefsHandler.
             getStringPref("extensions.jondofox.tor.accept_default"));
+          
         } else {
-	  // We use the opportunity to set other user prefs back to their
-	  // default values as well.
-	  this.clearPrefs();
+          // We use the opportunity to set other user prefs back to their
+          // default values as well.
+          this.clearPrefs();
           for (p in this.safebrowseMap) {
-            this.prefsHandler.deletePreference(p);
+              this.prefsHandler.deletePreference(p);
           }
         }
         break;
       case (this.STATE_NONE):
-	this.clearPrefs();
+        this.clearPrefs();
         for (p in this.safebrowseMap) {
             this.prefsHandler.deletePreference(p);
           }
+        
 	break;
       default:
 	log("We should not be here!");
@@ -1864,17 +1867,16 @@ JDFManager.prototype = {
             break;
 
           case this.STATE_TOR:
-	    var prefix = "extensions.jondofox.tor."
+            var prefix = "extensions.jondofox.tor."
             // Ensure that share_proxy_settings is unset
             this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings", false);
             this.proxyManager.setProxyAll('', 0);
             // Set SOCKS or if the user wishes a HTTP/S-proxy additionally
-	    this.proxyManager.setProxyHTTP(
-                 this.prefsHandler.getStringPref(prefix + "http_host"),
-		 this.prefsHandler.getIntPref(prefix + "http_port"));
-	    this.proxyManager.setProxySSL(
-		 this.prefsHandler.getStringPref(prefix + "ssl_host"),
-		 this.prefsHandler.getIntPref(prefix + "ssl_port"));
+            this.proxyManager.setProxyHTTP(this.prefsHandler.getStringPref(prefix + "http_host"),
+                      this.prefsHandler.getIntPref(prefix + "http_port"));
+            this.proxyManager.setProxySSL(
+            this.prefsHandler.getStringPref(prefix + "ssl_host"),
+            this.prefsHandler.getIntPref(prefix + "ssl_port"));
             this.proxyManager.setProxySOCKS("127.0.0.1", 9050, 5);
             this.proxyManager.setSocksRemoteDNS(true);
             // Set default exceptions
@@ -1896,12 +1898,6 @@ JDFManager.prototype = {
             this.proxyManager.setProxyFTP(
                 this.prefsHandler.getStringPref(prefix + "ftp_host"),
                 this.prefsHandler.getIntPref(prefix + "ftp_port"));
-	    // No native Gopher protocol anymore in FF4.
-	    if (!this.ff4) {
-              this.proxyManager.setProxyGopher(
-                this.prefsHandler.getStringPref(prefix + "gopher_host"),
-                this.prefsHandler.getIntPref(prefix + "gopher_port"));
-	    }
             this.proxyManager.setProxySOCKS(
                 this.prefsHandler.getStringPref(prefix + "socks_host"),
                 this.prefsHandler.getIntPref(prefix + "socks_port"),

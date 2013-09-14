@@ -172,36 +172,38 @@ function setProxy(state) {
       // Maybe somone configured her proxy not to use a fake UA anymore. We
       // should therefore check the User Agent here as well.
       if (state === jdfManager.STATE_CUSTOM) {
-	jdfManager.setUserAgent(false, state)
+          jdfManager.setUserAgent(false, state)
       }
       refresh();
     } else {
       // The state has changed --> set the user agent and clear cookies
+      jdfManager.closeAllTabsAndWindows();
+	  jdfManager.clearAllCookies();
       jdfManager.setUserAgent(false, state);
-      jdfManager.clearAllCookies();
-	  jdfManager.closeAllTabsAndWindows();
       // Setting already_submitted object back to avoid tracking risks
       reqObs.sslObservatory.already_submitted = {};
-	  // clear HTTP-Auth
-	  var authMgr = Cc["@mozilla.org/network/http-auth-manager;1"].getService(Ci.nsIHttpAuthManager);
+
+      // clear HTTP-Auth
+      var authMgr = Cc["@mozilla.org/network/http-auth-manager;1"].getService(Ci.nsIHttpAuthManager);
       if(authMgr) {
-		  authMgr.clearAll();
-	  }
-	  // clear crypto tokens
-	  var secMgr = Cc["@mozilla.org/security/crypto;1"].getService(Ci.nsIDOMCrypto);
-      if(secMgr) {
-		secMgr.logout();
-	  }
-	  // clear Image Cache
-	  var imgCache = Cc["@mozilla.org/image/cache;1"].getService(Ci.imgICache);
-      if (imgCache) {
-		imgCache.clearCache(false);
-	  }
-	  // clear Cache
-	  var cacheMgr = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
-	  if(cacheMgr) {
-          cacheMgr.evictEntries();
+         authMgr.clearAll();
       }
+      // clear crypto tokens
+      var secMgr = Cc["@mozilla.org/security/crypto;1"].getService(Ci.nsIDOMCrypto);
+      if(secMgr) {
+         secMgr.logout();
+      }
+      // clear Image Cache
+      var imgCache = Cc["@mozilla.org/image/cache;1"].getService(Ci.imgICache);
+      if (imgCache) {
+         imgCache.clearCache(false);
+      }
+      // clear Cache
+      var cacheMgr = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
+      if(cacheMgr) {
+          cacheMgr.evictEntries(1);
+      }
+      
      }
   } catch (e) {
     log("setProxy(): " + e);
@@ -311,7 +313,7 @@ function isProxyDisabled() {
         }
       }
       if (disableJonDo !== null && !disableJonDo) {
-        setProxy('jondo');
+        setProxy(jdfManager.STATE_JONDO);
       }
     }
   }
