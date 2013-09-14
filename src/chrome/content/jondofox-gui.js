@@ -182,7 +182,7 @@ function setProxy(state) {
       jdfManager.setUserAgent(false, state);
       // Setting already_submitted object back to avoid tracking risks
       reqObs.sslObservatory.already_submitted = {};
-
+	  
       // clear HTTP-Auth
       var authMgr = Cc["@mozilla.org/network/http-auth-manager;1"].getService(Ci.nsIHttpAuthManager);
       if(authMgr) {
