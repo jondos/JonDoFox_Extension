@@ -1,5 +1,11 @@
+Changes in version 0.3
+ * secured proxy switch (close all tabs, delete crypto tokens, auth tokens, cache and image cache)
+ * removed disposable email provider Mailinator.com
+ * added disposable email provider dispostable.com and trash-mail.com
+ * updated ssl-observatory-white.jsm & ssl-observatory-cas.jsm (HTTPS-Everywhere 3.4.1) 
+
 Changes in version 0.2.31 - 2013-08-05
-  * updated ssl-observatory-white.js and  (HTTPS-Everywhere 3.3.1)
+  * updated ssl-observatory-white.jsm & ssl-observatory-cas.jsm (HTTPS-Everywhere 3.3.1)
   * code cleanup
 
 Changes in version 0.2.30 - 2013-06-26

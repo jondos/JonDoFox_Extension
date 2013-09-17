@@ -1,6 +1,8 @@
 // These are SHA256 fingerprints for the most common chains observed by the
 // Decentralized SSL Observatory.  These should not be resubmitted.
 
+// according to X509ChainWhitelist.js from HTTPS Everywhere  3.4.1
+
 const EXPORTED_SYMBOLS = ["X509ChainWhitelist"];
 
 let X509ChainWhitelist = {
