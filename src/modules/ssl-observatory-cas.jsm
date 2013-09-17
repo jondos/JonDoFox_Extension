@@ -1,6 +1,8 @@
 // These are concatenated md5 and sha1 fingerprints for the Firefox and
 // Microsoft root CAs as of Aug 2010
 
+// according to Root-CAs.js.js from HTTPS Everywhere  3.4.1
+
 const EXPORTED_SYMBOLS = ["root_ca_hashes"];
 
 let root_ca_hashes = {
