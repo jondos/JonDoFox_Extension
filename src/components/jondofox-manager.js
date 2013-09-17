@@ -233,6 +233,7 @@ JDFManager.prototype = {
     'browser.zoom.siteSpecific':'extensions.jondofox.browser.zoom.siteSpecific',
     'plugin.expose_full_path':'extensions.jondofox.plugin.expose_full_path',
     'browser.send_pings':'extensions.jondofox.browser_send_pings',
+	'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
