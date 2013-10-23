@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Use this script to generate a distributable .xpi or an alhpa version 
 # including the chrome-folder as a .jar-archive

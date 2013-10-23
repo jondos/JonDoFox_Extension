@@ -55,11 +55,17 @@ pref("extensions.jondofox.custom.backup.socks_host", "");
 pref("extensions.jondofox.custom.backup.socks_port", 0);
 pref("extensions.jondofox.custom.backup.socks_version", 5);
 
+// JonDo proxy settings
+pref("extensions.jondofox.jondo.host", "127.0.0.1");
+pref("extensions.jondofox.jondo.port", 4001);
+
 // Tor proxy settings
 pref("extensions.jondofox.tor.http_host", "");
 pref("extensions.jondofox.tor.http_port", 0);
 pref("extensions.jondofox.tor.ssl_host", "");
 pref("extensions.jondofox.tor.ssl_port", 0);
+pref("extensions.jondofox.tor.socks_host", "127.0.0.1");
+pref("extensions.jondofox.tor.socks_port", 9050);
 
 // Useragent
 // JonDo settings
