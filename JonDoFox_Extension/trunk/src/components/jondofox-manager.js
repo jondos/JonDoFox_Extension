@@ -1140,40 +1140,6 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.0" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.1" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.2" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.3" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.4" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.5" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.6" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.7" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.8" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.9" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.10" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.11" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.12" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.13" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.14" &&
-          this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.15" &&
-	  this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.6.16" &&
-	  this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.7.0" &&
 	  this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.8.0" &&
