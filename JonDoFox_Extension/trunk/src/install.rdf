@@ -23,7 +23,7 @@
         <em:locale>en-US</em:locale>
         <em:name>JonDoFox</em:name>
         <em:description>Private and Secure Web Surfing</em:description>
-        <em:homepageURL>http://anonymous-proxy-servers.net/en/jondofox</em:homepageURL>
+        <em:homepageURL>https://anonymous-proxy-servers.net/en/jondofox</em:homepageURL>
       </Description>
     </em:localized>
     <em:localized>
@@ -31,7 +31,7 @@
         <em:locale>de-DE</em:locale>
         <em:name>JonDoFox</em:name>
         <em:description>Datenschutzfreundliches Websurfen</em:description>
-        <em:homepageURL>http://anonymous-proxy-servers.net/de/jondofox</em:homepageURL>
+        <em:homepageURL>https://www.anonym-surfen.de/jondofox</em:homepageURL>
       </Description>
     </em:localized>
 
