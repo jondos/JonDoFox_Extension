@@ -298,7 +298,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.dialogtab.options.warnings.prefs "Show warning if important preferences changed">
 <!ENTITY jondofox.dialogtab.options.warnings.proxy "Show warning if there is no proxy set">
 <!ENTITY jondofox.dialogtab.options.jondofox "JonDoFox Settings">
-<!ENTITY jondofox.dialogtab.options.menu "Show advanced menu">
+<!ENTITY jondofox.dialogtab.options.menu "Show proxy switch menu">
 <!ENTITY jondofox.dialogtab.options.update "Download JonDoBrowser updates over JonDonym">
 <!ENTITY jondofox.dialogtab.options.noproxy "Global proxy exceptions">
 <!ENTITY jondofox.dialogtab.options.example "Example">
