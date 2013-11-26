@@ -1268,7 +1268,7 @@ JDFManager.prototype = {
         //course, this does not mean that we really had a Tor UA before, maybe
         //the user changed the pref manually (and got a warning). But we can
         //safely ignore this case. 
-        if (acceptLang !== "en-us") {
+        if (acceptLang !== "en-US,en") {
           this.settingLocationNeutrality("");
         }
         this.prefsHandler.setStringPref("network.http.accept.default",
@@ -1689,8 +1689,8 @@ JDFManager.prototype = {
         var handledMimeType = handledMimeTypes.getNext().
             QueryInterface(CI.nsIHandlerInfo);
         var mimeType = handledMimeType.type;
-        if (!handledMimeType.alwaysAskBeforeHandling &&
-            mimeType !== "mailto" && handledMimeType.preferredAction > 1) {
+        if (!handledMimeType.alwaysAskBeforeHandling && (mimeType !== "pdf" ||
+            mimeType !== "mailto") && handledMimeType.preferredAction > 1) {
           log("MIME type is: " + mimeType + "\n");
 	  if (!firstProgramStart) {
             this.jdfUtils.showAlert(this.jdfUtils.
