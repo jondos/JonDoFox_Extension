@@ -1,3 +1,13 @@
+Changes in version 0.5
+ * using return value of SSL observatory to generate a warning in case of issues
+ * change settings dialog for aditional checks of SSL certificates
+ * block HTTP-Auth tracking silent
+
+Changes in version 0.4     
+ * change the user agent fake for JonDo to Firefox 24 (Linux, i686)
+ * proxy settings are configurable in about:config (for advanced user)
+ * set SOCKS5 proxy for JonDo too. 
+
 Changes in version 0.3
  * secured proxy switch (close all tabs, delete crypto tokens, auth tokens, cache and image cache)
  * removed disposable email provider Mailinator.com
