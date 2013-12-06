@@ -280,16 +280,15 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.dialogtab.options.cache "Cache">
 <!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache and HTTP Authentication protection">
 <!ENTITY jondofox.dialogtab.options.plugins.label "Plugins">
-<!ENTITY jondofox.dialogtab.options.SSL "SSL Settings">
-<!ENTITY jondofox.dialogtab.options.certpatrol "Activate Certificate Patrol">
-<!ENTITY jondofox.dialogtab.options.observatory "Send SSL certificates to the SSL Observatory">
-<!ENTITY jondofox.dialogtab.options.observatory.proxy "using">
-<!ENTITY jondofox.dialogtab.options.observatory.jondo "using JonDo">
-<!ENTITY jondofox.dialogtab.options.observatory.tor "using Tor">
-<!ENTITY jondofox.dialogtab.options.observatory.always "always">
-<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "only via proxy">
-<!ENTITY jondofox.dialogtab.options.observatory.never "never">
-<!ENTITY jondofox.dialogtab.options.observatory.help "The Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages eventually and thus surfing the Internet altogether. If you are transmitting SSL certificates to the EFF while surfing the web you help with this project. Read more about that">
+<!ENTITY jondofox.dialogtab.options.SSL "Additional SSL Certificate Validation">
+<!ENTITY jondofox.dialogtab.options.observatory.proxy "using SSL Observatory only with">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "using SSL Observatory only with JonDo">
+<!ENTITY jondofox.dialogtab.options.observatory.tor "using SSL Observatory only with Tor">
+<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "using SSL Observatory with all proxies">
+<!ENTITY jondofox.dialogtab.options.observatory.always "using SSL Observatory always">
+<!ENTITY jondofox.dialogtab.options.observatory.certpatrol "using Certificate Patrol (local database)">
+<!ENTITY jondofox.dialogtab.options.observatory.never "no additional certicicate validation">
+<!ENTITY jondofox.dialogtab.options.observatory.help "The Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages eventually and thus surfing the Internet altogether. If you are transmitting SSL certificates to the EFF while surfing the web you help and you will get a warning in case of issues.">
 <!ENTITY jondofox.dialogtab.options.adBlocking "AdBlocker-Settings">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Activate the AdBlocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Show filter">

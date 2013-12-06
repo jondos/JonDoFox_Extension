@@ -63,9 +63,7 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_set_plugins').checked =
         prefsHandler.
 	getBoolPref('extensions.jondofox.plugin-protection_enabled');
-    // Certificate Patrol setting
-    document.getElementById('checkbox_set_certpatrol').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
+
     // SSL observatory setting
     var obProxy = document.getElementById('observatoryProxy');
     var customProxy = obProxy.getItemAtIndex(2);
@@ -121,10 +119,14 @@ function writePrefsGeneral() {
     prefsHandler.
 	setBoolPref('extensions.jondofox.plugin-protection_enabled',
       document.getElementById('checkbox_set_plugins').checked);
-    prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
-        document.getElementById('checkbox_set_certpatrol').checked);
+    // get man-in.the-middle protection
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
         document.getElementById('observatoryProxy').selectedIndex);
+    if (prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 6) {
+        prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', true);
+    } else {
+        prefsHandler.setIntPref('extensions.jondofox.certpatrol_enabled', false);
+    }
     //prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
 //	document.getElementById('checkbox_set_adblock').checked);
     // Now the settings concerning different warnings

@@ -207,7 +207,7 @@ var sslObservatory = {
     // XXX: Not onreadystatechange due to performance reasons!
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
-        // XXX: Handle errors properly?
+        // If return status is equal 200 all is ok
         if (req.status == 200) {
           that.logger.warn("Successful cert submission for domain " + domain);
           if (!that.prefsHandler.
@@ -215,9 +215,33 @@ var sslObservatory = {
             if (fps[0] in that.already_submitted)
               delete that.already_submitted[fps[0]];
           }
+
+        // If return status is equal 403 something goes wrong, display a warning
+        } else if (req.status == 403) {
+          that.logger.warn("The SSL Observatory has issued a warning about this certificate for " + domain);
+
+          let ww = Cc["@mozilla.org/appshell/window-mediator;1"].
+            getService(Ci.nsIWindowMediator);
+          let wind = ww.getMostRecentWindow("navigator:browser");
+          let notifyBox = wind.gBrowser.getNotificationBox();
+     
+          // One notification per host seems to be enough.
+          if (notifyBox && !notifyBox.getNotificationWithValue(domain)) {
+            let n = notifyBox.appendNotification(
+                "The SSL Observatory has issued a warning about this certificate for " + domain,
+                domain, null, notifyBox.PRIORITY_WARNING_HIGH,
+                []);
+            // Make sure it stays visible after many redirects. 
+            n.persistence = 100;
+          }
+
+          if (!that.prefsHandler.
+              getBoolPref("extensions.jondofox.observatory.cache_submitted")) {
+            if (fps[0] in that.already_submitted)
+              delete that.already_submitted[fps[0]];
+          }
         } else {
-          // TODO: Think about the warning code path we could implement here as
-          // well.
+          // Submission failure
           if (fps[0] in that.already_submitted)
             delete that.already_submitted[fps[0]];
           try {

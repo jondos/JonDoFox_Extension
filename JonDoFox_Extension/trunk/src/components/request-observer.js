@@ -406,14 +406,11 @@ RequestObserver.prototype = {
       var obsProxy = this.prefsHandler.
         getIntPref("extensions.jondofox.observatory.proxy");
       var proxyState = this.jdfManager.getState();
-      // We can safely assume that a user wants to send the certs via a custom
-      // proxy even if there are no "valid" proxy values entered as she has
-      // already been asked whether she really wants to use such a "proxy".
+  
       if ((obsProxy === 0 && proxyState === 'jondo') ||
           (obsProxy === 1 && proxyState === 'tor') ||
           (obsProxy === 2 && proxyState === 'custom') ||
-          (obsProxy === 3 && (proxyState === 'jondo' || proxyState === 'tor' ||
-           proxyState === 'custom')) ||
+          (obsProxy === 3 && (proxyState === 'jondo' || proxyState === 'tor' || proxyState === 'custom')) ||
           (obsProxy === 4)) {
         var certs = this.sslObservatory.getSSLCert(channel);
         if (certs) {

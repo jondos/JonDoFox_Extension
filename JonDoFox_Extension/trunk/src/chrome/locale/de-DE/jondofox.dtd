@@ -271,16 +271,16 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.cache "Cache-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
 <!ENTITY jondofox.dialogtab.options.plugins.label "Plugin-Einstellungen">
-<!ENTITY jondofox.dialogtab.options.SSL "SSL-Einstellungen">
-<!ENTITY jondofox.dialogtab.options.certpatrol "Aktiviere Certificate Patrol">
-<!ENTITY jondofox.dialogtab.options.observatory "Sende SSL-Zertifikate an das SSL Observatory">
-<!ENTITY jondofox.dialogtab.options.observatory.proxy "über">
-<!ENTITY jondofox.dialogtab.options.observatory.jondo "über JonDo">
-<!ENTITY jondofox.dialogtab.options.observatory.tor "über Tor">
-<!ENTITY jondofox.dialogtab.options.observatory.always "immer">
-<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "immer über Proxy">
-<!ENTITY jondofox.dialogtab.options.observatory.never "nie">
-<!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um letztendlich die Sicherheit beim Surfen auf HTTPS-Seiten und damit insgesamt im Web zu verbessern. Wenn Sie SSL-Zertifikate, auf die Sie beim Surfen treffen, an die EFF senden, unterstützen Sie dieses Projekt. Lesen Sie mehr dazu">
+<!ENTITY jondofox.dialogtab.options.SSL "Zus&auml;tzliche Validierung von SSL-Zertifikaten">
+<!ENTITY jondofox.dialogtab.options.observatory "SSL-Zert. validieren">
+<!ENTITY jondofox.dialogtab.options.observatory.proxy "verwende SSL Observatory nur mit">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "verwende SSL Observatory nur mit JonDo">
+<!ENTITY jondofox.dialogtab.options.observatory.tor "verwende SSL Observatory nur mit Tor">
+<!ENTITY jondofox.dialogtab.options.observatory.always "verwende SSL Observatory immer">
+<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "verwende SSL Observatory mit allen Proxys">
+<!ENTITY jondofox.dialogtab.options.observatory.never "keine zus&auml;tzliche Validierung">
+<!ENTITY jondofox.dialogtab.options.observatory.certpatrol "verwende Certificate Patrol (lokale Datenbank)">
+<!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um die Sicherheit beim Surfen auf HTTPS-Seiten zu verbessern. Wenn Sie SSL-Zertifikate an die EFF senden, erhalten Sie eine Warnung, wenn etwas mit dem Zertifikaten nicht stimmt.">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">
