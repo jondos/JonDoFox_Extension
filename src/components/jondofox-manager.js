@@ -692,6 +692,14 @@ JDFManager.prototype = {
       // prefsMapper.map() in this function and should be more flexible and
       // transparent.
       this.setUserAgent(true, this.getState());
+  
+      // fix Certificate Patrol settings
+      if (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 6) {
+         this.prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', true);
+      } else {
+         this.prefsHandler.setIntPref('extensions.jondofox.certpatrol_enabled', false);
+      }
+
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -1142,7 +1150,7 @@ JDFManager.prototype = {
       if (this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.8.0" &&
 	  this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.8.1" &&
+            'extensions.jondofox.profile_version') !== "2.9.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
@@ -1302,7 +1310,7 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
               this.prefsHandler.getStringPref(this.safebrowseMap[p]));
           }
-          if (acceptLang !== "en-us") {
+          if (acceptLang !== "en-US,en") {
             this.settingLocationNeutrality("");
           }
           this.prefsHandler.setStringPref("network.http.accept.default",

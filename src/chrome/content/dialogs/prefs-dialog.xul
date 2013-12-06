@@ -96,15 +96,10 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.SSL;:"/>
-		<box align="center">
-                  <!-- Checkbox to activate/deactivate Certifiacte Patrol  -->
-                  <checkbox id="checkbox_set_certpatrol" 
-                          label="&jondofox.dialogtab.options.certpatrol;"
-                          accesskey="C"/>
-                </box>
+		
                 <box align="center">
-                  <label value="&jondofox.dialogtab.options.observatory;"/>
-                  <menulist id="observatoryProxy" width="160px" crop="end">
+                  
+                  <menulist id="observatoryProxy" width="400px" crop="end">
                     <menupopup>
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.jondo;"/>
@@ -118,6 +113,9 @@
                         label="&jondofox.dialogtab.options.observatory.always;"/>
                       <menuitem
                         label="&jondofox.dialogtab.options.observatory.never;"/>
+                      <menuitem
+                        label="&jondofox.dialogtab.options.observatory.certpatrol;"/>
+                      
                     </menupopup>
                   </menulist>
                   <toolbarbutton class="jondofox-ref" popup="observatoryHelp"

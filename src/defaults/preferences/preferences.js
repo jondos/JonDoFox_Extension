@@ -213,7 +213,7 @@ pref("extensions.jondofox.pagethumbnails.disabled", true);
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 
 //Certificate Patrol
-pref("extensions.jondofox.certpatrol_enabled", true);
+pref("extensions.jondofox.certpatrol_enabled", false);
 pref("extensions.jondofox.certpatrol_showNewCert", false);
 pref("extensions.jondofox.certpatrol_showChangedCert", false);
 
@@ -238,4 +238,4 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.11.1");
+pref("extensions.jondofox.jdb.version", "0.12");
