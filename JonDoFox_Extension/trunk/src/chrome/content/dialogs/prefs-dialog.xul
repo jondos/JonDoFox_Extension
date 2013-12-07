@@ -56,7 +56,7 @@
             <!-- Header preferences -->
             <row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.header;:"/>
+                <caption label="&jondofox.dialogtab.options.header;"/>
 		<box>
                   <!-- Checkbox to toggle 'set referrer' -->
                   <checkbox id="checkbox_set_referrer" 
@@ -69,7 +69,7 @@
            <!-- SafeCache preference -->
             <row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.cache;:"/>
+                <caption label="&jondofox.dialogtab.options.cache;"/>
 		<box>
 		  <!-- Checkbox to activate/deactivate cache protection  -->
                   <checkbox id="checkbox_set_safecache" 
@@ -82,7 +82,7 @@
             <!-- Plugin preference -->
             <row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.plugins.label;:"/>
+                <caption label="&jondofox.dialogtab.options.plugins.label;"/>
 		<box>
 		  <!-- Checkbox to activate/deactivate plugin protection  -->
                   <checkbox id="checkbox_set_plugins" 
@@ -95,7 +95,7 @@
             <!-- SSL preferences -->
             <row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.SSL;:"/>
+                <caption label="&jondofox.dialogtab.options.SSL;"/>
 		
                 <box align="center">
                   
@@ -151,7 +151,7 @@
             <!-- Warning preferences -->
             <row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.warnings;:"/>
+                <caption label="&jondofox.dialogtab.options.warnings;"/>
                  <!-- Checkboxes to toggle the different types of warnings -->
                 <box>
                   <checkbox id="checkbox_update_warning"
@@ -174,7 +174,7 @@
             <!-- Global proxy exceptions -->
             <row align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.noproxy;:"/>
+                <caption label="&jondofox.dialogtab.options.noproxy;"/>
                 <!-- Proxy exceptions textbox -->
                 <textbox id="no_proxies_on" flex="1"/>
                 <!-- Static example row -->
@@ -185,7 +185,7 @@
             <!-- Checkbox for JonDoBrowser -->
             <row id="jondofox-menu-row" hidden="true" align="center">
               <groupbox>
-                <caption label="&jondofox.dialogtab.options.jondofox;:"/>
+                <caption label="&jondofox.dialogtab.options.jondofox;"/>
                 <box>
                   <checkbox id="checkbox_advanced_menu"
                     label="&jondofox.dialogtab.options.menu;"
