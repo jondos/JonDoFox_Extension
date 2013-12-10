@@ -137,23 +137,19 @@ behavior may again be found in JonDoFox's settings panel:">
 <!ENTITY jondofox.features.plugins.picurl "chrome://jondofox/skin/plugins_en.png">
 <!ENTITY jondofox.features.certpatrol.head "Detecting faked SSL-Certificates">
 <!ENTITY jondofox.features.certpatrol1 "In order to provide better protection 
-against fraudulent SSL-certificates, we enhanced the functionality of the
-Certificate Patrol extension and included it into JonDoFox (as can be seen in
-the JonDoFox settings panel):">
+against <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
+man-in-the-middle-attacks</a> with fraudulent SSL-certificates you may use the
+SSL observatory of EFF.org or you may use Certificate Patrol with a local database.">
 <!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_en.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_en.png">
-<!ENTITY jondofox.features.certpatrol2 "This enhanced functionality has two
-distinct advantages. First, it allows users to check the fingerprint of a
-certificate very easily. Second, a dialog appears to the user indicating whether
-something may be wrong with an updated certificate, thus supporting the user to
-avoid information leaks due to faked certificates and
-<a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
-man-in-the-middle-attacks</a>. If this feature is kept enabled, a database is
-created in the directory of your JonDoFox profile: CertPatrol.sqlite. The
+<!ENTITY jondofox.features.certpatrol2 "If Certificate Patrol was enabled, a database is
+used in the directory of your JonDoFox profile: CertPatrol.sqlite. The
 database stores all websites visited via HTTPS together with corresponding
 information about the SSL certificate of the web server. A web server does not
 have the means to get to the saved data.">
-<!ENTITY jondofox.features.ssl-observatory "We furthermore included a way to help the Electronic Frontier Foundation (EFF) to collect SSL certificates. That effort aims at making the web a safer place in the long run and may be supported very easily by JonDoFox users now.">
+<!ENTITY jondofox.features.ssl-observatory "The SSL observatory of Electronic Frontier Foundation (EFF.org)
+collects SSL certificates. If you send the fingerprints of the SSL certificates you got
+from webservers to the observatory you will get a warning, if somthing goes wrong with this certificates.">
 <!ENTITY jondofox.features.temp.email.head "Getting temporary E-Mail addresses">
 <!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity
 to conveniently obtain a temporary E-mail address. In order to do so,
