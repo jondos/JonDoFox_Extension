@@ -1,3 +1,6 @@
+Changes in version 0.5.1
+ * Update Tor User Agent to latest TorBrowser
+
 Changes in version 0.5
  * using return value of SSL observatory to generate a warning in case of issues
  * change settings dialog for aditional checks of SSL certificates

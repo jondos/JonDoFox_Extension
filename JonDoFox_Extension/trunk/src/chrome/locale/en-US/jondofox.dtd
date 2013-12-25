@@ -142,14 +142,15 @@ man-in-the-middle-attacks</a> with fraudulent SSL-certificates you may use the
 SSL observatory of EFF.org or you may use Certificate Patrol with a local database.">
 <!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_en.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_en.png">
-<!ENTITY jondofox.features.certpatrol2 "If Certificate Patrol was enabled, a database is
-used in the directory of your JonDoFox profile: CertPatrol.sqlite. The
-database stores all websites visited via HTTPS together with corresponding
-information about the SSL certificate of the web server. A web server does not
-have the means to get to the saved data.">
-<!ENTITY jondofox.features.ssl-observatory "The SSL observatory of Electronic Frontier Foundation (EFF.org)
-collects SSL certificates. If you send the fingerprints of the SSL certificates you got
-from webservers to the observatory you will get a warning, if somthing goes wrong with this certificates.">
+<!ENTITY jondofox.features.certpatrol2 "Alternatively you may use Certificate Patrol. In this case a local database
+ is used to store all websites visited via HTTPS together with some information about the SSL certificate. 
+You will get an information, if the certificate changes unexpected and you may accept the new certificate or reject it. A web server has no
+means to get that saved data.">
+<!ENTITY jondofox.features.ssl-observatory "You may use the SSL observatory of of Electronic 
+Frontier Foundation (EFF.org). In this case the certificate fingerprint and
+domainname of SSL encrypted websites will be send to the observatory an compared with the 
+certificates sent by other users.
+You will get a warning, if something goes wrong with your certificate.">
 <!ENTITY jondofox.features.temp.email.head "Getting temporary E-Mail addresses">
 <!ENTITY jondofox.features.temp.email1 "With JonDoFox you have the opportunity
 to conveniently obtain a temporary E-mail address. In order to do so,
