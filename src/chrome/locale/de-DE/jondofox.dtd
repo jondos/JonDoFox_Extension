@@ -27,10 +27,14 @@ Zertifikate zu &uuml;berpr&uuml;fen. Zum anderen wird bei
 Zertfikats&auml;nderungen ein Dialog eingeblendet, der den Nutzer auf eventuell 
 vorhandene Unregelm&auml;&szlig;igkeiten hinweist und ihn so besser vor
 <a href='http://de.wikipedia.org/wiki/Man-in-the-middle-Angriff'>
-Man-in-the-middle-Angriffen</a> sch&uuml;tzt. Wenn Sie diese Funktion aktiviert lassen, wird die Datei <em>CertPatrol.sqlite</em> im Profil-Verzeichnis
+Man-in-the-middle-Angriffen</a> sch&uuml;tzt. Wenn Sie diese Funktion aktiviert lassen, 
+wird die Datei <em>CertPatrol.sqlite</em> im Profil-Verzeichnis
 des JonDoBrowsers angelegt. Diese Datenbank enth&auml;lt eine Liste der via HTTPS besuchten
-Webseiten und Informationen zu den dabei verwendeten SSL-Zertifikaten. Aus dieser Datenbank k&ouml;nnen keine Informationen von einem Webserver abgefragt werden.">
-<!ENTITY jondobrowser.features.ssl-observatory "Dar&uuml;ber hinaus gibt es die M&ouml;glichkeit, der Electronic Frontier Foundation (EFF) beim Sammeln von SSL-Zertifikaten zu helfen. Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu k&ouml;nnen JonDoBrowser-Nutzer nun leicht beitragen.">
+Webseiten und Informationen zu den dabei verwendeten SSL-Zertifikaten. 
+Aus dieser Datenbank k&ouml;nnen keine Informationen von einem Webserver abgefragt werden.">
+<!ENTITY jondobrowser.features.ssl-observatory "Dar&uuml;ber hinaus gibt es die M&ouml;glichkeit, 
+der Electronic Frontier Foundation (EFF) beim Sammeln von SSL-Zertifikaten zu helfen. 
+Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu k&ouml;nnen JonDoBrowser-Nutzer nun leicht beitragen.">
 <!ENTITY jondobrowser.features.tlsid.head "Schutz vor TLS-Session-Ids">
 <!ENTITY jondobrowser.features.tlsid "TLS-Session-Ids erlauben es, verschiedene TLS-Anfragen miteinander zu verkn&uuml;pfen. Dadurch ist es unter Umst&auml;nden m&ouml;glich, einen Nutzer wiederzuerkennen bzw. dessen Identifikation zu erleichtern. Damit dies nicht geschieht, schaltet JonDoBrowser diese Option Nutzer zu verfolgen ab.">
 <!ENTITY jondobrowser.features.temp.email1 "Mit dem JonDoBrowser haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen bei einer Anmeldung in Foren oder beim Posten von Blog-Kommentaren zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und w&auml;hlen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
@@ -141,16 +145,16 @@ gef&auml;lschten SSL-Zertifikaten k&ouml;nnen Sie das SSL Observatory der EFF.or
 nutzen oder Certificate Patrol mit einer lokalen Datenbank.">
 <!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_de.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_de.png">
-<!ENTITY jondofox.features.certpatrol2 "Alternativ können Sie Certificate Patrol nutzen. 
+<!ENTITY jondofox.features.certpatrol2 "Alternativ k&ouml;nnen Sie Certificate Patrol nutzen. 
 In einer lokale Datenbank im Profil-Verzeichnis
 des JonDoFox werden die Fingerprints der Zertifikate beim ersten Aufruf einer HTTPS-Webseite
 gespeichert, um sp&auml;ter eine Warnung anzuzeigen, wenn sich das Zertifikat ge&auml;ndert
-hat. Sie können die Änderungen ansehen und entscheiden, ob Sie das neue Zertifikat akzeptieren.
+hat. Sie k&ouml;nnen die &Auml;nderungen ansehen und entscheiden, ob Sie das neue Zertifikat akzeptieren.
 Es wird kein externer Server kontaktiert.">
-<!ENTITY jondofox.features.ssl-observatory "Wenn Sie das <a href="">SSL Observatory</a> der Electronic Frontier Foundation (EFF.org) nutzen,
+<!ENTITY jondofox.features.ssl-observatory "Wenn Sie das SSL Observatory der Electronic Frontier Foundation (EFF.org) nutzen,
 wird der Fingerprint der SSL-Zertifikate von besuchten Websites zusammen mit dem Domainnamen an das
 Observatory gesendet und dort mit den Daten verglichen, die andere Nutzer gesendet haben. Sollte ein Zertifikat 
-nicht übereinstimmen, wird eine Warnung gezeigt.">
+nicht &uuml;bereinstimmen, wird eine Warnung gezeigt.">
 <!ENTITY jondofox.features.temp.email.head "Tempor&auml;re E-Mail-Adressen benutzen">
 <!ENTITY jondofox.features.temp.email1 "Mit dem JonDoFox haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen bei einer Anmeldung in Foren oder beim Posten von Blog-Kommentaren zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und w&auml;hlen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
 <!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_de.png">
