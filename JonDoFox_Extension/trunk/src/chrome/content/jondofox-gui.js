@@ -203,7 +203,7 @@ function setProxy(state) {
       if(cacheMgr) {
           cacheMgr.evictEntries(1);
       }
-      
+
      }
   } catch (e) {
     log("setProxy(): " + e);
