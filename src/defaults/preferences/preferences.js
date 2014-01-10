@@ -206,6 +206,9 @@ pref("extensions.jondofox.spdy.enabled", false);
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);
 
+// Clipboard Sniffing vai JS
+pref("extensions.jondofox.event.clipboardevents.enabled", false);
+
 // Thumbnails for the New Tab page
 pref("extensions.jondofox.pagethumbnails.disabled", true);
 

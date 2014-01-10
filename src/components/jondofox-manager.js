@@ -239,22 +239,24 @@ JDFManager.prototype = {
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
     'view_source.editor.external':'extensions.jondofox.source_editor_external',
     'security.remember_cert_checkbox_default_setting':
-    'extensions.jondofox.security.remember_cert_checkbox_default_setting',
+       'extensions.jondofox.security.remember_cert_checkbox_default_setting',
     'browser.search.suggest.enabled':
-    'extensions.jondofox.search_suggest_enabled',
+       'extensions.jondofox.search_suggest_enabled',
     'privacy.sanitize.sanitizeOnShutdown':
-    'extensions.jondofox.sanitize_onShutdown',
+       'extensions.jondofox.sanitize_onShutdown',
     'privacy.clearOnShutdown.history':
-    'extensions.jondofox.clearOnShutdown_history',
+       'extensions.jondofox.clearOnShutdown_history',
     'privacy.clearOnShutdown.offlineApps':
-    'extensions.jondofox.clearOnShutdown_offlineApps',
+       'extensions.jondofox.clearOnShutdown_offlineApps',
     'security.enable_tls_session_tickets':
-    'extensions.jondofox.tls_session_tickets',
+       'extensions.jondofox.tls_session_tickets',
     'dom.battery.enabled':'extensions.jondofox.battery.enabled',
     'network.http.spdy.enabled':'extensions.jondofox.spdy.enabled',
     'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
+    'dom.event.clipboardevents.enabled':
+       'extensions.jondofox.event.clipboardevents.enabled',
     'browser.pagethumbnails.capturing_disabled':
-    'extensions.jondofox.pagethumbnails.disabled',
+       'extensions.jondofox.pagethumbnails.disabled',
     'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled',
     'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled'
   },

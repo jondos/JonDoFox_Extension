@@ -1,3 +1,9 @@
+Changes in version 0.5.3
+ * disable clipboardevents to block access to the clipboard by Javascript
+
+Changes in version 0.5.2
+ * Update for German translation
+
 Changes in version 0.5.1
  * Update Tor User Agent to latest TorBrowser
 
