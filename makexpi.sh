@@ -68,7 +68,7 @@ if [ ${JDF_BROWSER} ]; then
   # We basically replace all the JDF peculiarites (like logos, .xhtml,
   # "about:jondobrowser") with the JDB ones and undo that after building the
   # .xpi.
-  XPINAME="jondobrowser"
+  XPINAME="jondofoxBrowser"
   echo "Replacing \"about:jondofox\" with \"about:jondobrowser\""
   cd src
   $SEDBIN -i 's/about:jondofox/about:jondobrowser/g' \
