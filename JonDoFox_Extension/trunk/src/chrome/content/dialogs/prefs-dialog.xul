@@ -52,45 +52,36 @@
 
           <!-- Define rows -->
           <rows>
+	    
 
-            <!-- Header preferences -->
+
+	       <!-- Tracking Protection -->
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.header;"/>
-		<box>
+              
+                 <box>
                   <!-- Checkbox to toggle 'set referrer' -->
                   <checkbox id="checkbox_set_referrer" 
                           label="&jondofox.dialogtab.options.referrer;"
                           accesskey="r"/>
-		</box>
-              </groupbox>
-            </row>
-
-           <!-- SafeCache preference -->
-            <row align="center">
-              <groupbox>
-                <caption label="&jondofox.dialogtab.options.cache;"/>
-		<box>
+                 </box>
+		 <box>
 		  <!-- Checkbox to activate/deactivate cache protection  -->
                   <checkbox id="checkbox_set_safecache" 
                           label="&jondofox.dialogtab.options.safecache;"
                           accesskey="S"/>
 		</box>
-              </groupbox>
-            </row>
-
-            <!-- Plugin preference -->
-            <row align="center">
-              <groupbox>
-                <caption label="&jondofox.dialogtab.options.plugins.label;"/>
 		<box>
 		  <!-- Checkbox to activate/deactivate plugin protection  -->
                   <checkbox id="checkbox_set_plugins" 
-                          label=""
+                          label="&jondofox.dialogtab.options.plugins.label;"
                           accesskey="G"/>
 		</box>
               </groupbox>
             </row>
+
+            
 
             <!-- SSL preferences -->
             <row align="center">
