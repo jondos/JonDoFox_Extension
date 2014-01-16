@@ -1,3 +1,7 @@
+Changes in version 0.5.4
+ * Disabled Do-Not-Track in Tor mode	
+ * small GUI cleanup
+
 Changes in version 0.5.3
  * disable clipboardevents to block access to the clipboard by Javascript
 

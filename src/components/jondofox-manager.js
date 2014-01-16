@@ -108,6 +108,9 @@ JDFManager.prototype = {
   // whether a resource is third party or not is gone :-/
   notFF18 : null,
 
+  // We need to enforce privacy.donottrackheader.value
+  ff22 : null,
+
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
 
@@ -258,7 +261,8 @@ JDFManager.prototype = {
     'browser.pagethumbnails.capturing_disabled':
        'extensions.jondofox.pagethumbnails.disabled',
     'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled',
-    'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled'
+    'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled',
+    'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled'
   },
 
   //This map of integer preferences is given to the prefsMapper
@@ -605,8 +609,13 @@ JDFManager.prototype = {
         // Disabling WebGL for security reasons
         this.boolPrefsMap['webgl.disabled'] =
                 'extensions.jondofox.webgl.disabled';
+        // Enforce Do-Not-Track
         this.boolPrefsMap['privacy.donottrackheader.enabled'] =
                 'extensions.jondofox.donottrackheader.enabled';
+        if (this.ff22) {
+            this.intPrefsMap['privacy.donottrackheader.value'] =
+               'extensions.jondofox.donottrackheader.value';
+        }
         // Restricting the sessionhistory max_entries
         this.intPrefsMap['browser.sessionhistory.max_entries'] =
            'extensions.jondofox.sessionhistory.max_entries';
@@ -1133,6 +1142,11 @@ JDFManager.prototype = {
       this.ff12 = true;
     } else {
       this.ff12 = false;
+    }
+    if (versComp.compare(ffVersion, "22.0") >= 0) {
+      this.ff22 = true;
+    } else {
+      this.ff22 = false;
     }
     if (versComp.compare(ffVersion, "18.0a1") < 0) {
       this.notFF18 = true;

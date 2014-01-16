@@ -176,6 +176,7 @@ pref("extensions.jondofox.delete_searchbar", true);
 // See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time
 pref("extensions.jondofox.getAddons.cache.enabled", false);
 pref("extensions.jondofox.donottrackheader.enabled", true);
+pref("extensions.jondofox.donottrackheader.value", 1);
 
 // See: http://www.contextis.com/resources/blog/webgl/
 pref("extensions.jondofox.webgl.disabled", true);
@@ -231,6 +232,7 @@ pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
 
 //NoScript
 pref("extensions.jondofox.noscript_showDomain", false);
+pref("extensions.jondofox.noscript_dnt_enabled", false);
 
 // Mozilla shall not be able to deactivate one of our extensions
 pref("extensions.jondofox.blocklist.enabled", false);

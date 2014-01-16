@@ -272,11 +272,10 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 
 <!-- General configuration tab -->
 <!ENTITY jondofox.dialogtab.options.title "Preferences">
-<!ENTITY jondofox.dialogtab.options.header "Headers">
+<!ENTITY jondofox.dialogtab.options.header "Tracking Protection">
 <!ENTITY jondofox.dialogtab.options.referrer "Activate Referer management">
-<!ENTITY jondofox.dialogtab.options.cache "Cache">
 <!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache and HTTP Authentication protection">
-<!ENTITY jondofox.dialogtab.options.plugins.label "Plugins">
+<!ENTITY jondofox.dialogtab.options.plugins.label "Deactivate all plugins in JonDo mode">
 <!ENTITY jondofox.dialogtab.options.SSL "Additional SSL Certificate Validation">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "using SSL Observatory only with">
 <!ENTITY jondofox.dialogtab.options.observatory.jondo "using SSL Observatory only with JonDo">

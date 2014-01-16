@@ -319,10 +319,12 @@ RequestObserver.prototype = {
         log("modifyRequest(): " + e);
       }
     }
-    // Set other headers here...
-    // The Mozilla Do Not Track header. Maybe it helps in some scenarios...
-    // See: http://donottrack.us
-    channel.setRequestHeader("DNT", 1, false);
+   
+    // Do not send DNT header for Tor, see: http://donottrack.us 
+    if (this.jdfManager.getState() === "tor") {
+       channel.setRequestHeader("DNT", null, false);
+    }
+
     // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
     // actors like NoScript or AdBlock are supporting it.
     // channel.setRequestHeader("X-Behavioral-Ad-Opt-Out", 1, false);
