@@ -71,7 +71,7 @@ pref("extensions.jondofox.tor.socks_port", 9050);
 // JonDo settings
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "0");
+pref("extensions.jondofox.jondo.buildID_override", "20131205180928");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
@@ -82,7 +82,7 @@ pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 // Tor settings
 pref("extensions.jondofox.tor.appname_override","Netscape");
 pref("extensions.jondofox.tor.appversion_override","5.0 (Windows)");
-pref("extensions.jondofox.tor.buildID_override","0");
+pref("extensions.jondofox.tor.buildID_override","");
 pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.tor.platform_override","Win32");
 pref("extensions.jondofox.tor.productsub_override","20100101");
@@ -121,11 +121,13 @@ pref("extensions.jondofox.accept_languages", "en-US,en");
 pref("extensions.jondofox.accept_charsets", "iso-8859-1,*,utf-8");
 pref("extensions.jondofox.default_charset", "");
 pref("extensions.jondofox.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+pref("extensions.jondofox.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 
 // If the user sets a Torbutton UA then use the following values as well
 pref("extensions.jondofox.tor.accept_languages", "en-us, en");
 pref("extensions.jondofox.tor.accept_charsets", "iso-8859-1,*,utf-8");
 pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 
 // Feed prefs
 pref("extensions.jondofox.feeds_handler_default", "bookmarks");
@@ -192,7 +194,7 @@ pref("extensions.jondofox.sessionhistory.max_entries", 2);
 pref("extensions.jondofox.tls_session_tickets", false);
 
 // Disabling all plugins in JonDonym-Mode
-pref("extensions.jondofox.disableAllPluginsJonDoMode", false);
+pref("extensions.jondofox.disableAllPluginsJonDoMode", true);
 pref("extensions.jondofox.plugin-protection_enabled", true);
 
 // The Navigation Timing API

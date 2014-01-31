@@ -90,18 +90,16 @@ bypass the proxy without completely deactivating it (e.g. when downloading
 large files to save time and money), just open the context menu with a right 
 mouse click on the file and choose <em>Bypass JonDo/Tor/Proxy and Save Link 
 As...</em>">
-<!ENTITY jondofox.features.referer1 "The Referer is an HTTP feature that
+<!ENTITY jondofox.features.referer "The Referer is an HTTP feature that
 distinguishes different users on the Internet; consequently, it may reduce or
 abrogate anonymity. However, this can be avoided by activating our Referer
-management:">
-<!ENTITY jondofox.features.referer_picurl "chrome://jondofox/skin/referer_management_en.png">
-<!ENTITY jondofox.features.referer2 "The Referer is not merely deleted—some
-web services are not available to function without it. Rather, the Referer may
-or may not be set depending on the context of a particular request. The Referer
+management. The Referer
 will be set as long as a user is surfing within the same domain and will not be
 set if a bookmark is used to request a particular web page. This context
 dependent behavior ensures that no web pages will break while at the same time
 the Referer cannot be used to gather information to identify users.">
+<!ENTITY jondofox.features.referer_picurl "chrome://jondofox/skin/referer_management_en.png">
+
 <!ENTITY jondofox.features.useragent "Information regarding users' surfing
 behavior may not only be gathered by analyzing the Referer but examining the
 individual User Agent header as well. Accordingly, we built a uniform User Agent
@@ -113,41 +111,36 @@ flexible platform is provided to configure a proxy manually and the opportunity
 to choose between different User Agents, i.e. Unchanged (leaving the default setting), JonDo and Tor:">
 <!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_en.png">
 <!ENTITY jondofox.features.safecache.head "Mitigating cache attacks">
-<!ENTITY jondofox.features.safecache "In addition to the ability to obtain user
-related information by examining the Referer, the User Agent and other HTTP
-headers, the browser cache can be exploited as well to extract similar
-information. An attacker may, for instance, attempt to obtain some information
+<!ENTITY jondofox.features.safecache "It is possible to use the browser cache for tracking purposes.
+ An attacker may, for instance, attempt to obtain some information
 out of the web pages, due to the fact that information saved in the cache is
 loaded faster than the same, non-cached ones. Conversely, an attacker may try
-to set so-called cache cookies to identify a particular user across different
+to set so-called cache cookies (ETags) to identify a particular user across different
 domains. In order to better protect our users against this kind of attack, we
 included the slightly modified code of the SafeCache extension into JonDoFox.
-<br/>Additionally, the authentication cache of Firefox might get exploited to
+Additionally, the authentication cache of Firefox might get exploited to
 track users across several different domains. In order to defend against this
 kind of attack, however, we discard authentication information sent to or by
-third party elements. In the JonDoFox settings panel you will find a
-corresponding hint:">
+third party elements.">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_en.png">
 <!ENTITY jondofox.features.plugins.head "Defending against Plugins">
 <!ENTITY jondofox.features.plugins "Plugins can circumvent the proxy settings of
 JonDoFox, which makes them especially dangerous while surfing anonymously.
-Therefore, all plugins are deactivated by default in JonDo mode. Only
-Flash is still available due to its widespread use. The setting governing this
-behavior may again be found in JonDoFox's settings panel:">
+Therefore, all plugins are deactivated by default in JonDo mode. It is possible to activate
+Flash only due to its widespread use. You may have a look at our online help about important hints about Flash.">
 <!ENTITY jondofox.features.plugins.picurl "chrome://jondofox/skin/plugins_en.png">
 <!ENTITY jondofox.features.certpatrol.head "Detecting faked SSL-Certificates">
 <!ENTITY jondofox.features.certpatrol1 "In order to provide better protection 
 against <a href='http://en.wikipedia.org/wiki/Man-in-the-middle_attack'>
 man-in-the-middle-attacks</a> with fraudulent SSL-certificates you may use the
 SSL observatory of EFF.org or you may use Certificate Patrol with a local database.">
-<!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_en.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_en.png">
 <!ENTITY jondofox.features.certpatrol2 "Alternatively you may use Certificate Patrol. In this case a local database
  is used to store all websites visited via HTTPS together with some information about the SSL certificate. 
 You will get an information, if the certificate changes unexpected and you may accept the new certificate or reject it. A web server has no
 means to get that saved data.">
 <!ENTITY jondofox.features.ssl-observatory "You may use the SSL observatory of of Electronic 
-Frontier Foundation (EFF.org). In this case the certificate fingerprint and
+Frontier Foundation (EFF.org) with JonDo (default), Tor, all proxies or always. In this case the certificate fingerprint and
 domainname of SSL encrypted websites will be send to the observatory an compared with the 
 certificates sent by other users.
 You will get a warning, if something goes wrong with your certificate.">
@@ -275,7 +268,9 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.dialogtab.options.header "Tracking Protection">
 <!ENTITY jondofox.dialogtab.options.referrer "Activate Referer management">
 <!ENTITY jondofox.dialogtab.options.safecache "Activate SafeCache and HTTP Authentication protection">
-<!ENTITY jondofox.dialogtab.options.plugins.label "Deactivate all plugins in JonDo mode">
+<!ENTITY jondofox.dialogtab.options.plugins "Deactivate all plugins but Flash in JonDo mode">
+<!ENTITY jondofox.dialogtab.options.flash "Deactivate Flash in JonDo mode too">
+<!ENTITY jondofox.dialogtab.options.flashhelp "To avoid deanonymisation by Flash you have to create a secure configuration for your Flash player first. Please have a look at our online help.">
 <!ENTITY jondofox.dialogtab.options.SSL "Additional SSL Certificate Validation">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "using SSL Observatory only with">
 <!ENTITY jondofox.dialogtab.options.observatory.jondo "using SSL Observatory only with JonDo">
@@ -284,7 +279,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.dialogtab.options.observatory.always "using SSL Observatory always">
 <!ENTITY jondofox.dialogtab.options.observatory.certpatrol "using Certificate Patrol (local database)">
 <!ENTITY jondofox.dialogtab.options.observatory.never "no additional certicicate validation">
-<!ENTITY jondofox.dialogtab.options.observatory.help "The Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages eventually and thus surfing the Internet altogether. If you are transmitting SSL certificates to the EFF while surfing the web you help and you will get a warning in case of issues.">
+<!ENTITY jondofox.dialogtab.options.observatory.help "The SSL observatory of Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages. If you are transmitting SSL certificates to the SSL observatory while surfing the web you will get a warning in case of issues. See ">
 <!ENTITY jondofox.dialogtab.options.adBlocking "AdBlocker-Settings">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Activate the AdBlocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Show filter">

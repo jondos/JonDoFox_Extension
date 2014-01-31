@@ -75,13 +75,19 @@
 		<box>
 		  <!-- Checkbox to activate/deactivate plugin protection  -->
                   <checkbox id="checkbox_set_plugins" 
-                          label="&jondofox.dialogtab.options.plugins.label;"
+                          label="&jondofox.dialogtab.options.plugins;"
                           accesskey="G"/>
+		</box>
+		<box>
+		  <!-- Checkbox to activate/deactivate Flash  -->
+                  <checkbox id="checkbox_set_flash" 
+                          label="&jondofox.dialogtab.options.flash;"
+                          accesskey="F"/>
+                  <toolbarbutton class="jondofox-ref" popup="flashHelp"
+                           tooltiptext="&jondofox.contextHelp;"/>
 		</box>
               </groupbox>
             </row>
-
-            
 
             <!-- SSL preferences -->
             <row align="center">
@@ -377,6 +383,13 @@
           <html:a class="link"  
                   onclick="contextHelp('observatoryAPI');">
             &jondofox.here.label;</html:a>.
+        </description>
+      </vbox>
+    </menupopup>
+    <menupopup id="flashHelp">
+      <vbox class="jondofox-help">
+        <description>
+          &jondofox.dialogtab.options.flashhelp;
         </description>
       </vbox>
     </menupopup>

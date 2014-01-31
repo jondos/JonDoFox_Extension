@@ -63,6 +63,9 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_set_plugins').checked =
         prefsHandler.
 	getBoolPref('extensions.jondofox.plugin-protection_enabled');
+    document.getElementById('checkbox_set_flash').checked =
+        prefsHandler.
+	getBoolPref('extensions.jondofox.disableAllPluginsJonDoMode');
 
     // SSL observatory setting
     var obProxy = document.getElementById('observatoryProxy');
@@ -74,16 +77,8 @@ function loadPrefsGeneral() {
     // Adblock setting
     //document.getElementById('checkbox_set_adblock').checked =
     //    prefsHandler.getBoolPref('extensions.jondofox.adblock_enabled');
-    // the warnings are checkboxes as well
-    document.getElementById('checkbox_update_warning').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.update_warning');
-    document.getElementById('checkbox_preferences_warning').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.preferences_warning');
-    document.getElementById('checkbox_proxy_warning').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.proxy_warning');
+
     // Advanced menu in JonDoBrowser
-    // TODO: We do not get the jondofox.withinJonDoBrowser from jondofox-gui.js
-    // but why do other functions work fine?
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
       document.getElementById('jondofox-menu-row').hidden = false;
       var updateCheckbox = document.getElementById('checkbox_update_jondonym');
@@ -94,12 +89,16 @@ function loadPrefsGeneral() {
         prefsHandler.getBoolPref('extensions.jondofox.advanced_menu');
       updateCheckbox.checked = prefsHandler.
         getBoolPref('extensions.jondofox.update_jondonym');
-      document.getElementById('checkbox_set_plugins').label = jdfUtils.
-        getString('jondofox.dialogtab.options.plugins_jdb');
-    } else {
-      document.getElementById('checkbox_set_plugins').label = jdfUtils.
-        getString('jondofox.dialogtab.options.plugins');
     }
+
+    // the warnings are checkboxes as well
+    document.getElementById('checkbox_update_warning').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.update_warning');
+    document.getElementById('checkbox_preferences_warning').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.preferences_warning');
+    document.getElementById('checkbox_proxy_warning').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.proxy_warning');
+
     // 'no_proxies_on'
     document.getElementById('no_proxies_on').value =
         prefsHandler.getStringPref('extensions.jondofox.no_proxies_on');
@@ -116,9 +115,10 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_set_referrer').checked);
     prefsHandler.setBoolPref('extensions.jondofox.stanford-safecache_enabled',
         document.getElementById('checkbox_set_safecache').checked);
-    prefsHandler.
-	setBoolPref('extensions.jondofox.plugin-protection_enabled',
+    prefsHandler.setBoolPref('extensions.jondofox.plugin-protection_enabled',
       document.getElementById('checkbox_set_plugins').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.disableAllPluginsJonDoMode',
+      document.getElementById('checkbox_set_flash').checked);
     // get man-in.the-middle protection
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
         document.getElementById('observatoryProxy').selectedIndex);

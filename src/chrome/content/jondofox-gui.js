@@ -178,33 +178,57 @@ function setProxy(state) {
     } else {
       // The state has changed --> set the user agent and clear cookies
       jdfManager.closeAllTabsAndWindows();
-	  jdfManager.clearAllCookies();
-      jdfManager.setUserAgent(false, state);
+   
+      jdfManager.clearAllCookies();
+      
       // Setting already_submitted object back to avoid tracking risks
       reqObs.sslObservatory.already_submitted = {};
-	  
-      // clear HTTP-Auth
+	    
+      if ("@maone.net/noscript-service;1" in Components.classes) {
+           let ns =  Components.classes["@maone.net/noscript-service;1"].getService().wrappedJSObject;
+           ns.eraseTemp();
+      }
+
+     // clear HTTP-Auth
       var authMgr = Cc["@mozilla.org/network/http-auth-manager;1"].getService(Ci.nsIHttpAuthManager);
       if(authMgr) {
          authMgr.clearAll();
       }
-      // clear crypto tokens
+      // Clear all crypto auth tokens. 
+      var authCrypto = Cc["@mozilla.org/security/sdr;1"].
+                       getService(Components.interfaces.nsISecretDecoderRing);
+      if(authCrypto) {
+           authCrypto.logoutAndTeardown();
+      }
+      // clear other crypto tokens
       var secMgr = Cc["@mozilla.org/security/crypto;1"].getService(Ci.nsIDOMCrypto);
       if(secMgr) {
          secMgr.logout();
       }
-      // clear Image Cache
-      var imgCache = Cc["@mozilla.org/image/cache;1"].getService(Ci.imgICache);
-      if (imgCache) {
-         imgCache.clearCache(false);
-      }
+  
       // clear Cache
       var cacheMgr = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
       if(cacheMgr) {
           cacheMgr.evictEntries(1);
+          try { cacheMgr.evictEntries(2); }
+          catch (e) { }
+          try { cacheMgr.evictEntries(4); }
+          catch (e) { }
       }
+ 
+      // clear search bar
+      var searchBar = window.document.getElementById("searchbar");
+      if (searchBar) {
+          searchBar.textbox.reset();
+      }
+      jdfManager.clearImageCache();
+      jdfManager.setUserAgent(false, state);
+    }
+    // Force prefs to be synced to disk
+    var prefService = Components.classes["@mozilla.org/preferences-service;1"]
+        .getService(Components.interfaces.nsIPrefService);
+    prefService.savePrefFile(null);
 
-     }
   } catch (e) {
     log("setProxy(): " + e);
   } finally {

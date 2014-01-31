@@ -93,17 +93,16 @@ Proxy vorbei herunterladen m&#xf6;chten, ohne den Proxy dabei zu deaktivieren
 dazu einfach das Kontextmen&#xfc; mit einem rechten Mausklick auf die Datei und 
 w&#xe4;hlen Sie <em>JonDo/Tor/Proxy umgehen und Ziel speichern unter...</em> 
 aus.">
-<!ENTITY jondofox.features.referer1 "Der Referer ist eines der Merkmale, mit 
-dessen Hilfe sich Nutzer beim Surfen unterscheiden lassen. Das kann allerdings 
-verhindert werden, indem man unser Referer-Management aktiviert:">
-<!ENTITY jondofox.features.referer_picurl "chrome://jondofox/skin/referer_management_de.png">
-<!ENTITY jondofox.features.referer2 "Dabei wird der Referer nicht einfach 
-gel&ouml;scht, schlie&szlig;lich lassen sich einige Webangebote ohne einen 
-mitgeschickten Referer &uuml;berhaupt nicht benutzen. Vielmehr wird je nach 
+<!ENTITY jondofox.features.referer "Der Referer ist eines der Merkmale, mit 
+dessen Hilfe sich Nutzer beim Surfen unterscheiden lassen. Das kann
+verhindert werden, indem man unser Referer-Management aktiviert.wird je nach 
 Kontext des Seitenaufrufs ein Referer gesetzt (z.B. bei Weiterleitungen 
 innerhalb derselben Domain) oder leer &uuml;bergeben (z.B. beim Wechsel der 
 Domain). Damit wird garantiert, dass aus dem Referer keine Informationen 
-zur Nutzeridentifizierung gewonnen werden k&ouml;nnen.">
+zur Nutzeridentifizierung gewonnen werden k&ouml;nnen. HTTP-Parameter im Referer
+werden gel&ouml;scht.">
+<!ENTITY jondofox.features.referer_picurl "chrome://jondofox/skin/referer_management_de.png">
+
 <!ENTITY jondofox.features.useragent "Nicht nur &uuml;ber den Referer, sondern 
 auch &uuml;ber den individuellen User Agent, den der Browser bei Webanfragen 
 mitsendet, lassen sich Nutzerinformationen gewinnen. Daher haben wir einen 
@@ -115,26 +114,21 @@ seinen Proxy manuell konfigurieren m&ouml;chte, hat die M&ouml;glichkeit,
 zwischen verschiedenen User Agents zu w&auml;hlen:">
 <!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_de.png">
 <!ENTITY jondofox.features.safecache.head "Schutz vor Cacheangriffen">
-<!ENTITY jondofox.features.safecache "Neben dem Versuch, aus dem Referer, dem 
-User Agent und anderen HTTP-Headern Informationen &uuml;ber den Nutzer zu 
-gewinnen, gibt es noch die M&ouml;glichkeit, den Cache des Browsers f&uuml;r 
-Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
-Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
-installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
+<!ENTITY jondofox.features.safecache "Es gibt M&ouml;glichkeiten, den Cache des Browsers f&uuml;r 
+das Tracking zu nutzen. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
+Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies (ETags) zu 
+installieren. Zum Schutz vor diesen Angriffen wurde der Code der 
 SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung 
-integriert.<br/> Dar&uuml;ber hinaus sch&uuml;tzt JonDoFox vor Versuchen, den
-Nutzer mit Hilfe von HTTP-Authentifikationsdaten zu verfolgen. Dazu werden
-sowohl die spezifischen Nutzerdaten, die an Drittseiten gesendet als auch von
-ihnen empfangen werden, herausgefiltert. Im JonDoFox-Einstellungsmen&uuml;
-findet sich ein entsprechender Hinweis darauf:">
+integriert. Dar&uuml;ber hinaus sch&uuml;tzt JonDoFox vor Versuchen, den
+Nutzer mit Hilfe von HTTP-Authentifikationsdaten zu verfolgen.">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
 <!ENTITY jondofox.features.plugins.head "Schutz vor Plugins">
 <!ENTITY jondofox.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
 von JonDoFox umgehen, was sie besonders gef&auml;hrlich beim anonymen Surfen
 macht. Daher werden beim JonDoFox im JonDo-Modus standardm&auml;&szlig;ig alle
-Plugins abgeschaltet. Lediglich Flash wird aktiv gelassen, was allein dessen
-weiter Verbreitung zuzuschreiben ist. Die Einstellung, die dieses Verhalten
-regelt, findet man wiederum im JonDoFox-Einstellungsmen&uuml;:">
+Plugins abgeschaltet. Es ist m&ouml;glich, Flash einzeln zu aktivieren, was allein der
+Verbreitung zuzuschreiben ist. Bitte beachten Sie unsere Online Hilfe mit Hinweisen zur
+Konfiguration des Flash-Players.">
 <!ENTITY jondofox.features.plugins.picurl "chrome://jondofox/skin/plugins_de.png">
 <!ENTITY jondofox.features.certpatrol.head "Verbesserter Schutz vor 
 gef&auml;lschten SSL-Zertifikaten">
@@ -143,7 +137,6 @@ gef&auml;lschten SSL-Zertifikaten">
 Man-in-the-middle-Angriffen</a> mit
 gef&auml;lschten SSL-Zertifikaten k&ouml;nnen Sie das SSL Observatory der EFF.org
 nutzen oder Certificate Patrol mit einer lokalen Datenbank.">
-<!ENTITY jondofox.features.settings_header.picurl "chrome://jondofox/skin/settings_header_de.png">
 <!ENTITY jondofox.features.certpatrol.picurl "chrome://jondofox/skin/certpatrol_de.png">
 <!ENTITY jondofox.features.certpatrol2 "Alternativ k&ouml;nnen Sie Certificate Patrol nutzen. 
 In einer lokale Datenbank im Profil-Verzeichnis
@@ -274,7 +267,9 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.header "Schutz gegen Tracking">
 <!ENTITY jondofox.dialogtab.options.referrer "Aktiviere Referer-Management">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
-<!ENTITY jondofox.dialogtab.options.plugins.label "Deaktiviere Plugins im JonDo-Mode">
+<!ENTITY jondofox.dialogtab.options.plugins "Deaktiviere Plugins im JonDo-Mode (Ausnahme: Flash)">
+<!ENTITY jondofox.dialogtab.options.flash "Deaktiviere auch Flash im JonDo-Mode">
+<!ENTITY jondofox.dialogtab.options.flashhelp "Um eine Deanonymsierung via Flash zu vermeiden, ist als erstes eine sichere Konfiguration des Flash Players zu erstellen. Hinweise finden Sie in unserer Online-Hilfe">
 <!ENTITY jondofox.dialogtab.options.SSL "Validierung von SSL-Zertifikaten">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "verwende SSL Observatory nur mit">
 <!ENTITY jondofox.dialogtab.options.observatory.jondo "verwende SSL Observatory nur mit JonDo">
