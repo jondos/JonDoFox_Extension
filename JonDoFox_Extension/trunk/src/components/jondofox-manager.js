@@ -1200,21 +1200,15 @@ JDFManager.prototype = {
   },
 
   enforcePluginPref: function(state) {
-    var userAgent = this.prefsHandler.
-      getStringPref('extensions.jondofox.custom.user_agent');
-    var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.
-      nsIPluginHost);
+    var userAgent = this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent');
+    var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.nsIPluginHost);
     var plugins = pluginHost.getPluginTags({});
     if (state === this.STATE_JONDO) {
       for (var i = 0; i < plugins.length; i++) {
         var p=plugins[i];
         if (/^Shockwave.*Flash/i.test(p.name)) {
           // We are disabling Flash if a user of the JonDoFox-Profile wanted to
-          // or if the JonDoBrowser is used.
-          if (this.prefsHandler.
-              getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode") ||
-              this.prefsHandler.
-              isPreferenceSet("extensions.jondofox.browser_version")) {
+          if (this.prefsHandler.getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
             p.disabled = true;
           } else {
             // We need this if we are coming from Tor mode
@@ -1272,8 +1266,7 @@ JDFManager.prototype = {
     var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
     log("Setting user agent and other stuff for: " + state);
     // First the plugin pref
-    if (this.prefsHandler.
-        getBoolPref("extensions.jondofox.plugin-protection_enabled")) {
+    if (this.prefsHandler.getBoolPref("extensions.jondofox.plugin-protection_enabled")) {
       this.enforcePluginPref(state);
     }
     switch(state) {
@@ -1296,8 +1289,9 @@ JDFManager.prototype = {
           this.settingLocationNeutrality("");
         }
         this.prefsHandler.setStringPref("network.http.accept.default",
-          this.prefsHandler.
-          getStringPref("extensions.jondofox.accept_default"));
+          this.prefsHandler.getStringPref("extensions.jondofox.accept_default"));
+        this.prefsHandler.setStringPref("image.http.accept",
+          this.prefsHandler.getStringPref("extensions.jondofox.image_http_accept"));
         
         break;
       case (this.STATE_TOR):
@@ -1309,8 +1303,9 @@ JDFManager.prototype = {
           this.settingLocationNeutrality("tor.");
         }
         this.prefsHandler.setStringPref("network.http.accept.default",
-          this.prefsHandler.
-          getStringPref("extensions.jondofox.tor.accept_default"));
+          this.prefsHandler.getStringPref("extensions.jondofox.tor.accept_default"));
+        this.prefsHandler.setStringPref("image.http.accept",
+          this.prefsHandler.getStringPref("extensions.jondofox.tor.image_http_accept"));
         
         break;
       case (this.STATE_CUSTOM):
@@ -1330,8 +1325,9 @@ JDFManager.prototype = {
             this.settingLocationNeutrality("");
           }
           this.prefsHandler.setStringPref("network.http.accept.default",
-            this.prefsHandler.
-            getStringPref("extensions.jondofox.accept_default"));
+            this.prefsHandler.getStringPref("extensions.jondofox.accept_default"));
+          this.prefsHandler.setStringPref("image.http.accept",
+            this.prefsHandler.getStringPref("extensions.jondofox.image_http_accept"));
           
         } else if (userAgent === 'tor') {
           for (p in this.torUAMap) {
@@ -1342,8 +1338,9 @@ JDFManager.prototype = {
             this.settingLocationNeutrality("tor.");
           }
           this.prefsHandler.setStringPref("network.http.accept.default",
-            this.prefsHandler.
-            getStringPref("extensions.jondofox.tor.accept_default"));
+            this.prefsHandler.getStringPref("extensions.jondofox.tor.accept_default"));
+          this.prefsHandler.setStringPref("image.http.accept",
+            this.prefsHandler.getStringPref("extensions.jondofox.tor.image_http_accept"));
           
         } else {
           // We use the opportunity to set other user prefs back to their
@@ -1358,7 +1355,7 @@ JDFManager.prototype = {
         this.clearPrefs();
         for (p in this.safebrowseMap) {
             this.prefsHandler.deletePreference(p);
-          }
+        }
         
 	break;
       default:
@@ -1392,6 +1389,7 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('general.productsub.override');
       }
       this.prefsHandler.deletePreference("intl.accept_languages");
+      this.prefsHandler.deletePreference("image.http.accept");
     } catch (e) {
       log("clearPrefs(): " + e);
     }
@@ -1926,17 +1924,40 @@ JDFManager.prototype = {
   clearAllCookies: function() {
     log("Clearing all cookies");
     try {
-      CC["@mozilla.org/cookiemanager;1"].getService(CI.nsICookieManager).
-                                            removeAll();
+      CC["@mozilla.org/cookiemanager;1"].getService(CI.nsICookieManager).removeAll();
     } catch (e) {
       log("clearAllCookies(): " + e);
     }
     try {
-      CC["@mozilla.org/dom/storagemanager;1"].getService(CI.nsIDOMStorageManager).
-                                            clearOfflineApps();
-	} catch (e) {
+      CC["@mozilla.org/dom/storagemanager;1"].getService(CI.nsIDOMStorageManager).clearOfflineApps();
+    } catch (e) {
       log("clearOfflineApps(): " + e);
     }
+  },
+
+  // Clear image cache, e.g. when switching from one state to another
+  clearImageCache: function() {
+     try {
+        var imgCache;
+        var imgTools;
+        if (this.notFF18) {
+           // clear Image Cache for FF version < FF18
+           imgCache = Cc["@mozilla.org/image/cache;1"].getService(Ci.imgICache);
+           if (imgCache) {
+              imgCache.clearCache(false);
+           }
+        } else {
+            // clear Image Cache for FF version > FF17
+            imgTools = Cc["@mozilla.org/image/tools;1"].getService(Ci.imgITools);
+            imgCache = imgTools.getImgCacheForDocument(null);
+            if (imgCache) {
+                imgCache.clearCache(false); 
+            }
+        }
+
+     } catch(e) {
+         log("Exception on image cache clearing: "+e);
+     }
   },
   
    // Close all browser windows and tabs
