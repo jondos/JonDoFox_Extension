@@ -178,7 +178,7 @@ function setProxy(state) {
     } else {
       // The state has changed --> set the user agent and clear cookies
       jdfManager.closeAllTabsAndWindows();
-   
+      jdfManager.setUserAgent(false, state);
       jdfManager.clearAllCookies();
       
       // Setting already_submitted object back to avoid tracking risks
@@ -216,13 +216,10 @@ function setProxy(state) {
           catch (e) { }
       }
  
-      // clear search bar
-      var searchBar = window.document.getElementById("searchbar");
-      if (searchBar) {
-          searchBar.textbox.reset();
-      }
+      // clear search bar and image cache
+      clearingSearchbarHistory();
       jdfManager.clearImageCache();
-      jdfManager.setUserAgent(false, state);
+      
     }
     // Force prefs to be synced to disk
     var prefService = Components.classes["@mozilla.org/preferences-service;1"]
