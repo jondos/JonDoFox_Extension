@@ -8,9 +8,6 @@ pref("extensions.jondofox.alwaysUseJonDo", false);
 
 pref("extensions.jondofox.firstStart", true);
 
-// Autostart of JonDo
-// pref("extensions.jondofox.autostartJonDo", false);
-
 // Helping the EFF and its observatory
 pref("extensions.jondofox.observatory.cache_submitted", true);
 pref("extensions.jondofox.observatory.proxy", 0);
@@ -67,19 +64,25 @@ pref("extensions.jondofox.tor.ssl_port", 0);
 pref("extensions.jondofox.tor.socks_host", "127.0.0.1");
 pref("extensions.jondofox.tor.socks_port", 9050);
 
-// Useragent
-// JonDo settings
+// Useragent settings JonDo
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "20131205180928");
+pref("extensions.jondofox.jondo.buildID_override", "20140131092626");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
 pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i686; rv:24.0) Gecko/20100101 Firefox/24.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
+pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
+pref("extensions.jondofox.jondo.accept_charsets", "iso-8859-1,*,utf-8");
+pref("extensions.jondofox.jondo.default_charset", "");
+pref("extensions.jondofox.jondo.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+pref("extensions.jondofox.jondo.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
+pref("extensions.jondofox.jondo.http.accept_encoding", "gzip, deflate");
+pref("extensions.jondofox.jondo.useragent_locale", "en-US");
 
-// Tor settings
+// Useragent settings Tor
 pref("extensions.jondofox.tor.appname_override","Netscape");
 pref("extensions.jondofox.tor.appversion_override","5.0 (Windows)");
 pref("extensions.jondofox.tor.buildID_override","");
@@ -89,8 +92,15 @@ pref("extensions.jondofox.tor.productsub_override","20100101");
 pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
+pref("extensions.jondofox.tor.accept_languages", "en-us,en");
+pref("extensions.jondofox.tor.accept_charsets", "iso-8859-1,*,utf-8");
+pref("extensions.jondofox.tor.default_charset", "");
+pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
+pref("extensions.jondofox.tor.http.accept_encoding", "gzip, deflate");
+pref("extensions.jondofox.tor.useragent_locale", "en-US");
 
-// SafeBrowsing provider
+// SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
     "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.0&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.keyURL",
@@ -116,18 +126,6 @@ pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com
 
 pref("extensions.jondofox.safebrowsing.malware.reportURL", "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?client=%NAME%&hl=en-US&site=");
 
-// Location neutrality
-pref("extensions.jondofox.accept_languages", "en-US,en");
-pref("extensions.jondofox.accept_charsets", "iso-8859-1,*,utf-8");
-pref("extensions.jondofox.default_charset", "");
-pref("extensions.jondofox.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-pref("extensions.jondofox.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
-
-// If the user sets a Torbutton UA then use the following values as well
-pref("extensions.jondofox.tor.accept_languages", "en-us, en");
-pref("extensions.jondofox.tor.accept_charsets", "iso-8859-1,*,utf-8");
-pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 
 // Feed prefs
 pref("extensions.jondofox.feeds_handler_default", "bookmarks");
@@ -153,8 +151,7 @@ pref("extensions.jondofox.browser_send_pings", false);
 pref("extensions.jondofox.plugin.expose_full_path", false);
 // Do not track users via their site specific zoom [sic!]
 pref("extensions.jondofox.browser.zoom.siteSpecific", false);
-// UA locale spoofing
-pref("extensions.jondofox.useragent_locale", "en-US");
+
 pref("extensions.jondofox.source_editor_external", false);
 pref("extensions.jondofox.dom_storage_enabled", false);
 pref("extensions.jondofox.geo_enabled", false);
@@ -169,8 +166,7 @@ pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
 pref("extensions.jondofox.indexedDB.enabled", false);
 // Only valid for FF3
 pref("extensions.jondofox.history_expire_days", 0);
-pref("extensions.jondofox.http.accept_encoding", "gzip, deflate");
-//pref("extensions.jondofox.showAnontestNoProxy", true);
+
 pref("extensions.jondofox.search_suggest_enabled", false);
 pref("extensions.jondofox.delete_searchbar", true);
 // Only valid for FF4
@@ -202,6 +198,9 @@ pref("extensions.jondofox.navigationTiming.enabled", false);
 
 // The Battery API
 pref("extensions.jondofox.battery.enabled", false);
+
+// Gamepad API
+pref("extensions.jondofox.gamepad.enabled", false);
 
 // SPDY
 pref("extensions.jondofox.spdy.enabled", false);
