@@ -47,7 +47,7 @@ var sslObservatory = {
     this.logger = this.jdfManager.Log4Moz.repository.
         getLogger("JonDoFox Observatory");
     this.logger.level = this.jdfManager.Log4Moz.Level["Info"];
-    this.logger.info("Initialized SSL Observatory Logger!\n");
+  
     // The url to submit to
     this.submit_url = "https://observatory.eff.org/submit_cert";
     // Generate nonce to append to url to protect against CSRF

@@ -108,8 +108,11 @@ JDFManager.prototype = {
   // whether a resource is third party or not is gone :-/
   notFF18 : null,
 
-  // We need to enforce privacy.donottrackheader.value
+  // We need it to enforce privacy.donottrackheader.value
   ff22 : null,
+
+  // We need it to disable gamepad API
+  ff24 : null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -163,7 +166,7 @@ JDFManager.prototype = {
   },
 
   // The user agent maps...
-  // If JonDo is set as proxy take these UA-settings and DNT
+  // If JonDo is set as proxy take these UA-settings
   jondoUAMap: {
     'general.appname.override':'extensions.jondofox.jondo.appname_override',
     'general.appversion.override':'extensions.jondofox.jondo.appversion_override',
@@ -173,10 +176,17 @@ JDFManager.prototype = {
     'general.productSub.override':'extensions.jondofox.jondo.productsub_override',
     'general.useragent.override':'extensions.jondofox.jondo.useragent_override',
     'general.useragent.vendor':'extensions.jondofox.jondo.useragent_vendor',
-    'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub'
+    'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub',
+    'intl.accept_languages':'extensions.jondofox.jondo.accept_languages',
+    'intl.accept_charsets':'extensions.jondofox.jondo.accept_charsets',
+    'intl.charset.default':'extensions.jondofox.jondo.default_charset',
+    'network.http.accept.default':'extensions.jondofox.jondo.accept_default',
+    'image.http.accept':'extensions.jondofox.jondo.image_http_accept',
+    'network.http.accept-encoding':'extensions.jondofox.jondo.http.accept_encoding',
+    'general.useragent.locale':'extensions.jondofox.jondo.useragent_locale'
   },
 
-  // If Tor is set as proxy take these UA-settings and DNT
+  // If Tor is set as proxy take these UA-settings
   torUAMap: {
     'general.appname.override':'extensions.jondofox.tor.appname_override',
     'general.appversion.override':'extensions.jondofox.tor.appversion_override',
@@ -186,7 +196,14 @@ JDFManager.prototype = {
     'general.productSub.override':'extensions.jondofox.tor.productsub_override',
     'general.useragent.override':'extensions.jondofox.tor.useragent_override',
     'general.useragent.vendor':'extensions.jondofox.tor.useragent_vendor',
-    'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub'
+    'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub',
+    'intl.accept_languages':'extensions.jondofox.tor.accept_languages',
+    'intl.accept_charsets':'extensions.jondofox.tor.accept_charsets',
+    'intl.charset.default':'extensions.jondofox.tor.default_charset',
+    'network.http.accept.default':'extensions.jondofox.tor.accept_default',
+    'image.http.accept':'extensions.jondofox.tor.image_http_accept',
+    'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding',
+    'general.useragent.locale':'extensions.jondofox.tor.useragent_locale'
   },
 
   // Adding a uniform URLs concerning safebrowsing functionality to not
@@ -220,13 +237,6 @@ JDFManager.prototype = {
 
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: {
-    'intl.accept_languages':'extensions.jondofox.accept_languages',
-    'intl.charset.default':'extensions.jondofox.default_charset',
-    'intl.accept_charsets':'extensions.jondofox.accept_charsets',
-    'network.http.accept.default':'extensions.jondofox.accept_default',
-    // TODO: This one can get deleted if we do not support FF versions < 4
-    // anymore.
-    'network.http.accept-encoding':'extensions.jondofox.http.accept_encoding',
     'security.default_personal_cert':
     'extensions.jondofox.security.default_personal_cert'
   },
@@ -343,8 +353,7 @@ JDFManager.prototype = {
 	  this.getVersionFF4();
 	  AddonManager.addAddonListener(extensionListener);
 	} catch (e) {
-          log("There went something with importing the AddonManager: " +
-              e);
+          log("There went something with importing the AddonManager: " + e);
 	}
       } else {
         JDFManager.prototype.VERSION = this.getVersion();
@@ -615,6 +624,11 @@ JDFManager.prototype = {
         if (this.ff22) {
             this.intPrefsMap['privacy.donottrackheader.value'] =
                'extensions.jondofox.donottrackheader.value';
+        }
+        // Disable gamepad API
+        if (this.ff24) {
+            this.boolPrefsMap['dom.gamepad.enabled'] =
+            'extensions.jondofox.gamepad.enabled';
         }
         // Restricting the sessionhistory max_entries
         this.intPrefsMap['browser.sessionhistory.max_entries'] =
@@ -1148,6 +1162,11 @@ JDFManager.prototype = {
     } else {
       this.ff22 = false;
     }
+    if (versComp.compare(ffVersion, "24.0") >= 0) {
+      this.ff24 = true;
+    } else {
+      this.ff24 = false;
+    }
     if (versComp.compare(ffVersion, "18.0a1") < 0) {
       this.notFF18 = true;
     } else {
@@ -1279,38 +1298,18 @@ JDFManager.prototype = {
         for (p in this.safebrowseMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.safebrowseMap[p]));
-        }
-        //Check whether we had a Tor UA before. If so, the value of the pref
-        //is not equal to "en-us" and we change it back to JonDoFox values. (Of
-        //course, this does not mean that we really had a Tor UA before, maybe
-        //the user changed the pref manually (and got a warning). But we can
-        //safely ignore this case. 
-        if (acceptLang !== "en-US,en") {
-          this.settingLocationNeutrality("");
-        }
-        this.prefsHandler.setStringPref("network.http.accept.default",
-          this.prefsHandler.getStringPref("extensions.jondofox.accept_default"));
-        this.prefsHandler.setStringPref("image.http.accept",
-          this.prefsHandler.getStringPref("extensions.jondofox.image_http_accept"));
-        
+        }      
         break;
+
       case (this.STATE_TOR):
         for (p in this.torUAMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
-        }
-        if (acceptLang !== "en-us, en") {
-          this.settingLocationNeutrality("tor.");
-        }
-        this.prefsHandler.setStringPref("network.http.accept.default",
-          this.prefsHandler.getStringPref("extensions.jondofox.tor.accept_default"));
-        this.prefsHandler.setStringPref("image.http.accept",
-          this.prefsHandler.getStringPref("extensions.jondofox.tor.image_http_accept"));
-        
+        }        
         break;
+
       case (this.STATE_CUSTOM):
-        userAgent = this.prefsHandler.getStringPref(
-			       'extensions.jondofox.custom.user_agent');
+        userAgent = this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent');
         if (userAgent === 'jondo') {
           for (p in this.jondoUAMap) {
             this.prefsHandler.setStringPref(p,
@@ -1321,26 +1320,12 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
               this.prefsHandler.getStringPref(this.safebrowseMap[p]));
           }
-          if (acceptLang !== "en-US,en") {
-            this.settingLocationNeutrality("");
-          }
-          this.prefsHandler.setStringPref("network.http.accept.default",
-            this.prefsHandler.getStringPref("extensions.jondofox.accept_default"));
-          this.prefsHandler.setStringPref("image.http.accept",
-            this.prefsHandler.getStringPref("extensions.jondofox.image_http_accept"));
           
         } else if (userAgent === 'tor') {
           for (p in this.torUAMap) {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
           }
-          if (acceptLang !== "en-us, en") {
-            this.settingLocationNeutrality("tor.");
-          }
-          this.prefsHandler.setStringPref("network.http.accept.default",
-            this.prefsHandler.getStringPref("extensions.jondofox.tor.accept_default"));
-          this.prefsHandler.setStringPref("image.http.accept",
-            this.prefsHandler.getStringPref("extensions.jondofox.tor.image_http_accept"));
           
         } else {
           // We use the opportunity to set other user prefs back to their
@@ -1374,10 +1359,7 @@ JDFManager.prototype = {
     var branch;
     try {
       // We only have to reset the values if this has not yet been done.
-      // For instance, if there was no previous proxy set before and now the 
-      // user uses a not well configured custom one, the values are already set.
-      if (this.prefsHandler.getStringPref('general.useragent.override') !==
-          null) {
+      if (this.prefsHandler.getStringPref('general.useragent.override') !== null) {
         this.prefsHandler.deletePreference('general.useragent.override');
         this.prefsHandler.deletePreference('general.appname.override');
         this.prefsHandler.deletePreference('general.appversion.override');
@@ -1387,21 +1369,18 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('general.oscpu.override');
         this.prefsHandler.deletePreference('general.buildID.override');
         this.prefsHandler.deletePreference('general.productsub.override');
-      }
-      this.prefsHandler.deletePreference("intl.accept_languages");
-      this.prefsHandler.deletePreference("image.http.accept");
+        this.prefsHandler.deletePreference("intl.accept_languages");
+        this.prefsHandler.deletePreference("image.http.accept");
+        this.prefsHandler.deletePreference("intl.accept_charsets");
+        this.prefsHandler.deletePreference("intl.charset.default");
+        this.prefsHandler.deletePreference("network.http.accept.default");
+        this.prefsHandler.deletePreference("network.http.accept-encoding");
+        this.prefsHandler.deletePreference("general.useragent.locale");
+       }
+
     } catch (e) {
       log("clearPrefs(): " + e);
     }
-  },
-
-  settingLocationNeutrality: function(torString) {
-    this.prefsHandler.setStringPref("intl.accept_languages",
-         this.prefsHandler.getStringPref(
-         "extensions.jondofox." + torString + "accept_languages"));
-    this.prefsHandler.setStringPref("intl.accept_charsets",
-         this.prefsHandler.getStringPref(
-         "extensions.jondofox." + torString + "accept_charsets"));
   },
 
   // First, we check the mimetypes.rdf in order to prevent the user from
