@@ -100,6 +100,24 @@ pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q
 pref("extensions.jondofox.tor.http.accept_encoding", "gzip, deflate");
 pref("extensions.jondofox.tor.useragent_locale", "en-US");
 
+// Useragent settings FF Windows
+pref("extensions.jondofox.windows.appname_override", "Netscape");
+pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
+pref("extensions.jondofox.windows.buildID_override", "20140127194636");
+pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
+pref("extensions.jondofox.windows.platform_override", "Win32");
+pref("extensions.jondofox.windows.productsub_override", "20100101");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:27.0) Gecko/20100101 Firefox/27.0");
+pref("extensions.jondofox.windows.useragent_vendor", "");
+pref("extensions.jondofox.windows.useragent_vendorSub", "");
+pref("extensions.jondofox.windows.accept_languages", "en-US,en");
+pref("extensions.jondofox.windows.accept_charsets", "iso-8859-1,*,utf-8");
+pref("extensions.jondofox.windows.default_charset", "");
+pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
+pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
+pref("extensions.jondofox.windows.useragent_locale", "en-US");
+
 // SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
     "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.0&pver=2.2");

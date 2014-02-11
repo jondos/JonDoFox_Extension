@@ -171,6 +171,9 @@ function loadPrefsCustomProxy(onLoad) {
     } else if (userAgent == 'tor') {
       document.getElementById('user_agent').selectedItem =
 	  document.getElementById('torUA');
+    } else if (userAgent == 'win') {
+      document.getElementById('user_agent').selectedItem =
+	  document.getElementById('winUA');
     } else {
       document.getElementById('user_agent').selectedItem =
           document.getElementById('normalUA');

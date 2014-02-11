@@ -195,8 +195,7 @@ function setProxy(state) {
          authMgr.clearAll();
       }
       // Clear all crypto auth tokens. 
-      var authCrypto = Cc["@mozilla.org/security/sdr;1"].
-                       getService(Components.interfaces.nsISecretDecoderRing);
+      var authCrypto = Cc["@mozilla.org/security/sdr;1"].getService(Components.interfaces.nsISecretDecoderRing);
       if(authCrypto) {
            authCrypto.logoutAndTeardown();
       }
@@ -205,7 +204,11 @@ function setProxy(state) {
       if(secMgr) {
          secMgr.logout();
       }
-  
+     // clear site permissions
+      var permMgr = Cc["@mozilla.org/permissionmanager;1"].getService(Ci.nsIPermissionManager);
+      if(permMgr) {
+         permMgr.removeAll();
+      }
       // clear Cache
       var cacheMgr = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
       if(cacheMgr) {

@@ -235,8 +235,9 @@
                   <radiogroup id="user_agent" orient="horizontal">
                     <radio id="normalUA" value="normal"
                            label="&jondofox.dialogtab.custom.useragent.normal;"/>
-                    <radio id="jondoUA" value="jondo" label="JonDo"/>
-                    <radio id="torUA" value="tor" label="Tor"/>
+                    <radio id="winUA" value="win" label="Firefox (Win32)"/>
+                    <radio id="jondoUA" value="jondo" label="JonDo-UA"/>
+                    <radio id="torUA" value="tor" label="Tor-UA"/>
                   </radiogroup>
                 </row>
 

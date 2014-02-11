@@ -165,7 +165,6 @@ JDFManager.prototype = {
     'Cookie Monster':'{45d8ff86-d909-11db-9705-005056c00008}'
   },
 
-  // The user agent maps...
   // If JonDo is set as proxy take these UA-settings
   jondoUAMap: {
     'general.appname.override':'extensions.jondofox.jondo.appname_override',
@@ -204,6 +203,26 @@ JDFManager.prototype = {
     'image.http.accept':'extensions.jondofox.tor.image_http_accept',
     'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding',
     'general.useragent.locale':'extensions.jondofox.tor.useragent_locale'
+  },
+
+  // UA-settings for Windows fake
+  windowsUAMap: {
+    'general.appname.override':'extensions.jondofox.windows.appname_override',
+    'general.appversion.override':'extensions.jondofox.windows.appversion_override',
+    'general.buildID.override':'extensions.jondofox.windows.buildID_override',
+    'general.oscpu.override':'extensions.jondofox.windows.oscpu_override',
+    'general.platform.override':'extensions.jondofox.windows.platform_override',
+    'general.productSub.override':'extensions.jondofox.windows.productsub_override',
+    'general.useragent.override':'extensions.jondofox.windows.useragent_override',
+    'general.useragent.vendor':'extensions.jondofox.windows.useragent_vendor',
+    'general.useragent.vendorSub':'extensions.jondofox.windows.useragent_vendorSub',
+    'intl.accept_languages':'extensions.jondofox.windows.accept_languages',
+    'intl.accept_charsets':'extensions.jondofox.windows.accept_charsets',
+    'intl.charset.default':'extensions.jondofox.windows.default_charset',
+    'network.http.accept.default':'extensions.jondofox.windows.accept_default',
+    'image.http.accept':'extensions.jondofox.windows.image_http_accept',
+    'network.http.accept-encoding':'extensions.jondofox.windows.http.accept_encoding',
+    'general.useragent.locale':'extensions.jondofox.windows.useragent_locale'
   },
 
   // Adding a uniform URLs concerning safebrowsing functionality to not
@@ -1325,6 +1344,12 @@ JDFManager.prototype = {
           for (p in this.torUAMap) {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
+          }
+
+        } else if (userAgent === 'win') {
+          for (p in this.windowsUAMap) {
+            this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.windowsUAMap[p]));
           }
           
         } else {
