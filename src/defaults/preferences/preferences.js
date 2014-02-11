@@ -110,7 +110,7 @@ pref("extensions.jondofox.windows.productsub_override", "20100101");
 pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:27.0) Gecko/20100101 Firefox/27.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
-pref("extensions.jondofox.windows.accept_languages", "en-US,en");
+pref("extensions.jondofox.windows.accept_languages", "en-us,en");
 pref("extensions.jondofox.windows.accept_charsets", "iso-8859-1,*,utf-8");
 pref("extensions.jondofox.windows.default_charset", "");
 pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
