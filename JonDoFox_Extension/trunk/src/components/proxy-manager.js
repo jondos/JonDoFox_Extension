@@ -111,30 +111,6 @@ ProxyManager.prototype = {
     }
   },
 
-  // Set 'network.proxy.no_proxies_on'
-  setExceptions: function(value) {
-    log("No proxies on --> " + value);
-    try {
-      this.ph.setStringPref("network.proxy.no_proxies_on", value);
-    } catch (e) {
-      log("setExceptions(): " + e);
-    }
-  },
-
-  // Add a domain element to the no proxy list
-  // XXX: Not needed?
-  addException: function(domain) {
-    log("Adding to no proxy list: " + domain);
-    try {
-      var oldList = this.ph.getStringPref("network.proxy.no_proxies_on");
-      var newList = oldList + ", " + domain;
-      log("No proxy list --> " + newList);
-      this.ph.setStringPref("network.proxy.no_proxies_on", newList);
-    } catch (e) {
-      log("setExceptions(): " + e);
-    }
-  },
-
   // Return the current proxy state
   getProxyState: function() {
     try {

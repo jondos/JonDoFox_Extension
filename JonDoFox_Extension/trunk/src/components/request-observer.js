@@ -320,9 +320,18 @@ RequestObserver.prototype = {
       }
     }
    
-    // Do not send DNT header for Tor, see: http://donottrack.us 
-    if (this.jdfManager.getState() === "tor") {
+    // Enforce DNT header for Tor and JonDo, see: http://donottrack.us
+    if ((this.jdfManager.getState() === "tor") ||
+        ((this.jdfManager.getState() === "custom") && 
+         (this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent') === 'tor')) ) {
+       // Do not send DNT header for Tor
        channel.setRequestHeader("DNT", null, false);
+    } 
+    if ((this.jdfManager.getState() === "jondo") ||
+        ((this.jdfManager.getState() === "custom") && 
+         (this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent') === 'jondo')) ) {
+       // Enforce DNT header for JonDo
+       channel.setRequestHeader("DNT", "1", false);
     }
 
     // And we set X-Behavioral-Ad-Opt-Out as well... but only if major
@@ -336,8 +345,7 @@ RequestObserver.prototype = {
     // The exception we make is the WebSocket handshake that needs a keep-alive
     // header: "At this point the HTTP connection breaks down and is replaced by
     // the WebSocket connection over the same underlying TCP/IP connection."
-    // http://www.websocket.org/aboutwebsocket.html section: The WebSocket
-    // Protocol
+    // http://www.websocket.org/aboutwebsocket.html section: The WebSocket Protocol
     var reqHeader = null;
     try {
       reqHeader = channel.getRequestHeader("Sec-WebSocket-Version");

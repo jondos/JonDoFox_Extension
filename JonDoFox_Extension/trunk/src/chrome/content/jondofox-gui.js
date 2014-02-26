@@ -220,8 +220,8 @@ function setProxy(state) {
       }
  
       // clear search bar and image cache
-      clearingSearchbarHistory();
       jdfManager.clearImageCache();
+      // clearingSearchbarHistory();
       
     }
     // Force prefs to be synced to disk

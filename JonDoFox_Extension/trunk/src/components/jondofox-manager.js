@@ -70,7 +70,6 @@ JDFManager.prototype = {
 
   // Some preferences
   STATE_PREF: 'extensions.jondofox.proxy.state',
-  NO_PROXIES: 'extensions.jondofox.no_proxies_on',
   REF_PREF: 'extensions.jondofox.set_referrer',
   FEEDS_PREF: 'extensions.jondofox.feeds_handler_default',
   AUDIO_FEEDS_PREF: 'extensions.jondofox.audioFeeds_handler_default',
@@ -177,8 +176,6 @@ JDFManager.prototype = {
     'general.useragent.vendor':'extensions.jondofox.jondo.useragent_vendor',
     'general.useragent.vendorSub':'extensions.jondofox.jondo.useragent_vendorSub',
     'intl.accept_languages':'extensions.jondofox.jondo.accept_languages',
-    'intl.accept_charsets':'extensions.jondofox.jondo.accept_charsets',
-    'intl.charset.default':'extensions.jondofox.jondo.default_charset',
     'network.http.accept.default':'extensions.jondofox.jondo.accept_default',
     'image.http.accept':'extensions.jondofox.jondo.image_http_accept',
     'network.http.accept-encoding':'extensions.jondofox.jondo.http.accept_encoding',
@@ -197,8 +194,6 @@ JDFManager.prototype = {
     'general.useragent.vendor':'extensions.jondofox.tor.useragent_vendor',
     'general.useragent.vendorSub':'extensions.jondofox.tor.useragent_vendorSub',
     'intl.accept_languages':'extensions.jondofox.tor.accept_languages',
-    'intl.accept_charsets':'extensions.jondofox.tor.accept_charsets',
-    'intl.charset.default':'extensions.jondofox.tor.default_charset',
     'network.http.accept.default':'extensions.jondofox.tor.accept_default',
     'image.http.accept':'extensions.jondofox.tor.image_http_accept',
     'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding',
@@ -217,8 +212,6 @@ JDFManager.prototype = {
     'general.useragent.vendor':'extensions.jondofox.windows.useragent_vendor',
     'general.useragent.vendorSub':'extensions.jondofox.windows.useragent_vendorSub',
     'intl.accept_languages':'extensions.jondofox.windows.accept_languages',
-    'intl.accept_charsets':'extensions.jondofox.windows.accept_charsets',
-    'intl.charset.default':'extensions.jondofox.windows.default_charset',
     'network.http.accept.default':'extensions.jondofox.windows.accept_default',
     'image.http.accept':'extensions.jondofox.windows.image_http_accept',
     'network.http.accept-encoding':'extensions.jondofox.windows.http.accept_encoding',
@@ -257,7 +250,9 @@ JDFManager.prototype = {
   // This map of string preferences is given to the prefsMapper
   stringPrefsMap: {
     'security.default_personal_cert':
-    'extensions.jondofox.security.default_personal_cert'
+      'extensions.jondofox.security.default_personal_cert',
+    'network.proxy.no_proxies_on':
+      'extensions.jondofox.network_no_proxies_on'
   },
 
   // This map of boolean preferences is given to the prefsMapper
@@ -629,25 +624,20 @@ JDFManager.prototype = {
       this.init();
       if (this.ff4) {
         if (this.ff7) {
-          this.boolPrefsMap['dom.enable_performance'] =
-            'extensions.jondofox.navigationTiming.enabled';
+          this.boolPrefsMap['dom.enable_performance'] = 'extensions.jondofox.navigationTiming.enabled';
+          // delete old charset values if it was set, because FF7 doesn't send it any more
+          if (this.prefsHandler.getStringPref('intl.accept_charsets') !== null) {
+             this.prefsHandler.deletePreference("intl.accept_charsets");
+             this.prefsHandler.deletePreference("intl.charset.default");
+             this.prefsHandler.deletePreference("intl.charsetmenu.browser.cache");
+          }
         }
-        this.boolPrefsMap['dom.indexedDB.enabled'] =
-                'extensions.jondofox.indexedDB.enabled';
+        this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled';
         // Disabling WebGL for security reasons
-        this.boolPrefsMap['webgl.disabled'] =
-                'extensions.jondofox.webgl.disabled';
-        // Enforce Do-Not-Track
-        this.boolPrefsMap['privacy.donottrackheader.enabled'] =
-                'extensions.jondofox.donottrackheader.enabled';
-        if (this.ff22) {
-            this.intPrefsMap['privacy.donottrackheader.value'] =
-               'extensions.jondofox.donottrackheader.value';
-        }
+        this.boolPrefsMap['webgl.disabled'] = 'extensions.jondofox.webgl.disabled';
         // Disable gamepad API
         if (this.ff24) {
-            this.boolPrefsMap['dom.gamepad.enabled'] =
-            'extensions.jondofox.gamepad.enabled';
+            this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
         }
         // Restricting the sessionhistory max_entries
         this.intPrefsMap['browser.sessionhistory.max_entries'] =
@@ -658,8 +648,7 @@ JDFManager.prototype = {
         // We do not want to ping Mozilla once per day for different updates
         // of Add-On Metadata and other stuff (duration of last startup...).
         this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
-        this.prefsHandler.
-	     getBoolPref('extensions.jondofox.getAddons.cache.enabled'));
+           this.prefsHandler.getBoolPref('extensions.jondofox.getAddons.cache.enabled'));
       } else {
         // In order to avoid unnecessary error messages we just add it to the
         // prefs map if we have a FF3 as it does not exist anymore in FF4.
@@ -1241,7 +1230,10 @@ JDFManager.prototype = {
     var userAgent = this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent');
     var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.nsIPluginHost);
     var plugins = pluginHost.getPluginTags({});
-    if (state === this.STATE_JONDO) {
+
+    if ((state === this.STATE_JONDO)  || 
+        ((state === this.STATE_CUSTOM) && 
+         (this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent') === "jondo"))) {
       for (var i = 0; i < plugins.length; i++) {
         var p=plugins[i];
         if (/^Shockwave.*Flash/i.test(p.name)) {
@@ -1258,18 +1250,20 @@ JDFManager.prototype = {
       }
       // We do not want to show a warning about missing plugins. No plugins
       // no security risk stemming from them.
-      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin",
-        true);
-    } else if (state === this.STATE_TOR) {
+      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin", true);
+
+    } else if ((state === this.STATE_TOR) || 
+               ((state === this.STATE_CUSTOM) && 
+                (this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent') === "tor"))) {
       for (var i = 0; i < plugins.length; i++) {
         var p = plugins[i];
         // The TorBrowserBundle blocks all plugins by default
         p.disabled = true;
       }
       // The same as for JonDo mode...
-      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin",
-        true);
-    } else if (state === this.STATE_CUSTOM || state === this.STATE_NONE) {
+      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin", true);
+
+    } else {
       log("Setting plugin state back...");
       var oldPluginSettings = JSON.parse(this.prefsHandler.
         getStringPref("extensions.jondofox.saved_plugin_settings"));
@@ -1396,8 +1390,6 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('general.productsub.override');
         this.prefsHandler.deletePreference("intl.accept_languages");
         this.prefsHandler.deletePreference("image.http.accept");
-        this.prefsHandler.deletePreference("intl.accept_charsets");
-        this.prefsHandler.deletePreference("intl.charset.default");
         this.prefsHandler.deletePreference("network.http.accept.default");
         this.prefsHandler.deletePreference("network.http.accept-encoding");
         this.prefsHandler.deletePreference("general.useragent.locale");
@@ -1860,9 +1852,6 @@ JDFManager.prototype = {
                       this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"));
             this.proxyManager.setProxySOCKS(this.prefsHandler.getStringPref("extensions.jondofox.jondo.host"), 
                       this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"), 5);
-            // Set default exceptions
-            this.proxyManager.setExceptions(this.prefsHandler.
-                                 getStringPref(this.NO_PROXIES));
             break;
 
           case this.STATE_TOR:
@@ -1878,9 +1867,7 @@ JDFManager.prototype = {
             this.proxyManager.setProxySOCKS(this.prefsHandler.getStringPref(prefix + "socks_host"), 
                       this.prefsHandler.getIntPref(prefix + "socks_port"), 5);
             this.proxyManager.setSocksRemoteDNS(true);
-            // Set default exceptions
-            this.proxyManager.setExceptions(this.prefsHandler.
-                                 getStringPref(this.NO_PROXIES));
+ 
             break;
 
           case this.STATE_CUSTOM:
@@ -1901,8 +1888,7 @@ JDFManager.prototype = {
                 this.prefsHandler.getStringPref(prefix + "socks_host"),
                 this.prefsHandler.getIntPref(prefix + "socks_port"),
                 this.prefsHandler.getIntPref(prefix + "socks_version"));
-            this.proxyManager.setExceptions(
-                this.prefsHandler.getStringPref(this.NO_PROXIES));
+
             break;
 
           default:
@@ -2189,9 +2175,7 @@ JDFManager.prototype = {
 		 this.prefsHandler.getStringPref(data));
 	  }
 
-          else if ((data === 'intl.accept_languages' ||
-            data === 'intl.accept_charsets' || data ===
-            'network.http.accept.default')
+          else if ((data === 'intl.accept_languages')
             && this.prefsHandler.isPreferenceSet('general.useragent.override')
             && this.prefsHandler.getStringPref('general.useragent.override') ===
 	    this.prefsHandler.

@@ -289,8 +289,6 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.jondofox "JonDoFox-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.menu "Proxy-Menü anzeigen">
 <!ENTITY jondofox.dialogtab.options.update "JonDoBrowser-Updates über JonDonym herunterladen">
-<!ENTITY jondofox.dialogtab.options.noproxy "Globale Proxy-Ausnahmen">
-<!ENTITY jondofox.dialogtab.options.example "Beispiel">
 
 <!-- Edit custom proxy tab -->
 <!ENTITY jondofox.dialogtab.custom.title "Benutzerdefinierte Proxy-Konfiguration">
