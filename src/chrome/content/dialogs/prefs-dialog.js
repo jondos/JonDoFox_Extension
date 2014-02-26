@@ -99,9 +99,6 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_proxy_warning').checked =
         prefsHandler.getBoolPref('extensions.jondofox.proxy_warning');
 
-    // 'no_proxies_on'
-    document.getElementById('no_proxies_on').value =
-        prefsHandler.getStringPref('extensions.jondofox.no_proxies_on');
   } catch (e) {
     log("loadPrefsGeneral(): " + e);
   }
@@ -143,9 +140,7 @@ function writePrefsGeneral() {
       prefsHandler.setBoolPref('extensions.jondofox.update_jondonym',
         document.getElementById('checkbox_update_jondonym').checked);
     }
-    // Setting 'no_proxies_on'
-    prefsHandler.setStringPref('extensions.jondofox.no_proxies_on',
-        document.getElementById('no_proxies_on').value);
+   
   } catch (e) {
     log("writePrefsGeneral(): " + e);
   }

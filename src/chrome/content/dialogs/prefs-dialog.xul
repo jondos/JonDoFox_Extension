@@ -168,17 +168,6 @@
               </groupbox>
             </row>
 
-            <!-- Global proxy exceptions -->
-            <row align="center">
-              <groupbox>
-                <caption label="&jondofox.dialogtab.options.noproxy;"/>
-                <!-- Proxy exceptions textbox -->
-                <textbox id="no_proxies_on" flex="1"/>
-                <!-- Static example row -->
-                <label value="&jondofox.dialogtab.options.example;: .mozilla.org, 192.168.1.0/24"/>
-              </groupbox>
-            </row>
-
             <!-- Checkbox for JonDoBrowser -->
             <row id="jondofox-menu-row" hidden="true" align="center">
               <groupbox>

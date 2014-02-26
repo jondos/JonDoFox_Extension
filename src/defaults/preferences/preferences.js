@@ -20,8 +20,8 @@ pref("extensions.jondofox.update_warning", true);
 pref("extensions.jondofox.preferences_warning", true);
 pref("extensions.jondofox.proxy_warning", true);
 
-// No proxy list
-pref("extensions.jondofox.no_proxies_on", "localhost, 127.0.0.1");
+// No proxy list has to be empty
+pref("extensions.jondofox.network_no_proxies_on", "");
 
 // Custom proxy
 pref("extensions.jondofox.custom.label", "");
@@ -75,8 +75,6 @@ pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i6
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
-pref("extensions.jondofox.jondo.accept_charsets", "iso-8859-1,*,utf-8");
-pref("extensions.jondofox.jondo.default_charset", "");
 pref("extensions.jondofox.jondo.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.jondo.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.jondo.http.accept_encoding", "gzip, deflate");
@@ -93,8 +91,6 @@ pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1;
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 pref("extensions.jondofox.tor.accept_languages", "en-us,en");
-pref("extensions.jondofox.tor.accept_charsets", "iso-8859-1,*,utf-8");
-pref("extensions.jondofox.tor.default_charset", "");
 pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.tor.http.accept_encoding", "gzip, deflate");
@@ -103,7 +99,7 @@ pref("extensions.jondofox.tor.useragent_locale", "en-US");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20140127194636");
+pref("extensions.jondofox.windows.buildID_override", "20140212131424");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
@@ -111,8 +107,6 @@ pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-us,en");
-pref("extensions.jondofox.windows.accept_charsets", "iso-8859-1,*,utf-8");
-pref("extensions.jondofox.windows.default_charset", "");
 pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
@@ -191,8 +185,6 @@ pref("extensions.jondofox.delete_searchbar", true);
 // No pinging of Mozilla once a day for Metadata updates or whatever
 // See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time
 pref("extensions.jondofox.getAddons.cache.enabled", false);
-pref("extensions.jondofox.donottrackheader.enabled", true);
-pref("extensions.jondofox.donottrackheader.value", 1);
 
 // See: http://www.contextis.com/resources/blog/webgl/
 pref("extensions.jondofox.webgl.disabled", true);
