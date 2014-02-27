@@ -680,7 +680,7 @@ function errorPageCheck() {
               contDoc.documentElement.replaceChild(DOMPars.firstChild.
                 firstChild, bodyElem);
             } catch (e) {
-              log("Error while parsing the HTML and modifying the DOm: " + e);
+              log("Error while parsing the HTML and modifying the DOM: " + e);
             }
             return;
           }

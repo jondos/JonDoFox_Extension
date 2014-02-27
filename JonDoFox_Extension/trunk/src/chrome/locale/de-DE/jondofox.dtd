@@ -213,11 +213,10 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.temp.email.wiki2 "in unserer Online-Hilfe">
 
 <!-- Instructions text -->
-<!ENTITY jondofox.instructions.titleQuestion "Haben Sie das Programm JonDo gestartet?">
-<!ENTITY jondofox.instructions.titleText "JonDoFox benötigt <b>zusätzlich</b> das Programm JonDo, 
-   um eine Verbindung zum JonDonym-Dienst herzustellen.">
+<!ENTITY jondofox.instructions.titleQuestion "Haben Sie den Anonymisierungs-Proxy gestartet?">
+<!ENTITY jondofox.instructions.titleText "<ul><li>Für anonymes Surfen mit <b>JonDo</b> müssen Sie das Proxy-Programm JonDo zusätzlich installieren und starten, um eine Verbindung zu JonDonym Diensten herzustellen.</li><li>Wenn Sie <b>Tor</b> als Anonymisierungsdienst ausgewählt haben, müssen Sie den Tor Daemon zusätzlich installieren und starten.</li><li>Wenn Sie keinen Anonymisierungsdienst nutzen wollen, wählen Sie bitte 'Kein Proxy' im JonDoFox Menü.</li></ul>">
 
-<!ENTITY jondofox.instructions.testTitle "Abschließender Test:">
+<!ENTITY jondofox.instructions.testTitle "Abschließender Test">
 <!ENTITY jondofox.instructions.testLink 
    "<a href='http://ip-check.info/?lang=de' target='_blank'>Klicken Sie 
    hier, um Ihre Installation mit dem JonDonym-Anonymitätstest zu 
