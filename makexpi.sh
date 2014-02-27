@@ -84,9 +84,6 @@ if [ ${JDF_BROWSER} ]; then
   echo "Replacing the JonDoFox update URL with an own"
   $SEDBIN -i 's/downloads\/update.rdf/downloads\/updateBrowser.rdf/g' \
     $(grep -ril 'downloads/update.rdf' *)
-  echo "Adapting netError.xhtml"
-  $SEDBIN -i 's/\&jondofox.instructions.titleText;/\&jondobrowser.instructions.titleText;/g' \
-    $(grep -ril '&jondofox.instructions.titleText;' *)
   cd ..
 fi
 
@@ -139,8 +136,6 @@ if [ ${JDF_BROWSER} ]; then
   # Resetting the update URL to the old one...
   $SEDBIN -i 's/downloads\/updateBrowser.rdf/downloads\/update.rdf/g' \
     `grep -ril 'downloads/updateBrowser.rdf' *`
-  $SEDBIN -i 's/\&jondobrowser.instructions.titleText;/\&jondofox.instructions.titleText;/g' \
-    $(grep -ril '&jondobrowser.instructions.titleText;' *)
 fi
 
 cd ..

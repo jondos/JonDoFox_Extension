@@ -3,6 +3,7 @@ Changes in version 0.5.8
  * Remove setting of charset in HTTP header, because it is not send by Firefox
  * Remove proxy exeptions from settings dialog, because it is risk for anonymity
  * Bump buildID for Windows-UA fake to latest Firefox
+ * Improved proxy error page and fixed OS specific download links for JonDo
 
 Changes in version 0.5.4
  * Disabled Do-Not-Track in Tor mode	

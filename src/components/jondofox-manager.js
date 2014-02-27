@@ -719,6 +719,19 @@ JDFManager.prototype = {
           this.startJondo();
         }
       }*/
+
+      // Check the OS
+      var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULRuntime); 
+      if (xulRuntime.OS === "WINNT") {
+         this.os = "windows";
+      } else if ((xulRuntime.OS === "Linux") ||
+                 (xulRuntime.OS === "FreeBSD") ||
+                 (xulRuntime.OS === "OpenBSD") ||
+                 (xulRuntime.OS === "NetBSD")) {
+         this.os = "linux";
+      } else if (xulRuntime.OS === "Darwin") {
+         this.os = "darwin";
+      }
       // A convenient method to set user prefs that change from proxy to proxy.
       // We should nevertheless make the settings of userprefs in broader way
       // dependant on the chosen proxy. This would include the call to 

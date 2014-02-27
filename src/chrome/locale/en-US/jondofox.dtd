@@ -220,9 +220,9 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.temp.email.wiki2 "in our online help">
 
 <!-- Instructions text -->
-<!ENTITY jondofox.instructions.titleQuestion "Did you start the JonDo program?">
-<!ENTITY jondofox.instructions.titleText "JonDoFox <b>additionally</b> needs the JonDo proxy program to be able to connect to the JonDonym service.">
-<!ENTITY jondofox.instructions.testTitle "Final test:">
+<!ENTITY jondofox.instructions.titleQuestion "Did you start the IP anonymisation program?">
+<!ENTITY jondofox.instructions.titleText "<ul><li>For anonymous surfing with <b>JonDo</b> you have to install and start the IP changer tool JonDo to connect to the JonDonym service.</li><li>If you selected <b>Tor</b> for anonymisation you have to install and start the Tor daemon.</li><li>If you don't want to use an anonymisation service you may choose 'No proxy' in the JonDoFox menu.</li></ul>">
+<!ENTITY jondofox.instructions.testTitle "Final Test">
 <!ENTITY jondofox.instructions.testLink 
    "<a href='http://ip-check.info/?lang=en' target='_blank'>Click here to check your 
    installation using the JonDonym anonymity test.</a>">
@@ -233,7 +233,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!-- Warnings-->
 <!ENTITY jondofox.warnings.externalApp "It is possible that your anonymity gets compromised if you are opening files/links directly with external applications!">
 <!ENTITY jondofox.warnings.externalPdf "Make sure that JavaScript, Flash and other active content is deactivated in your pdf-reader before opening the file as they can compromise your anonymity!">
-<!ENTITY jondofox.warnings.externalDoc "Use OpenOffice.org instead of Word to open this file if you want to keep your IP address protected!">
+<!ENTITY jondofox.warnings.externalDoc "Use OpenOffice.org or LibreOffice instead of Word to open this file if you want to keep your IP address protected!">
 
 <!-- Context menu strings -->
 <!ENTITY jondofox.contextmenu.noproxylist.add "Add Link to 'No Proxy'-List">
