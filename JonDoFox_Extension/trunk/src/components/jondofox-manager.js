@@ -338,7 +338,7 @@ JDFManager.prototype = {
         getService(CI.nsIEnvironment);
       // Determine whether we use FF4 or 7 or 12 or 17 still some FF3
       this.isFirefox4or7or12orNot18();
-      if (this.ff4) {
+    
         try {
           var extensionListener = {
 	    onUninstalling: function(addon, needsRestart) {
@@ -369,9 +369,7 @@ JDFManager.prototype = {
 	} catch (e) {
           log("There went something with importing the AddonManager: " + e);
 	}
-      } else {
-        JDFManager.prototype.VERSION = this.getVersion();
-      }
+  
       // Register the proxy filter
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
@@ -452,97 +450,9 @@ JDFManager.prototype = {
     }
   },
 
-  /**
-   * Try to uninstall other extensions that are not compatible
-   */
-  checkExtensions: function() {
-    var extension;
-    try {
-      // Indicate a necessary restart
-      // Iterate
-      for (extension in this.extensions) {
-        log('Checking for ' + extension);
-        // If present, uninstall
-        if (this.isInstalled(this.extensions[extension])) {
-          // XXX: Allow RefControl in some cases
-          if (extension === 'RefControl' &&
-              !this.prefsHandler.getBoolPref(this.REF_PREF)) {
-            log("Ignoring RefControl " + "refControl is " + this.refControl);
-          } else if (extension === 'Certificate Patrol' &&
-              !this.prefsHandler.
-              getBoolPref('extensions.jondofox.certpatrol_enabled')) {
-            this.certPatrol = true;
-            log("Ignoring Cerificate Patrol");
-          } else if (extension === 'SafeCache' ||
-                     extension === 'Certificate Patrol' ||
-                     extension === 'RefControl') {
-            log('Found ' + extension + ', uninstalling ..');
-            // Prompt a message window for every extension
-            this.jdfUtils.showAlert(this.jdfUtils.
-              getString('jondofox.dialog.attention'), this.jdfUtils.
-              formatString('jondofox.dialog.message.uninstallExtension',
-              [extension]));
-              // Uninstall and set restart to true
-            this.uninstallExtension(this.extensions[extension]);
-            this.restart = true;
-	  } else {
-            if (this.jdfUtils.showConfirm(this.jdfUtils.
-                  getString('jondofox.dialog.attention'), this.jdfUtils.
-                  formatString('jondofox.dialog.message.extension',
-                  [extension]))) {
-              // Uninstall and set restart to true
-              this.uninstallExtension(this.extensions[extension]);
-              this.restart = true;
-            }
-          }
-        } else {
-          log(extension + ' not found');
-          if (extension === 'RefControl' &&
-	      !this.prefsHandler.getBoolPref(this.REF_PREF)) {
-	    this.prefsHandler.setBoolPref(this.REF_PREF, true);
-          }
-        }
-      }
-      if (this.restart) {
-        // Programmatically restart the browser
-        this.restartBrowser();
-      }
-      // Now we check whether necessary extensions are installed...
-      for (extension in this.necessaryExtensions) {
-        log ('Checking for ' + extension);
-        if (!this.isInstalled(this.necessaryExtensions[extension])) {
-	  // We just set the flag here as we want to load the NoScript-URL
-	  // in the browser window in order to help the user installing it.
-	  // But the browser window is not ready yet, thus resorting to a 
-	  // flag read later.
-	  if (extension === "NoScript") {
-             this.isNoScriptInstalled = false;
-	  } else if (extension === "Cookie Monster") {
-	     this.isCMInstalled = false;
-	  }
-          log(extension + ' is missing');
-        } else {
-          log(extension + ' is installed');
-          //... and if so whether they are enabled.
-          if (this.isUserDisabled(this.necessaryExtensions[extension])) {
-            if (extension === "NoScript") {
-              this.isNoScriptEnabled = false;
-	    } else if (extension === "Cookie Monster") {
-              this.isCMEnabled = false;
-	    }
-	    log(extension + ' is disabled by user');
-          } else {
-	    log(extension + ' is enabled by user');
-          }
-        }
-      }
-    } catch (e) {
-      log("checkExtensions(): " + e);
-    }
-  },
 
   /**
-   * Try to uninstall other extensions that are not compatible; FF4 code
+   * Try to uninstall other extensions that are not compatible; FF4+ code
    */
   checkExtensionsFF4: function() {
     try {
@@ -622,7 +532,25 @@ JDFManager.prototype = {
     try {
       // Call init() first
       this.init();
-      if (this.ff4) {
+
+      // Check the OS
+      var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULRuntime); 
+      if (xulRuntime.OS === "WINNT") {
+         this.os = "windows";
+      } else if ((xulRuntime.OS === "Linux") ||
+                 (xulRuntime.OS === "FreeBSD") ||
+                 (xulRuntime.OS === "OpenBSD") ||
+                 (xulRuntime.OS === "NetBSD")) {
+         this.os = "linux";
+      } else if (xulRuntime.OS === "Darwin") {
+         this.os = "darwin";
+      }
+
+      // Set prefereces at first start
+      if (this.prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
+         this.first_start();
+      }
+
         if (this.ff7) {
           this.boolPrefsMap['dom.enable_performance'] = 'extensions.jondofox.navigationTiming.enabled';
           // delete old charset values if it was set, because FF7 doesn't send it any more
@@ -649,15 +577,7 @@ JDFManager.prototype = {
         // of Add-On Metadata and other stuff (duration of last startup...).
         this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
            this.prefsHandler.getBoolPref('extensions.jondofox.getAddons.cache.enabled'));
-      } else {
-        // In order to avoid unnecessary error messages we just add it to the
-        // prefs map if we have a FF3 as it does not exist anymore in FF4.
-        this.intPrefsMap['browser.history_expire_days'] =
-              'extensions.jondofox.history_expire_days';
-        // FF3-check for incompatible extensions and whether the necessary ones
-        // are installed and enabled.
-        this.checkExtensions();
-      }
+ 
       // Check whether we have some MIME-types which use external helper apps
       // automatically and if so correct this
       this.firstMimeTypeCheck();
@@ -720,18 +640,6 @@ JDFManager.prototype = {
         }
       }*/
 
-      // Check the OS
-      var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULRuntime); 
-      if (xulRuntime.OS === "WINNT") {
-         this.os = "windows";
-      } else if ((xulRuntime.OS === "Linux") ||
-                 (xulRuntime.OS === "FreeBSD") ||
-                 (xulRuntime.OS === "OpenBSD") ||
-                 (xulRuntime.OS === "NetBSD")) {
-         this.os = "linux";
-      } else if (xulRuntime.OS === "Darwin") {
-         this.os = "darwin";
-      }
       // A convenient method to set user prefs that change from proxy to proxy.
       // We should nevertheless make the settings of userprefs in broader way
       // dependant on the chosen proxy. This would include the call to 
@@ -964,6 +872,277 @@ JDFManager.prototype = {
     }
   },
 
+
+  first_start: function() {
+     try {
+        // set non-privacy relevant parameters
+        this.prefsHandler.setIntPref("accessibility.typeaheadfind.flashBar", 0);
+        this.prefsHandler.setBoolPref("bcpm.Button.Shown", true);
+        this.prefsHandler.setBoolPref("app.update.auto", false);
+
+        // Set cache
+        this.prefsHandler.setIntPref("browser.cache.disk.capacity", 0);
+        this.prefsHandler.setBoolPref("browser.cache.disk.enable", false);
+        this.prefsHandler.setBoolPref("browser.cache.disk_cache_ssl", false);
+        this.prefsHandler.setIntPref("browser.cache.memory.capacity", 65536);
+        this.prefsHandler.setBoolPref("browser.cache.offline.enable", false);
+        this.prefsHandler.setIntPref("browser.cache.compression_level", 1);
+
+        this.prefsHandler.setBoolPref("browser.download.hide_plugins_without_extensions", false);
+        this.prefsHandler.setBoolPref("browser.download.manager.alertOnEXEOpen", true);
+        this.prefsHandler.setIntPref("browser.download.manager.retention", 0);
+        this.prefsHandler.setBoolPref("browser.download.useDownloadDir", false);
+        this.prefsHandler.setStringPref("browser.newtab.url", "about:blank");
+        this.prefsHandler.setBoolPref("browserbrowser.newtabpage.enabled", false);
+        this.prefsHandler.setStringPref("browser.feeds.handler", "bookmarks");
+        this.prefsHandler.setStringPref("browser.feeds.handler.default", "bookmarks");
+        this.prefsHandler.setBoolPref("browser.feeds.showFirstRunUI", false);
+        this.prefsHandler.setBoolPref("browser.fixup.alternate.enabled", false);
+        this.prefsHandler.setIntPref("browser.history_expire_days", 0);
+        this.prefsHandler.setIntPref("browser.history_expire_days.mirror", 180);
+        this.prefsHandler.setBoolPref("browser.microsummary.enabled", false);
+        this.prefsHandler.setIntPref("browser.migration.version", 1);
+        this.prefsHandler.setBoolPref("browser.offline", false);
+        this.prefsHandler.setBoolPref("browser.offline-apps.notify", false);
+        this.prefsHandler.setBoolPref("browser.places.importBookmarksHTML", false);
+        this.prefsHandler.setBoolPref("browser.places.importDefaults", false);
+        this.prefsHandler.setIntPref("browser.places.leftPaneFolderId", -1);
+        this.prefsHandler.setBoolPref("browser.places.migratePostDataAnnotations", false);
+        this.prefsHandler.setIntPref("browser.places.smartBookmarksVersion", 2);
+        this.prefsHandler.setBoolPref("browser.places.updateRecentTagsUri", false);
+        this.prefsHandler.setIntPref("browser.preferences.advanced.selectedTabIndex", 0);
+        this.prefsHandler.setIntPref("browser.preferences.privacy.selectedTabIndex", 5);
+        this.prefsHandler.setBoolPref("browser.rights.3.shown", true);
+        this.prefsHandler.setStringPref("browser.search.selectedEngine", "Startpage HTTPS");
+        this.prefsHandler.setBoolPref("browser.search.update", false);
+        this.prefsHandler.setBoolPref("browser.search.useDBForOrder", true);
+        this.prefsHandler.setBoolPref("browser.sessionstore.enabled", false);
+        this.prefsHandler.setBoolPref("browser.sessionstore.resume_from_crash", false);
+        this.prefsHandler.setBoolPref("browser.shell.checkDefaultBrowser", false);
+        this.prefsHandler.setStringPref("browser.startup.homepage", "https://anonymous-proxy-servers.net/");
+        this.prefsHandler.setIntPref("browser.startup.page", 0);
+        this.prefsHandler.setStringPref("browser.throbber.url", "http://www.mozilla.org/");
+
+        this.prefsHandler.setStringPref("capability.policy.allowclipboard.Clipboard.cutcopy", "allAccess");
+        this.prefsHandler.setStringPref("capability.policy.allowclipboard.Clipboard.paste", "allAccess");
+        this.prefsHandler.setStringPref("capability.policy.allowclipboard.sites", "");
+        this.prefsHandler.setStringPref("capability.policy.maonoscript.javascript.enabled", "allAccess");
+        this.prefsHandler.setStringPref("capability.policy.maonoscript.sites", "about: about:blocked about:certerror about:config about:neterror about:plugins about:privatebrowsing about:sessionrestore chrome: resource:");
+        this.prefsHandler.setStringPref("capability.policy.policynames", "allowclipboard");
+        this.prefsHandler.setBoolPref("compact.menu.firstrun", false);
+        this.prefsHandler.setBoolPref("copyplaintext.default", false);
+        this.prefsHandler.setBoolPref("copyplaintext.formatting.extra.newline", true);
+        this.prefsHandler.setBoolPref("copyplaintext.formatting.extra.space", true);
+        this.prefsHandler.setBoolPref("copyplaintext.formatting.trim", true);
+
+        // Data reporting
+        this.prefsHandler.setBoolPref("datareporting.healthreport.service.enabled", false);
+        this.prefsHandler.setBoolPref("datareporting.healthreport.uploadEnabled", false);
+        this.prefsHandler.setBoolPref("datareporting.policy.dataSubmissionEnabled", false);
+
+        this.prefsHandler.setIntPref("dom.max_chrome_script_run_time", 60);
+        this.prefsHandler.setBoolPref("dom.event.clipboardevents.enabled", false);
+
+         // VideoDownloadHelper
+        this.prefsHandler.setBoolPref("dwhelper.conversion-enabled", false);
+        this.prefsHandler.setBoolPref("dwhelper.disable-dwcount-cookie", true);
+        this.prefsHandler.setIntPref("dwhelper.download-count", 1);
+        this.prefsHandler.setBoolPref("dwhelper.download-counter", false);
+        this.prefsHandler.setStringPref("dwhelper.download-mode", "onebyone");
+        this.prefsHandler.setBoolPref("dwhelper.extended-download-menu", false);
+        this.prefsHandler.setBoolPref("dwhelper.first-time", false);
+        this.prefsHandler.setBoolPref("dwhelper.icon-animation", false);
+        this.prefsHandler.setStringPref("dwhelper.icon-click", "open-popup");
+        this.prefsHandler.setBoolPref("dwhelper.safe-mode", false);
+        this.prefsHandler.setBoolPref("dwhelper.share-blacklist", false);
+        this.prefsHandler.setBoolPref("dwhelper.smartnamer.auto-share", false);
+        this.prefsHandler.setBoolPref("dwhelper.smartnamer.fname.keep-nonascii", false);
+        this.prefsHandler.setBoolPref("dwhelper.smartnamer.fname.keep-spaces", false);
+        this.prefsHandler.setBoolPref("dwhelper.social-share.enabled", false);
+        this.prefsHandler.setBoolPref("dwhelper.socialshare.enabled", false);
+
+        // Extensions
+        this.prefsHandler.setIntPref("extensions.autoDisableScopes", 14);
+        this.prefsHandler.setIntPref("extensions.autoDisableScopes", 14);
+
+        // AdBlock Plus
+        this.prefsHandler.setBoolPref("extensions.adblockplus.checkedadblockinstalled", true);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.checkedtoolbar", true);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.correctTyposAsked", true);
+        this.prefsHandler.setIntPref("extensions.adblockplus.patternsbackups", 0);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.showinstatusbar", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.showintoolbar", true);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.showsubscriptions", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.subscriptions_exceptionscheckbox", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.subscriptions_autoupdate", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.savestats", false);
+        this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.popup_shown", true);
+        this.prefsHandler.setBoolPref("extensions.https_everywhere.toolbar_hint_shown", true);
+
+        this.prefsHandler.setBoolPref("extensions.shownSelectionUI", true);
+        this.prefsHandler.setStringPref("extensions.ui.lastCategory", "addons://list/extension");
+        this.prefsHandler.setBoolPref("extensions.update.notifyUser", false);
+    
+        if (this.os === "linux") {
+            this.prefsHandler.setStringPref("font.name.serif.x-western", "Liberation Sans");
+            this.prefsHandler.setStringPref("font.name.sans-serif.x-western", "Liberation Sans");
+        } else {
+            this.prefsHandler.setStringPref("font.name.serif.x-western", "Arial");
+            this.prefsHandler.setStringPref("font.name.sans-serif.x-western", "Arial");
+        }
+        this.prefsHandler.setBoolPref("keyword.enabled", false);
+        this.prefsHandler.setBoolPref("local_install.addonsEnabled", true);
+        this.prefsHandler.setStringPref("local_install.addons_view_override", "installs");
+        this.prefsHandler.setBoolPref("local_install.disableInstallDelay", false);
+        this.prefsHandler.setBoolPref("local_install.enableInstall", true);
+        this.prefsHandler.setBoolPref("local_install.hideToolsBuildID", true);
+        this.prefsHandler.setBoolPref("local_install.hideToolsExtensionOptionsMenu", true);
+        this.prefsHandler.setBoolPref("local_install.hideToolsMyConfig", true);
+        this.prefsHandler.setBoolPref("local_install.hideToolsOpenProfile", true);
+        this.prefsHandler.setBoolPref("local_install.hideToolsOptionsMenu", true);
+        this.prefsHandler.setBoolPref("local_install.hideToolsThemeSwitcherMenu", true);
+        this.prefsHandler.setBoolPref("local_install.prompt_disableInstallDelay", false);
+        this.prefsHandler.setBoolPref("local_install.promptingToAutoUninstall", true);
+        this.prefsHandler.setIntPref("local_install.selected_settings_sub_tab3", 4);
+        this.prefsHandler.setIntPref("local_install.selected_settings_sub_tab4", 5);
+        this.prefsHandler.setBoolPref("local_install.showAddonsMyConfigImage", false);
+        this.prefsHandler.setBoolPref("local_install.showEMMenuButton", false);
+        this.prefsHandler.setBoolPref("local_install.showTMMenuButton", false);
+
+        this.prefsHandler.setIntPref("network.cookie.cookieBehavior", 2);
+        this.prefsHandler.setBoolPref("network.cookie.prefsMigrated", true);
+        this.prefsHandler.setStringPref("network.http.accept.default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        this.prefsHandler.setIntPref("network.http.max-persistent-connections-per-proxy", 12);
+        this.prefsHandler.setIntPref("network.http.pipelining.maxrequests", 6);
+        this.prefsHandler.setBoolPref("network.http.proxy.keep-alive", false);
+        this.prefsHandler.setBoolPref("network.prefetch-next", false);
+        this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.file", true);
+        this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.mailto", true);
+        this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.news", true);
+        this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.nntp", true);
+        this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.snews", true);
+
+        // NoScript
+        this.prefsHandler.setBoolPref("noscript.ABE.wanIpAsLocal", false);
+        this.prefsHandler.setBoolPref("noscript.autoReload", true);
+        this.prefsHandler.setBoolPref("noscript.blockNSWB", true);
+        this.prefsHandler.setBoolPref("noscript.canonicalFQDN", false);
+        this.prefsHandler.setBoolPref("noscript.contentBlocker", true);
+        this.prefsHandler.setBoolPref("noscript.ctxMenu", false);
+        this.prefsHandler.setBoolPref("noscript.doNotTrack.enabled", false);
+        this.prefsHandler.setStringPref("noscript.filterXExceptions", "^https?://([a-z]+)\\.google\\.(?:[a-z]{1,3}\\.)?[a-z]+/(?:search|custom|\\1)\\?\n^https?://([a-z]*)\\.?search\\.yahoo\\.com/search(?:\\?|/\\1\\b)\n^https?://[a-z]+\\.wikipedia\\.org/wiki/[^\"<>\\?%]+$\n^https?://translate\\.google\\.com/translate_t[^\"'<>\\?%]+$\n^https://secure\\.wikimedia\\.org/wikipedia/[a-z]+/wiki/[^\"<>\\?%]+$\n^https://www\\.cashu\\.com/cgi-bin/pcashu\\.cgi$");
+        this.prefsHandler.setBoolPref("noscript.firstRunRedirection", false);
+        this.prefsHandler.setBoolPref("noscript.forbidBookmarklets", true);
+        this.prefsHandler.setStringPref("noscript.gtemp", "");
+        this.prefsHandler.setStringPref("noscript.httpsForcedExceptions", "");
+        this.prefsHandler.setStringPref("noscript.options.tabSelectedIndexes", "3,0,0");
+        this.prefsHandler.setStringPref("noscript.policynames", "allowclipboard");
+        this.prefsHandler.setBoolPref("noscript.showAllowPage", false);
+        this.prefsHandler.setBoolPref("noscript.showBlockedObjects", false);
+        this.prefsHandler.setBoolPref("noscript.showDistrust", false);
+        this.prefsHandler.setBoolPref("noscript.showDomain", false);
+        this.prefsHandler.setBoolPref("noscript.showGlobal", false);
+        this.prefsHandler.setBoolPref("noscript.showPermanent", false);
+        this.prefsHandler.setBoolPref("noscript.showRecentlyBlocked", false);
+        this.prefsHandler.setBoolPref("noscript.showTempAllowPage", false);
+        this.prefsHandler.setBoolPref("noscript.showUntrustedPlaceholder", false);
+        this.prefsHandler.setBoolPref("noscript.showUntrusted", false);
+        this.prefsHandler.setStringPref("noscript.temp", "");
+        this.prefsHandler.setIntPref("noscript.toolbarToggle", 1);
+        this.prefsHandler.setStringPref("noscript.untrusted", "falkag.net google-analytics.com googlesyndication.com doubleclick.net doubleclick.com");
+
+        this.prefsHandler.setBoolPref("pref.advanced.images.disable_button.view_image", false);
+        this.prefsHandler.setBoolPref("pref.advanced.javascript.disable_button.advanced", false);
+        this.prefsHandler.setBoolPref("pref.browser.homepage.disable_button.current_page", false);
+        this.prefsHandler.setBoolPref("pref.browser.language.disable_button.remove", false);
+        this.prefsHandler.setBoolPref("pref.browser.language.disable_button.up", false);
+        this.prefsHandler.setBoolPref("pref.privacy.disable_button.cookie_exceptions", false);
+        this.prefsHandler.setBoolPref("pref.privacy.disable_button.view_cookies", false);
+        this.prefsHandler.setBoolPref("privacy.clearOnShutdown.passwords", true);
+        this.prefsHandler.setBoolPref("privacy.cpd.cookies", false);
+        this.prefsHandler.setBoolPref("privacy.item.passwords", true);
+        this.prefsHandler.setBoolPref("privacy.sanitize.didShutdownSanitize", true);
+        this.prefsHandler.setBoolPref("privacy.sanitize.migrateFx3Prefs", true);
+        this.prefsHandler.setBoolPref("privacy.sanitize.promptOnSanitize", false);
+        this.prefsHandler.setBoolPref("privacy.sanitize.sanitizeOnShutdown", true);
+
+        // Profilswitcher 
+        this.prefsHandler.setIntPref("profileswitcher.close_before_launch", 0);
+        this.prefsHandler.setIntPref("profileswitcher.where_show_name", 0);
+
+        this.prefsHandler.setBoolPref("pttl.menu-add-bookmark", false);
+        this.prefsHandler.setBoolPref("pttl.menu-append", false);
+        this.prefsHandler.setBoolPref("pttl.menu-complete-menu", true);
+        this.prefsHandler.setBoolPref("pttl.menu-def-open", false);
+        this.prefsHandler.setBoolPref("pttl.menu-def-save", false);
+        this.prefsHandler.setBoolPref("pttl.menu-save-in-file", false);
+        this.prefsHandler.setBoolPref("pttl.menu-search-groups-tab", false);
+        this.prefsHandler.setBoolPref("pttl.menu-search-groups-win", false);
+        this.prefsHandler.setBoolPref("pttl.menu-send-mail-to", false);
+        this.prefsHandler.setBoolPref("pttl.menu-send-text-to", false);
+        this.prefsHandler.setBoolPref("pttl.menu-translate", false);
+        this.prefsHandler.setIntPref("pttl.open-type", 2);
+        this.prefsHandler.setStringPref("pttl.save-directory-default", "");
+        this.prefsHandler.setStringPref("pttl.save-extension-default", ".txt");
+        this.prefsHandler.setBoolPref("pttl.save-with-UTF8", false);
+        this.prefsHandler.setBoolPref("reloadSearchPlugins", false);
+        this.prefsHandler.setBoolPref("security.disable_button.openCertManager", false);
+        this.prefsHandler.setBoolPref("security.disable_button.openDeviceManager", false);
+
+        // SSL
+        if (this.ff24) {
+           this.prefsHandler.setIntPref("security.tls.version.min", 1);
+           this.prefsHandler.setIntPref("security.tls.version.max", 3);
+        } else {
+           this.prefsHandler.setBoolPref("security.enable_ssl3", false);
+        }
+        this.prefsHandler.setBoolPref("security.ssl.enable_false_start", true);
+        this.prefsHandler.setIntPref("security.OCSP.enabled", 0);
+
+        this.prefsHandler.setBoolPref("signon.rememberSignons", false);
+        this.prefsHandler.setIntPref("toolkit.telemetry.prompted", 2);
+        this.prefsHandler.setBoolPref("toolkit.telemetry.rejected", true);
+
+        this.prefsHandler.setStringPref("xpinstall.whitelist.add", "");
+        this.prefsHandler.setStringPref("xpinstall.whitelist.add.103", "");
+
+        // restore default privacy settings
+        this.prefsHandler.deletePreference('extensions.jondofox.security.default_personal_cert');
+        this.prefsHandler.deletePreference('extensions.jondofox.network_no_proxies_on');
+        this.prefsHandler.deletePreference('extensions.jondofox.browser.zoom.siteSpecific');
+        this.prefsHandler.deletePreference('extensions.jondofox.plugin.expose_full_path');
+        this.prefsHandler.deletePreference('extensions.jondofox.browser_send_pings');
+        this.prefsHandler.deletePreference('extensions.jondofox.dom_storage_enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.geo_enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.network_prefetch-next');
+        this.prefsHandler.deletePreference('extensions.jondofox.socks_remote_dns');
+        this.prefsHandler.deletePreference('extensions.jondofox.source_editor_external');
+        this.prefsHandler.deletePreference('extensions.jondofox.security.remember_cert_checkbox_default_setting');
+        this.prefsHandler.deletePreference('extensions.jondofox.search_suggest_enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.sanitize_onShutdown');
+        this.prefsHandler.deletePreference('extensions.jondofox.clearOnShutdown_history');
+        this.prefsHandler.deletePreference('extensions.jondofox.clearOnShutdown_offlineApps');
+        this.prefsHandler.deletePreference('extensions.jondofox.tls_session_tickets');
+        this.prefsHandler.deletePreference('extensions.jondofox.battery.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.spdy.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.dom.network.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.event.clipboardevents.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.pagethumbnails.disabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.blocklist.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.peerconnection.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.noscript_dnt_enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.cookieBehavior');
+        this.prefsHandler.deletePreference('extensions.jondofox.use_document_fonts');
+        this.prefsHandler.deletePreference('extensions.jondofox.indexedDB.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.webgl.disabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.gamepad.enabled');
+        this.prefsHandler.deletePreference('extensions.jondofox.sessionhistory.max_entries');
+
+     } catch (e) {
+      log("first_start(): " + e);
+     }
+  },
+
   // General cleanup function for deinstallation etc.
   cleanup: function() {
     log("Cleaning up ..");
@@ -1041,34 +1220,6 @@ JDFManager.prototype = {
 		  prototype.VERSION);
             }
           });
-  },
-
-  /**
-   * Return the version string of this extension (FF < 4)
-   */
-  getVersion: function() {
-    try {
-      // Get the extension-manager and rdf-service
-      var extMgr = CC["@mozilla.org/extensions/manager;1"].
-                    getService(CI.nsIExtensionManager);
-      // Our ID
-      var extID = "{437be45a-4114-11dd-b9ab-71d256d89593}";
-      var version = "";
-      // Init ingredients
-      var ds = extMgr.datasource;
-      var res = this.rdfService.GetResource("urn:mozilla:item:" + extID);
-      var prop = this.rdfService.
-                  GetResource("http://www.mozilla.org/2004/em-rdf#version");
-      // Get the target
-      var target = ds.GetTarget(res, prop, true);
-      if(target !== null) {
-        version = target.QueryInterface(CI.nsIRDFLiteral).Value;
-      }
-      log("Current version is " + version);
-      return version;
-    } catch (e) {
-      log("getVersion(): " + e);
-    }
   },
 
   /**
