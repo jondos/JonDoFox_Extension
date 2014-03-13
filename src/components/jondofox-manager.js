@@ -113,6 +113,8 @@ JDFManager.prototype = {
   // We need it to disable gamepad API
   ff24 : null,
 
+  ff27 : null,
+
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
 
@@ -178,8 +180,7 @@ JDFManager.prototype = {
     'intl.accept_languages':'extensions.jondofox.jondo.accept_languages',
     'network.http.accept.default':'extensions.jondofox.jondo.accept_default',
     'image.http.accept':'extensions.jondofox.jondo.image_http_accept',
-    'network.http.accept-encoding':'extensions.jondofox.jondo.http.accept_encoding',
-    'general.useragent.locale':'extensions.jondofox.jondo.useragent_locale'
+    'network.http.accept-encoding':'extensions.jondofox.jondo.http.accept_encoding'
   },
 
   // If Tor is set as proxy take these UA-settings
@@ -196,8 +197,7 @@ JDFManager.prototype = {
     'intl.accept_languages':'extensions.jondofox.tor.accept_languages',
     'network.http.accept.default':'extensions.jondofox.tor.accept_default',
     'image.http.accept':'extensions.jondofox.tor.image_http_accept',
-    'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding',
-    'general.useragent.locale':'extensions.jondofox.tor.useragent_locale'
+    'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding'
   },
 
   // UA-settings for Windows fake
@@ -215,7 +215,6 @@ JDFManager.prototype = {
     'network.http.accept.default':'extensions.jondofox.windows.accept_default',
     'image.http.accept':'extensions.jondofox.windows.image_http_accept',
     'network.http.accept-encoding':'extensions.jondofox.windows.http.accept_encoding',
-    'general.useragent.locale':'extensions.jondofox.windows.useragent_locale'
   },
 
   // Adding a uniform URLs concerning safebrowsing functionality to not
@@ -286,13 +285,21 @@ JDFManager.prototype = {
        'extensions.jondofox.pagethumbnails.disabled',
     'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled',
     'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled',
-    'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled'
+    'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled',
+    'webgl.disabled':'extensions.jondofox.webgl.disabled',
+    'dom.indexedDB.enabled':'extensions.jondofox.indexedDB.enabled',
+       
+    'browser.download.manager.addToRecentDocs':
+       'extensions.jondofox.download_manager_addToRecentDocs',
+    'browser.formfill.enable':'extensions.jondofox.formfill.enable'
+
   },
 
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
     'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior',
-    'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts'
+    'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts',
+    'browser.sessionhistory.max_entries':'extensions.jondofox.sessionhistory.max_entries'
   },
 
   // This map contains those preferences which avoid external apps being opened
@@ -558,18 +565,15 @@ JDFManager.prototype = {
              this.prefsHandler.deletePreference("intl.accept_charsets");
              this.prefsHandler.deletePreference("intl.charset.default");
              this.prefsHandler.deletePreference("intl.charsetmenu.browser.cache");
+             
           }
+          this.prefsHandler.deletePreference("general.useragent.locale");
         }
-        this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled';
-        // Disabling WebGL for security reasons
-        this.boolPrefsMap['webgl.disabled'] = 'extensions.jondofox.webgl.disabled';
         // Disable gamepad API
         if (this.ff24) {
             this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
         }
-        // Restricting the sessionhistory max_entries
-        this.intPrefsMap['browser.sessionhistory.max_entries'] =
-           'extensions.jondofox.sessionhistory.max_entries';
+        
         // For clearity of code we implement a different method to check the
         // installed extension in Firefox4
         this.checkExtensionsFF4();
@@ -1339,6 +1343,11 @@ JDFManager.prototype = {
     } else {
       this.ff24 = false;
     }
+    if (versComp.compare(ffVersion, "27.0") >= 0) {
+      this.ff27 = true;
+    } else {
+      this.ff27 = false;
+    }
     if (versComp.compare(ffVersion, "18.0a1") < 0) {
       this.notFF18 = true;
     } else {
@@ -1556,7 +1565,6 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("image.http.accept");
         this.prefsHandler.deletePreference("network.http.accept.default");
         this.prefsHandler.deletePreference("network.http.accept-encoding");
-        this.prefsHandler.deletePreference("general.useragent.locale");
        }
 
     } catch (e) {

@@ -79,7 +79,6 @@ pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
 pref("extensions.jondofox.jondo.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.jondo.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.jondo.http.accept_encoding", "gzip, deflate");
-pref("extensions.jondofox.jondo.useragent_locale", "en-US");
 
 // Useragent settings Tor
 pref("extensions.jondofox.tor.appname_override","Netscape");
@@ -95,7 +94,6 @@ pref("extensions.jondofox.tor.accept_languages", "en-us,en");
 pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.tor.http.accept_encoding", "gzip, deflate");
-pref("extensions.jondofox.tor.useragent_locale", "en-US");
 
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
@@ -111,7 +109,6 @@ pref("extensions.jondofox.windows.accept_languages", "en-us,en");
 pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
-pref("extensions.jondofox.windows.useragent_locale", "en-US");
 
 // SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
@@ -224,6 +221,11 @@ pref("extensions.jondofox.event.clipboardevents.enabled", false);
 
 // Thumbnails for the New Tab page
 pref("extensions.jondofox.pagethumbnails.disabled", true);
+
+// secure the download manager to avoid wrting to disk
+pref("extensions.jondofox.download_manager_addToRecentDocs", false);
+
+pref("extensions.jondofox.formfill.enable", false);
 
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
