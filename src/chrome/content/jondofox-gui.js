@@ -990,26 +990,13 @@ var overlayObserver = {
             gBrowser.addEventListener("DOMContentLoaded", errorPageCheck,
               false);
 
-            // We have to tweak the code here as it is not working reliable for
-	    // FF 4. The funny thing is that the version check works well for
-	    // the first times of a FF4 start. But afterwards the async method
-	    // is always returning too late. Thus, the pref check returns NULL
-	    // and the feature page is always shown. Thus, we set the correct
-	    // pref directly in the jondofox-manager but the call to open a new
-	    // tab is done here. Once using the prefObserver (if the async
-	    // method is returning later, after the overlayobserver-code was
-	    // processed) and once on the following code if the aysnc-method is
-	    // returning earlier using a variable set by the Addon-Manager call.
-	    // Fun.
-	    if (!jdfManager.ff4 || jdfManager.newVersionDetected) {
-	      // Get the last version property
-              var last_version = prefsHandler.
-                getStringPref('extensions.jondofox.last_version');
-              if (jdfManager.newVersionDetected || last_version !== jdfManager.
-                    VERSION) {
+            // Show about:jondofox if new version was installed
+	    if (jdfManager.newVersionDetected) {
+	        // Get the last version property
+                var last_version = prefsHandler.getStringPref('extensions.jondofox.last_version');
+         
                 log("New version detected, opening feature page ..");
-	        // Checking whether we have to open a new tab for about:jondofox
-                // and opening it.
+	        // Checking whether we have to open a new tab for about:jondofox and opening it.
 	        openJDFFeaturePage();
                 prefsHandler.setStringPref('extensions.jondofox.last_version',
                   jdfManager.VERSION);
@@ -1017,14 +1004,8 @@ var overlayObserver = {
                   'extensions.jondofox.noscript_showDomain')) {
                   prefsHandler.setBoolPref('noscript.showDomain', false);
                 }
-              }
-              // Assuming we have a FF > 4 we detected the new version once and
-              // need to set the flag to false now. Otherwise we are getting
-              // always the about:jondofox page shown in the first session after
-              // the upgrade (or in every first session after the start of the
-              // Live-CD!) if a new window is opened (e.g. due to a login window
-              // of a bank).
-              jdfManager.newVersionDetected = false;
+   
+                jdfManager.newVersionDetected = false;
 	    }
 
             setTimeout(function() {startupChecks()}, 100);
