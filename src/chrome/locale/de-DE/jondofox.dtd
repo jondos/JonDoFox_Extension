@@ -266,8 +266,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.header "Schutz gegen Tracking">
 <!ENTITY jondofox.dialogtab.options.referrer "Aktiviere Referer-Management">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
-<!ENTITY jondofox.dialogtab.options.plugins "Deaktiviere Plugins im JonDo-Mode (Ausnahme: Flash)">
-<!ENTITY jondofox.dialogtab.options.flash "Deaktiviere auch Flash im JonDo-Mode">
+<!ENTITY jondofox.dialogtab.options.flash "Deaktiviere Flash im JonDo-Mode">
 <!ENTITY jondofox.dialogtab.options.flashhelp "Um eine Deanonymsierung via Flash zu vermeiden, ist als erstes eine sichere Konfiguration des Flash Players zu erstellen. Hinweise finden Sie in unserer Online-Hilfe">
 <!ENTITY jondofox.dialogtab.options.SSL "Validierung von SSL-Zertifikaten">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "verwende SSL Observatory nur mit">
@@ -281,6 +280,8 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">
+<!ENTITY jondofox.dialogtab.options.startup "Startverhalten">
+<!ENTITY jondofox.dialogtab.options.startup.alwaysjondo "beim Start immer JonDo als Proxy setzen">
 <!ENTITY jondofox.dialogtab.options.warnings "Warnungen">
 <!ENTITY jondofox.dialogtab.options.warnings.update "Zeige Warnung bei notwendigem Profil-Update">
 <!ENTITY jondofox.dialogtab.options.warnings.prefs "Zeige Warnung bei Veränderung wichtiger Einstellungen">

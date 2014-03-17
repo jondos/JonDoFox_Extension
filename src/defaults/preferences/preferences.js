@@ -68,7 +68,7 @@ pref("extensions.jondofox.tor.socks_port", 9050);
 // Useragent settings JonDo
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "20140131092626");
+pref("extensions.jondofox.jondo.buildID_override", "20140315085348");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
@@ -166,6 +166,7 @@ pref("extensions.jondofox.source_editor_external", false);
 pref("extensions.jondofox.dom_storage_enabled", false);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
+pref("extensions.jondofox.network_dns_disablePrefetch", true);
 pref("extensions.jondofox.cookieBehavior", 2);
 pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.sanitize_onShutdown", true);
@@ -199,7 +200,6 @@ pref("extensions.jondofox.tls_session_tickets", false);
 
 // Disabling all plugins in JonDonym-Mode
 pref("extensions.jondofox.disableAllPluginsJonDoMode", true);
-pref("extensions.jondofox.plugin-protection_enabled", true);
 
 // The Navigation Timing API
 pref("extensions.jondofox.navigationTiming.enabled", false);

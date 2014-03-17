@@ -6,13 +6,17 @@
 <body>
 <h1>JonDoFox - What's New</h1>
 <p>&nbsp;</p>
-<h2>What's New - 0.5.8</h2>
+<h2>What's New - 0.6</h2>
 <ul>
- <li>Improved Do-Not-Track handling and plug-in handling</li>
- <li>Remove setting of charset in HTTP header, because it is not send by Firefox</li>
- <li>Remove proxy exeptions from settings dialog, because it is risk for anonymity</li> 
- <li>Bump buildID for Windows-UA fake to latest Firefox</li>
- <li>Improved proxy error page and fixed OS specific download links for JonDo</li>
+ <li>Disable all plugins but Flash for no proxy and custom proxy</li>
+ <li>Firefox formfill assistance option is disabled</li>
+ <li>Do not add downloads to recent documents of desktop to avoid local traces</li>
+ <li>Disabled network.dns.disablePrefetch</li>
+ <li>Set app.update.enabled = false for FreeBSD, NetBSD, OpenBSD</li>
+ <li>Added option to config dialog for always set the proxy to JonDo on startup </li>
+ <li>Added a function to reset all values to JonDoFox default by reset extensions.jondofox.firstStart</li>
+ <li>Bump buildIDs for user agent fakes to latest Firefox esr</li>
+ <li>several bugfixes</li>
 </ul>
 </body>
 </html>
