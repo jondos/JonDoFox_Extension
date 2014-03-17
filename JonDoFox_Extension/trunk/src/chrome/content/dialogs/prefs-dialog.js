@@ -60,9 +60,6 @@ function loadPrefsGeneral() {
         prefsHandler.
 	getBoolPref('extensions.jondofox.stanford-safecache_enabled');
     // Plugin setting
-    document.getElementById('checkbox_set_plugins').checked =
-        prefsHandler.
-	getBoolPref('extensions.jondofox.plugin-protection_enabled');
     document.getElementById('checkbox_set_flash').checked =
         prefsHandler.
 	getBoolPref('extensions.jondofox.disableAllPluginsJonDoMode');
@@ -90,7 +87,9 @@ function loadPrefsGeneral() {
       updateCheckbox.checked = prefsHandler.
         getBoolPref('extensions.jondofox.update_jondonym');
     }
-
+    // allways start in JonDo mode
+    document.getElementById('checkbox_alwaysjondo').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.alwaysUseJonDo');
     // the warnings are checkboxes as well
     document.getElementById('checkbox_update_warning').checked =
         prefsHandler.getBoolPref('extensions.jondofox.update_warning');
@@ -112,8 +111,6 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_set_referrer').checked);
     prefsHandler.setBoolPref('extensions.jondofox.stanford-safecache_enabled',
         document.getElementById('checkbox_set_safecache').checked);
-    prefsHandler.setBoolPref('extensions.jondofox.plugin-protection_enabled',
-      document.getElementById('checkbox_set_plugins').checked);
     prefsHandler.setBoolPref('extensions.jondofox.disableAllPluginsJonDoMode',
       document.getElementById('checkbox_set_flash').checked);
     // get man-in.the-middle protection
@@ -122,10 +119,13 @@ function writePrefsGeneral() {
     if (prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 6) {
         prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', true);
     } else {
-        prefsHandler.setIntPref('extensions.jondofox.certpatrol_enabled', false);
+        prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', false);
     }
     //prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
 //	document.getElementById('checkbox_set_adblock').checked);
+    // Always start with JonDo
+    prefsHandler.setBoolPref('extensions.jondofox.alwaysUseJonDo',
+        document.getElementById('checkbox_alwaysjondo').checked);
     // Now the settings concerning different warnings
     prefsHandler.setBoolPref('extensions.jondofox.update_warning',
         document.getElementById('checkbox_update_warning').checked);
@@ -505,12 +505,8 @@ function onAccept() {
     writePrefsTempEmail();
     // Act according to the plugin checkbox
     jdfManager.enforcePluginPref(jdfManager.getState());
-    // Set proxy exceptions to FF
-    proxyManager.setExceptions(prefsHandler.getStringPref(
-        'extensions.jondofox.no_proxies_on'));
     // If the current state is 'custom': reset it
-    if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') ==
-        'custom') {
+    if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {
       setCustomProxy();
     }
   } catch (e) {
@@ -528,15 +524,13 @@ function onApply() {
     // Call the respective write-method
     if (index == TABINDEX_GENERAL) {
       writePrefsGeneral();
-      //
       // Act according to the plugin checkbox
       jdfManager.enforcePluginPref(jdfManager.getState());
-      // Set proxy exceptions to FF
-      proxyManager.setExceptions(prefsHandler.getStringPref(
-          'extensions.jondofox.no_proxies_on'));
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
-      setCustomProxy();
+      if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {
+         setCustomProxy();
+      }
       // Changing the label for the observatory custom-proxy menuitem
       //var obProxy = document.getElementById('observatoryProxy');
       //var customProxy = obProxy.getItemAtIndex(2);

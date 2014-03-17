@@ -110,6 +110,9 @@ JDFManager.prototype = {
   // We need it to enforce privacy.donottrackheader.value
   ff22 : null,
 
+  // We need it for new plugin handling
+  ff23 : null,
+
   // We need it to disable gamepad API
   ff24 : null,
 
@@ -291,7 +294,8 @@ JDFManager.prototype = {
        
     'browser.download.manager.addToRecentDocs':
        'extensions.jondofox.download_manager_addToRecentDocs',
-    'browser.formfill.enable':'extensions.jondofox.formfill.enable'
+    'browser.formfill.enable':'extensions.jondofox.formfill.enable',
+    'network.dns.disablePrefetch':'extensions.jondofox.network_dns_disablePrefetch'
 
   },
 
@@ -544,11 +548,14 @@ JDFManager.prototype = {
       var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULRuntime); 
       if (xulRuntime.OS === "WINNT") {
          this.os = "windows";
-      } else if ((xulRuntime.OS === "Linux") ||
-                 (xulRuntime.OS === "FreeBSD") ||
+      } else if (xulRuntime.OS === "Linux") {
+         this.os = "linux";
+      } else if ((xulRuntime.OS === "FreeBSD") ||
                  (xulRuntime.OS === "OpenBSD") ||
                  (xulRuntime.OS === "NetBSD")) {
          this.os = "linux";
+         // disable update, because it is done by compile options
+         this.prefsHandler.setBoolPref('app.update.enabled', false);
       } else if (xulRuntime.OS === "Darwin") {
          this.os = "darwin";
       }
@@ -655,7 +662,7 @@ JDFManager.prototype = {
       if (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 6) {
          this.prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', true);
       } else {
-         this.prefsHandler.setIntPref('extensions.jondofox.certpatrol_enabled', false);
+         this.prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', false);
       }
 
     } catch (e) {
@@ -1141,6 +1148,9 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('extensions.jondofox.webgl.disabled');
         this.prefsHandler.deletePreference('extensions.jondofox.gamepad.enabled');
         this.prefsHandler.deletePreference('extensions.jondofox.sessionhistory.max_entries');
+        this.prefsHandler.deletePreference('extensions.jondofox.network_dns_disablePrefetch');
+        this.prefsHandler.deletePreference('extensions.jondofox.download_manager_addToRecentDocs');
+        this.prefsHandler.deletePreference('extensions.jondofox.formfill.enable');
 
      } catch (e) {
       log("first_start(): " + e);
@@ -1338,6 +1348,11 @@ JDFManager.prototype = {
     } else {
       this.ff22 = false;
     }
+    if (versComp.compare(ffVersion, "23.0") >= 0) {
+      this.ff23 = true;
+    } else {
+      this.ff23 = false;
+    }
     if (versComp.compare(ffVersion, "24.0") >= 0) {
       this.ff24 = true;
     } else {
@@ -1381,84 +1396,103 @@ JDFManager.prototype = {
 
   savePluginSettings: function() {
     log("Saving plugins...");
-    var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.
-      nsIPluginHost);
-    var plugins = pluginHost.getPluginTags({});
+    var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.nsIPluginHost);
+    var plugins = pluginHost.getPluginTags();
     var oldPlugins = {};
     for (var i = 0; i < plugins.length; i++) {
       var p = plugins[i];
-      log(p.name + " : " + p.disabled);
-      oldPlugins[p.name] = p.disabled;
+      if ("enabledState" in p) {
+         log(p.name + " : " + p.enabledState);
+         oldPlugins[p.name] = p.enabledState;
+      } else {
+         log(p.name + " : " + p.disabled);
+         oldPlugins[p.name] = p.disabled;
+      }
     }
     var pluginJSON = JSON.stringify(oldPlugins);
     this.prefsHandler.setStringPref("extensions.jondofox.saved_plugin_settings",
       pluginJSON);
     // Saving the missing plugin notification as well...
-    this.prefsHandler.
-      setBoolPref("extensions.jondofox.saved_plugin_notification", this.
-      prefsHandler.getBoolPref("plugins.hide_infobar_for_missing_plugin"));
+    this.prefsHandler.setBoolPref("extensions.jondofox.saved_plugin_notification", 
+         this.prefsHandler.getBoolPref("plugins.hide_infobar_for_missing_plugin"));
   },
 
   enforcePluginPref: function(state) {
-    var userAgent = this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent');
+    var anz = new Object();
     var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.nsIPluginHost);
-    var plugins = pluginHost.getPluginTags({});
+    var plugins = pluginHost.getPluginTags(anz);
+    var userAgent = this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent');
 
-    if ((state === this.STATE_JONDO)  || 
-        ((state === this.STATE_CUSTOM) && 
-         (this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent') === "jondo"))) {
-      for (var i = 0; i < plugins.length; i++) {
+    if ((state === this.STATE_JONDO) || 
+        ((state ===  this.STATE_CUSTOM) && (userAgent === "jondo") ))  {
+      for (var i = 0; i < anz.value; i++) {
         var p=plugins[i];
         if (/^Shockwave.*Flash/i.test(p.name)) {
           // We are disabling Flash if a user of the JonDoFox-Profile wanted to
           if (this.prefsHandler.getBoolPref("extensions.jondofox.disableAllPluginsJonDoMode")) {
-            p.disabled = true;
+              if (this.ff23) {
+                  p.enabledState = CI.nsIPluginTag.STATE_DISABLED;
+              } else {
+                  p.disabled = true;
+              }
           } else {
             // We need this if we are coming from Tor mode
-            p.disabled = false;
+             if (this.ff23) {
+                  p.enabledState = CI.nsIPluginTag.STATE_ENABLED;
+              } else {
+                  p.disabled = false;
+              }
           }
         } else {
-          p.disabled = true;
+           if (this.ff23) {
+              p.enabledState = CI.nsIPluginTag.STATE_DISABLED;
+           } else {
+              p.disabled = true;
+           }
         }
       }
       // We do not want to show a warning about missing plugins. No plugins
       // no security risk stemming from them.
       this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin", true);
+      log("Enforce plug-ins settings for JonDo");
 
     } else if ((state === this.STATE_TOR) || 
-               ((state === this.STATE_CUSTOM) && 
-                (this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent') === "tor"))) {
-      for (var i = 0; i < plugins.length; i++) {
-        var p = plugins[i];
+               ((state ===  this.STATE_CUSTOM) && (userAgent === "tor") ))  {
+      for (var i = 0; i < anz.value; i++) {
         // The TorBrowserBundle blocks all plugins by default
-        p.disabled = true;
+        var p = plugins[i];
+        if (this.ff23) {
+           p.enabledState = CI.nsIPluginTag.STATE_DISABLED;
+        } else {
+           p.disabled = true;
+        }
       }
       // The same as for JonDo mode...
       this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin", true);
-
+      log("Disabled all plug-ins for Tor");
+ 
     } else {
-      log("Setting plugin state back...");
-      var oldPluginSettings = JSON.parse(this.prefsHandler.
-        getStringPref("extensions.jondofox.saved_plugin_settings"));
-      for (var i = 0; i < plugins.length; i++) {
-        var p = plugins[i];
-        try {
-          var oldSettings = oldPluginSettings.hasOwnProperty(p.name);
-        } catch (e) {}
-        if (oldSettings) {
-          p.disabled = oldPluginSettings[p.name];
+      for (var i = 0; i < anz.value; i++) {
+        var p=plugins[i];
+        if (/^Shockwave.*Flash/i.test(p.name)) {
+          // Flash is set to click_to_play
+          if (this.ff23) {
+                  p.enabledState = CI.nsIPluginTag.STATE_ENABLED;
+          } else {
+                  p.disabled = false;
+          }
         } else {
-          // If new plugins were installed meanwhile (i.e. in an other mode) we
-          // do enable them as the user probably installed these plugins in
-          // order to make use of them.
-          p.disabled = false;
+           // all other plugins are disabled
+           if (this.ff23) {
+              p.enabledState = CI.nsIPluginTag.STATE_DISABLED;
+           } else {
+              p.disabled = true;
+           }
         }
       }
       // Using the saved plugin notification settings.
-      this.prefsHandler.
-        setBoolPref("plugins.hide_infobar_for_missing_plugin",
-        this.prefsHandler.
-        getBoolPref("extensions.jondofox.saved_plugin_notification"));
+      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin",
+        this.prefsHandler.getBoolPref("extensions.jondofox.saved_plugin_notification"));
     }
   },
 
@@ -1471,9 +1505,8 @@ JDFManager.prototype = {
     var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
     log("Setting user agent and other stuff for: " + state);
     // First the plugin pref
-    if (this.prefsHandler.getBoolPref("extensions.jondofox.plugin-protection_enabled")) {
-      this.enforcePluginPref(state);
-    }
+    this.enforcePluginPref(state);
+
     switch(state) {
       case (this.STATE_JONDO):
         for (p in this.jondoUAMap) {
@@ -2090,28 +2123,54 @@ JDFManager.prototype = {
     } catch (e) {
       log("clearAllCookies(): " + e);
     }
+    /*
     try {
-      CC["@mozilla.org/dom/storagemanager;1"].getService(CI.nsIDOMStorageManager).clearOfflineApps();
+      var storagemgr= CC["@mozilla.org/dom/storagemanager;1"].getService(CI.nsIDOMStorageManager);
+      storagemgr.clearOfflineApps();
     } catch (e) {
       log("clearOfflineApps(): " + e);
     }
+    */
+  },
+
+   // clear Cache
+   clearCache: function() {
+      var cacheMgr = CC["@mozilla.org/network/cache-service;1"].getService(CI.nsICacheService);
+      try {
+          cacheMgr.evictEntries(CI.nsICache.STORE_ANYWHERE);
+          // cacheMgr.evictEntries(CI.nsICache.STORE_IN_MEMORY);
+          // cacheMgr.evictEntries(CI.nsICache.STORE_ON_DISK); 
+          // cacheMgr.evictEntries(CI.nsICache.STORE_ON_DISK_AS_FILE); 
+          // cacheMgr.evictEntries(CI.nsICache.STORE_OFFLINE); 
+      }   catch (e) { 
+          log("clearCache(): " + e); 
+      }
+      // clear DNS cache
+      var olddns= null;
+      if (this.prefsHandler.prefHasUserValue("network.dnsCacheExpiration")) {
+         olddns= this.prefsHandler.getIntPref("network.dnsCacheExpiration");
+      }
+      this.prefsHandler.setIntPref("network.dnsCacheExpiration", 0);
+      if (olddns != null) {
+           this.prefsHandler.setIntPref("network.dnsCacheExpiration", olddns);
+      } else {
+           this.prefsHandler.clearUserPref("network.dnsCacheExpiration");
+      }
   },
 
   // Clear image cache, e.g. when switching from one state to another
   clearImageCache: function() {
      try {
-        var imgCache;
-        var imgTools;
         if (this.notFF18) {
            // clear Image Cache for FF version < FF18
-           imgCache = Cc["@mozilla.org/image/cache;1"].getService(Ci.imgICache);
+           var imgCache = CC["@mozilla.org/image/cache;1"].getService(CI.imgICache);
            if (imgCache) {
               imgCache.clearCache(false);
            }
         } else {
             // clear Image Cache for FF version > FF17
-            imgTools = Cc["@mozilla.org/image/tools;1"].getService(Ci.imgITools);
-            imgCache = imgTools.getImgCacheForDocument(null);
+            var imgTools = CC["@mozilla.org/image/tools;1"].getService(CI.imgITools);
+            var imgCache = imgTools.getImgCacheForDocument(null);
             if (imgCache) {
                 imgCache.clearCache(false); 
             }
@@ -2153,7 +2212,7 @@ JDFManager.prototype = {
       }
       for(var i = 0; i < closeWins.length; ++i) {
             closeWins[i].close();
-	  }			
+      }			
   },
 
   // Implement nsIObserver ////////////////////////////////////////////////////

@@ -209,17 +209,8 @@ function setProxy(state) {
       if(permMgr) {
          permMgr.removeAll();
       }
-      // clear Cache
-      var cacheMgr = Cc["@mozilla.org/network/cache-service;1"].getService(Ci.nsICacheService);
-      if(cacheMgr) {
-          cacheMgr.evictEntries(1);
-          try { cacheMgr.evictEntries(2); }
-          catch (e) { }
-          try { cacheMgr.evictEntries(4); }
-          catch (e) { }
-      }
- 
-      // clear search bar and image cache
+      // clear Cache and ImgCache
+      jdfManager.clearCache();
       jdfManager.clearImageCache();
       // clearingSearchbarHistory();
       

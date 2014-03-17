@@ -72,12 +72,7 @@
                           label="&jondofox.dialogtab.options.safecache;"
                           accesskey="S"/>
 		</box>
-		<box>
-		  <!-- Checkbox to activate/deactivate plugin protection  -->
-                  <checkbox id="checkbox_set_plugins" 
-                          label="&jondofox.dialogtab.options.plugins;"
-                          accesskey="G"/>
-		</box>
+
 		<box>
 		  <!-- Checkbox to activate/deactivate Flash  -->
                   <checkbox id="checkbox_set_flash" 
@@ -168,6 +163,19 @@
               </groupbox>
             </row>
 
+            <!-- Startup  -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.startup;"/>
+                 <!-- Checkboxes to toggle the different types of warnings -->
+                <box>
+                  <checkbox id="checkbox_alwaysjondo"
+                          label="&jondofox.dialogtab.options.startup.alwaysjondo;"
+                          accesskey="a"/>
+		</box>
+              </groupbox>
+            </row>
+
             <!-- Checkbox for JonDoBrowser -->
             <row id="jondofox-menu-row" hidden="true" align="center">
               <groupbox>
@@ -180,7 +188,7 @@
                 <box>
                   <checkbox hidden="true" id="checkbox_update_jondonym"
                     label="&jondofox.dialogtab.options.update;"
-                    accesskey="u"/>
+                    accesskey="b"/>
                 </box>
               </groupbox>
             </row>

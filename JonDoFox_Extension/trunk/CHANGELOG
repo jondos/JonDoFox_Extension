@@ -1,3 +1,15 @@
+Changes in version 0.6
+
+ * Disable all plugins but Flash for "no proxy" and "custom proxy"
+ * Firefox formfill assistance option is disabled
+ * Do not add downloads to recent documents of desktop to avoid local traces
+ * Disabled network.dns.disablePrefetch
+ * Set "app.update.enabled = false" for FreeBSD, NetBSD, OpenBSD
+ * Added option to config dialog for always set the proxy to JonDo on startup 
+ * Added a function to reset all values to JonDoFox default by reset "extensions.jondofox.firstStart"
+ * Bump buildIDs for user agent fakes to latest Firefox esr
+ * several bugfixes
+
 Changes in version 0.5.9
  * Set all configuration values on first start, not required to set in prefs.js
  * Bump buildIDs for user agent fakes to latest Firefox and Firefox esr
