@@ -98,11 +98,11 @@ pref("extensions.jondofox.tor.http.accept_encoding", "gzip, deflate");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20140212131424");
+pref("extensions.jondofox.windows.buildID_override", "20140314220517");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:27.0) Gecko/20100101 Firefox/27.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:28.0) Gecko/20100101 Firefox/28.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-us,en");
