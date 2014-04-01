@@ -1,3 +1,13 @@
+Changes in version 0.6.1
+
+ * Enforce cache settings at startup and proxy switch
+ * Disabled media.cache, because it is written to disk
+ * Update JonDoFox and JonDoBrowser feature page
+
+Changes in version 0.6.0.1
+
+ * Bump user agent for Firefox (Win32) to Firefox 28.0
+
 Changes in version 0.6
 
  * Disable all plugins but Flash for "no proxy" and "custom proxy"

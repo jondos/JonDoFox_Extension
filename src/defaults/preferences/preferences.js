@@ -79,6 +79,7 @@ pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
 pref("extensions.jondofox.jondo.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.jondo.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.jondo.http.accept_encoding", "gzip, deflate");
+pref("extensions.jondofox.jondo.default_charset", "ISO-8859-1");
 
 // Useragent settings Tor
 pref("extensions.jondofox.tor.appname_override","Netscape");
@@ -94,6 +95,7 @@ pref("extensions.jondofox.tor.accept_languages", "en-us,en");
 pref("extensions.jondofox.tor.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.tor.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.tor.http.accept_encoding", "gzip, deflate");
+pref("extensions.jondofox.tor.default_charset", "ISO-8859-1");
 
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
@@ -109,6 +111,7 @@ pref("extensions.jondofox.windows.accept_languages", "en-us,en");
 pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
+pref("extensions.jondofox.windows.default_charset", "ISO-8859-1");
 
 // SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
@@ -229,6 +232,7 @@ pref("extensions.jondofox.formfill.enable", false);
 
 //SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
+pref("extensions.jondofox.browser_cache_memory_capacity", 65536);
 
 //Certificate Patrol
 pref("extensions.jondofox.certpatrol_enabled", false);
