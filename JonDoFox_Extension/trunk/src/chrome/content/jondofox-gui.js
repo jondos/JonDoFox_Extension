@@ -176,16 +176,18 @@ function setProxy(state) {
       }
       refresh();
     } else {
-      // The state has changed --> set the user agent and clear cookies
+      // The state has changed --> set the user agent and clear cookies     
       jdfManager.closeAllTabsAndWindows();
+      jdfManager.clearMemoryCache();
       jdfManager.setUserAgent(false, state);
       jdfManager.clearAllCookies();
+      jdfManager.enforceCachePref();
       
       // Setting already_submitted object back to avoid tracking risks
       reqObs.sslObservatory.already_submitted = {};
 	    
       if ("@maone.net/noscript-service;1" in Components.classes) {
-           let ns =  Components.classes["@maone.net/noscript-service;1"].getService().wrappedJSObject;
+           let ns =  Cc["@maone.net/noscript-service;1"].getService().wrappedJSObject;
            ns.eraseTemp();
       }
 
@@ -195,7 +197,7 @@ function setProxy(state) {
          authMgr.clearAll();
       }
       // Clear all crypto auth tokens. 
-      var authCrypto = Cc["@mozilla.org/security/sdr;1"].getService(Components.interfaces.nsISecretDecoderRing);
+      var authCrypto = Cc["@mozilla.org/security/sdr;1"].getService(Ci.nsISecretDecoderRing);
       if(authCrypto) {
            authCrypto.logoutAndTeardown();
       }
@@ -204,14 +206,12 @@ function setProxy(state) {
       if(secMgr) {
          secMgr.logout();
       }
-     // clear site permissions
-      var permMgr = Cc["@mozilla.org/permissionmanager;1"].getService(Ci.nsIPermissionManager);
-      if(permMgr) {
-         permMgr.removeAll();
-      }
-      // clear Cache and ImgCache
-      jdfManager.clearCache();
-      jdfManager.clearImageCache();
+      // clear site permissions
+      // var permMgr = Cc["@mozilla.org/permissionmanager;1"].getService(Ci.nsIPermissionManager);
+      // if(permMgr) {
+      //   permMgr.removeAll();
+      // }
+      
       // clearingSearchbarHistory();
       
     }

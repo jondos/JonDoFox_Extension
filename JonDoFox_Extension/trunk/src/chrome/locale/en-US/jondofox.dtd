@@ -5,24 +5,19 @@ downloading and using JonDoBrowser!</h3>The following page exhibits the main
 features of the JonDoBrowser, which are built into the browser itself or are
 provided by the JonDoFox extension. The features allow the user to surf the web
 in a more private and secure manner.">
-<!ENTITY jondobrowser.features.safecache "In addition to the ability to obtain
-user related information by examining the Referer, the User Agent and other
-HTTP headers, the browser cache can be exploited as well to extract similar
-information. An attacker may, for instance, attempt to obtain some information
-out of the web pages, due to the fact that information saved in the cache is
-loaded faster than the same, non-cached ones. Conversely, an attacker may try
-to set so-called cache cookies to identify a particular user across different
-domains. In order to better protect our users against this kind of attack, we
-included the slightly modified code of the SafeCache extension into JonDoFox.
-<br/>Additionally, the authentication cache of JonDoBrowser might get exploited
+<!ENTITY jondobrowser.features.safecache "It is possible to use the browser cache for tracking purposes. 
+An attacker may try to set so-called cache cookies (ETags) to identify a particular user across 
+different domains. In order to better protect our users against this kind of attack, 
+we included SafeCache into JonDoBrowser. To avoid traces about your surfing on disk the disk cache 
+ist disabled and only caching of first-party content in RAM is used by JonDoBrowser. 
+The cache is cleared, if the browser was closed.">
+<!ENTITY jondobrowser.features.httpauth "Additionally, the authentication cache of JonDoBrowser might get exploited
 to track users across several different domains. In order to defend against
 this kind of attack, however, we discard authentication information sent to or
-by third party elements. In the JonDoFox settings panel you will find a
-corresponding hint:">
+by third party elements.">
 <!ENTITY jondobrowser.features.plugins "Plugins can circumvent the proxy settings of
 JonDoBrowser, which makes them especially dangerous while surfing anonymously.
-Therefore, all plugins are deactivated by default in JonDo mode. The setting governing this
-behavior may again be found in JonDoFox's settings panel:">
+Therefore, all plugins are deactivated by default in JonDo mode and Tor mode.">
 <!ENTITY jondobrowser.features.plugins.picurl "chrome://jondofox/skin/plugins_en_jdb.png">
 <!ENTITY jondobrowser.features.certpatrol2 "This enhanced functionality has two
 distinct advantages. First, it allows users to check the fingerprint of a
@@ -42,7 +37,7 @@ have the means to get to the saved data.">
 to conveniently obtain a temporary E-mail address. In order to do so,
 right-click on a text field in which you want to get the E-mail address and
 choose the following entry out of the pop up menu">
-<!ENTITY jondobrowser.features.searchbar "In order to mitigate the risk that an outsider might get to know the queries entered into the browser's searchbar, JonDoBrowser erases them just after they were submitted. Furthermore, the search history gets deleted every thirty minutes. This configuration offers a fair compromise between privacy and convenience. Because the web browser's search bar is a more immediate threat, it is erased immediately to ensure the privacy of users. However, by retaining the search history for thirty minutes, the JonDoBrowser minimizes the possibility that entries in the search history may compromise the user without losing the search history feature completely.">
+<!ENTITY jondobrowser.features.searchbar "In order to mitigate the risk that an outsider might get knowledge about used login accounts, the formfill wizard is disabled in JonDoBrowser. Additionaly JonDoBrowser erases search queries just after they were submitted. The search history gets deleted every thirty minutes. This minimizes the possibility that entries in the search history may compromise the user without loosing the search history feature completely.">
 <!ENTITY jondobrowser.features.additionalAddons.head "Additional features of JonDoBrowser">
 <!ENTITY jondobrowser.features.additionalAddons "In addition to our
 self-designed extension, we have incorporated multiple of others into the
@@ -111,17 +106,16 @@ flexible platform is provided to configure a proxy manually and the opportunity
 to choose between different User Agents, i.e. Unchanged (leaving the default setting), JonDo and Tor:">
 <!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_en.png">
 <!ENTITY jondofox.features.safecache.head "Mitigating cache attacks">
-<!ENTITY jondofox.features.safecache "It is possible to use the browser cache for tracking purposes.
- An attacker may, for instance, attempt to obtain some information
-out of the web pages, due to the fact that information saved in the cache is
-loaded faster than the same, non-cached ones. Conversely, an attacker may try
-to set so-called cache cookies (ETags) to identify a particular user across different
-domains. In order to better protect our users against this kind of attack, we
-included the slightly modified code of the SafeCache extension into JonDoFox.
-Additionally, the authentication cache of Firefox might get exploited to
-track users across several different domains. In order to defend against this
-kind of attack, however, we discard authentication information sent to or by
-third party elements.">
+<!ENTITY jondofox.features.safecache "It is possible to use the browser cache for tracking purposes. 
+An attacker may try to set so-called cache cookies (ETags) to identify a particular user across 
+different domains. In order to better protect our users against this kind of attack, 
+we included SafeCache into JonDoFox. To avoid traces about your surfing on disk the disk cache 
+ist disabled and only caching of first-party content in RAM is used by JonDoFox. 
+The cache is cleared, if the browser was closed.">
+<!ENTITY jondofox.features.httpauth "Additionally, the authentication cache of JonDoFox might get exploited
+to track users across several different domains. In order to defend against
+this kind of attack, however, we discard authentication information sent to or
+by third party elements.">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_en.png">
 <!ENTITY jondofox.features.plugins.head "Defending against Plugins">
 <!ENTITY jondofox.features.plugins "Plugins can circumvent the proxy settings of
@@ -159,8 +153,9 @@ This allows you to choose a provider ad-hoc. The second option is using the
 JonDoFox settings. There, in the Temporary E-mails tab, you may even deactivate
 the whole feature:">
 <!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_en.png">
-<!ENTITY jondofox.features.searchbar.head "Protecting search queries at your workplace">
-<!ENTITY jondofox.features.searchbar "In order to mitigate the risk that an outsider might get to know the queries entered into the browser's searchbar, JonDoFox erases them just after they were submitted. Furthermore, the search history gets deleted every thirty minutes. This configuration offers a fair compromise between privacy and convenience. Because the web browser's search bar is a more immediate threat, it is erased immediately to ensure the privacy of users. However, by retaining the search history for thirty minutes, the JonDoFox minimizes the possibility that entries in the search history may compromise the user without losing the search history feature completely.">
+<!ENTITY jondofox.features.searchbar.head "Protecting your workplace">
+<!ENTITY jondofox.features.searchbar "In order to mitigate the risk that an outsider might get knowledge about used login accounts, the formfill wizard is disabled in JonDoFox. Additionaly JonDoFox erases search queries just after they were submitted. The search history gets deleted every thirty minutes. This minimizes the possibility that entries in the search history may compromise the user without loosing the search history feature completely.">
+<!ENTITY jondobrowser.features.additionalAddons.head "Additional features of JonDoBrowser">
 <!ENTITY jondofox.features.additionalAddons.head "Additional features of the JonDoFox profile">
 <!ENTITY jondofox.features.additionalAddons "In addition to our
 self-designed extension, we have incorporated multiple of others into the

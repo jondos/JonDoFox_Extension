@@ -1,20 +1,16 @@
 <!-- JonDoBrowser Features -->
 <!ENTITY jondobrowser.features.title "JonDoBrowser-Features">
-<!ENTITY jondobrowser.features.introduction "<h3 align='center'>Vielen Dank daf&uuml;r, 
+<!ENTITY jondobrowser.features.introduction "<h3 align='center'>Vielen Dank, 
 dass Sie JonDoBrowser heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
 die Hauptfeatures von JonDoBrowser n&auml;her erl&auml;utert, die in den Browser selbst eingebaut wurden oder &uuml;ber die JonDoFox-Erweiterung zur Verf&uuml;gung gestellt werden, um ein sichereres Surfen im Internet erm&ouml;glichen.">
-<!ENTITY jondobrowser.features.safecache "Neben dem Versuch, aus dem Referer, dem 
-User Agent und anderen HTTP-Headern Informationen &uuml;ber den Nutzer zu 
-gewinnen, gibt es noch die M&ouml;glichkeit, den Cache des Browsers f&uuml;r 
-Angriffe zu verwenden. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
-Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies zu 
-installieren. Zum besseren Schutz vor diesen Angriffen wurde der Code der 
-SafeCache-Erweiterung mit leichten Modifikationen in die JonDoFox-Erweiterung 
-integriert.<br/> Dar&uuml;ber hinaus sch&uuml;tzt JonDoBrowser vor Versuchen, den
-Nutzer mit Hilfe von HTTP-Authentifikationsdaten zu verfolgen. Dazu werden
-sowohl die spezifischen Nutzerdaten, die an Drittseiten gesendet als auch von
-ihnen empfangen werden, herausgefiltert. Im JonDoFox-Einstellungsmen&uuml;
-findet sich ein entsprechender Hinweis darauf:">
+<!ENTITY jondobrowser.features.safecache "Es gibt M&ouml;glichkeiten, den Cache des Browsers für das Tracking zu nutzen. 
+Dabei wird versucht, die k&uuml;rzere Ladezeit von Webseiten aus dem Cache auszunutzen oder Cache-Cookies 
+(ETags) zu installieren. Zum Schutz vor diesen Angriffen wurde SafeCache mit leichten Modifikationen im JonDoBrowser integriert. 
+Um keine Spuren des Surfverhaltens auf der Festplatte zu hinterlassen, wird der Disk-Cache deaktiviert 
+und nur der Cache im RAM genutzt. Da der Cache beim Beenden von Firefox immer gel&ouml;scht wird, entsteht durch die 
+Beschr&auml;nkung auf den Cache im RAM keine zus&auml;tzliche Beeinträchtigung.">
+<!ENTITY jondobrowser.features.httpauth "Dar&uuml;ber hinaus sch&uuml;tzt JonDoBrowser vor Versuchen, 
+das Surfverhalten mit HTTP-Authentifikationsdaten zu verfolgen.">
 <!ENTITY jondobrowser.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
 von JonDoBrowser umgehen, was sie besonders gef&auml;hrlich beim anonymen Surfen
 macht. Daher werden im JonDo-Modus standardm&auml;&szlig;ig alle
@@ -38,23 +34,23 @@ Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu k&ou
 <!ENTITY jondobrowser.features.tlsid.head "Schutz vor TLS-Session-Ids">
 <!ENTITY jondobrowser.features.tlsid "TLS-Session-Ids erlauben es, verschiedene TLS-Anfragen miteinander zu verkn&uuml;pfen. Dadurch ist es unter Umst&auml;nden m&ouml;glich, einen Nutzer wiederzuerkennen bzw. dessen Identifikation zu erleichtern. Damit dies nicht geschieht, schaltet JonDoBrowser diese Option Nutzer zu verfolgen ab.">
 <!ENTITY jondobrowser.features.temp.email1 "Mit dem JonDoBrowser haben Sie die M&ouml;glichkeit, bequem tempor&auml;re E-Mail-Adressen bei einer Anmeldung in Foren oder beim Posten von Blog-Kommentaren zu benutzen. Klicken Sie dazu mit der rechten Maustaste auf ein Textfeld, in dem die E-Mail-Adresse erscheinen soll und w&auml;hlen Sie aus dem aufklappenden Men&uuml; folgenden Eintrag aus:">
-<!ENTITY jondobrowser.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoBrowser diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage f&uuml;r jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchhistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalit&auml;t ganz aufzugeben.">
+<!ENTITY jondobrowser.features.searchbar "Um die Eingaben in Formulare (z.B. Login Namen) vor Analyse durch ungewollte Beobachtern zu sch&uuml;tzen, ist der Assistent zum Ausf&uuml;llen von Formularen im JonDoBrowser deaktiviert. Die Eingaben in die Suchleiste des Browsers werden nach dem Abschicken gel&ouml;scht. Die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, wird jede halbe Stunde gel&ouml;scht. Damit kann es nicht passieren, dass die letzten Logins oder Suchanfrage für jeden einsehbar bleiben, der Zugang zur Browsersitzung des Nutzers hat.">
 <!ENTITY jondobrowser.features.additionalAddons.head "Weitere Features des JonDoBrowsers">
 <!ENTITY jondobrowser.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in den JonDoBrowser
-integriert, damit die Anonymität während des Surfens noch besser gesch&uuml;tzt ist. 
-Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, UnPlug und HTTPS-Everywhere) 
+integriert, damit die Anonymit&auml;t während des Surfens noch besser gesch&uuml;tzt ist. 
+Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, VideoDownloadHelper und HTTPS-Everywhere) 
 sind auf unserer Hilfeseiten unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">
 <!ENTITY jondobrowser.features.ipcheck.head "Testen Sie Ihre Einstellungen mit dem IP-Check">
 <!ENTITY jondobrowser.features.ipcheck "Um zu überprüfen, ob Sie Ihren Browser ordentlich konfiguriert haben, bieten wir den <a href='http://ip-check.info'>IP-Check</a> an. Dort wird mit verschiedenen Mitteln versucht, Ihre IP-Adresse herauszubekommen oder identifizierende Informationen aus Ihrem Browser auszulesen. Sie finden dort auch Hinweise dazu, wie Sie eventuell auftretende Probleme beheben und sich so besser vor einer Identifikation im Netz schützen können.">
-<!ENTITY jondobrowser.instructions.titleText "JonDoBrowser benötigt <b>zusätzlich</b> das Programm JonDo, 
+<!ENTITY jondobrowser.instructions.titleText "JonDoBrowser ben&ouml;tigt <b>zus&auml;tzlich</b> das Programm JonDo, 
    um eine Verbindung zum JonDonym-Dienst herzustellen.">
 
 <!-- JonDoFox Features -->
 <!ENTITY jondofox.features.title "JonDoFox-Features">
-<!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank daf&uuml;r, 
+<!ENTITY jondofox.features.introduction "<h3 align='center'>Vielen Dank, 
 dass Sie JonDoFox heruntergeladen und gestartet haben!</h3>Im Folgenden werden 
 die Hauptfeatures unserer JonDoFox-Erweiterung n&auml;her erl&auml;utert, die 
 ein sichereres Surfen im Internet erm&ouml;glichen.">
@@ -114,13 +110,14 @@ seinen Proxy manuell konfigurieren m&ouml;chte, hat die M&ouml;glichkeit,
 zwischen verschiedenen User Agents zu w&auml;hlen:">
 <!ENTITY jondofox.features.useragent.picurl "chrome://jondofox/skin/user_agent_management_de.png">
 <!ENTITY jondofox.features.safecache.head "Schutz vor Cacheangriffen">
-<!ENTITY jondofox.features.safecache "Es gibt M&ouml;glichkeiten, den Cache des Browsers f&uuml;r 
-das Tracking zu nutzen. Dabei wird versucht, die k&uuml;rzere Ladezeit von 
-Webseiten aus dem Cache auszunutzen oder sogenannte Cache-Cookies (ETags) zu 
-installieren. Zum Schutz vor diesen Angriffen wurde der Code der 
-SafeCache-Extension mit leichten Modifikationen in unsere Erweiterung 
-integriert. Dar&uuml;ber hinaus sch&uuml;tzt JonDoFox vor Versuchen, den
-Nutzer mit Hilfe von HTTP-Authentifikationsdaten zu verfolgen.">
+<!ENTITY jondofox.features.safecache "Es gibt M&ouml;glichkeiten, den Cache des Browsers für das Tracking zu nutzen. 
+Dabei wird versucht, die k&uuml;rzere Ladezeit von Webseiten aus dem Cache auszunutzen oder Cache-Cookies 
+(ETags) zu installieren. Zum Schutz vor diesen Angriffen wurde SafeCache mit leichten Modifikationen im JonDoFox integriert. 
+Um keine Spuren des Surfverhaltens auf der Festplatte zu hinterlassen, wird der Disk-Cache deaktiviert 
+und nur der Cache im RAM genutzt. Da der Cache beim Beenden von Firefox immer gel&ouml;scht wird, entsteht durch die 
+Beschr&auml;nkung auf den Cache im RAM keine zus&auml;tzliche Beeintr&auml;chtigung.">
+<!ENTITY jondofox.features.httpauth "Dar&uuml;ber hinaus sch&uuml;tzt JonDoFox vor Versuchen, 
+das Surfverhalten mit HTTP-Authentifikationsdaten zu verfolgen.">
 <!ENTITY jondofox.features.safecache.picurl "chrome://jondofox/skin/safecache_de.png">
 <!ENTITY jondofox.features.plugins.head "Schutz vor Plugins">
 <!ENTITY jondofox.features.plugins "Plugins k&ouml;nnen die Proxy-Einstellungen
@@ -153,13 +150,13 @@ nicht &uuml;bereinstimmen, wird eine Warnung gezeigt.">
 <!ENTITY jondofox.features.temp.email.picurl1 "chrome://jondofox/skin/temp_emails_context_de.png">
 <!ENTITY jondofox.features.temp.email2 "Wenn Sie auf 'E-Mail-Adresse generieren (tempor&auml;r)' klicken, wird die angeforderte E-Mail-Adresse in das Textfeld eingef&uuml;gt und Ihr Account in einem neuen Tab ge&ouml;ffnet. Wenn Sie selbst bestimmen m&ouml;chten, welchen Anbieter tempor&auml;rer E-Mail-Adressen Sie verwenden, dann haben Sie zwei M&ouml;glichkeiten. Zum einen k&ouml;nnen Sie mit der Maus &uuml;ber das '&gt;' fahren und spontan einen Anbieter ausw&auml;hlen. Zum anderen k&ouml;nnen Sie in den JonDoFox-Einstellungen eine Auswahl festlegen. Dort finden Sie auch die M&ouml;glichkeit, das Feature ganz zu deaktivieren:">
 <!ENTITY jondofox.features.temp.email.picurl2 "chrome://jondofox/skin/temp_emails_de.png">
-<!ENTITY jondofox.features.searchbar.head "Schutz der Suchanfragen vor Beoachtern am Rechner-Arbeitsplatz">
-<!ENTITY jondofox.features.searchbar "Um die Eingaben in die Suchleiste des Browsers vor ungewollten Beobachtern zu sch&uuml;tzen, entfernt JonDoFox diese nach jeder Eingabe. Au&szlig;erdem wird die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, jede halbe Stunde gel&ouml;scht. Damit kann es zum einen nicht mehr passieren, dass die letzte Suchanfrage f&uuml;r jeden, der Zugang zur Browsersitzung des Nutzers hat, einsehbar bleibt. Zum anderen wird die M&ouml;glichkeit, dass Eintr&auml;ge in der Suchhistorie den Nutzer kompromittieren, minimiert, ohne deren Funktionalit&auml;t ganz aufzugeben.">
+<!ENTITY jondofox.features.searchbar.head "Schutz vor Beoachtern am Rechner-Arbeitsplatz">
+<!ENTITY jondofox.features.searchbar "Um die Eingaben in Formulare (z.B. Login Namen) vor Analyse durch ungewollte Beobachtern zu sch&uuml;tzen, ist der Assistent zum Ausf&uuml;llen von Formularen im JonDoFox deaktiviert. Die Eingaben in die Suchleiste des Browsers werden nach dem Abschicken gel&ouml;scht. Die Suchhistorie, in der die eingegebenen Begriffe gespeichert werden, wird jede halbe Stunde gel&ouml;scht. Damit kann es nicht passieren, dass die letzten Logins oder Suchanfrage für jeden einsehbar bleiben, der Zugang zur Browsersitzung des Nutzers hat.">
 <!ENTITY jondofox.features.additionalAddons.head "Weitere Features des JonDoFox-Profils">
 <!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
-integriert, damit die Anonymität während des Surfens noch besser gesch&uuml;tzt ist. 
-Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, UnPlug und HTTPS-Everywhere) 
+integriert, damit die Anonymit&auml;t während des Surfens noch besser gesch&uuml;tzt ist. 
+Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, VideoDownloadHelper und HTTPS-Everywhere) 
 sind auf unserer Hilfeseiten unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">

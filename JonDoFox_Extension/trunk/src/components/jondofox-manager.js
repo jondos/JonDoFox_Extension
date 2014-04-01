@@ -161,6 +161,7 @@ JDFManager.prototype = {
     'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}',
     'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}',
     'Certificate Patrol':'CertPatrol@PSYC.EU'
+    // 'UnPlug':'unplug@compunach'
   },
 
   // Necessary security extensions with their IDs
@@ -183,7 +184,8 @@ JDFManager.prototype = {
     'intl.accept_languages':'extensions.jondofox.jondo.accept_languages',
     'network.http.accept.default':'extensions.jondofox.jondo.accept_default',
     'image.http.accept':'extensions.jondofox.jondo.image_http_accept',
-    'network.http.accept-encoding':'extensions.jondofox.jondo.http.accept_encoding'
+    'network.http.accept-encoding':'extensions.jondofox.jondo.http.accept_encoding',
+    'intl.charset.default':'extensions.jondofox.jondo.default_charset'
   },
 
   // If Tor is set as proxy take these UA-settings
@@ -200,7 +202,8 @@ JDFManager.prototype = {
     'intl.accept_languages':'extensions.jondofox.tor.accept_languages',
     'network.http.accept.default':'extensions.jondofox.tor.accept_default',
     'image.http.accept':'extensions.jondofox.tor.image_http_accept',
-    'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding'
+    'network.http.accept-encoding':'extensions.jondofox.tor.http.accept_encoding',
+    'intl.charset.default':'extensions.jondofox.tor.default_charset'
   },
 
   // UA-settings for Windows fake
@@ -218,6 +221,7 @@ JDFManager.prototype = {
     'network.http.accept.default':'extensions.jondofox.windows.accept_default',
     'image.http.accept':'extensions.jondofox.windows.image_http_accept',
     'network.http.accept-encoding':'extensions.jondofox.windows.http.accept_encoding',
+    'intl.charset.default':'extensions.jondofox.windows.default_charset'
   },
 
   // Adding a uniform URLs concerning safebrowsing functionality to not
@@ -564,8 +568,10 @@ JDFManager.prototype = {
       if (this.prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
          this.first_start();
       }
+      // enforce cache settings
+      this.enforceCachePref();
 
-        if (this.ff7) {
+      if (this.ff7) {
           this.boolPrefsMap['dom.enable_performance'] = 'extensions.jondofox.navigationTiming.enabled';
           // delete old charset values if it was set, because FF7 doesn't send it any more
           if (this.prefsHandler.getStringPref('intl.accept_charsets') !== null) {
@@ -575,18 +581,18 @@ JDFManager.prototype = {
              
           }
           this.prefsHandler.deletePreference("general.useragent.locale");
-        }
-        // Disable gamepad API
-        if (this.ff24) {
+      }
+      // Disable gamepad API
+      if (this.ff24) {
             this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
-        }
+      }
         
-        // For clearity of code we implement a different method to check the
-        // installed extension in Firefox4
-        this.checkExtensionsFF4();
-        // We do not want to ping Mozilla once per day for different updates
-        // of Add-On Metadata and other stuff (duration of last startup...).
-        this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
+      // For clearity of code we implement a different method to check the
+      // installed extension in Firefox4
+      this.checkExtensionsFF4();
+      // We do not want to ping Mozilla once per day for different updates
+      // of Add-On Metadata and other stuff (duration of last startup...).
+      this.prefsHandler.setBoolPref('extensions.getAddons.cache.enabled',
            this.prefsHandler.getBoolPref('extensions.jondofox.getAddons.cache.enabled'));
  
       // Check whether we have some MIME-types which use external helper apps
@@ -891,14 +897,6 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("bcpm.Button.Shown", true);
         this.prefsHandler.setBoolPref("app.update.auto", false);
 
-        // Set cache
-        this.prefsHandler.setIntPref("browser.cache.disk.capacity", 0);
-        this.prefsHandler.setBoolPref("browser.cache.disk.enable", false);
-        this.prefsHandler.setBoolPref("browser.cache.disk_cache_ssl", false);
-        this.prefsHandler.setIntPref("browser.cache.memory.capacity", 65536);
-        this.prefsHandler.setBoolPref("browser.cache.offline.enable", false);
-        this.prefsHandler.setIntPref("browser.cache.compression_level", 1);
-
         this.prefsHandler.setBoolPref("browser.download.hide_plugins_without_extensions", false);
         this.prefsHandler.setBoolPref("browser.download.manager.alertOnEXEOpen", true);
         this.prefsHandler.setIntPref("browser.download.manager.retention", 0);
@@ -1151,6 +1149,7 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('extensions.jondofox.network_dns_disablePrefetch');
         this.prefsHandler.deletePreference('extensions.jondofox.download_manager_addToRecentDocs');
         this.prefsHandler.deletePreference('extensions.jondofox.formfill.enable');
+        this.prefsHandler.deletePreference('extensions.jondofox.browser_cache_memory_capacity');
 
      } catch (e) {
       log("first_start(): " + e);
@@ -1417,6 +1416,40 @@ JDFManager.prototype = {
          this.prefsHandler.getBoolPref("plugins.hide_infobar_for_missing_plugin"));
   },
 
+  enforceCachePref: function() {
+        // Set cache preferences
+        this.prefsHandler.setIntPref("browser.cache.disk.capacity", 0);
+        this.prefsHandler.setBoolPref("browser.cache.disk.enable", false);
+        this.prefsHandler.setBoolPref("browser.cache.disk_cache_ssl", false);
+        this.prefsHandler.setIntPref("browser.cache.offline.capacity", 0);
+        this.prefsHandler.setBoolPref("browser.cache.offline.enable", false);
+        this.prefsHandler.setIntPref("media.cache_size", 0);
+        this.prefsHandler.setIntPref("browser.cache.memory.capacity", 
+           this.prefsHandler.getIntPref("extensions.jondofox.browser_cache_memory_capacity"));
+        this.prefsHandler.setIntPref("browser.cache.compression_level", 1);
+        this.prefsHandler.setIntPref("image.cache.size", 5242880);
+        this.prefsHandler.setBoolPref("browser.cache.memory.enable", true);
+  },
+
+  clearMemoryCache: function() {
+      this.prefsHandler.setIntPref("browser.cache.memory.capacity", 0);
+      this.prefsHandler.setIntPref("image.cache.size", 0);
+      this.prefsHandler.setBoolPref("browser.cache.memory.enable", false);
+
+      // clear DNS cache
+      var olddns= null;
+      if (this.prefsHandler.isPreferenceSet("network.dnsCacheExpiration")) {
+         olddns= this.prefsHandler.getIntPref("network.dnsCacheExpiration");
+      }
+      this.prefsHandler.setIntPref("network.dnsCacheExpiration", 0);
+      if (olddns != null) {
+           this.prefsHandler.setIntPref("network.dnsCacheExpiration", olddns);
+      } else {
+           this.prefsHandler.deletePreference("network.dnsCacheExpiration");
+      }
+  },
+
+
   enforcePluginPref: function(state) {
     var anz = new Object();
     var pluginHost = CC["@mozilla.org/plugin/host;1"].getService(CI.nsIPluginHost);
@@ -1598,6 +1631,7 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("image.http.accept");
         this.prefsHandler.deletePreference("network.http.accept.default");
         this.prefsHandler.deletePreference("network.http.accept-encoding");
+        this.prefsHandler.deletePreference("intl.charset.default");
        }
 
     } catch (e) {
