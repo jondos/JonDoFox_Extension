@@ -213,9 +213,6 @@ pref("extensions.jondofox.battery.enabled", false);
 // Gamepad API
 pref("extensions.jondofox.gamepad.enabled", false);
 
-// SPDY
-pref("extensions.jondofox.spdy.enabled", false);
-
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);
 
