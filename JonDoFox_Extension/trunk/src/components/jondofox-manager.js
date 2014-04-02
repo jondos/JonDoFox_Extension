@@ -284,7 +284,6 @@ JDFManager.prototype = {
     'security.enable_tls_session_tickets':
        'extensions.jondofox.tls_session_tickets',
     'dom.battery.enabled':'extensions.jondofox.battery.enabled',
-    'network.http.spdy.enabled':'extensions.jondofox.spdy.enabled',
     'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
     'dom.event.clipboardevents.enabled':
        'extensions.jondofox.event.clipboardevents.enabled',
@@ -626,11 +625,7 @@ JDFManager.prototype = {
       // Now, we observe the datasource in order to be able to prevent the user
       // from using external applications automatically.
       this.observeMimeTypes();
-      // We need to save the mode of all plugins in order to get them properly
-      // set after switching to No-Proxy mode.
-      if (!this.prefsHandler.getStringPref('extensions.jondofox.saved_plugin_settings')) {
-         this.savePluginSettings();
-      }
+
       log("Setting initial proxy state ..");
       // If somebody wants to have always JonDo as a proxy she gets it and the 
       // corresponding User Agent setting. Otherwise the last used proxy will be
@@ -1133,7 +1128,6 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('extensions.jondofox.clearOnShutdown_offlineApps');
         this.prefsHandler.deletePreference('extensions.jondofox.tls_session_tickets');
         this.prefsHandler.deletePreference('extensions.jondofox.battery.enabled');
-        this.prefsHandler.deletePreference('extensions.jondofox.spdy.enabled');
         this.prefsHandler.deletePreference('extensions.jondofox.dom.network.enabled');
         this.prefsHandler.deletePreference('extensions.jondofox.event.clipboardevents.enabled');
         this.prefsHandler.deletePreference('extensions.jondofox.pagethumbnails.disabled');
@@ -1546,6 +1540,9 @@ JDFManager.prototype = {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.jondoUAMap[p]));
         }
+        //  Disable SPDY, websockets for JonDo
+        this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
+        this.prefsHandler.setBoolPref('network.websocket.enabled', false);
         // Setting our own safebrowsing provider and activate it.
         for (p in this.safebrowseMap) {
           this.prefsHandler.setStringPref(p,
@@ -1557,7 +1554,10 @@ JDFManager.prototype = {
         for (p in this.torUAMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
-        }        
+        }
+        //  Disable SPDY for Tor
+        this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
+        this.prefsHandler.setBoolPref('network.websocket.enabled', false);    
         break;
 
       case (this.STATE_CUSTOM):
@@ -1567,6 +1567,9 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
              this.prefsHandler.getStringPref(this.jondoUAMap[p]));
           }
+          //  Disable SPDY for JonDo
+          this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
+          this.prefsHandler.setBoolPref('network.websocket.enabled', false);
           // Setting our own safebrowsing provider and activate it.
           for (p in this.safebrowseMap) {
             this.prefsHandler.setStringPref(p,
@@ -1578,13 +1581,18 @@ JDFManager.prototype = {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
           }
+          //  Disable SPDY for Tor
+          this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
+          this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 
         } else if (userAgent === 'win') {
           for (p in this.windowsUAMap) {
             this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.windowsUAMap[p]));
           }
-          
+          //  Enable SPDY, because it is default for Firefox
+          this.prefsHandler.setBoolPref('network.http.spdy.enabled', true);
+          this.prefsHandler.setBoolPref('network.websocket.enabled', true);
         } else {
           // We use the opportunity to set other user prefs back to their
           // default values as well.
@@ -1592,6 +1600,7 @@ JDFManager.prototype = {
           for (p in this.safebrowseMap) {
               this.prefsHandler.deletePreference(p);
           }
+
         }
         break;
       case (this.STATE_NONE):
@@ -1632,6 +1641,8 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("network.http.accept.default");
         this.prefsHandler.deletePreference("network.http.accept-encoding");
         this.prefsHandler.deletePreference("intl.charset.default");
+        this.prefsHandler.deletePreference('network.http.spdy.enabled');
+        this.prefsHandler.deletePreference('network.websocket.enabled');
        }
 
     } catch (e) {
@@ -2064,19 +2075,7 @@ JDFManager.prototype = {
     try {
       // Store the previous state to detect state changes
       var previousState = this.getState();
-      // We store the previous plugin settings if the user comes out of no proxy
-      // mode in order to restore them later if the user switches back. That
-      // should be independent of the status of the plugin feature. Otherwise it
-      // could happen that an old saved state gets restored as soon as the user
-      // is enabling that feature: forgetting about e.g. newly installed or
-      // removed plugins.
-      // We treat custom proxy mode as no proxy mode for the plugin feature
-      // as otherwise the user would have no options to use JonDonym with
-      // plugins other than Flash enabled.
-      if (previousState === this.STATE_NONE ||
-          (previousState === this.STATE_CUSTOM)) {
-        this.savePluginSettings();
-      }
+ 
       // STATE_NONE --> straight disable
       if (state === this.STATE_NONE) {
         this.disableProxy();
