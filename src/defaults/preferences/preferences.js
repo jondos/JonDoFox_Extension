@@ -68,7 +68,7 @@ pref("extensions.jondofox.tor.socks_port", 9050);
 // Useragent settings JonDo
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "20140315085348");
+pref("extensions.jondofox.jondo.buildID_override", "20140421162246");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
@@ -100,11 +100,11 @@ pref("extensions.jondofox.tor.default_charset", "ISO-8859-1");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20140314220517");
+pref("extensions.jondofox.windows.buildID_override", "20140421221237");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:28.0) Gecko/20100101 Firefox/28.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:29.0) Gecko/20100101 Firefox/29.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-us,en");
@@ -115,11 +115,11 @@ pref("extensions.jondofox.windows.default_charset", "ISO-8859-1");
 
 // SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.0&pver=2.2");
+    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.5&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.keyURL",
-    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=24.0&pver=2.2");
+    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=24.5&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.lookupURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=24.0&");
+    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=24.5&");
 pref("extensions.jondofox.safebrowsing.provider.0.reportErrorURL",
     "http://en-US.phish-error.mozilla.com/?hl=en-US");
 pref("extensions.jondofox.safebrowsing.provider.0.reportGenericURL",
@@ -133,7 +133,7 @@ pref("extensions.jondofox.safebrowsing.provider.0.reportPhishURL",
 pref("extensions.jondofox.safebrowsing.provider.0.reportURL",
     "http://safebrowsing.clients.google.com/safebrowsing/report?");
 pref("extensions.jondofox.safebrowsing.provider.0.updateURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=24.0&pver=2.2");
+    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=24.5&pver=2.2");
 
 pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
 
@@ -201,6 +201,9 @@ pref("extensions.jondofox.sessionhistory.max_entries", 2);
 // https://tools.ietf.org/html/rfc5077)
 pref("extensions.jondofox.tls_session_tickets", false);
 
+// Do not restore sessions
+pref("extensions.jondofox.sessionstore_privacy_level", 2);
+
 // Disabling all plugins in JonDonym-Mode
 pref("extensions.jondofox.disableAllPluginsJonDoMode", true);
 
@@ -213,11 +216,20 @@ pref("extensions.jondofox.battery.enabled", false);
 // Gamepad API
 pref("extensions.jondofox.gamepad.enabled", false);
 
+//  Snippet URL
+pref("extensions.jondofox.snippet_url", "");
+
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);
 
-// Clipboard Sniffing vai JS
+// Javascript stuff
 pref("extensions.jondofox.event.clipboardevents.enabled", false);
+pref("extensions.jondofox.javascript.options.ion.content", false);
+pref("extensions.jondofox.javascript.options.baselinejit.content", false);
+pref("extensions.jondofox.javascript.options.asmjs", false);
+pref("extensions.jondofox.javascript.options.typeinference", false);
+pref("extensions.jondofox.gfx.direct2d.disabled", true);
+pref("extensions.jondofox.layers.acceleration.disabled", true);
 
 // Thumbnails for the New Tab page
 pref("extensions.jondofox.pagethumbnails.disabled", true);
@@ -227,9 +239,12 @@ pref("extensions.jondofox.download_manager_addToRecentDocs", false);
 
 pref("extensions.jondofox.formfill.enable", false);
 
-//SafeCache
+// SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 pref("extensions.jondofox.browser_cache_memory_capacity", 65536);
+
+// cookie manager
+pref("extensions.jondofox.cookiemgr_enabled", true);
 
 //Certificate Patrol
 pref("extensions.jondofox.certpatrol_enabled", false);
@@ -258,4 +273,5 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.14");
+pref("extensions.jondofox.jdb.version", "0.15");
+

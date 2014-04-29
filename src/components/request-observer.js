@@ -179,8 +179,7 @@ RequestObserver.prototype = {
         channel.QueryInterface(CI.nsICachingChannel);
         this.safeCache.safeCache(channel, parentHost);
       }
-      // Forge the referrer if necessary
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
+
         // Getting the associated window if available.
         domWin = this.getDOMWindow(channel);
         // Determine the base domain of the request
@@ -255,6 +254,11 @@ RequestObserver.prototype = {
 	      }
             }
           }
+        }
+
+      // Forge the referrer if necessary
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.set_referrer')) {
+        if (suffix && baseDomain !== suffix) {
           if (this.jdfManager.notFF18) {
             log ("Originating URI is: " + originatingDomain);
             if (baseDomain === originatingDomain || !originatingDomain) {
@@ -281,7 +285,7 @@ RequestObserver.prototype = {
           }
           if (this.jdfManager.notFF18) {
             if (originatingDomain !== "false") {
-              log("3rd party content");
+              log("3rd party content, clean referer");
               this.cleanReferer(channel);
             } else {
               log("We got a referer but no originating URI!\n" +
@@ -289,7 +293,7 @@ RequestObserver.prototype = {
 	      channel.setRequestHeader("Referer", null, false);
             }
           } else if (isThirdParty) {
-              log("3rd party content");
+              log("3rd party content, clean referer");
               this.cleanReferer(channel);
           }
         } else {
@@ -312,6 +316,20 @@ RequestObserver.prototype = {
           }
         }
       }
+
+      // clear cookies for third party requests
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.cookiemgr_enabled')) {
+        if (this.jdfManager.notFF18) {
+            if (originatingDomain !== "false") {
+              log("3rd party content, clear cookies");
+              channel.setRequestHeader("Cookie", null, false);
+            } 
+        } else if (isThirdParty) {
+              log("3rd party content, clear cookies");
+              channel.setRequestHeader("Cookie", null, false);
+        }
+      }
+
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!" + e);
@@ -440,24 +458,39 @@ RequestObserver.prototype = {
           }
         }
       }
-      // The HTTP Auth tracking protection on the response side: Just for FF <
-      // 12! Starting from FF 12 we have an improved protection.
-      if (!this.jdfManager.ff12) {
-        if (this.prefsHandler.
-          getBoolPref('extensions.jondofox.stanford-safecache_enabled')) {
-          parentHost = this.getParentHost(channel);
-          if (channel.documentURI && channel.documentURI === channel.URI) {
+
+      // get the parentHost to detect first party / third party
+      parentHost = this.getParentHost(channel);
+      if (channel.documentURI && channel.documentURI === channel.URI) {
             parentHost = null;  // first party interaction
-          }
+      }
+      // The HTTP Auth tracking protection on the response side: Just for FF < 12!
+      // Starting from FF 12 we have an improved protection.
+      if (!this.jdfManager.ff12) {
+        if (this.prefsHandler.getBoolPref('extensions.jondofox.stanford-safecache_enabled')) {
           if (parentHost && parentHost !== channel.URI.host) {
             try {
               if (channel.getResponseHeader("WWW-Authenticate")) {
                 channel.setResponseHeader("WWW-Authenticate", null, false);
               }
             } catch (e) {}
-          } else {}
+          }
         }
       }
+      // remove third party cookies, because it is not done by CookieMonster
+      if (this.prefsHandler.getBoolPref('extensions.jondofox.cookiemgr_enabled')) {
+          if (parentHost && parentHost !== channel.URI.host) {
+            try {
+              if (channel.getResponseHeader("Set-Cookie")) {
+                channel.setResponseHeader("Set-Cookie", null, false);
+              }
+              if (channel.getResponseHeader("Set-Cookie2")) {
+                channel.setResponseHeader("Set-Cookie2", null, false);
+              }
+            } catch (e) {}
+          }
+      }
+
       // For safety's sake we set the "close" header here as well as it looks
       // as if an attacker could let the connection open by sending a
       // "Connection: keep-alive": https://mxr.mozilla.org/mozilla-central/

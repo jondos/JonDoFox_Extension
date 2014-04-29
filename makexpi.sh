@@ -84,7 +84,14 @@ if [ ${JDF_BROWSER} ]; then
   echo "Replacing the JonDoFox update URL with an own"
   $SEDBIN -i 's/downloads\/update.rdf/downloads\/updateBrowser.rdf/g' \
     $(grep -ril 'downloads/update.rdf' *)
+  
+  # set the pref isJondoBowser
+  echo "pref(\"extensions.jondofox.isJonDoBowser\", true);" >> defaults/preferences/preferences.js
   cd ..
+
+else 
+  # set the pref isJondoBowser
+  echo "pref(\"extensions.jondofox.isJonDoBowser\", false);" >> src/defaults/preferences/preferences.js
 fi
 
 # Check for existence of the old XPI and remove it.
