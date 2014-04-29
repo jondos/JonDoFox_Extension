@@ -1,3 +1,12 @@
+Changes in version 0.6.3
+
+ * Added additional third party cookie protection
+ * Enforce some Javascript settings to improve security
+ * Disabled Mozilla snippet downloads
+ * Enabled websockets for Firefox 29 and JonDoBrowser 0.15
+ * Enabled DOMStorage for JonDoBrowser 0.15
+ * Bump user-agent fakes to the latest Firefox release
+
 Changes in version 0.6.1
 
  * Enforce cache settings at startup and proxy switch
