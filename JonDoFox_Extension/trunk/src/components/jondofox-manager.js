@@ -118,6 +118,12 @@ JDFManager.prototype = {
 
   ff27 : null,
 
+  // websockets are ready to use for ff29
+  ff29 : null,
+
+  // websockets and DOMStorage are ready for use with JDB15
+  jdb15 : null,
+
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
 
@@ -258,7 +264,9 @@ JDFManager.prototype = {
     'security.default_personal_cert':
       'extensions.jondofox.security.default_personal_cert',
     'network.proxy.no_proxies_on':
-      'extensions.jondofox.network_no_proxies_on'
+      'extensions.jondofox.network_no_proxies_on',
+    'browser.aboutHomeSnippets.updateUrl':
+      'extensions.jondofox.snippet_url'
   },
 
   // This map of boolean preferences is given to the prefsMapper
@@ -266,7 +274,6 @@ JDFManager.prototype = {
     'browser.zoom.siteSpecific':'extensions.jondofox.browser.zoom.siteSpecific',
     'plugin.expose_full_path':'extensions.jondofox.plugin.expose_full_path',
     'browser.send_pings':'extensions.jondofox.browser_send_pings',
-    'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
@@ -298,15 +305,22 @@ JDFManager.prototype = {
     'browser.download.manager.addToRecentDocs':
        'extensions.jondofox.download_manager_addToRecentDocs',
     'browser.formfill.enable':'extensions.jondofox.formfill.enable',
-    'network.dns.disablePrefetch':'extensions.jondofox.network_dns_disablePrefetch'
+    'network.dns.disablePrefetch':'extensions.jondofox.network_dns_disablePrefetch',
 
+    'javascript.options.ion.content': 'extensions.jondofox.javascript.options.ion.content',
+    'javascript.options.baselinejit.content': 'extensions.jondofox.javascript.options.baselinejit.content',
+    'javascript.options.asmjs': 'extensions.jondofox.javascript.options.asmjs',
+    'javascript.options.typeinference': 'extensions.jondofox.javascript.options.typeinference',
+    'gfx.direct2d.disabled': 'extensions.jondofox.gfx.direct2d.disabled',
+    'layers.acceleration.disabled': 'extensions.jondofox.layers.acceleration.disabled'
   },
-
+   
   //This map of integer preferences is given to the prefsMapper
   intPrefsMap: {
     'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior',
     'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts',
-    'browser.sessionhistory.max_entries':'extensions.jondofox.sessionhistory.max_entries'
+    'browser.sessionhistory.max_entries':'extensions.jondofox.sessionhistory.max_entries',
+    'browser.sessionstore.privacy_level':'extensions.jondofox.sessionstore_privacy_level'
   },
 
   // This map contains those preferences which avoid external apps being opened
@@ -557,7 +571,7 @@ JDFManager.prototype = {
                  (xulRuntime.OS === "OpenBSD") ||
                  (xulRuntime.OS === "NetBSD")) {
          this.os = "linux";
-         // disable update, because it is done by compile options
+         // disable update, because it is not done by compile options
          this.prefsHandler.setBoolPref('app.update.enabled', false);
       } else if (xulRuntime.OS === "Darwin") {
          this.os = "darwin";
@@ -583,7 +597,13 @@ JDFManager.prototype = {
       }
       // Disable gamepad API
       if (this.ff24) {
-            this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
+          this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
+      }
+      // enable/disable DOMStorage
+      if (this.jdb15) {
+          this.prefsHandler.setBoolPref('dom.storage.enabled', true);
+      } else {
+          this.boolPrefsMap['dom.storage.enabled'] = 'extensions.jondofox.dom_storage_enabled';
       }
         
       // For clearity of code we implement a different method to check the
@@ -921,9 +941,10 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("browser.search.update", false);
         this.prefsHandler.setBoolPref("browser.search.useDBForOrder", true);
         this.prefsHandler.setBoolPref("browser.sessionstore.enabled", false);
+        this.prefsHandler.setIntPref("browser.sessionstore.privacy_level", 2);
         this.prefsHandler.setBoolPref("browser.sessionstore.resume_from_crash", false);
         this.prefsHandler.setBoolPref("browser.shell.checkDefaultBrowser", false);
-        this.prefsHandler.setStringPref("browser.startup.homepage", "https://anonymous-proxy-servers.net/");
+        this.prefsHandler.setStringPref("browser.startup.homepage", "about:home");
         this.prefsHandler.setIntPref("browser.startup.page", 0);
         this.prefsHandler.setStringPref("browser.throbber.url", "http://www.mozilla.org/");
 
@@ -1361,6 +1382,18 @@ JDFManager.prototype = {
     } else {
       this.notFF18 = false;
     }
+    if (versComp.compare(ffVersion, "29.0") >= 0) {
+      this.ff29 = true;
+    } else {
+      this.ff29 = false;
+    }
+
+    if ((this.prefsHandler.getBoolPref('extensions.jondofox.isJonDoBowser')) &&
+        (versComp.compare(ffVersion, "24.5.0") >= 0)) {
+      this.jdb15 = true;
+    } else {
+      this.jdb15 = false;
+    }
   },
 
   /**
@@ -1540,9 +1573,14 @@ JDFManager.prototype = {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.jondoUAMap[p]));
         }
-        //  Disable SPDY, websockets for JonDo
+        //  Disable SPDY
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-        this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+        // for Firefox 29 and JDB15 websockest are ready to use with JonDo
+	if ((this.ff29) || (this.jdb15)) {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+        } else {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+	}
         // Setting our own safebrowsing provider and activate it.
         for (p in this.safebrowseMap) {
           this.prefsHandler.setStringPref(p,
@@ -1557,7 +1595,11 @@ JDFManager.prototype = {
         }
         //  Disable SPDY for Tor
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-        this.prefsHandler.setBoolPref('network.websocket.enabled', false);    
+        if ((this.ff29) || (this.jdb15)) {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+        } else {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+	} 
         break;
 
       case (this.STATE_CUSTOM):
@@ -1569,7 +1611,11 @@ JDFManager.prototype = {
           }
           //  Disable SPDY for JonDo
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-          this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+          if ((this.ff29) || (this.jdb15)) {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+          } else {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+	  }
           // Setting our own safebrowsing provider and activate it.
           for (p in this.safebrowseMap) {
             this.prefsHandler.setStringPref(p,
@@ -1583,7 +1629,11 @@ JDFManager.prototype = {
           }
           //  Disable SPDY for Tor
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-          this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+          if ((this.ff29) || (this.jdb15)) {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+          } else {
+            this.prefsHandler.setBoolPref('network.websocket.enabled', false);
+	  }
 
         } else if (userAgent === 'win') {
           for (p in this.windowsUAMap) {
