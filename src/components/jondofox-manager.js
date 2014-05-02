@@ -121,7 +121,7 @@ JDFManager.prototype = {
   // websockets are ready to use for ff29
   ff29 : null,
 
-  // websockets and DOMStorage are ready for use with JDB15
+  // websockets is ready for use with JDB15
   jdb15 : null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
@@ -301,6 +301,8 @@ JDFManager.prototype = {
     'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled',
     'webgl.disabled':'extensions.jondofox.webgl.disabled',
     'dom.indexedDB.enabled':'extensions.jondofox.indexedDB.enabled',
+
+    'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
        
     'browser.download.manager.addToRecentDocs':
        'extensions.jondofox.download_manager_addToRecentDocs',
@@ -599,13 +601,7 @@ JDFManager.prototype = {
       if (this.ff24) {
           this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
       }
-      // enable/disable DOMStorage
-      if (this.jdb15) {
-          this.prefsHandler.setBoolPref('dom.storage.enabled', true);
-      } else {
-          this.boolPrefsMap['dom.storage.enabled'] = 'extensions.jondofox.dom_storage_enabled';
-      }
-        
+ 
       // For clearity of code we implement a different method to check the
       // installed extension in Firefox4
       this.checkExtensionsFF4();
