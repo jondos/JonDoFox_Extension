@@ -273,12 +273,5 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.15");
+pref("extensions.jondofox.jdb.version", "0.16");
 
-pref("extensions.jondofox.isJonDoBowser", true);
-pref("extensions.jondofox.isJonDoBowser", false);
-pref("extensions.jondofox.isJonDoBowser", false);
-pref("extensions.jondofox.isJonDoBowser", false);
-pref("extensions.jondofox.isJonDoBowser", false);
-pref("extensions.jondofox.isJonDoBowser", false);
-pref("extensions.jondofox.isJonDoBowser", true);
