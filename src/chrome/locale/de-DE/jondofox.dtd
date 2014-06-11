@@ -310,3 +310,8 @@ die Verbindungen zum Proxy Server. Für weitere Informationen dazu siehe ">
 
 <!-- overrideLongDesc override for FF3, FF4-6, FF7+ -->
 <!ENTITY netOffline.overrideLongDesc "<p>Der Browser arbeitet im Offline-Modus und kann keine Verbindung mit dem gewünschten Eintrag herstellen.</p><ul><li>Ist der Computer mit einem aktiven Netzwerk verbunden?</li><li>Setzen Sie den Browser in den Online-Modus und versuchen Sie es nochmals.</li></ul>">
+
+<!-- Net error strings -->
+<!ENTITY jondofox.protocolNotFound.title "Fehler: unbekanntes Protokoll">
+<!ENTITY jondofox.protocolNotFound.longDesc "<p>Firefox weiß nicht, wie diese Adresse geöffnet werden soll, da das Protokoll mit keinem Programm verknüpft ist.</p><ul><li>Eventuell müssen Sie andere Software installieren, um diese Adresse zu öffnen</li></ul>">
+
