@@ -116,13 +116,13 @@ JDFManager.prototype = {
   // We need it to disable gamepad API
   ff24 : null,
 
+  // We need it to switch to javascript.options.typeinference.content
+  ff26 : null,
+
   ff27 : null,
 
   // websockets are ready to use for ff29
   ff29 : null,
-
-  // websockets is ready for use with JDB15
-  jdb15 : null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -312,7 +312,6 @@ JDFManager.prototype = {
     'javascript.options.ion.content': 'extensions.jondofox.javascript.options.ion.content',
     'javascript.options.baselinejit.content': 'extensions.jondofox.javascript.options.baselinejit.content',
     'javascript.options.asmjs': 'extensions.jondofox.javascript.options.asmjs',
-    'javascript.options.typeinference': 'extensions.jondofox.javascript.options.typeinference',
     'gfx.direct2d.disabled': 'extensions.jondofox.gfx.direct2d.disabled',
     'layers.acceleration.disabled': 'extensions.jondofox.layers.acceleration.disabled'
   },
@@ -600,6 +599,16 @@ JDFManager.prototype = {
       // Disable gamepad API
       if (this.ff24) {
           this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
+      }
+
+      // Enforce typeinference for Javascript
+      if (this.ff26) {
+          this.boolPrefsMap['javascript.options.typeinference.content'] = 
+             'extensions.jondofox.javascript.options.typeinference';
+          this.prefsHandler.deletePreference('javascript.options.typeinference');
+      } else {
+          this.boolPrefsMap['javascript.options.typeinference'] = 
+             'extensions.jondofox.javascript.options.typeinference';
       }
  
       // For clearity of code we implement a different method to check the
@@ -1368,6 +1377,11 @@ JDFManager.prototype = {
     } else {
       this.ff24 = false;
     }
+    if (versComp.compare(ffVersion, "26.0") >= 0) {
+      this.ff26 = true;
+    } else {
+      this.ff26 = false;
+    }
     if (versComp.compare(ffVersion, "27.0") >= 0) {
       this.ff27 = true;
     } else {
@@ -1384,12 +1398,6 @@ JDFManager.prototype = {
       this.ff29 = false;
     }
 
-    if ((this.prefsHandler.getBoolPref('extensions.jondofox.isJonDoBowser')) &&
-        (versComp.compare(ffVersion, "24.5.0") >= 0)) {
-      this.jdb15 = true;
-    } else {
-      this.jdb15 = false;
-    }
   },
 
   /**
@@ -1571,9 +1579,12 @@ JDFManager.prototype = {
         }
         //  Disable SPDY
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-        // for Firefox 29 and JDB15 websockest are ready to use with JonDo
-	if ((this.ff29) || (this.jdb15)) {
+        
+	if (this.ff29) {
+            // for Firefox 29 websockest are ready to use with JonDo
             this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+            // disable seer
+            this.prefsHandler.setBoolPref('network.seer.enabled', false);
         } else {
             this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 	}
@@ -1591,8 +1602,11 @@ JDFManager.prototype = {
         }
         //  Disable SPDY for Tor
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-        if ((this.ff29) || (this.jdb15)) {
+        if (this.ff29) {
+            // for Firefox 29 websockest are ready to use with JonDo
             this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+            // disable seer
+            this.prefsHandler.setBoolPref('network.seer.enabled', false);
         } else {
             this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 	} 
@@ -1607,8 +1621,11 @@ JDFManager.prototype = {
           }
           //  Disable SPDY for JonDo
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-          if ((this.ff29) || (this.jdb15)) {
+          if (this.ff29){
+            // for Firefox 29 websockest are ready to use with JonDo
             this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+            // disable seer
+            this.prefsHandler.setBoolPref('network.seer.enabled', false);
           } else {
             this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 	  }
@@ -1625,8 +1642,11 @@ JDFManager.prototype = {
           }
           //  Disable SPDY for Tor
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-          if ((this.ff29) || (this.jdb15)) {
+          if (this.ff29) {
+             // for Firefox 29 websockest are ready to use with JonDo
             this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+            // disable seer
+            this.prefsHandler.setBoolPref('network.seer.enabled', false);
           } else {
             this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 	  }
@@ -1639,6 +1659,9 @@ JDFManager.prototype = {
           //  Enable SPDY, because it is default for Firefox
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', true);
           this.prefsHandler.setBoolPref('network.websocket.enabled', true);
+          if (this.ff29) {
+             this.prefsHandler.setBoolPref('network.seer.enabled', true);
+          }
         } else {
           // We use the opportunity to set other user prefs back to their
           // default values as well.
@@ -1689,6 +1712,7 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("intl.charset.default");
         this.prefsHandler.deletePreference('network.http.spdy.enabled');
         this.prefsHandler.deletePreference('network.websocket.enabled');
+        this.prefsHandler.deletePreference('network.seer.enabled'); 
        }
 
     } catch (e) {

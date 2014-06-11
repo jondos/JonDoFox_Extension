@@ -311,3 +311,6 @@ server. For further information click ">
 <!-- overrideLongDesc override for FF3, FF4-6, FF7+ -->
 <!ENTITY netOffline.overrideLongDesc "<p>The browser is operating in its offline mode and cannot connect to the requested item.</p><ul><li>Is the computer connected to an active network?</li><li>Place the browser in online mode and try again.</li></ul>">
 
+<!-- Net error strings -->
+<!ENTITY jondofox.protocolNotFound.title "The address wasn't understood">
+<!ENTITY jondofox.protocolNotFound.longDesc "<p>Firefox doesn't know how to open this address, because the protocol isn't associated with any program.</p><ul><li>You might need to install other software to open this address.</li></ul>">
