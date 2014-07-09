@@ -275,6 +275,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.observatory.never "keine Validierung von SSL-Zertifikaten">
 <!ENTITY jondofox.dialogtab.options.observatory.certpatrol "verwende Certificate Patrol (lokale Datenbank)">
 <!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um die Sicherheit beim Surfen auf HTTPS-Seiten zu verbessern. Wenn Sie SSL-Zertifikate an die EFF senden, erhalten Sie eine Warnung, wenn etwas mit dem Zertifikaten nicht stimmt.">
+<!ENTITY jondofox.dialogtab.options.sslcipher "Deaktivieren von SSLv3 und schwacher SSL Chiffre (RC4, 3DES)">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">

@@ -219,6 +219,9 @@ pref("extensions.jondofox.gamepad.enabled", false);
 //  Snippet URL
 pref("extensions.jondofox.snippet_url", "");
 
+// disable insecure SSL
+pref("extensions.jondofox.disable_insecure_ssl_cipher", true);
+
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);
 

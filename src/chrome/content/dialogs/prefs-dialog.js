@@ -66,6 +66,10 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_set_flash').checked =
         prefsHandler.
 	getBoolPref('extensions.jondofox.disableAllPluginsJonDoMode');
+    // SSL setting
+    document.getElementById('checkbox_ssl_cipher').checked =
+        prefsHandler.
+	getBoolPref('extensions.jondofox.disable_insecure_ssl_cipher');
 
     // SSL observatory setting
     var obProxy = document.getElementById('observatoryProxy');
@@ -118,6 +122,8 @@ function writePrefsGeneral() {
         document.getElementById('checkbox_set_safecache').checked);
     prefsHandler.setBoolPref('extensions.jondofox.disableAllPluginsJonDoMode',
       document.getElementById('checkbox_set_flash').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.disable_insecure_ssl_cipher',
+      document.getElementById('checkbox_ssl_cipher').checked);
     // get man-in.the-middle protection
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
         document.getElementById('observatoryProxy').selectedIndex);
@@ -508,8 +514,9 @@ function onAccept() {
     writePrefsGeneral();
     writePrefsCustomProxy();
     writePrefsTempEmail();
-    // Act according to the plugin checkbox
+    // Act according to the plugin checkbox and SSL cipher
     jdfManager.enforcePluginPref(jdfManager.getState());
+    jdfManager.enforceSSLPref();
     // If the current state is 'custom': reset it
     if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {
       setCustomProxy();

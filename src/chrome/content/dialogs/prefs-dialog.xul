@@ -119,6 +119,12 @@
                   <toolbarbutton class="jondofox-ref" popup="observatoryHelp"
                            tooltiptext="&jondofox.contextHelp;"/>
                 </box>
+                <box>
+                  <!-- Checkbox to toggle 'SSL cipher' -->
+                  <checkbox id="checkbox_ssl_cipher" 
+                          label="&jondofox.dialogtab.options.sslcipher;"
+                          accesskey="d"/>
+                 </box>
               </groupbox>
             </row>
 
