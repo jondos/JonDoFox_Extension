@@ -582,8 +582,9 @@ JDFManager.prototype = {
       if (this.prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
          this.first_start();
       }
-      // enforce cache settings
+      // enforce cache and SSL settings
       this.enforceCachePref();
+      this.enforceSSLPref();
 
       if (this.ff7) {
           this.boolPrefsMap['dom.enable_performance'] = 'extensions.jondofox.navigationTiming.enabled';
@@ -1119,14 +1120,7 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.disable_button.openCertManager", false);
         this.prefsHandler.setBoolPref("security.disable_button.openDeviceManager", false);
 
-        // SSL
-        if (this.ff24) {
-           this.prefsHandler.setIntPref("security.tls.version.min", 1);
-           this.prefsHandler.setIntPref("security.tls.version.max", 3);
-        } else {
-           this.prefsHandler.setBoolPref("security.enable_ssl3", false);
-        }
-        this.prefsHandler.setBoolPref("security.ssl.enable_false_start", true);
+        
         this.prefsHandler.setIntPref("security.OCSP.enabled", 0);
 
         this.prefsHandler.setBoolPref("signon.rememberSignons", false);
@@ -1460,6 +1454,58 @@ JDFManager.prototype = {
         this.prefsHandler.setIntPref("browser.cache.compression_level", 1);
         this.prefsHandler.setIntPref("image.cache.size", 5242880);
         this.prefsHandler.setBoolPref("browser.cache.memory.enable", true);
+  },
+
+  enforceSSLPref: function() {
+
+      if (this.prefsHandler.getBoolPref("extensions.jondofox.disable_insecure_ssl_cipher")) {
+        if (this.ff24) {
+           this.prefsHandler.setIntPref("security.tls.version.min", 1);
+           this.prefsHandler.setIntPref("security.tls.version.max", 3);
+        } else {
+           this.prefsHandler.setBoolPref("security.enable_ssl3", false);
+        }
+        this.prefsHandler.setBoolPref("security.ssl3.ecdh_ecdsa_rc4_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_rc4_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdhe_ecdsa_rc4_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdhe_rsa_rc4_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.rsa_rc4_128_md5", false);
+        this.prefsHandler.setBoolPref("security.ssl3.rsa_rc4_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.rsa_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.rsa_fips_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdhe_rsa_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdhe_ecdsa_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.dhe_rsa_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdh_ecdsa_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_des_ede3_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.rsa_seed_sha", false);
+
+      } else {
+        if (this.ff24) {
+           this.prefsHandler.deletePreference("security.tls.version.min");
+           this.prefsHandler.deletePreference("security.tls.version.max");
+        } else {
+           this.prefsHandler.deletePreference("security.enable_ssl3");
+        }
+        this.prefsHandler.deletePreference("security.ssl3.ecdh_ecdsa_rc4_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdh_rsa_rc4_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdhe_ecdsa_rc4_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdhe_rsa_rc4_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.rsa_rc4_128_md5");
+        this.prefsHandler.deletePreference("security.ssl3.rsa_rc4_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.rsa_fips_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdhe_rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdhe_ecdsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdh_ecdsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_dss_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdh_rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.rsa_seed_sha");
+      }
+
+      this.prefsHandler.setBoolPref("security.ssl.enable_false_start", true);
   },
 
   clearMemoryCache: function() {

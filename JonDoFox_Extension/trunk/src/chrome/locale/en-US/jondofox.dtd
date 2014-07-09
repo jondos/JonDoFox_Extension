@@ -275,6 +275,7 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.dialogtab.options.observatory.certpatrol "using Certificate Patrol (local database)">
 <!ENTITY jondofox.dialogtab.options.observatory.never "no additional certicicate validation">
 <!ENTITY jondofox.dialogtab.options.observatory.help "The SSL observatory of Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages. If you are transmitting SSL certificates to the SSL observatory while surfing the web you will get a warning in case of issues. See ">
+<!ENTITY jondofox.dialogtab.options.sslcipher "Disable SSLv3 and weak SSL cipher (RC4, 3DES)">
 <!ENTITY jondofox.dialogtab.options.adBlocking "AdBlocker-Settings">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Activate the AdBlocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Show filter">

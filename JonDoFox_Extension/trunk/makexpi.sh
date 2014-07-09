@@ -64,6 +64,8 @@ fi
 
 XPINAME="jondofox"
 
+cp src/defaults/preferences/preferences.js ./preferences.js
+
 if [ ${JDF_BROWSER} ]; then
   # We basically replace all the JDF peculiarites (like logos, .xhtml,
   # "about:jondobrowser") with the JDB ones and undo that after building the
@@ -146,5 +148,8 @@ if [ ${JDF_BROWSER} ]; then
 fi
 
 cd ..
+
+cp -f ./preferences.js src/defaults/preferences/preferences.js 
+rm preferences.js
 
 exit 0
