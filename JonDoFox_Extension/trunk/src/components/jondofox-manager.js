@@ -230,6 +230,24 @@ JDFManager.prototype = {
     'intl.charset.default':'extensions.jondofox.windows.default_charset'
   },
 
+  // UA-settings for Windows fake
+  windowsESRUAMap: {
+    'general.appname.override':'extensions.jondofox.windows.appname_override',
+    'general.appversion.override':'extensions.jondofox.windows.appversion_override',
+    'general.buildID.override':'extensions.jondofox.windows_esr.buildID_override',
+    'general.oscpu.override':'extensions.jondofox.windows.oscpu_override',
+    'general.platform.override':'extensions.jondofox.windows.platform_override',
+    'general.productSub.override':'extensions.jondofox.windows.productsub_override',
+    'general.useragent.override':'extensions.jondofox.windows_esr.useragent_override',
+    'general.useragent.vendor':'extensions.jondofox.windows.useragent_vendor',
+    'general.useragent.vendorSub':'extensions.jondofox.windows.useragent_vendorSub',
+    'intl.accept_languages':'extensions.jondofox.windows.accept_languages',
+    'network.http.accept.default':'extensions.jondofox.windows.accept_default',
+    'image.http.accept':'extensions.jondofox.windows.image_http_accept',
+    'network.http.accept-encoding':'extensions.jondofox.windows.http.accept_encoding',
+    'intl.charset.default':'extensions.jondofox.windows.default_charset'
+  },
+
   // Adding a uniform URLs concerning safebrowsing functionality to not
   // leak information.
   safebrowseMap: {
@@ -1606,19 +1624,7 @@ JDFManager.prototype = {
     }
   },
 
-  // TODO: Transfor this function in a more general prefs setting function
-  // depending on the proxy state.
-  // Setting the user agent for the different proxy states
-  setUserAgent: function(startup, state) {
-    var p;
-    var userAgent;
-    var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
-    log("Setting user agent and other stuff for: " + state);
-    // First the plugin pref
-    this.enforcePluginPref(state);
-
-    switch(state) {
-      case (this.STATE_JONDO):
+  setUserAgent_Jondo: function() {
         for (p in this.jondoUAMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.jondoUAMap[p]));
@@ -1627,7 +1633,7 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
         
 	if (this.ff29) {
-            // for Firefox 29 websockest are ready to use with JonDo
+            // for Firefox 29 websockets are ready to use with JonDo
             this.prefsHandler.setBoolPref('network.websocket.enabled', true);
             // disable seer
             this.prefsHandler.setBoolPref('network.seer.enabled', false);
@@ -1639,10 +1645,10 @@ JDFManager.prototype = {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.safebrowseMap[p]));
         }      
-        break;
+  },
 
-      case (this.STATE_TOR):
-        for (p in this.torUAMap) {
+  setUserAgent_Tor: function() {
+       for (p in this.torUAMap) {
           this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.torUAMap[p]));
         }
@@ -1656,51 +1662,47 @@ JDFManager.prototype = {
         } else {
             this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 	} 
+  },
+
+  // TODO: Transfor this function in a more general prefs setting function
+  // depending on the proxy state.
+  // Setting the user agent for the different proxy states
+  setUserAgent: function(startup, state) {
+    var p;
+    var userAgent;
+    var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
+    log("Setting user agent and other stuff for: " + state);
+    // First the plugin pref
+    this.enforcePluginPref(state);
+
+    switch(state) {
+      case (this.STATE_JONDO):
+        this.setUserAgent_Jondo();
+        break;
+
+      case (this.STATE_TOR):
+        this.setUserAgent_Tor();
         break;
 
       case (this.STATE_CUSTOM):
         userAgent = this.prefsHandler.getStringPref('extensions.jondofox.custom.user_agent');
         if (userAgent === 'jondo') {
-          for (p in this.jondoUAMap) {
-            this.prefsHandler.setStringPref(p,
-             this.prefsHandler.getStringPref(this.jondoUAMap[p]));
-          }
-          //  Disable SPDY for JonDo
-          this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-          if (this.ff29){
-            // for Firefox 29 websockest are ready to use with JonDo
-            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
-            // disable seer
-            this.prefsHandler.setBoolPref('network.seer.enabled', false);
-          } else {
-            this.prefsHandler.setBoolPref('network.websocket.enabled', false);
-	  }
-          // Setting our own safebrowsing provider and activate it.
-          for (p in this.safebrowseMap) {
-            this.prefsHandler.setStringPref(p,
-              this.prefsHandler.getStringPref(this.safebrowseMap[p]));
-          }
+          this.setUserAgent_Jondo();
           
         } else if (userAgent === 'tor') {
-          for (p in this.torUAMap) {
-            this.prefsHandler.setStringPref(p,
-               this.prefsHandler.getStringPref(this.torUAMap[p]));
-          }
-          //  Disable SPDY for Tor
-          this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
-          if (this.ff29) {
-             // for Firefox 29 websockest are ready to use with JonDo
-            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
-            // disable seer
-            this.prefsHandler.setBoolPref('network.seer.enabled', false);
-          } else {
-            this.prefsHandler.setBoolPref('network.websocket.enabled', false);
-	  }
+          this.setUserAgent_Tor();
 
         } else if (userAgent === 'win') {
-          for (p in this.windowsUAMap) {
-            this.prefsHandler.setStringPref(p,
+          if (this.ff26) {
+            for (p in this.windowsUAMap) {
+              this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.windowsUAMap[p]));
+            }
+          } else {
+            for (p in this.windowsESRUAMap) {
+              this.prefsHandler.setStringPref(p,
+               this.prefsHandler.getStringPref(this.windowsESRUAMap[p]));
+            }
           }
           //  Enable SPDY, because it is default for Firefox
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', true);
