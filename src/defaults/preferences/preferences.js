@@ -113,6 +113,11 @@ pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*
 pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
 pref("extensions.jondofox.windows.default_charset", "ISO-8859-1");
 
+// Useragent settings FF Windows ESR
+pref("extensions.jondofox.windows_esr.buildID_override", "20140609182057");
+pref("extensions.jondofox.windows_esr.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0");
+
+
 // SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
     "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.5&pver=2.2");
@@ -247,7 +252,7 @@ pref("extensions.jondofox.stanford-safecache_enabled", true);
 pref("extensions.jondofox.browser_cache_memory_capacity", 65536);
 
 // cookie manager
-pref("extensions.jondofox.cookiemgr_enabled", true);
+pref("extensions.jondofox.cookiemgr_enabled", false);
 
 //Certificate Patrol
 pref("extensions.jondofox.certpatrol_enabled", false);
