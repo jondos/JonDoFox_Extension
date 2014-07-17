@@ -262,7 +262,6 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Schutz gegen Tracking">
 <!ENTITY jondofox.dialogtab.options.referrer "Aktiviere Referer-Management">
-<!ENTITY jondofox.dialogtab.options.cookiemgr "Aktiviere zus. Schutz gegen Cookies von Drittseiten">
 <!ENTITY jondofox.dialogtab.options.safecache "Aktiviere SafeCache und HTTP-Authentifikationsschutz">
 <!ENTITY jondofox.dialogtab.options.flash "Deaktiviere Flash im JonDo-Mode">
 <!ENTITY jondofox.dialogtab.options.flashhelp "Um eine Deanonymsierung via Flash zu vermeiden, ist als erstes eine sichere Konfiguration des Flash Players zu erstellen. Hinweise finden Sie in unserer Online-Hilfe">

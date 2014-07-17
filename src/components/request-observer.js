@@ -317,19 +317,6 @@ RequestObserver.prototype = {
         }
       }
 
-      // clear cookies for third party requests
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.cookiemgr_enabled')) {
-        if (this.jdfManager.notFF18) {
-            if (originatingDomain !== "false") {
-              log("3rd party content, clear cookies");
-              channel.setRequestHeader("Cookie", null, false);
-            } 
-        } else if (isThirdParty) {
-              log("3rd party content, clear cookies");
-              channel.setRequestHeader("Cookie", null, false);
-        }
-      }
-
     } catch (e) {
       if (e.name === "NS_NOINTERFACE") {
         log("The requested interface is not available!" + e);
@@ -476,19 +463,6 @@ RequestObserver.prototype = {
             } catch (e) {}
           }
         }
-      }
-      // remove third party cookies, because it is not done by CookieMonster
-      if (this.prefsHandler.getBoolPref('extensions.jondofox.cookiemgr_enabled')) {
-          if (parentHost && parentHost !== channel.URI.host) {
-            try {
-              if (channel.getResponseHeader("Set-Cookie")) {
-                channel.setResponseHeader("Set-Cookie", null, false);
-              }
-              if (channel.getResponseHeader("Set-Cookie2")) {
-                channel.setResponseHeader("Set-Cookie2", null, false);
-              }
-            } catch (e) {}
-          }
       }
 
       // For safety's sake we set the "close" header here as well as it looks

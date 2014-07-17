@@ -66,12 +66,6 @@
                           label="&jondofox.dialogtab.options.referrer;"
                           accesskey="r"/>
                  </box>
-                 <box>
-                  <!-- Checkbox to toggle 'cookie managemant' -->
-                  <checkbox id="checkbox_set_cookiemgr" 
-                          label="&jondofox.dialogtab.options.cookiemgr;"
-                          accesskey="o"/>
-                 </box>
 		 <box>
 		  <!-- Checkbox to activate/deactivate cache protection  -->
                   <checkbox id="checkbox_set_safecache" 

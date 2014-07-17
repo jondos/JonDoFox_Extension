@@ -166,14 +166,15 @@ JDFManager.prototype = {
     'RefControl':'{455D905A-D37C-4643-A9E2-F6FEFAA0424A}',
     'SwitchProxy':'{27A2FD41-CB23-4518-AB5C-C25BAFFDE531}',
     'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}',
-    'Certificate Patrol':'CertPatrol@PSYC.EU'
-    // 'UnPlug':'unplug@compunach'
+    'Certificate Patrol':'CertPatrol@PSYC.EU',
+    'Cookie Monster':'{45d8ff86-d909-11db-9705-005056c00008}',
+    'UnPlug':'unplug@compunach'
   },
 
   // Necessary security extensions with their IDs
   necessaryExtensions: {
     'NoScript':'{73a6fe31-595d-460b-a920-fcc0f8843232}',
-    'Cookie Monster':'{45d8ff86-d909-11db-9705-005056c00008}'
+    'Cookie Controller':'{ac2cfa60-bc96-11e0-962b-0800200c9a66}'
   },
 
   // If JonDo is set as proxy take these UA-settings
@@ -550,19 +551,19 @@ JDFManager.prototype = {
           JDFManager.prototype.isNoScriptInstalled = false;
         }
       });
-      AddonManager.getAddonByID('{45d8ff86-d909-11db-9705-005056c00008}',
+      AddonManager.getAddonByID('{ac2cfa60-bc96-11e0-962b-0800200c9a66}',
       function(addon) {
         if (addon) {
-          log("Found Cookie Monster, that's good." +
+          log("Found Cookie Controller, that's good." +
 		    " Checking whether it is enabled...");
           if (addon.isActive) {
-            log("Cookie Monster is enabled as well.");
+            log("Cookie Controller is enabled as well.");
           } else {
-            log("Cookie Monster is not enabled! That's bad.");
+            log("Cookie Controller is not enabled! That's bad.");
             JDFManager.prototype.isCMEnabled = false;
           }
         } else {
-          log("Cookie Monster is missing...");
+          log("Cookie Controller is missing...");
           JDFManager.prototype.isCMInstalled = false;
         }
       });
@@ -1421,9 +1422,9 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.8.0" &&
+            'extensions.jondofox.profile_version') !== "2.11.0" &&
 	  this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.9.0" &&
+            'extensions.jondofox.profile_version') !== "2.10.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.

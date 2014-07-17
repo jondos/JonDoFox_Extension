@@ -463,8 +463,8 @@ function openPageNewTab(aString) {
       win.openUILinkIn(jdfUtils.getString('jondofox.homepage.url'), 'tab');
     } else if (aString === "noScript") {
       win.openUILinkIn('http://noscript.net', 'tab');
-    } else if (aString === "cookieMonster") {
-      var cm = 'https://addons.mozilla.org/en-US/firefox/addon/cookie-monster';
+    } else if (aString === "cookieController") {
+      var cm = 'https://addons.mozilla.org/en-US/firefox/addon/cookie-controller/';
       win.openUILinkIn(cm, 'tab');
     } else if (aString === "about") {
       if (win.gBrowser.getBrowserForTab(win.gBrowser.selectedTab).
@@ -842,12 +842,12 @@ function startupChecks() {
     if (!jdfManager.isCMInstalled) {
       jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
         jdfUtils.formatString('jondofox.dialog.message.necessaryExtension',
-        ['Cookie Monster']), 'update');
-      openPageNewTab("cookieMonster");
+        ['Cookie Controller']), 'update');
+      openPageNewTab("cookieController");
     } else if (!jdfManager.isCMEnabled) {
       jdfUtils.showAlertCheck(jdfUtils.getString('jondofox.dialog.attention'),
         jdfUtils.formatString('jondofox.dialog.message.enableExtension',
-        ['Cookie Monster']), 'update');
+        ['Cookie Cntroller']), 'update');
     }
   }
   // Let's test whether the user starts with appropriate proxy-settings..

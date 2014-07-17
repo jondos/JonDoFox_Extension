@@ -171,7 +171,7 @@ pref("extensions.jondofox.plugin.expose_full_path", false);
 pref("extensions.jondofox.browser.zoom.siteSpecific", false);
 
 pref("extensions.jondofox.source_editor_external", false);
-pref("extensions.jondofox.dom_storage_enabled", false);
+pref("extensions.jondofox.dom_storage_enabled", true);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
 pref("extensions.jondofox.network_dns_disablePrefetch", true);
@@ -225,7 +225,7 @@ pref("extensions.jondofox.gamepad.enabled", false);
 pref("extensions.jondofox.snippet_url", "");
 
 // disable insecure SSL
-pref("extensions.jondofox.disable_insecure_ssl_cipher", true);
+pref("extensions.jondofox.disable_insecure_ssl_cipher", false);
 
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);
@@ -250,9 +250,6 @@ pref("extensions.jondofox.formfill.enable", false);
 // SafeCache
 pref("extensions.jondofox.stanford-safecache_enabled", true);
 pref("extensions.jondofox.browser_cache_memory_capacity", 65536);
-
-// cookie manager
-pref("extensions.jondofox.cookiemgr_enabled", false);
 
 //Certificate Patrol
 pref("extensions.jondofox.certpatrol_enabled", false);
@@ -281,5 +278,5 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
 pref("extensions.jondofox.update_jondonym", false);
-pref("extensions.jondofox.jdb.version", "0.16");
+pref("extensions.jondofox.jdb.version", "0.17");
 
