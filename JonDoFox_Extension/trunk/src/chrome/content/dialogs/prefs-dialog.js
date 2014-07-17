@@ -55,9 +55,6 @@ function loadPrefsGeneral() {
     // 'set_referrer' is a checkbox
     document.getElementById('checkbox_set_referrer').checked =
         prefsHandler.getBoolPref('extensions.jondofox.set_referrer');
-    // 'cookie mgr' is a checkbox
-    document.getElementById('checkbox_set_cookiemgr').checked =
-        prefsHandler.getBoolPref('extensions.jondofox.cookiemgr_enabled');
     // SafeCache's setting
     document.getElementById('checkbox_set_safecache').checked =
         prefsHandler.
@@ -116,8 +113,6 @@ function writePrefsGeneral() {
   try {
     prefsHandler.setBoolPref('extensions.jondofox.set_referrer',
         document.getElementById('checkbox_set_referrer').checked);
-   prefsHandler.setBoolPref('extensions.jondofox.cookiemgr_enabled',
-        document.getElementById('checkbox_set_cookiemgr').checked);
     prefsHandler.setBoolPref('extensions.jondofox.stanford-safecache_enabled',
         document.getElementById('checkbox_set_safecache').checked);
     prefsHandler.setBoolPref('extensions.jondofox.disableAllPluginsJonDoMode',
