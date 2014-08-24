@@ -286,7 +286,8 @@ JDFManager.prototype = {
     'network.proxy.no_proxies_on':
       'extensions.jondofox.network_no_proxies_on',
     'browser.aboutHomeSnippets.updateUrl':
-      'extensions.jondofox.snippet_url'
+      'extensions.jondofox.snippet_url',
+    'browser.newtab.url':'extensions.jondofox.newtabpage.url',
   },
 
   // This map of boolean preferences is given to the prefsMapper
@@ -316,12 +317,12 @@ JDFManager.prototype = {
        'extensions.jondofox.event.clipboardevents.enabled',
     'browser.pagethumbnails.capturing_disabled':
        'extensions.jondofox.pagethumbnails.disabled',
+    'browser.newtabpage.enabled':'extensions.jondofox.newtabpage.enabled',
     'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled',
     'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled',
     'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled',
     'webgl.disabled':'extensions.jondofox.webgl.disabled',
     'dom.indexedDB.enabled':'extensions.jondofox.indexedDB.enabled',
-
     'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
        
     'browser.download.manager.addToRecentDocs':

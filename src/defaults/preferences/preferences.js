@@ -241,6 +241,8 @@ pref("extensions.jondofox.layers.acceleration.disabled", true);
 
 // Thumbnails for the New Tab page
 pref("extensions.jondofox.pagethumbnails.disabled", true);
+pref("extensions.jondofox.newtabpage.enabled", false);
+pref("extensions.jondofox.newtabpage.url", "about:blank");
 
 // secure the download manager to avoid wrting to disk
 pref("extensions.jondofox.download_manager_addToRecentDocs", false);
