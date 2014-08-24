@@ -168,7 +168,7 @@ JDFManager.prototype = {
     'SafeCache':'{670a77c5-010e-4476-a8ce-d09171318839}',
     'Certificate Patrol':'CertPatrol@PSYC.EU',
     'Cookie Monster':'{45d8ff86-d909-11db-9705-005056c00008}',
-    'UnPlug':'unplug@compunach'
+    // 'UnPlug':'unplug@compunach'
   },
 
   // Necessary security extensions with their IDs
@@ -275,7 +275,8 @@ JDFManager.prototype = {
     'browser.safebrowsing.warning.infoURL':
       'extensions.jondofox.safebrowsing.warning.infoURL',
     'browser.safebrowsing.malware.reportURL':
-      'extensions.jondofox.safebrowsing.malware.reportURL'
+      'extensions.jondofox.safebrowsing.malware.reportURL',
+    'browser.safebrowsing.appRepURL': ' '
   },
 
   // This map of string preferences is given to the prefsMapper
@@ -942,7 +943,7 @@ JDFManager.prototype = {
         this.prefsHandler.setIntPref("browser.download.manager.retention", 0);
         this.prefsHandler.setBoolPref("browser.download.useDownloadDir", false);
         this.prefsHandler.setStringPref("browser.newtab.url", "about:blank");
-        this.prefsHandler.setBoolPref("browserbrowser.newtabpage.enabled", false);
+        this.prefsHandler.setBoolPref("browser.newtabpage.enabled", false);
         this.prefsHandler.setStringPref("browser.feeds.handler", "bookmarks");
         this.prefsHandler.setStringPref("browser.feeds.handler.default", "bookmarks");
         this.prefsHandler.setBoolPref("browser.feeds.showFirstRunUI", false);
