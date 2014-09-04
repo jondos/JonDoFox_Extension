@@ -334,7 +334,11 @@ JDFManager.prototype = {
     'javascript.options.baselinejit.content': 'extensions.jondofox.javascript.options.baselinejit.content',
     'javascript.options.asmjs': 'extensions.jondofox.javascript.options.asmjs',
     'gfx.direct2d.disabled': 'extensions.jondofox.gfx.direct2d.disabled',
-    'layers.acceleration.disabled': 'extensions.jondofox.layers.acceleration.disabled'
+    'layers.acceleration.disabled': 'extensions.jondofox.layers.acceleration.disabled',
+
+    // Safebrowsing disabled
+    'browser.safebrowsing.enabled': 'extensions.jondofox.safebrowsing_enabled',
+    'browser.safebrowsing.malware.enabled': 'extensions.jondofox.safebrowsing_enabled'
   },
    
   //This map of integer preferences is given to the prefsMapper
@@ -1643,11 +1647,6 @@ JDFManager.prototype = {
         } else {
             this.prefsHandler.setBoolPref('network.websocket.enabled', false);
 	}
-        // Setting our own safebrowsing provider and activate it.
-        for (p in this.safebrowseMap) {
-          this.prefsHandler.setStringPref(p,
-               this.prefsHandler.getStringPref(this.safebrowseMap[p]));
-        }      
   },
 
   setUserAgent_Tor: function() {
@@ -1717,10 +1716,6 @@ JDFManager.prototype = {
           // We use the opportunity to set other user prefs back to their
           // default values as well.
           this.clearPrefs();
-          for (p in this.safebrowseMap) {
-              this.prefsHandler.deletePreference(p);
-          }
-
         }
         break;
       case (this.STATE_NONE):
