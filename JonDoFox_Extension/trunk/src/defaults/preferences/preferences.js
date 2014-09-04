@@ -68,11 +68,11 @@ pref("extensions.jondofox.tor.socks_port", 9050);
 // Useragent settings JonDo
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "20140714155506");
+pref("extensions.jondofox.jondo.buildID_override", "20140825060242");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i686; rv:24.0) Gecko/20100101 Firefox/24.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
@@ -100,11 +100,11 @@ pref("extensions.jondofox.tor.default_charset", "ISO-8859-1");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20140716183446");
+pref("extensions.jondofox.windows.buildID_override", "20140825202822");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:32.0) Gecko/20100101 Firefox/32.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-us,en");
@@ -119,6 +119,9 @@ pref("extensions.jondofox.windows_esr.useragent_override", "Mozilla/5.0 (Windows
 
 
 // SafeBrowsing provider JonDo
+pref("extensions.jondofox.safebrowsing_enabled", false);
+
+// old stuff, remove
 pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
     "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.5&pver=2.2");
 pref("extensions.jondofox.safebrowsing.provider.0.keyURL",
