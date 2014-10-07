@@ -307,6 +307,8 @@ JDFManager.prototype = {
        'extensions.jondofox.sanitize_onShutdown',
     'privacy.clearOnShutdown.history':
        'extensions.jondofox.clearOnShutdown_history',
+    'places.history.enabled':
+       'extensions.jondofox.places_history_enabled',
     'privacy.clearOnShutdown.offlineApps':
        'extensions.jondofox.clearOnShutdown_offlineApps',
     'security.enable_tls_session_tickets':
