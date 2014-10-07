@@ -203,6 +203,7 @@ pref("extensions.jondofox.use_document_fonts", 0);
 
 // we allow just two items in the session history due to fingerprinting issues
 pref("extensions.jondofox.sessionhistory.max_entries", 2);
+pref("extensions.jondofox.places_history_enabled", false);
 
 // Disabling TLS Session Resumption tracking (see:
 // https://tools.ietf.org/html/rfc5077)
