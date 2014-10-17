@@ -88,7 +88,7 @@ pref("extensions.jondofox.tor.buildID_override","");
 pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.tor.platform_override","Win32");
 pref("extensions.jondofox.tor.productsub_override","20100101");
-pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0");
+pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 pref("extensions.jondofox.tor.accept_languages", "en-us,en");
@@ -104,7 +104,7 @@ pref("extensions.jondofox.windows.buildID_override", "20141011015303");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:32.0) Gecko/20100101 Firefox/33.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-us,en");
@@ -146,6 +146,7 @@ pref("extensions.jondofox.safebrowsing.provider.0.updateURL",
 pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
 
 pref("extensions.jondofox.safebrowsing.malware.reportURL", "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?client=%NAME%&hl=en-US&site=");
+pref("extensions.jondofox.safebrowsing.appRepURL", " ");
 
 
 // Feed prefs
@@ -228,7 +229,7 @@ pref("extensions.jondofox.gamepad.enabled", false);
 pref("extensions.jondofox.snippet_url", "");
 
 // disable insecure SSL
-pref("extensions.jondofox.disable_insecure_ssl_cipher", false);
+pref("extensions.jondofox.disable_insecure_ssl_cipher", true);
 
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);
@@ -247,7 +248,7 @@ pref("extensions.jondofox.pagethumbnails.disabled", true);
 pref("extensions.jondofox.newtabpage.enabled", false);
 pref("extensions.jondofox.newtabpage.url", "about:blank");
 
-// secure the download manager to avoid wrting to disk
+// secure the download manager to avoid writing to disk
 pref("extensions.jondofox.download_manager_addToRecentDocs", false);
 
 pref("extensions.jondofox.formfill.enable", false);

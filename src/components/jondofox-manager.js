@@ -276,7 +276,8 @@ JDFManager.prototype = {
       'extensions.jondofox.safebrowsing.warning.infoURL',
     'browser.safebrowsing.malware.reportURL':
       'extensions.jondofox.safebrowsing.malware.reportURL',
-    'browser.safebrowsing.appRepURL': ' '
+    'browser.safebrowsing.appRepURL': 
+      'extensions.jondofox.safebrowsing.appRepURL'
   },
 
   // This map of string preferences is given to the prefsMapper
@@ -333,7 +334,8 @@ JDFManager.prototype = {
     'network.dns.disablePrefetch':'extensions.jondofox.network_dns_disablePrefetch',
 
     'javascript.options.ion.content': 'extensions.jondofox.javascript.options.ion.content',
-    'javascript.options.baselinejit.content': 'extensions.jondofox.javascript.options.baselinejit.content',
+    'javascript.options.baselinejit.content': 
+        'extensions.jondofox.javascript.options.baselinejit.content',
     'javascript.options.asmjs': 'extensions.jondofox.javascript.options.asmjs',
     'gfx.direct2d.disabled': 'extensions.jondofox.gfx.direct2d.disabled',
     'layers.acceleration.disabled': 'extensions.jondofox.layers.acceleration.disabled',
@@ -1507,7 +1509,8 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.rsa_seed_sha", false);
-
+        // Disable Youtube in HTTPSEverywhere
+        this.prefsHandler.setBoolPref("extensions.https_everywhere.rule_toggle.YouTube (partial)", false);
       } else {
         if (this.ff24) {
            this.prefsHandler.deletePreference("security.tls.version.min");
@@ -1530,6 +1533,8 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("security.ssl3.dhe_dss_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.ecdh_rsa_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.rsa_seed_sha");
+        // Enable Youtube in HTTPSEverywhere
+        this.prefsHandler.deletePreference("extensions.https_everywhere.rule_toggle.YouTube (partial)");
       }
 
       this.prefsHandler.setBoolPref("security.ssl.enable_false_start", true);
