@@ -423,8 +423,7 @@ var CertPatrol = {
 
     // The certificate changed 
     if ( found && (
-         old.sha1Fingerprint != now.sha1Fingerprint ||
-         old.md5Fingerprint  != now.md5Fingerprint 
+         old.sha1Fingerprint != now.sha1Fingerprint 
        )) {
       // Let's check whether we have a wildcard certificate and whether we 
       // have the same certificare already stored...
