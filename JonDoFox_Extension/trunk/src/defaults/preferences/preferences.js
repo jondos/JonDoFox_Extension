@@ -184,20 +184,21 @@ pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.sanitize_onShutdown", true);
 pref("extensions.jondofox.clearOnShutdown_history", true);
 pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
-// Only valid for FF4+
 pref("extensions.jondofox.indexedDB.enabled", false);
-// Only valid for FF3
 pref("extensions.jondofox.history_expire_days", 0);
 
 pref("extensions.jondofox.search_suggest_enabled", false);
 pref("extensions.jondofox.delete_searchbar", true);
-// Only valid for FF4
-// No pinging of Mozilla once a day for Metadata updates or whatever
-// See: http://blog.mozilla.com/addons/2011/02/10/add-on-metadata-start-up-time
+
 pref("extensions.jondofox.getAddons.cache.enabled", false);
 
 // See: http://www.contextis.com/resources/blog/webgl/
 pref("extensions.jondofox.webgl.disabled", true);
+
+pref("extensions.jondofox.iframes_disabled", true);
+
+// for Firefox 34
+pref("extensions.jondofox.loop_enabled", false);
 
 // No document fonts to avoid this fingerprint means
 pref("extensions.jondofox.use_document_fonts", 0);
@@ -215,9 +216,13 @@ pref("extensions.jondofox.sessionstore_privacy_level", 2);
 
 // Disabling all plugins in JonDonym-Mode
 pref("extensions.jondofox.disableAllPluginsJonDoMode", true);
+pref("extensions.jondofox.plugins_enumerable_names", "");
 
 // The Navigation Timing API
 pref("extensions.jondofox.navigationTiming.enabled", false);
+
+// disable video Stats
+pref("extensions.jondofox.video_stats_enabled", false);
 
 // The Battery API
 pref("extensions.jondofox.battery.enabled", false);
@@ -280,6 +285,9 @@ pref("extensions.jondofox.blocklist.enabled", false);
 
 // No WebRTC UDP sockets for JonDoFox user
 pref("extensions.jondofox.peerconnection.enabled", false);
+
+// disable experiments
+pref("extensions.jondofox.experiments_enabled", false);
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);

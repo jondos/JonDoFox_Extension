@@ -19,8 +19,11 @@ function onLoad() {
   var keys = ["commonName", "organization", "organizationalUnit",
     // "serialNumber", "emailAddress",
     "notBeforeGMT", "notAfterGMT", "issuerCommonName", "issuerOrganization",
-    "issuerOrganizationUnit", "issuerMd5Fingerprint", "issuerSha1Fingerprint",
-    "md5Fingerprint", "sha1Fingerprint"];
+    "issuerOrganizationUnit", 
+    // "issuerMd5Fingerprint", 
+    "issuerSha1Fingerprint",
+    // "md5Fingerprint",
+    "sha1Fingerprint"];
   for (var i in keys) {
     var key = keys[i];
     if (certobj.now[key] == certobj.old[key]) {
