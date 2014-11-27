@@ -67,11 +67,11 @@
         <groupbox>
           <caption id="cmfinger" label="&CP_fingerprints;" />
         </groupbox>
-        <row>
+        <!-- <row>
           <label id="cmmd5l" value="&CP_md5Fingerprint;" />
           <textbox class="plain" readonly="true" size="64" 
             id="md5Fingerprint" />
-        </row>
+        </row> -->
         <row>
           <label id="cmsha1l" value="&CP_sha1Fingerprint;"/>
           <textbox class="plain" readonly="true" size="64"

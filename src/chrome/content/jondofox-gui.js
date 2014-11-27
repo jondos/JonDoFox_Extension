@@ -914,13 +914,12 @@ var prefsObserver = {
             jdfManager.setUserAgent(false, jdfManager.STATE_NONE);
           }
         }
-        else if (data === VERSION_PREF && jdfManager.ff4) {
+        else if (data === VERSION_PREF) {
             log("Detected last version change in FF4.")
 	    openJDFFeaturePage();
             if (!prefsHandler.getBoolPref(
                 'extensions.jondofox.noscript_showDomain')) {
-                prefsHandler.
-		  setBoolPref('noscript.showDomain', false);
+                prefsHandler.setBoolPref('noscript.showDomain', false);
             }
 	  }
         else if (data === MENU_PREF) {
@@ -1001,7 +1000,7 @@ var overlayObserver = {
 
             setTimeout(function() {startupChecks()}, 100);
 
-            if (jdfManager.ff4) {
+            
               // First, setting the toolbar button on first startup...
               if (prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
                 prefsHandler.setBoolPref("extensions.jondofox.firstStart",
@@ -1043,7 +1042,7 @@ var overlayObserver = {
                 appStart.quit(Ci.nsIAppStartup.eAttemptQuit|
 			     Ci.nsIAppStartup.eRestart);
 	      }
-            }
+            
 	    // We delete the search history after 30 minutes... But only using
 	    // one setInterval as there is no search history per window but
 	    // per session.
@@ -1058,16 +1057,9 @@ var overlayObserver = {
 	    var searchbar = document.getElementById("searchbar");
 	    document.getElementById("PopupAutoComplete").
 		    addEventListener("click", clearingSearchbar, false);
-	    searchbar.textbox.addEventListener("keypress",
-			    clearingSearchbar, true);
-	    // Yes, seems "bubble-sensitiv" across FF3/4... But just this one.
-	    if (jdfManager.ff4) {
-	      searchbar.textbox.
-		addEventListener("drop", clearingSearchbar, false);
-	    } else {
-              searchbar.textbox.
-		addEventListener("drop", clearingSearchbar, true);
-	    }
+	    searchbar.textbox.addEventListener("keypress", clearingSearchbar, true);
+	    searchbar.textbox.addEventListener("drop", clearingSearchbar, false);
+	   
 	    document.getAnonymousElementByAttribute(searchbar,
 			    "anonid", "search-go-button").addEventListener(
 				    "click", clearingSearchbar, true);
@@ -1097,13 +1089,9 @@ function shutdown() {
             removeEventListener("click", clearingSearchbar, false);
     document.getElementById("searchbar").textbox.
 	    removeEventListener("keypress", clearingSearchbar, true);
-    if (jdfManager.ff4) {
-      document.getElementById("searchbar").textbox.
+    document.getElementById("searchbar").textbox.
 	    removeEventListener("drop", clearingSearchbar, false);
-    } else {
-      document.getElementById("searchbar").textbox.
-	    removeEventListener("drop", clearingSearchbar, true);
-    }
+    
     document.getAnonymousElementByAttribute(document.
 	getElementById("searchbar"), "anonid", "search-go-button").
 	    removeEventListener("click", clearingSearchbar, true);

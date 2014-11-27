@@ -91,15 +91,6 @@ JDFManager.prototype = {
   // Remove jondofox preferences branch on uninstall only
   uninstall: false,
 
-  // Do we have a FF4 or still a FF3?
-  ff4: null,
-
-  // If FF4, which version (the add-on bar exists since 4.0b7pre)
-  ff4Version: "",
-
-  // The NavigationTiming API we want to deactivate got introduced in FF7.
-  ff7: null,
-
   // Can we use our improved HTTP Auth defense (available since FF12)?
   ff12: null,
 
@@ -123,6 +114,9 @@ JDFManager.prototype = {
 
   // websockets are ready to use for ff29
   ff29 : null,
+
+  // disable loop in ff34
+  ff34: null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -288,7 +282,10 @@ JDFManager.prototype = {
       'extensions.jondofox.network_no_proxies_on',
     'browser.aboutHomeSnippets.updateUrl':
       'extensions.jondofox.snippet_url',
-    'browser.newtab.url':'extensions.jondofox.newtabpage.url',
+    'browser.newtab.url':
+      'extensions.jondofox.newtabpage.url',
+    'plugins.enumerable_names':
+      'extensions.jondofox.plugins_enumerable_names',
   },
 
   // This map of boolean preferences is given to the prefsMapper
@@ -296,6 +293,7 @@ JDFManager.prototype = {
     'browser.zoom.siteSpecific':'extensions.jondofox.browser.zoom.siteSpecific',
     'plugin.expose_full_path':'extensions.jondofox.plugin.expose_full_path',
     'browser.send_pings':'extensions.jondofox.browser_send_pings',
+    'beacon.enabled':'extensions.jondofox.browser_send_pings',
     'geo.enabled':'extensions.jondofox.geo_enabled',
     'network.prefetch-next':'extensions.jondofox.network_prefetch-next',
     'network.proxy.socks_remote_dns':'extensions.jondofox.socks_remote_dns',
@@ -314,6 +312,7 @@ JDFManager.prototype = {
        'extensions.jondofox.clearOnShutdown_offlineApps',
     'security.enable_tls_session_tickets':
        'extensions.jondofox.tls_session_tickets',
+    'dom.enable_performance':'extensions.jondofox.navigationTiming.enabled',
     'dom.battery.enabled':'extensions.jondofox.battery.enabled',
     'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
     'dom.event.clipboardevents.enabled':
@@ -324,9 +323,12 @@ JDFManager.prototype = {
     'extensions.blocklist.enabled':'extensions.jondofox.blocklist.enabled',
     'media.peerconnection.enabled':'extensions.jondofox.peerconnection.enabled',
     'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled',
+    'noscript.forbidIFrames':'extensions.jondofox.iframes_disabled',
     'webgl.disabled':'extensions.jondofox.webgl.disabled',
     'dom.indexedDB.enabled':'extensions.jondofox.indexedDB.enabled',
     'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
+    
+    'media.video_stats.enabled':'extensions.jondofox.video_stats_enabled',
        
     'browser.download.manager.addToRecentDocs':
        'extensions.jondofox.download_manager_addToRecentDocs',
@@ -342,7 +344,11 @@ JDFManager.prototype = {
 
     // Safebrowsing disabled
     'browser.safebrowsing.enabled': 'extensions.jondofox.safebrowsing_enabled',
-    'browser.safebrowsing.malware.enabled': 'extensions.jondofox.safebrowsing_enabled'
+    'browser.safebrowsing.malware.enabled': 'extensions.jondofox.safebrowsing_enabled',
+
+    // disable experiments
+    'experiments.supported':'extensions.jondofox.experiments_enabled',
+    'experiments.enabled':'extensions.jondofox.experiments_enabled',
   },
    
   //This map of integer preferences is given to the prefsMapper
@@ -615,17 +621,6 @@ JDFManager.prototype = {
       this.enforceCachePref();
       this.enforceSSLPref();
 
-      if (this.ff7) {
-          this.boolPrefsMap['dom.enable_performance'] = 'extensions.jondofox.navigationTiming.enabled';
-          // delete old charset values if it was set, because FF7 doesn't send it any more
-          if (this.prefsHandler.getStringPref('intl.accept_charsets') !== null) {
-             this.prefsHandler.deletePreference("intl.accept_charsets");
-             this.prefsHandler.deletePreference("intl.charset.default");
-             this.prefsHandler.deletePreference("intl.charsetmenu.browser.cache");
-             
-          }
-          this.prefsHandler.deletePreference("general.useragent.locale");
-      }
       // Disable gamepad API
       if (this.ff24) {
           this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
@@ -639,6 +634,10 @@ JDFManager.prototype = {
       } else {
           this.boolPrefsMap['javascript.options.typeinference'] = 
              'extensions.jondofox.javascript.options.typeinference';
+      }
+      // Disable Loop
+      if (this.ff34) {
+          this.boolPrefsMap['loop.enabled'] = 'extensions.jondofox.loop_enabled';
       }
  
       // For clearity of code we implement a different method to check the
@@ -1369,17 +1368,7 @@ JDFManager.prototype = {
     var versComp = CC['@mozilla.org/xpcom/version-comparator;1'].
 	    getService(CI.nsIVersionComparator);
     var ffVersion = appInfo.version;
-    if (versComp.compare(ffVersion, "4.0a1") >= 0) {
-      this.ff4Version = ffVersion;
-      this.ff4 = true;
-    } else {
-      this.ff4 = false;
-    }
-    if (versComp.compare(ffVersion, "7.0") >= 0) {
-      this.ff7 = true;
-    } else {
-      this.ff7 = false;
-    }
+ 
     if (versComp.compare(ffVersion, "12.0") >= 0) {
       this.ff12 = true;
     } else {
@@ -1419,6 +1408,11 @@ JDFManager.prototype = {
       this.ff29 = true;
     } else {
       this.ff29 = false;
+    }
+    if (versComp.compare(ffVersion, "34.0") >= 0) {
+      this.ff34 = true;
+    } else {
+      this.ff34 = false;
     }
 
   },
@@ -1680,6 +1674,7 @@ JDFManager.prototype = {
     var p;
     var userAgent;
     var acceptLang = this.prefsHandler.getStringPref("intl.accept_languages");
+
     log("Setting user agent and other stuff for: " + state);
     // First the plugin pref
     this.enforcePluginPref(state);

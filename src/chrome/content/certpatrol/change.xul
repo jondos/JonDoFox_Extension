@@ -95,14 +95,14 @@
         </row>
         <groupbox>
           <caption id="cmfinger" label="&fingerprints;" />
-        </groupbox -->
+        </groupbox 
         <row>
           <label id="cmmd5l" value="&CP_md5Fingerprint;" />
 	  <vbox flex="1">
 	    <textbox class="plain" readonly="true" id="md5Fingerprint" />
 	    <textbox class="plain" readonly="true" id="md5Fingerprint2" />
 	  </vbox>
-        </row>
+        </row> -->
         <row>
           <label id="cmsha1l" value="&CP_sha1Fingerprint;" />
 	  <vbox flex="1">
@@ -157,13 +157,13 @@
 	    <textbox class="plain" readonly="true" id="issuerOrganizationUnit2" />
 	  </vbox>
         </row>
-        <row>
+        <!-- <row>
           <label id="cmimd5l" value="&CP_md5Fingerprint;" />
 	  <vbox flex="1">
 	    <textbox class="plain" readonly="true" id="issuerMd5Fingerprint" />
 	    <textbox class="plain" readonly="true" id="issuerMd5Fingerprint2" />
 	  </vbox>
-        </row>
+        </row> -->
         <row>
           <label id="cmisha1l" value="&CP_sha1Fingerprint;" />
 	  <vbox flex="1">

@@ -10,7 +10,8 @@ function onLoad() {
   $("cmdiag").setAttribute("title", certobj.lang.newEvent);
       
   var keys = [ 'commonName', 'organization', 'organizationalUnit',
-               'md5Fingerprint', 'sha1Fingerprint', 'notAfterGMT', 'emailAddress' 
+               // 'md5Fingerprint', 
+               'sha1Fingerprint', 'notAfterGMT', 'emailAddress' 
 	      // NOT SHOWN ANYMORE (go details):
 	      // 'serialNumber',
 	      // 'issuerCommonName', 'issuerOrganization',
