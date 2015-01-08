@@ -179,6 +179,7 @@ function setProxy(state) {
       // The state has changed --> set the user agent and clear cookies     
       jdfManager.closeAllTabsAndWindows();
       jdfManager.clearMemoryCache();
+      jdfManager.clearCache();
       jdfManager.setUserAgent(false, state);
       jdfManager.clearAllCookies();
       jdfManager.enforceCachePref();
@@ -202,10 +203,10 @@ function setProxy(state) {
            authCrypto.logoutAndTeardown();
       }
       // clear other crypto tokens
-      var secMgr = Cc["@mozilla.org/security/crypto;1"].getService(Ci.nsIDOMCrypto);
-      if(secMgr) {
-         secMgr.logout();
-      }
+      // var secMgr = Cc["@mozilla.org/security/crypto;1"].getService(Ci.nsIDOMCrypto);
+      // if(secMgr) {
+      //   secMgr.logout();
+      // }
       // clear site permissions
       // var permMgr = Cc["@mozilla.org/permissionmanager;1"].getService(Ci.nsIPermissionManager);
       // if(permMgr) {
