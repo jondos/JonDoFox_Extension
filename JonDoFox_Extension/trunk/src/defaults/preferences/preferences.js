@@ -100,11 +100,11 @@ pref("extensions.jondofox.tor.default_charset", "ISO-8859-1");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20141011015303");
+pref("extensions.jondofox.windows.buildID_override", "20141126041045");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:34.0) Gecko/20100101 Firefox/34.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-us,en");
@@ -184,6 +184,7 @@ pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.sanitize_onShutdown", true);
 pref("extensions.jondofox.clearOnShutdown_history", true);
 pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
+pref("extensions.jondofox.clearOnShutdown_siteSettings", true);
 pref("extensions.jondofox.indexedDB.enabled", false);
 pref("extensions.jondofox.history_expire_days", 0);
 
@@ -229,6 +230,9 @@ pref("extensions.jondofox.battery.enabled", false);
 
 // Gamepad API
 pref("extensions.jondofox.gamepad.enabled", false);
+
+// Sensors API
+pref("extensions.jondofox.sensors.enabled", false);
 
 //  Snippet URL
 pref("extensions.jondofox.snippet_url", "");

@@ -115,6 +115,9 @@ JDFManager.prototype = {
   // websockets are ready to use for ff29
   ff29 : null,
 
+  // cache service changed
+  ff33 : null,
+
   // disable loop in ff34
   ff34: null,
 
@@ -310,11 +313,18 @@ JDFManager.prototype = {
        'extensions.jondofox.places_history_enabled',
     'privacy.clearOnShutdown.offlineApps':
        'extensions.jondofox.clearOnShutdown_offlineApps',
+    'privacy.clearOnShutdown.siteSettings':
+       'extensions.jondofox.clearOnShutdown_siteSettings',
+
     'security.enable_tls_session_tickets':
        'extensions.jondofox.tls_session_tickets',
     'dom.enable_performance':'extensions.jondofox.navigationTiming.enabled',
     'dom.battery.enabled':'extensions.jondofox.battery.enabled',
+    'device.sensors.enabled':'extensions.jondofox.sensors.enabled',
+
     'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
+    'dom.netinfo.enabled':'extensions.jondofox.dom.network.enabled',
+ 
     'dom.event.clipboardevents.enabled':
        'extensions.jondofox.event.clipboardevents.enabled',
     'browser.pagethumbnails.capturing_disabled':
@@ -635,9 +645,11 @@ JDFManager.prototype = {
           this.boolPrefsMap['javascript.options.typeinference'] = 
              'extensions.jondofox.javascript.options.typeinference';
       }
-      // Disable Loop
+      // Disable Loop and download of safebrowsing DB
       if (this.ff34) {
           this.boolPrefsMap['loop.enabled'] = 'extensions.jondofox.loop_enabled';
+          this.boolPrefsMap['browser.safebrowsing.downloads.enabled'] = 
+             'extensions.jondofox.safebrowsing_enabled';
       }
  
       // For clearity of code we implement a different method to check the
@@ -1409,6 +1421,11 @@ JDFManager.prototype = {
     } else {
       this.ff29 = false;
     }
+    if (versComp.compare(ffVersion, "33.0") >= 0) {
+      this.ff33 = true;
+    } else {
+      this.ff33 = false;
+    }
     if (versComp.compare(ffVersion, "34.0") >= 0) {
       this.ff34 = true;
     } else {
@@ -1503,8 +1520,8 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.rsa_seed_sha", false);
-        // Disable Youtube in HTTPSEverywhere
-        this.prefsHandler.setBoolPref("extensions.https_everywhere.rule_toggle.YouTube (partial)", false);
+        // Enable Youtube in HTTPSEverywhere
+        this.prefsHandler.deletePreference("extensions.https_everywhere.rule_toggle.YouTube (partial)");
       } else {
         if (this.ff24) {
            this.prefsHandler.deletePreference("security.tls.version.min");
@@ -2286,53 +2303,22 @@ JDFManager.prototype = {
 
    // clear Cache
    clearCache: function() {
+
+    if (this.ff33) {
+      var cacheService = CC["@mozilla.org/netwerk/cache-storage-service;1"]
+          .getService(Components.interfaces.nsICacheStorageService);
+      cacheService.clear();
+    } else {
       var cacheMgr = CC["@mozilla.org/network/cache-service;1"].getService(CI.nsICacheService);
       try {
           cacheMgr.evictEntries(CI.nsICache.STORE_ANYWHERE);
-          // cacheMgr.evictEntries(CI.nsICache.STORE_IN_MEMORY);
-          // cacheMgr.evictEntries(CI.nsICache.STORE_ON_DISK); 
-          // cacheMgr.evictEntries(CI.nsICache.STORE_ON_DISK_AS_FILE); 
-          // cacheMgr.evictEntries(CI.nsICache.STORE_OFFLINE); 
       }   catch (e) { 
           log("clearCache(): " + e); 
       }
-      // clear DNS cache
-      var olddns= null;
-      if (this.prefsHandler.prefHasUserValue("network.dnsCacheExpiration")) {
-         olddns= this.prefsHandler.getIntPref("network.dnsCacheExpiration");
-      }
-      this.prefsHandler.setIntPref("network.dnsCacheExpiration", 0);
-      if (olddns != null) {
-           this.prefsHandler.setIntPref("network.dnsCacheExpiration", olddns);
-      } else {
-           this.prefsHandler.clearUserPref("network.dnsCacheExpiration");
-      }
-  },
-
-  // Clear image cache, e.g. when switching from one state to another
-  clearImageCache: function() {
-     try {
-        if (this.notFF18) {
-           // clear Image Cache for FF version < FF18
-           var imgCache = CC["@mozilla.org/image/cache;1"].getService(CI.imgICache);
-           if (imgCache) {
-              imgCache.clearCache(false);
-           }
-        } else {
-            // clear Image Cache for FF version > FF17
-            var imgTools = CC["@mozilla.org/image/tools;1"].getService(CI.imgITools);
-            var imgCache = imgTools.getImgCacheForDocument(null);
-            if (imgCache) {
-                imgCache.clearCache(false); 
-            }
-        }
-
-     } catch(e) {
-         log("Exception on image cache clearing: "+e);
-     }
+    }
   },
   
-   // Close all browser windows and tabs
+  // Close all browser windows and tabs
   closeAllTabsAndWindows: function() {
 	  
 	  var wm = CC["@mozilla.org/appshell/window-mediator;1"].getService(CI.nsIWindowMediator);
