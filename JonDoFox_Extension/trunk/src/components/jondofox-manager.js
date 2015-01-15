@@ -59,9 +59,9 @@ var JDFManager = function() {
   // Now we are adding a specific logger (JDFManager)...
   this.logger = this.Log4Moz.repository.getLogger("JonDoFox Manager");
   this.logger.level = this.Log4Moz.Level["Debug"];
-  //Components.utils.import("resource://jondofox/adblockModule.js", this);
-  //Components.utils.import("resource://jondofox/adblockFilter.js", this);
-  //Components.utils.import("resource://jondofox/adblockMatcher.js", this);
+  // Components.utils.import("resource://jondofox/adblockModule.js", this);
+  // Components.utils.import("resource://jondofox/adblockFilter.js", this);
+  // Components.utils.import("resource://jondofox/adblockMatcher.js", this);
 };
 
 JDFManager.prototype = {
@@ -120,6 +120,9 @@ JDFManager.prototype = {
 
   // disable loop in ff34
   ff34: null,
+
+  // enable indexed DB in ff35
+  ff35: null,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -335,7 +338,6 @@ JDFManager.prototype = {
     'noscript.doNotTrack.enabled':'extensions.jondofox.noscript_dnt_enabled',
     'noscript.forbidIFrames':'extensions.jondofox.iframes_disabled',
     'webgl.disabled':'extensions.jondofox.webgl.disabled',
-    'dom.indexedDB.enabled':'extensions.jondofox.indexedDB.enabled',
     'dom.storage.enabled':'extensions.jondofox.dom_storage_enabled',
     
     'media.video_stats.enabled':'extensions.jondofox.video_stats_enabled',
@@ -447,8 +449,8 @@ JDFManager.prototype = {
       // Register the proxy filter
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
-      //this.adBlock.init();
-      //this.loadFilterList();
+      // this.adBlock.init();
+      // this.loadFilterList();
     } catch (e) {
       log('init(): ' + e);
     }
@@ -650,6 +652,11 @@ JDFManager.prototype = {
           this.boolPrefsMap['loop.enabled'] = 'extensions.jondofox.loop_enabled';
           this.boolPrefsMap['browser.safebrowsing.downloads.enabled'] = 
              'extensions.jondofox.safebrowsing_enabled';
+      }
+      if (this.ff35) {
+          this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled35';
+      } else {
+         this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled';
       }
  
       // For clearity of code we implement a different method to check the
@@ -1036,17 +1043,6 @@ JDFManager.prototype = {
         this.prefsHandler.setIntPref("extensions.autoDisableScopes", 14);
         this.prefsHandler.setIntPref("extensions.autoDisableScopes", 14);
 
-        // AdBlock Plus
-        this.prefsHandler.setBoolPref("extensions.adblockplus.checkedadblockinstalled", true);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.checkedtoolbar", true);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.correctTyposAsked", true);
-        this.prefsHandler.setIntPref("extensions.adblockplus.patternsbackups", 0);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.showinstatusbar", false);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.showintoolbar", true);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.showsubscriptions", false);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.subscriptions_exceptionscheckbox", false);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.subscriptions_autoupdate", false);
-        this.prefsHandler.setBoolPref("extensions.adblockplus.savestats", false);
         this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.popup_shown", true);
         this.prefsHandler.setBoolPref("extensions.https_everywhere.toolbar_hint_shown", true);
 
@@ -1431,6 +1427,11 @@ JDFManager.prototype = {
     } else {
       this.ff34 = false;
     }
+    if (versComp.compare(ffVersion, "35.0") >= 0) {
+      this.ff35 = true;
+    } else {
+      this.ff35 = false;
+    }
 
   },
 
@@ -1443,7 +1444,7 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.11.0" &&
+            'extensions.jondofox.profile_version') !== "2.10.0" &&
 	  this.prefsHandler.getStringPref(
             'extensions.jondofox.profile_version') !== "2.10.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
@@ -1520,8 +1521,7 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.rsa_seed_sha", false);
-        // Enable Youtube in HTTPSEverywhere
-        this.prefsHandler.deletePreference("extensions.https_everywhere.rule_toggle.YouTube (partial)");
+     
       } else {
         if (this.ff24) {
            this.prefsHandler.deletePreference("security.tls.version.min");
@@ -1544,8 +1544,6 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("security.ssl3.dhe_dss_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.ecdh_rsa_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.rsa_seed_sha");
-        // Enable Youtube in HTTPSEverywhere
-        this.prefsHandler.deletePreference("extensions.https_everywhere.rule_toggle.YouTube (partial)");
       }
 
       this.prefsHandler.setBoolPref("security.ssl.enable_false_start", true);

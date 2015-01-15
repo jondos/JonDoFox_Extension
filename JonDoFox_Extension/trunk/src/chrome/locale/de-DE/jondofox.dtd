@@ -39,7 +39,7 @@ Dessen Ziel ist es, das Surfen im Web letztendlich sicherer zu machen. Dazu k&ou
 <!ENTITY jondobrowser.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in den JonDoBrowser
 integriert, damit die Anonymit&auml;t während des Surfens noch besser gesch&uuml;tzt ist. 
-Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, VideoDownloadHelper und HTTPS-Everywhere) 
+Informationen zu diesen (Cookie Controller, Adblock Plus, NoScript, VideoDownloadHelper und HTTPS-Everywhere) 
 sind auf unserer Hilfeseiten unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">
@@ -156,7 +156,7 @@ nicht &uuml;bereinstimmen, wird eine Warnung gezeigt.">
 <!ENTITY jondofox.features.additionalAddons "Zus&auml;tzlich zu unserer eigenen 
 Erweiterung haben wir einige weitere Add-Ons in unser JonDoFox-Profil 
 integriert, damit die Anonymit&auml;t während des Surfens noch besser gesch&uuml;tzt ist. 
-Informationen zu diesen (Cookie Monster, Adblock Plus, NoScript, VideoDownloadHelper und HTTPS-Everywhere) 
+Informationen zu diesen (Cookie Controller, Adblock Plus, NoScript, VideoDownloadHelper und HTTPS-Everywhere) 
 sind auf unserer Hilfeseiten unter 
 <a href='https://anonymous-proxy-servers.net/de/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des Weiteren enth&auml;lt unser Wiki zus&auml;tzliche Hilfe unter <a href='https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen'>https://anonymous-proxy-servers.net/wiki/index.php/Kompatible_Anwendungen</a>.">

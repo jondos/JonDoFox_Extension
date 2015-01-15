@@ -42,7 +42,7 @@ choose the following entry out of the pop up menu">
 <!ENTITY jondobrowser.features.additionalAddons "In addition to our
 self-designed extension, we have incorporated multiple of others into the
 JonDoBrowser, all of which help facilitate a more anonymous web browsing
-experience: Cookie Monster, Adblock Plus, NoScript, UnPlug and
+experience: Cookie Controller, Adblock Plus, NoScript, VideoDownloadHelper and
 HTTPS-Everywhere. You will find information on how to use them on
 <a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the following). Additional help is provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
@@ -160,7 +160,7 @@ the whole feature:">
 <!ENTITY jondofox.features.additionalAddons "In addition to our
 self-designed extension, we have incorporated multiple of others into the
 JonDoBrowser, all of which help facilitate a more anonymous web browsing
-experience: Cookie Monster, Adblock Plus, NoScript, UnPlug and
+experience: Cookie Controller, Adblock Plus, NoScript, VideoDownloadHelper and
 HTTPS-Everywhere. You will find information on how to use them on
 <a href='https://anonymous-proxy-servers.net/en/help/jondofox2.html'>
 https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the following). Additional help is provided in our Wiki: <a href='https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications'>https://anonymous-proxy-servers.net/wiki/index.php/Compatible_applications</a>.">
