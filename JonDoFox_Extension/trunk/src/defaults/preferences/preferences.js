@@ -184,7 +184,6 @@ pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.sanitize_onShutdown", true);
 pref("extensions.jondofox.clearOnShutdown_history", true);
 pref("extensions.jondofox.clearOnShutdown_offlineApps", true);
-pref("extensions.jondofox.clearOnShutdown_siteSettings", true);
 pref("extensions.jondofox.indexedDB.enabled", false);
 // only for FF 35 because of a bug
 pref("extensions.jondofox.indexedDB.enabled35", true);
@@ -210,9 +209,6 @@ pref("extensions.jondofox.use_document_fonts", 0);
 pref("extensions.jondofox.sessionhistory.max_entries", 2);
 pref("extensions.jondofox.places_history_enabled", false);
 
-// Disabling TLS Session Resumption tracking (see:
-// https://tools.ietf.org/html/rfc5077)
-pref("extensions.jondofox.tls_session_tickets", false);
 
 // Do not restore sessions
 pref("extensions.jondofox.sessionstore_privacy_level", 2);
@@ -250,7 +246,7 @@ pref("extensions.jondofox.event.clipboardevents.enabled", false);
 pref("extensions.jondofox.javascript.options.ion.content", false);
 pref("extensions.jondofox.javascript.options.baselinejit.content", false);
 pref("extensions.jondofox.javascript.options.asmjs", false);
-pref("extensions.jondofox.javascript.options.typeinference", false);
+
 pref("extensions.jondofox.gfx.direct2d.disabled", true);
 pref("extensions.jondofox.layers.acceleration.disabled", true);
 

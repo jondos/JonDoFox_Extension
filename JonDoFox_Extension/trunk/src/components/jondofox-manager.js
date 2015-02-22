@@ -1,6 +1,5 @@
 /******************************************************************************
- * Copyright 2008-2012, JonDos GmbH
- * Author: Johannes Renner, Georg Koppen
+ * Copyright 2008-2015, JonDos GmbH
  *
  * JonDoFox extension management and compatibility tasks + utilities
  * TODO: Create another component containing the utils only
@@ -59,9 +58,9 @@ var JDFManager = function() {
   // Now we are adding a specific logger (JDFManager)...
   this.logger = this.Log4Moz.repository.getLogger("JonDoFox Manager");
   this.logger.level = this.Log4Moz.Level["Debug"];
-  // Components.utils.import("resource://jondofox/adblockModule.js", this);
-  // Components.utils.import("resource://jondofox/adblockFilter.js", this);
-  // Components.utils.import("resource://jondofox/adblockMatcher.js", this);
+  //Components.utils.import("resource://jondofox/adblockModule.js", this);
+  //Components.utils.import("resource://jondofox/adblockFilter.js", this);
+  //Components.utils.import("resource://jondofox/adblockMatcher.js", this);
 };
 
 JDFManager.prototype = {
@@ -107,6 +106,7 @@ JDFManager.prototype = {
   // We need it to disable gamepad API
   ff24 : null,
 
+
   // We need it to switch to javascript.options.typeinference.content
   ff26 : null,
 
@@ -115,14 +115,18 @@ JDFManager.prototype = {
   // websockets are ready to use for ff29
   ff29 : null,
 
-  // cache service changed
-  ff33 : null,
-
   // disable loop in ff34
   ff34: null,
 
   // enable indexed DB in ff35
   ff35: null,
+
+  // disable indexed DB in ff36 again
+  ff36: null,
+  
+  // Used by clear Cache function
+  // Set to false to only check minor versions
+  isOld : false,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -316,18 +320,9 @@ JDFManager.prototype = {
        'extensions.jondofox.places_history_enabled',
     'privacy.clearOnShutdown.offlineApps':
        'extensions.jondofox.clearOnShutdown_offlineApps',
-    'privacy.clearOnShutdown.siteSettings':
-       'extensions.jondofox.clearOnShutdown_siteSettings',
-
-    'security.enable_tls_session_tickets':
-       'extensions.jondofox.tls_session_tickets',
     'dom.enable_performance':'extensions.jondofox.navigationTiming.enabled',
     'dom.battery.enabled':'extensions.jondofox.battery.enabled',
-    'device.sensors.enabled':'extensions.jondofox.sensors.enabled',
-
     'dom.network.enabled':'extensions.jondofox.dom.network.enabled',
-    'dom.netinfo.enabled':'extensions.jondofox.dom.network.enabled',
- 
     'dom.event.clipboardevents.enabled':
        'extensions.jondofox.event.clipboardevents.enabled',
     'browser.pagethumbnails.capturing_disabled':
@@ -449,8 +444,8 @@ JDFManager.prototype = {
       // Register the proxy filter
       this.registerProxyFilter();
       // Loading the adblocking filterlist and initializing that component.
-      // this.adBlock.init();
-      // this.loadFilterList();
+      //this.adBlock.init();
+      //this.loadFilterList();
     } catch (e) {
       log('init(): ' + e);
     }
@@ -638,23 +633,14 @@ JDFManager.prototype = {
           this.boolPrefsMap['dom.gamepad.enabled'] = 'extensions.jondofox.gamepad.enabled';
       }
 
-      // Enforce typeinference for Javascript
-      if (this.ff26) {
-          this.boolPrefsMap['javascript.options.typeinference.content'] = 
-             'extensions.jondofox.javascript.options.typeinference';
-          this.prefsHandler.deletePreference('javascript.options.typeinference');
-      } else {
-          this.boolPrefsMap['javascript.options.typeinference'] = 
-             'extensions.jondofox.javascript.options.typeinference';
-      }
-      // Disable Loop and download of safebrowsing DB
+      // Disable Loop
       if (this.ff34) {
           this.boolPrefsMap['loop.enabled'] = 'extensions.jondofox.loop_enabled';
-          this.boolPrefsMap['browser.safebrowsing.downloads.enabled'] = 
-             'extensions.jondofox.safebrowsing_enabled';
       }
-      if (this.ff35) {
-          this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled35';
+
+     // Enable Indexed DB for FF 35 because of a bug
+      if (this.ff35 && !this.ff36) {
+           this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled35';
       } else {
          this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled';
       }
@@ -1043,6 +1029,17 @@ JDFManager.prototype = {
         this.prefsHandler.setIntPref("extensions.autoDisableScopes", 14);
         this.prefsHandler.setIntPref("extensions.autoDisableScopes", 14);
 
+        // AdBlock Plus
+        this.prefsHandler.setBoolPref("extensions.adblockplus.checkedadblockinstalled", true);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.checkedtoolbar", true);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.correctTyposAsked", true);
+        this.prefsHandler.setIntPref("extensions.adblockplus.patternsbackups", 0);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.showinstatusbar", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.showintoolbar", true);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.showsubscriptions", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.subscriptions_exceptionscheckbox", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.subscriptions_autoupdate", false);
+        this.prefsHandler.setBoolPref("extensions.adblockplus.savestats", false);
         this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.popup_shown", true);
         this.prefsHandler.setBoolPref("extensions.https_everywhere.toolbar_hint_shown", true);
 
@@ -1377,50 +1374,164 @@ JDFManager.prototype = {
 	    getService(CI.nsIVersionComparator);
     var ffVersion = appInfo.version;
  
+    if (versComp.compare(ffVersion, "4.0a1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "7.0") >= 0) {
+       isOld = true;
+    }
     if (versComp.compare(ffVersion, "12.0") >= 0) {
       this.ff12 = true;
+      isOld = true;
     } else {
       this.ff12 = false;
     }
+    if (versComp.compare(ffVersion, "19.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "19.0.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "19.0.2") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "20.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "20.0.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "21.0") >= 0) {
+       isOld = true;
+    }
     if (versComp.compare(ffVersion, "22.0") >= 0) {
       this.ff22 = true;
+      isOld = "True";
     } else {
       this.ff22 = false;
     }
     if (versComp.compare(ffVersion, "23.0") >= 0) {
       this.ff23 = true;
+      isOld = true;
     } else {
       this.ff23 = false;
     }
+    if (versComp.compare(ffVersion, "23.0.1") >= 0) {
+       isOld = true;
+    }
     if (versComp.compare(ffVersion, "24.0") >= 0) {
       this.ff24 = true;
+      isOld = true;
     } else {
       this.ff24 = false;
     }
+    if (versComp.compare(ffVersion, "24.5.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.7.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.3.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.2.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.8.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.1.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.4.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.6.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.8.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "24.1.1") >= 0) {
+       isOld = "True";
+    }
+    if (versComp.compare(ffVersion, "25.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "25.0.1") >= 0) {
+       isOld = true;
+    }
     if (versComp.compare(ffVersion, "26.0") >= 0) {
       this.ff26 = true;
+      isOld = true;
     } else {
       this.ff26 = false;
     }
     if (versComp.compare(ffVersion, "27.0") >= 0) {
       this.ff27 = true;
+      isOld = "True";
     } else {
       this.ff27 = false;
     }
+    if (versComp.compare(ffVersion, "27.0.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "28.0") >= 0) {
+       isOld = true;
+    }
     if (versComp.compare(ffVersion, "18.0a1") < 0) {
       this.notFF18 = true;
+      isOld = true;
     } else {
       this.notFF18 = false;
     }
     if (versComp.compare(ffVersion, "29.0") >= 0) {
       this.ff29 = true;
+      isOld = true;
     } else {
       this.ff29 = false;
     }
+    if (versComp.compare(ffVersion, "29.0.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "30.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.5.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.4.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.3.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.2.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.1.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.1.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "31.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "32.0") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "32.0.1") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "32.0.2") >= 0) {
+       isOld = true;
+    }
+    if (versComp.compare(ffVersion, "32.0.3") >= 0) {
+       isOld = true;
+    }
     if (versComp.compare(ffVersion, "33.0") >= 0) {
-      this.ff33 = true;
-    } else {
-      this.ff33 = false;
+       isOld = false;
     }
     if (versComp.compare(ffVersion, "34.0") >= 0) {
       this.ff34 = true;
@@ -1431,6 +1542,11 @@ JDFManager.prototype = {
       this.ff35 = true;
     } else {
       this.ff35 = false;
+    }
+    if (versComp.compare(ffVersion, "36.0") >= 0) {
+      this.ff36 = true;
+    } else {
+      this.ff36 = false;
     }
 
   },
@@ -1444,9 +1560,9 @@ JDFManager.prototype = {
     log("Checking whether we have to update the profile ..");
     try {
       if (this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.10.0" &&
+            'extensions.jondofox.profile_version') !== "2.12.0" &&
 	  this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.10.0" &&
+            'extensions.jondofox.profile_version') !== "2.11.0" &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
@@ -1477,24 +1593,18 @@ JDFManager.prototype = {
     var pluginJSON = JSON.stringify(oldPlugins);
     this.prefsHandler.setStringPref("extensions.jondofox.saved_plugin_settings",
       pluginJSON);
-    // Saving the missing plugin notification as well...
-    this.prefsHandler.setBoolPref("extensions.jondofox.saved_plugin_notification", 
-         this.prefsHandler.getBoolPref("plugins.hide_infobar_for_missing_plugin"));
   },
 
   enforceCachePref: function() {
-        // Set cache preferences
-        this.prefsHandler.setIntPref("browser.cache.disk.capacity", 0);
+        // Set cache preferences     
         this.prefsHandler.setBoolPref("browser.cache.disk.enable", false);
         this.prefsHandler.setBoolPref("browser.cache.disk_cache_ssl", false);
-        this.prefsHandler.setIntPref("browser.cache.offline.capacity", 0);
+        this.prefsHandler.setBoolPref("browser.cache.memory.enable", true);
         this.prefsHandler.setBoolPref("browser.cache.offline.enable", false);
         this.prefsHandler.setIntPref("media.cache_size", 0);
-        this.prefsHandler.setIntPref("browser.cache.memory.capacity", 
-           this.prefsHandler.getIntPref("extensions.jondofox.browser_cache_memory_capacity"));
+      
         this.prefsHandler.setIntPref("browser.cache.compression_level", 1);
-        this.prefsHandler.setIntPref("image.cache.size", 5242880);
-        this.prefsHandler.setBoolPref("browser.cache.memory.enable", true);
+        this.prefsHandler.setIntPref("image.cache.size", 5242880);     
   },
 
   enforceSSLPref: function() {
@@ -1521,7 +1631,6 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.rsa_seed_sha", false);
-     
       } else {
         if (this.ff24) {
            this.prefsHandler.deletePreference("security.tls.version.min");
@@ -1550,7 +1659,7 @@ JDFManager.prototype = {
   },
 
   clearMemoryCache: function() {
-      this.prefsHandler.setIntPref("browser.cache.memory.capacity", 0);
+
       this.prefsHandler.setIntPref("image.cache.size", 0);
       this.prefsHandler.setBoolPref("browser.cache.memory.enable", false);
 
@@ -1641,9 +1750,6 @@ JDFManager.prototype = {
            }
         }
       }
-      // Using the saved plugin notification settings.
-      this.prefsHandler.setBoolPref("plugins.hide_infobar_for_missing_plugin",
-        this.prefsHandler.getBoolPref("extensions.jondofox.saved_plugin_notification"));
     }
   },
 
@@ -2299,24 +2405,78 @@ JDFManager.prototype = {
     */
   },
 
-   // clear Cache
    clearCache: function() {
-
-    if (this.ff33) {
-      var cacheService = CC["@mozilla.org/netwerk/cache-storage-service;1"]
-          .getService(Components.interfaces.nsICacheStorageService);
-      cacheService.clear();
-    } else {
-      var cacheMgr = CC["@mozilla.org/network/cache-service;1"].getService(CI.nsICacheService);
-      try {
-          cacheMgr.evictEntries(CI.nsICache.STORE_ANYWHERE);
-      }   catch (e) { 
-          log("clearCache(): " + e); 
+      
+      //Re-run this to go sure we have the Versions loaded.
+      this.isFirefox4or7or12orNot18();
+      
+      if (!isOld) { //FF Version => 33 so we use the new Cache API
+      
+         //New (from Empty Cache Button)
+          this.getService('cache').clear();
+   
+      } else { 
+      
+         //Older version of clearCache()
+      
+         var cacheMgr = CC["@mozilla.org/network/cache-service;1"].getService(CI.nsICacheService);
+         try {
+             cacheMgr.evictEntries(CI.nsICache.STORE_ANYWHERE);
+         }   catch (e) { 
+             log("clearCache(): " + e); 
+         }
+         // clear DNS cache
+         var olddns= null;
+         if (this.prefsHandler.prefHasUserValue("network.dnsCacheExpiration")) {
+            olddns= this.prefsHandler.getIntPref("network.dnsCacheExpiration");
+         }
+         this.prefsHandler.setIntPref("network.dnsCacheExpiration", 0);
+         if (olddns != null) {
+              this.prefsHandler.setIntPref("network.dnsCacheExpiration", olddns);
+         } else {
+              this.prefsHandler.clearUserPref("network.dnsCacheExpiration");
+         }
+      
       }
-    }
+      
   },
   
-  // Close all browser windows and tabs
+  //ClearCache from Empty Cache Button
+  getService: function(service_type) {
+      switch (service_type) {
+        case 'cache':
+          return Components.classes["@mozilla.org/netwerk/cache-storage-service;1"]
+          .getService(Components.interfaces.nsICacheStorageService);
+        break;
+        //cut
+      }
+  },
+
+
+  // Clear image cache, e.g. when switching from one state to another
+  clearImageCache: function() {
+     try {
+        if (this.notFF18) {
+           // clear Image Cache for FF version < FF18
+           var imgCache = CC["@mozilla.org/image/cache;1"].getService(CI.imgICache);
+           if (imgCache) {
+              imgCache.clearCache(false);
+           }
+        } else {
+            // clear Image Cache for FF version > FF17
+            var imgTools = CC["@mozilla.org/image/tools;1"].getService(CI.imgITools);
+            var imgCache = imgTools.getImgCacheForDocument(null);
+            if (imgCache) {
+                imgCache.clearCache(false); 
+            }
+        }
+
+     } catch(e) {
+         log("Exception on image cache clearing: "+e);
+     }
+  },
+  
+   // Close all browser windows and tabs
   closeAllTabsAndWindows: function() {
 	  
 	  var wm = CC["@mozilla.org/appshell/window-mediator;1"].getService(CI.nsIWindowMediator);
@@ -2649,3 +2809,4 @@ if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([JDFManager]);
 else
     var NSGetModule = XPCOMUtils.generateNSGetModule([JDFManager]);
+

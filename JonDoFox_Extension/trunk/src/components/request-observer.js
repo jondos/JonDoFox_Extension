@@ -465,6 +465,13 @@ RequestObserver.prototype = {
         }
       }
 
+      // remove HSTS Header to avoid HSTS Tracking
+      try {
+       if (channel.getResponseHeader("Strict-Transport-Security")) {
+          channel.setResponseHeader("Strict-Transport-Security", null, false);
+       }
+      } catch (e) {}
+
       // For safety's sake we set the "close" header here as well as it looks
       // as if an attacker could let the connection open by sending a
       // "Connection: keep-alive": https://mxr.mozilla.org/mozilla-central/
