@@ -644,6 +644,11 @@ JDFManager.prototype = {
       } else {
          this.boolPrefsMap['dom.indexedDB.enabled'] = 'extensions.jondofox.indexedDB.enabled';
       }
+
+      // Disable SSL session identifiers
+      if (this.ff34) {
+          this.boolPrefsMap['security.ssl.disable_session_identifiers'] = 'extensions.jondofox.disable_session_identifiers';
+      }
  
       // For clearity of code we implement a different method to check the
       // installed extension in Firefox4
