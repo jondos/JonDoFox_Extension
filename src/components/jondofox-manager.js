@@ -1627,14 +1627,14 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.ssl3.ecdhe_rsa_rc4_128_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.rsa_rc4_128_md5", false);
         this.prefsHandler.setBoolPref("security.ssl3.rsa_rc4_128_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.rsa_des_ede3_sha", false);
+        this.prefsHandler.deletePreference("security.ssl3.rsa_des_ede3_sha");
         this.prefsHandler.setBoolPref("security.ssl3.rsa_fips_des_ede3_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.ecdhe_rsa_des_ede3_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.ecdhe_ecdsa_des_ede3_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.dhe_rsa_des_ede3_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.ecdh_ecdsa_des_ede3_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_des_ede3_sha", false);
-        this.prefsHandler.setBoolPref("security.ssl3.ecdh_rsa_des_ede3_sha", false);
+        this.prefsHandler.deletePreference("security.ssl3.ecdhe_rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdhe_ecdsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdh_ecdsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_dss_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.ecdh_rsa_des_ede3_sha");
         this.prefsHandler.setBoolPref("security.ssl3.rsa_seed_sha", false);
       } else {
         if (this.ff24) {
