@@ -1832,7 +1832,6 @@ JDFManager.prototype = {
           }
           //  Enable SPDY, because it is default for Firefox
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', true);
-          this.prefsHandler.setBoolPref('network.websocket.enabled', true);
           if (this.ff29) {
              this.prefsHandler.setBoolPref('network.seer.enabled', true);
           }
