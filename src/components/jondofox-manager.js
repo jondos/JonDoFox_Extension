@@ -1767,8 +1767,6 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
         
 	if (this.ff29) {
-            // for Firefox 29 websockets are ready to use with JonDo
-            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
             // disable seer
             this.prefsHandler.setBoolPref('network.seer.enabled', false);
         } else {
@@ -1784,8 +1782,6 @@ JDFManager.prototype = {
         //  Disable SPDY for Tor
         this.prefsHandler.setBoolPref('network.http.spdy.enabled', false);
         if (this.ff29) {
-            // for Firefox 29 websockest are ready to use with JonDo
-            this.prefsHandler.setBoolPref('network.websocket.enabled', true);
             // disable seer
             this.prefsHandler.setBoolPref('network.seer.enabled', false);
         } else {
