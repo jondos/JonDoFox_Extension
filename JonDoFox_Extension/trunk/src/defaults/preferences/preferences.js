@@ -107,7 +107,7 @@ pref("extensions.jondofox.windows.productsub_override", "20100101");
 pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:36.0) Gecko/20100101 Firefox/36.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
-pref("extensions.jondofox.windows.accept_languages", "en-us,en");
+pref("extensions.jondofox.windows.accept_languages", "en-US,en");
 pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
@@ -120,33 +120,6 @@ pref("extensions.jondofox.windows_esr.useragent_override", "Mozilla/5.0 (Windows
 
 // SafeBrowsing provider JonDo
 pref("extensions.jondofox.safebrowsing_enabled", false);
-
-// old stuff, remove
-pref("extensions.jondofox.safebrowsing.provider.0.gethashURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/gethash?client=navclient-auto-ffox&appver=24.5&pver=2.2");
-pref("extensions.jondofox.safebrowsing.provider.0.keyURL",
-    "https://sb-ssl.google.com/safebrowsing/newkey?client=navclient-auto-ffox&appver=24.0&pver=2.2");
-pref("extensions.jondofox.safebrowsing.provider.0.lookupURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/lookup?sourceid=firefox-antiphish&features=TrustRank&client=navclient-auto-ffox&appver=24.0&");
-pref("extensions.jondofox.safebrowsing.provider.0.reportErrorURL",
-    "http://en-US.phish-error.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportGenericURL",
-    "http://en-US.phish-generic.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportMalwareErrorURL",
-    "http://en-US.malware-error.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportMalwareURL",
-    "http://en-US.malware-report.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportPhishURL",
-    "http://en-US.phish-report.mozilla.com/?hl=en-US");
-pref("extensions.jondofox.safebrowsing.provider.0.reportURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/report?");
-pref("extensions.jondofox.safebrowsing.provider.0.updateURL",
-    "http://safebrowsing.clients.google.com/safebrowsing/downloads?client=navclient-auto-ffox&appver=24.0&pver=2.2");
-
-pref("extensions.jondofox.safebrowsing.warning.infoURL", "http://www.mozilla.com/en-US/firefox/phishing-protection/");
-
-pref("extensions.jondofox.safebrowsing.malware.reportURL", "http://safebrowsing.clients.google.com/safebrowsing/diagnostic?client=%NAME%&hl=en-US&site=");
-pref("extensions.jondofox.safebrowsing.appRepURL", " ");
 
 
 // Feed prefs
