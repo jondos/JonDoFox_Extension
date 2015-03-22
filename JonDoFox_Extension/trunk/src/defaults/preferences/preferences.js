@@ -213,6 +213,8 @@ pref("extensions.jondofox.snippet_url", "");
 
 // disable insecure SSL
 pref("extensions.jondofox.disable_insecure_ssl_cipher", true);
+pref("extensions.jondofox.disable_insecure_ssl_nego", false);
+pref("extensions.jondofox.disable_insecure_ssl_mixed", false);
 
 // Connection sniffing via JS
 pref("extensions.jondofox.dom.network.enabled", false);

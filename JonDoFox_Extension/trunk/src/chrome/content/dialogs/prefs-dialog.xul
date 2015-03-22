@@ -113,11 +113,30 @@
                   <toolbarbutton class="jondofox-ref" popup="observatoryHelp"
                            tooltiptext="&jondofox.contextHelp;"/>
                 </box>
+               </groupbox>
+               </row>
+
+              <row align="center">
+               <groupbox>
+                <caption label="&jondofox.dialogtab.options.SSLsecure;"/>
+
                 <box>
                   <!-- Checkbox to toggle 'SSL cipher' -->
                   <checkbox id="checkbox_ssl_cipher" 
                           label="&jondofox.dialogtab.options.sslcipher;"
                           accesskey="d"/>
+                 </box>
+                  <box>
+                  <!-- Checkbox to toggle 'SSL Insecure Renegotation' -->
+                  <checkbox id="checkbox_ssl_nego" 
+                          label="&jondofox.dialogtab.options.sslnego;"
+                          accesskey="g"/>
+                 </box>
+                 <box>
+                  <!-- Checkbox to toggle 'SSL Mixed' -->
+                  <checkbox id="checkbox_ssl_mixed" 
+                          label="&jondofox.dialogtab.options.sslmixed;"
+                          accesskey="m"/>
                  </box>
               </groupbox>
             </row>

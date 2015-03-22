@@ -67,6 +67,12 @@ function loadPrefsGeneral() {
     document.getElementById('checkbox_ssl_cipher').checked =
         prefsHandler.
 	getBoolPref('extensions.jondofox.disable_insecure_ssl_cipher');
+    document.getElementById('checkbox_ssl_nego').checked =
+        prefsHandler.
+	getBoolPref('extensions.jondofox.disable_insecure_ssl_nego');
+    document.getElementById('checkbox_ssl_mixed').checked =
+        prefsHandler.
+	getBoolPref('extensions.jondofox.disable_insecure_ssl_mixed');
 
     // SSL observatory setting
     var obProxy = document.getElementById('observatoryProxy');
@@ -119,6 +125,12 @@ function writePrefsGeneral() {
       document.getElementById('checkbox_set_flash').checked);
     prefsHandler.setBoolPref('extensions.jondofox.disable_insecure_ssl_cipher',
       document.getElementById('checkbox_ssl_cipher').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.disable_insecure_ssl_nego',
+      document.getElementById('checkbox_ssl_nego').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.disable_insecure_ssl_mixed',
+      document.getElementById('checkbox_ssl_mixed').checked);
+
+
     // get man-in.the-middle protection
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
         document.getElementById('observatoryProxy').selectedIndex);
@@ -533,6 +545,7 @@ function onApply() {
       writePrefsGeneral();
       // Act according to the plugin checkbox
       jdfManager.enforcePluginPref(jdfManager.getState());
+      jdfManager.enforceSSLPref();
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
       if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {
