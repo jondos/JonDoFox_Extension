@@ -277,6 +277,7 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um die Sicherheit beim Surfen auf HTTPS-Seiten zu verbessern. Wenn Sie SSL-Zertifikate an die EFF senden, erhalten Sie eine Warnung, wenn etwas mit dem Zertifikaten nicht stimmt.">
 <!ENTITY jondofox.dialogtab.options.sslcipher "Deaktivieren von SSLv3 und schwacher SSL Chiffre (RC4, 3DES, DSS)">
 <!ENTITY jondofox.dialogtab.options.sslnego "Deaktivieren von Insecure Renegotation (PayPal, EBay u.a funktionieren nicht)">
+<!ENTITY jondofox.dialogtab.options.renegotationhelp "Insecure Renegotation seit 2009 als Bug im SSL Protokoll bekannt. Ein Angreifer kann evtl. Zugriff auf Ihre Login Credentials erlangen. Es ist empfehlenswert, Insecure Renegotation zu deaktivieren. Viele Webseiten werden dann aber nicht mehr funktionieren.">
 <!ENTITY jondofox.dialogtab.options.sslmixed "Blockieren von Mixed Content (Suchmaschinen für Bilder funktionieren nicht)">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">

@@ -131,6 +131,8 @@
                   <checkbox id="checkbox_ssl_nego" 
                           label="&jondofox.dialogtab.options.sslnego;"
                           accesskey="g"/>
+                  <toolbarbutton class="jondofox-ref" popup="renegotationHelp"
+                           tooltiptext="&jondofox.contextHelp;"/>  
                  </box>
                  <box>
                   <!-- Checkbox to toggle 'SSL Mixed' -->
@@ -413,6 +415,13 @@
       <vbox class="jondofox-help">
         <description>
           &jondofox.dialogtab.options.flashhelp;
+        </description>
+      </vbox>
+    </menupopup>
+    <menupopup id="renegotationHelp">
+      <vbox class="jondofox-help">
+        <description>
+          &jondofox.dialogtab.options.renegotationhelp;
         </description>
       </vbox>
     </menupopup>

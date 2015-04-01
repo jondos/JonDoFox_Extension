@@ -68,7 +68,7 @@ pref("extensions.jondofox.tor.socks_port", 9050);
 // Useragent settings JonDo
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "20150217104802");
+pref("extensions.jondofox.jondo.buildID_override", "20150325203137");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
@@ -100,11 +100,11 @@ pref("extensions.jondofox.tor.default_charset", "ISO-8859-1");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20150222232811");
+pref("extensions.jondofox.windows.buildID_override", "20150326190726");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:36.0) Gecko/20100101 Firefox/36.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:37.0) Gecko/20100101 Firefox/37.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-US,en");
@@ -268,6 +268,9 @@ pref("extensions.jondofox.peerconnection.enabled", false);
 
 // disable experiments
 pref("extensions.jondofox.experiments_enabled", false);
+
+// set heartbeat URL to empty string
+pref("extensions.jondofox.selfsupport.url", "");
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
