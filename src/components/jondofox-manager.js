@@ -123,6 +123,9 @@ JDFManager.prototype = {
 
   // disable indexed DB in ff36 again
   ff36: null,
+
+  // disable heartbeat URL and Webspeech in ff37
+  ff37: null,
   
   // Used by clear Cache function
   // Set to false to only check minor versions
@@ -636,6 +639,7 @@ JDFManager.prototype = {
       // Disable Loop
       if (this.ff34) {
           this.boolPrefsMap['loop.enabled'] = 'extensions.jondofox.loop_enabled';
+          this.boolPrefsMap['security.ssl.disable_session_identifiers'] = 'extensions.jondofox.disable_session_identifiers';
       }
 
      // Enable Indexed DB for FF 35 because of a bug
@@ -646,8 +650,8 @@ JDFManager.prototype = {
       }
 
       // Disable SSL session identifiers
-      if (this.ff34) {
-          this.boolPrefsMap['security.ssl.disable_session_identifiers'] = 'extensions.jondofox.disable_session_identifiers';
+      if (this.ff37) {
+          this.stringPrefsMap['browser.selfsupport.url'] = 'extensions.jondofox.selfsupport.url';
       }
  
       // For clearity of code we implement a different method to check the
@@ -1552,6 +1556,11 @@ JDFManager.prototype = {
       this.ff36 = true;
     } else {
       this.ff36 = false;
+    }
+    if (versComp.compare(ffVersion, "37.0") >= 0) {
+      this.ff37 = true;
+    } else {
+      this.ff37 = false;
     }
 
   },
