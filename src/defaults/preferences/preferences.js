@@ -170,8 +170,6 @@ pref("extensions.jondofox.getAddons.cache.enabled", false);
 // See: http://www.contextis.com/resources/blog/webgl/
 pref("extensions.jondofox.webgl.disabled", true);
 
-pref("extensions.jondofox.iframes_disabled", true);
-
 // for Firefox 34+
 pref("extensions.jondofox.loop_enabled", false);
 
@@ -259,6 +257,9 @@ pref("extensions.jondofox.temp.email.selected", "10minutemail.com");
 //NoScript
 pref("extensions.jondofox.noscript_showDomain", false);
 pref("extensions.jondofox.noscript_dnt_enabled", false);
+pref("extensions.jondofox.iframes_disabled", true);
+pref("extensions.jondofox.ABE.enabled", true);
+pref("extensions.jondofox.ABE.wanIpAsLocal", false);
 
 // Mozilla shall not be able to deactivate one of our extensions
 pref("extensions.jondofox.blocklist.enabled", false);

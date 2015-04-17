@@ -359,6 +359,10 @@ JDFManager.prototype = {
     // disable experiments
     'experiments.supported':'extensions.jondofox.experiments_enabled',
     'experiments.enabled':'extensions.jondofox.experiments_enabled',
+
+    // enforce ABE settings for NoScript
+    'noscript.ABE.enabled':'extensions.jondofox.ABE.enabled',
+    'noscript.ABE.wanIpAsLocal':'extensions.jondofox.ABE.wanIpAsLocal',
   },
    
   //This map of integer preferences is given to the prefsMapper
