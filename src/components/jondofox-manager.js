@@ -345,9 +345,8 @@ JDFManager.prototype = {
     'browser.formfill.enable':'extensions.jondofox.formfill.enable',
     'network.dns.disablePrefetch':'extensions.jondofox.network_dns_disablePrefetch',
 
-    'javascript.options.ion.content': 'extensions.jondofox.javascript.options.ion.content',
-    'javascript.options.baselinejit.content': 
-        'extensions.jondofox.javascript.options.baselinejit.content',
+    'javascript.options.ion': 'extensions.jondofox.javascript.options.ion',
+    'javascript.options.baselinejit': 'extensions.jondofox.javascript.options.baselinejit',
     'javascript.options.asmjs': 'extensions.jondofox.javascript.options.asmjs',
     'gfx.direct2d.disabled': 'extensions.jondofox.gfx.direct2d.disabled',
     'layers.acceleration.disabled': 'extensions.jondofox.layers.acceleration.disabled',
@@ -363,6 +362,9 @@ JDFManager.prototype = {
     // enforce ABE settings for NoScript
     'noscript.ABE.enabled':'extensions.jondofox.ABE.enabled',
     'noscript.ABE.wanIpAsLocal':'extensions.jondofox.ABE.wanIpAsLocal',
+
+    'security.ssl.treat_unsafe_negotiation_as_broken' :
+       'extensions.jondofox.display_insecure_ssl_nego',
   },
    
   //This map of integer preferences is given to the prefsMapper
@@ -1685,10 +1687,8 @@ JDFManager.prototype = {
 
       if (this.prefsHandler.getBoolPref("extensions.jondofox.disable_insecure_ssl_nego")) {
         this.prefsHandler.setBoolPref("security.ssl.require_safe_negotiation", true);
-        this.prefsHandler.setBoolPref("security.ssl.treat_unsafe_negotiation_as_broken", true);
       } else {
         this.prefsHandler.setBoolPref("security.ssl.require_safe_negotiation", false);
-        this.prefsHandler.setBoolPref("security.ssl.treat_unsafe_negotiation_as_broken", false);
       }
 
       if (this.prefsHandler.getBoolPref("extensions.jondofox.disable_insecure_ssl_mixed")) {
