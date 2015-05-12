@@ -220,6 +220,7 @@ pref("extensions.jondofox.dom.network.enabled", false);
 
 // Javascript stuff
 pref("extensions.jondofox.event.clipboardevents.enabled", false);
+pref("extensions.jondofox.sharedWorkers_enabled", false);
 pref("extensions.jondofox.javascript.options.ion", false);
 pref("extensions.jondofox.javascript.options.baselinejit", false);
 pref("extensions.jondofox.javascript.options.asmjs", false);
@@ -273,6 +274,9 @@ pref("extensions.jondofox.experiments_enabled", false);
 
 // set heartbeat URL to empty string
 pref("extensions.jondofox.selfsupport.url", "");
+
+// Disable Healt reports
+pref("extensions.jondofox.healthreport_enabled", false);
 
 //JonDoBrowser
 pref("extensions.jondofox.advanced_menu", false);
