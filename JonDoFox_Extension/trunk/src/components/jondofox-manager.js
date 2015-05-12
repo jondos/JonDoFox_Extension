@@ -365,6 +365,13 @@ JDFManager.prototype = {
 
     'security.ssl.treat_unsafe_negotiation_as_broken' :
        'extensions.jondofox.display_insecure_ssl_nego',
+
+    'dom.workers.sharedWorkers.enabled' : 'extensions.jondofox.sharedWorkers_enabled',
+
+    // Health report
+    'datareporting.healthreport.service.enabled' : 'extensions.jondofox.healthreport_enabled',
+    'datareporting.healthreport.uploadEnabled' : 'extensions.jondofox.healthreport_enabled',
+    'datareporting.policy.dataSubmissionEnabled' : 'extensions.jondofox.healthreport_enabled',
   },
    
   //This map of integer preferences is given to the prefsMapper
@@ -1017,6 +1024,7 @@ JDFManager.prototype = {
         // Data reporting
         this.prefsHandler.setBoolPref("datareporting.healthreport.service.enabled", false);
         this.prefsHandler.setBoolPref("datareporting.healthreport.uploadEnabled", false);
+        this.prefsHandler.setBoolPref("datareporting.policy.dataSubmissionEnabled", false);
         this.prefsHandler.setBoolPref("datareporting.policy.dataSubmissionEnabled", false);
 
         this.prefsHandler.setIntPref("dom.max_chrome_script_run_time", 60);
