@@ -100,6 +100,34 @@ ProxyManager.prototype = {
     }
   },
 
+  // Set the proxy host and port for SSL Observatory in HTTPSEverywhere (using HTTPS)
+  setProxySSLObservatoryHTTP: function(host, port) {
+    log("SSL Observatory HTTP proxy --> " + host + ":" + port);
+    try {
+      this.ph.setStringPref("extensions.https_everywhere._observatory.proxy_host", host);
+      this.ph.setIntPref("extensions.https_everywhere._observatory.proxy_port", port);
+      this.ph.setStringPref("extensions.https_everywhere._observatory.proxy_type", "http");
+      this.ph.setBoolPref("extensions.https_everywhere._observatory.use_custom_proxy", true);
+      this.ph.setBoolPref("extensions.https_everywhere._observatory.use_tor_proxy", false);
+    } catch (e) {
+      log("setProxySSLObservatoryHTTP: " + e);
+    }
+  },
+
+  // Set the proxy host and port for SSL Observatory in HTTPSEverywhere (using SOCKS)
+  setProxySSLObservatorySOCKS: function(host, port) {
+    log("SSL-Observatory SOCKS proxy --> " + host + ":" + port);
+    try {
+      this.ph.setStringPref("extensions.https_everywhere._observatory.proxy_host", host);
+      this.ph.setIntPref("extensions.https_everywhere._observatory.proxy_port", port);
+      this.ph.setStringPref("extensions.https_everywhere._observatory.proxy_type", "socks");
+      this.ph.setBoolPref("extensions.https_everywhere._observatory.use_custom_proxy", true);
+      this.ph.setBoolPref("extensions.https_everywhere._observatory.use_tor_proxy", false);
+    } catch (e) {
+      log("setProxySSLObservatorySOCKS: " + e);
+    }
+  },
+
   // Set 'network.proxy.socks_remote_dns'
   setSocksRemoteDNS: function(value) {
     // Set 'network.proxy.socks_remote_dns' --> value
@@ -139,6 +167,16 @@ ProxyManager.prototype = {
       this.ph.setIntPref("network.proxy.type", 0);
     } catch(e) {
       log("disableProxy(): " + e);
+    }
+  },
+
+ // Reset ... to direct
+  disableProxySSLObservatory: function() {
+    log("Disable SSL-Observatory proxy");
+    try {
+      this.ph.setStringPref("extensions.https_everywhere._observatory.proxy_type", "direct");
+    } catch(e) {
+      log("disableProxySSLObservatory(): " + e);
     }
   },
 

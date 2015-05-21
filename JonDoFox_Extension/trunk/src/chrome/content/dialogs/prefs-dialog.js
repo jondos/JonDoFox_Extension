@@ -65,26 +65,22 @@ function loadPrefsGeneral() {
 	getBoolPref('extensions.jondofox.disableAllPluginsJonDoMode');
     // SSL setting
     document.getElementById('checkbox_ssl_cipher').checked =
-        prefsHandler.
-	getBoolPref('extensions.jondofox.disable_insecure_ssl_cipher');
-    document.getElementById('checkbox_ssl_nego').checked =
-        prefsHandler.
-	getBoolPref('extensions.jondofox.disable_insecure_ssl_nego');
-    document.getElementById('checkbox_ssl_mixed').checked =
-        prefsHandler.
-	getBoolPref('extensions.jondofox.disable_insecure_ssl_mixed');
+        prefsHandler.getBoolPref('extensions.jondofox.disable_insecure_ssl_cipher');
+    document.getElementById('checkbox_obervatory_tor').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.observatory.use_with_tor');
+    document.getElementById('checkbox_obervatory_all').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.observatory.use_with_without');
+    document.getElementById('checkbox_certpatrol').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.certpatrol_enabled');
 
     // SSL observatory setting
-    var obProxy = document.getElementById('observatoryProxy');
-    var customProxy = obProxy.getItemAtIndex(2);
-    customProxy.setAttribute("label", customProxy.getAttribute("label") + " " +
-      getLabel(jdfManager.STATE_CUSTOM));
-    obProxy.selectedIndex =
-        prefsHandler.getIntPref('extensions.jondofox.observatory.proxy');
-    // Adblock setting
-    //document.getElementById('checkbox_set_adblock').checked =
-    //    prefsHandler.getBoolPref('extensions.jondofox.adblock_enabled');
-
+    document.getElementById('checkbox_obervatory_jondo').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.observatory.use_with_jondo');
+    document.getElementById('checkbox_ssl_nego').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.disable_insecure_ssl_nego');
+    document.getElementById('checkbox_ssl_mixed').checked =
+        prefsHandler.getBoolPref('extensions.jondofox.disable_insecure_ssl_mixed');
+ 
     // Advanced menu in JonDoBrowser
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
       document.getElementById('jondofox-menu-row').hidden = false;
@@ -132,6 +128,16 @@ function writePrefsGeneral() {
 
 
     // get man-in.the-middle protection
+    prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled',
+      document.getElementById('checkbox_certpatrol').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_without',
+      document.getElementById('checkbox_obervatory_all').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_tor',
+      document.getElementById('checkbox_obervatory_tor').checked);
+    prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_jondo',
+      document.getElementById('checkbox_obervatory_jondo').checked);
+
+
     prefsHandler.setIntPref('extensions.jondofox.observatory.proxy',
         document.getElementById('observatoryProxy').selectedIndex);
     if (prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 6) {
@@ -139,8 +145,7 @@ function writePrefsGeneral() {
     } else {
         prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', false);
     }
-    //prefsHandler.setBoolPref('extensions.jondofox.adblock_enabled',
-//	document.getElementById('checkbox_set_adblock').checked);
+   
     // Always start with JonDo
     prefsHandler.setBoolPref('extensions.jondofox.alwaysUseJonDo',
         document.getElementById('checkbox_alwaysjondo').checked);
@@ -524,6 +529,7 @@ function onAccept() {
     // Act according to the plugin checkbox and SSL cipher
     jdfManager.enforcePluginPref(jdfManager.getState());
     jdfManager.enforceSSLPref();
+    jdfManager.enforceObservatoryEnabled(jdfManager.getState());
     // If the current state is 'custom': reset it
     if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {
       setCustomProxy();
@@ -546,6 +552,7 @@ function onApply() {
       // Act according to the plugin checkbox
       jdfManager.enforcePluginPref(jdfManager.getState());
       jdfManager.enforceSSLPref();
+      jdfManager.enforceObservatoryEnabled(jdfManager.getState());
     } else if (index == TABINDEX_CUSTOMPROXY) {
       writePrefsCustomProxy();
       if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {

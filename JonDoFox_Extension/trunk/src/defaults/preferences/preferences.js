@@ -11,7 +11,13 @@ pref("extensions.jondofox.firstStart", true);
 
 // Helping the EFF and its observatory
 pref("extensions.jondofox.observatory.cache_submitted", true);
+// old one
 pref("extensions.jondofox.observatory.proxy", 0);
+// new settings
+pref("extensions.jondofox.observatory.use_with_jondo", false);
+pref("extensions.jondofox.observatory.use_with_tor", false);
+pref("extensions.jondofox.observatory.use_with_custom", false);
+pref("extensions.jondofox.observatory.use_with_without", false);
 
 // Set the 'Referer' header according our smart spoof functionality
 pref("extensions.jondofox.set_referrer", true);
@@ -100,11 +106,11 @@ pref("extensions.jondofox.tor.default_charset", "ISO-8859-1");
 // Useragent settings FF Windows
 pref("extensions.jondofox.windows.appname_override", "Netscape");
 pref("extensions.jondofox.windows.appversion_override", "5.0 (Windows)");
-pref("extensions.jondofox.windows.buildID_override", "20150415140819");
+pref("extensions.jondofox.windows.buildID_override", "20150508094354");
 pref("extensions.jondofox.windows.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.windows.platform_override", "Win32");
 pref("extensions.jondofox.windows.productsub_override", "20100101");
-pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:37.0) Gecko/20100101 Firefox/37.0");
+pref("extensions.jondofox.windows.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0");
 pref("extensions.jondofox.windows.useragent_vendor", "");
 pref("extensions.jondofox.windows.useragent_vendorSub", "");
 pref("extensions.jondofox.windows.accept_languages", "en-US,en");
@@ -112,10 +118,6 @@ pref("extensions.jondofox.windows.accept_default", "text/html,application/xhtml+
 pref("extensions.jondofox.windows.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.windows.http.accept_encoding", "gzip, deflate");
 pref("extensions.jondofox.windows.default_charset", "ISO-8859-1");
-
-// Useragent settings FF Windows ESR
-pref("extensions.jondofox.windows_esr.buildID_override", "20140714155506");
-pref("extensions.jondofox.windows_esr.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:24.0) Gecko/20100101 Firefox/24.0");
 
 
 // SafeBrowsing provider JonDo
@@ -152,6 +154,7 @@ pref("extensions.jondofox.dom_storage_enabled", true);
 pref("extensions.jondofox.geo_enabled", false);
 pref("extensions.jondofox.network_prefetch-next", false);
 pref("extensions.jondofox.network_dns_disablePrefetch", true);
+pref("extensions.jondofox.network_speculative-parallel-limit", 0);
 pref("extensions.jondofox.cookieBehavior", 2);
 pref("extensions.jondofox.socks_remote_dns", true);
 pref("extensions.jondofox.sanitize_onShutdown", true);

@@ -37,9 +37,7 @@ CU.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var RequestObserver = function() {
   this.wrappedJSObject = this;
-  CU.import("resource://jondofox/ssl-observatory.jsm", this);
   CU.import("resource://jondofox/safeCache.jsm", this);
-  this.sslObservatory.init();
   this.safeCache.init();
 };
 
@@ -417,34 +415,6 @@ RequestObserver.prototype = {
           this.jdfManager.noProxyListAdd(location);
         }
       }
-      // Now the code helping the EFF SSL-Observatory...
-      var obsProxy = this.prefsHandler.
-        getIntPref("extensions.jondofox.observatory.proxy");
-      var proxyState = this.jdfManager.getState();
-  
-      if ((obsProxy === 0 && proxyState === 'jondo') ||
-          (obsProxy === 1 && proxyState === 'tor') ||
-          (obsProxy === 2 && proxyState === 'custom') ||
-          (obsProxy === 3 && (proxyState === 'jondo' || proxyState === 'tor' || proxyState === 'custom')) ||
-          (obsProxy === 4)) {
-        var certs = this.sslObservatory.getSSLCert(channel);
-        if (certs) {
-          var chainEnum = certs.getChain();
-          var chainArray = [];
-          for (var i = 0; i < chainEnum.length; i++) {
-            var cert = chainEnum.queryElementAt(i, CI.nsIX509Cert);
-            chainArray.push(cert);
-          }
-          this.logger.warn("Cert length is: " + chainArray.length);
-          if (channel.URI.port == -1) {
-            this.sslObservatory.
-              submitChain(chainArray, new String(channel.URI.host));
-          } else {
-            this.sslObservatory.
-              submitChain(chainArray, channel.URI.host+":"+channel.URI.port);
-          }
-        }
-      }
 
       // get the parentHost to detect first party / third party
       parentHost = this.getParentHost(channel);
@@ -569,7 +539,6 @@ RequestObserver.prototype = {
 
         case 'cookie-changed':
           if (data === "cleared") {
-            this.sslObservatory.already_submitted = {};
             this.logger.
               warn("Cookies were cleared. Purging list of already submitted sites");
           }

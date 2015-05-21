@@ -269,10 +269,10 @@ https://anonymous-proxy-servers.net/en/help/jondofox2.html</a> (and the followin
 <!ENTITY jondofox.dialogtab.options.SSL "Additional SSL Certificate Validation">
 <!ENTITY jondofox.dialogtab.options.SSLsecure "Enforce secure SSL Settings">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "using SSL Observatory only with">
-<!ENTITY jondofox.dialogtab.options.observatory.jondo "using SSL Observatory only with JonDo">
-<!ENTITY jondofox.dialogtab.options.observatory.tor "using SSL Observatory only with Tor">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "using SSL Observatory with JonDo">
+<!ENTITY jondofox.dialogtab.options.observatory.tor "using SSL Observatory with Tor">
 <!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "using SSL Observatory with all proxies">
-<!ENTITY jondofox.dialogtab.options.observatory.always "using SSL Observatory always">
+<!ENTITY jondofox.dialogtab.options.observatory.always "using SSL Observatory without proxy">
 <!ENTITY jondofox.dialogtab.options.observatory.certpatrol "using Certificate Patrol (local database)">
 <!ENTITY jondofox.dialogtab.options.observatory.never "no additional certicicate validation">
 <!ENTITY jondofox.dialogtab.options.observatory.help "The SSL observatory of Electronic Frontier Foundation (EFF) is about to collect all SSL certificates that can be found in the Internet in order to improve the security while surfing HTTPS pages. If you are transmitting SSL certificates to the SSL observatory while surfing the web you will get a warning in case of issues. See ">
