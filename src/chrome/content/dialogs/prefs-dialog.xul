@@ -88,31 +88,32 @@
             <row align="center">
               <groupbox>
                 <caption label="&jondofox.dialogtab.options.SSL;"/>
+
+                <box>
+                  <!-- Use SSL Observatory with JonDo -->
+                  <checkbox id="checkbox_obervatory_jondo" 
+                          label="&jondofox.dialogtab.options.observatory.jondo;"
+                          accesskey="J"/>
+                 </box>
+                  <box>
+                  <!-- Use SSL Observatory with Tor -->
+                  <checkbox id="checkbox_obervatory_tor" 
+                          label="&jondofox.dialogtab.options.observatory.tor;"
+                          accesskey="T"/>
+                 </box>
+                 <box>
+                  <!-- Use SSL Observatory without proxy -->
+                  <checkbox id="checkbox_obervatory_all" 
+                          label="&jondofox.dialogtab.options.observatory.always;"
+                          accesskey="o"/>
+                 </box>
+                 <box>
+                  <!-- Use Certificate Patrol -->
+                  <checkbox id="checkbox_certpatrol" 
+                          label="&jondofox.dialogtab.options.observatory.certpatrol;"
+                          accesskey="P"/>
+                 </box>
 		
-                <box align="center">
-                  
-                  <menulist id="observatoryProxy" width="400px" crop="end">
-                    <menupopup>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.jondo;"/>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.tor;"/>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.proxy;"/>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.alwaysproxy;"/>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.always;"/>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.never;"/>
-                      <menuitem
-                        label="&jondofox.dialogtab.options.observatory.certpatrol;"/>
-                      
-                    </menupopup>
-                  </menulist>
-                  <toolbarbutton class="jondofox-ref" popup="observatoryHelp"
-                           tooltiptext="&jondofox.contextHelp;"/>
-                </box>
                </groupbox>
                </row>
 
@@ -142,30 +143,6 @@
                  </box>
               </groupbox>
             </row>
-
-	    <!-- Adblocking preferences -->
-	    <!--<row align="center">
-              <groupbox>
-		<caption label="&jondofox.dialogtab.options.adBlocking;:"/>-->
-                <!-- Checkbox to activate/deactivate the Adblocker -->
-		<!--<box>
-		  <box align="center">
-                    <checkbox id="checkbox_set_adblock" 
-                          label="&jondofox.dialogtab.options.adBlocker;"
-                          accesskey="A"/>
-		  </box>
-		  <box>
-			<button label="Filterlist" 
-			        align="center"
-			        onclick="openFilterListWindow();">
-			  <description>
-			    &jondofox.dialogtab.options.filtertext;
-			  </description>
-			</button>
-		  </box>
-		</box>
-              </groupbox>
-	    </row>-->
 
             <!-- Warning preferences -->
             <row align="center">

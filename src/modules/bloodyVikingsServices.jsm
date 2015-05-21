@@ -264,23 +264,6 @@ function initServices() {
     }
   );
 
-  new BloodyVikings.Service (
-    "spamavert.com",
-    "http://spamavert.com/mail/${alias}",
-    "http://spamavert.com/static/privacy",
-    null,
-    'en',
-    null
-  );
-  
-  new BloodyVikings.Service (
-        "trash-mail.com",
-        "http://trash-mail.com/index.php?mail=${alias}",
-        "http://trash-mail.com/",
-        null,
-        'de',
-        null
-  );
 }
 
 initServices();

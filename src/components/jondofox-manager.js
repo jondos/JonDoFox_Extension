@@ -58,9 +58,6 @@ var JDFManager = function() {
   // Now we are adding a specific logger (JDFManager)...
   this.logger = this.Log4Moz.repository.getLogger("JonDoFox Manager");
   this.logger.level = this.Log4Moz.Level["Debug"];
-  //Components.utils.import("resource://jondofox/adblockModule.js", this);
-  //Components.utils.import("resource://jondofox/adblockFilter.js", this);
-  //Components.utils.import("resource://jondofox/adblockMatcher.js", this);
 };
 
 JDFManager.prototype = {
@@ -238,24 +235,6 @@ JDFManager.prototype = {
     'intl.charset.default':'extensions.jondofox.windows.default_charset'
   },
 
-  // UA-settings for Windows fake
-  windowsESRUAMap: {
-    'general.appname.override':'extensions.jondofox.windows.appname_override',
-    'general.appversion.override':'extensions.jondofox.windows.appversion_override',
-    'general.buildID.override':'extensions.jondofox.windows_esr.buildID_override',
-    'general.oscpu.override':'extensions.jondofox.windows.oscpu_override',
-    'general.platform.override':'extensions.jondofox.windows.platform_override',
-    'general.productSub.override':'extensions.jondofox.windows.productsub_override',
-    'general.useragent.override':'extensions.jondofox.windows_esr.useragent_override',
-    'general.useragent.vendor':'extensions.jondofox.windows.useragent_vendor',
-    'general.useragent.vendorSub':'extensions.jondofox.windows.useragent_vendorSub',
-    'intl.accept_languages':'extensions.jondofox.windows.accept_languages',
-    'network.http.accept.default':'extensions.jondofox.windows.accept_default',
-    'image.http.accept':'extensions.jondofox.windows.image_http_accept',
-    'network.http.accept-encoding':'extensions.jondofox.windows.http.accept_encoding',
-    'intl.charset.default':'extensions.jondofox.windows.default_charset'
-  },
-
   // Adding a uniform URLs concerning safebrowsing functionality to not
   // leak information.
   safebrowseMap: {
@@ -379,7 +358,8 @@ JDFManager.prototype = {
     'network.cookie.cookieBehavior':'extensions.jondofox.cookieBehavior',
     'browser.display.use_document_fonts':'extensions.jondofox.use_document_fonts',
     'browser.sessionhistory.max_entries':'extensions.jondofox.sessionhistory.max_entries',
-    'browser.sessionstore.privacy_level':'extensions.jondofox.sessionstore_privacy_level'
+    'browser.sessionstore.privacy_level':'extensions.jondofox.sessionstore_privacy_level',
+    'network.http.speculative-parallel-limit':'extensions.jondofox.network_speculative-parallel-limit'
   },
 
   // This map contains those preferences which avoid external apps being opened
@@ -459,47 +439,8 @@ JDFManager.prototype = {
   
       // Register the proxy filter
       this.registerProxyFilter();
-      // Loading the adblocking filterlist and initializing that component.
-      //this.adBlock.init();
-      //this.loadFilterList();
     } catch (e) {
       log('init(): ' + e);
-    }
-  },
-
-  loadFilterList: function() {
-    var filterHelper;
-    var line = {};
-    var hasmore;
-    /* TODO: Does not work in FF4 anymore, see below */
-    var componentFile = __LOCATION__;
-    var extDir = componentFile.parent.parent;
-    extDir.append("easylistgermany+easylist.txt");
-    if (!extDir.exists() || !extDir.isFile()) {
-      log("Could not find and import the filterlist");
-    } else {
-      var istream = CC["@mozilla.org/network/file-input-stream;1"].
-                  createInstance(CI.nsIFileInputStream);
-      // -1 has the same effect as 0444.
-      istream.init(extDir, 0x01, -1, 0);
-      var conStream = CC["@mozilla.org/intl/converter-input-stream;1"].
-                  createInstance(CI.nsIConverterInputStream);
-      conStream.init(istream, "UTF-8", 16384, CI.nsIConverterInputStream.
-	DEFAULT_REPLACEMENT_CHARACTER);
-      conStream.QueryInterface(CI.nsIUnicharLineInputStream);
-      do {
-        hasmore = conStream.readLine(line);
-        if (line.value && line.value.indexOf("!") < 0 &&
-	    line.value.indexOf("[") < 0) {
-          filterHelper = this.adBlock.Filter.fromText(this.adBlock.utils.
-	    normalizeFilter(line.value.replace(/\s+$/, "")));
-	  this.filterList.push(filterHelper);
-	  log("Length is: " + this.filterList.length + " Text is: " +
-	      filterHelper.text);
-        }
-      } while(hasmore);
-      conStream.close();
-      log("Loaded the filter list!");
     }
   },
 
@@ -740,13 +681,36 @@ JDFManager.prototype = {
       // transparent.
       this.setUserAgent(true, this.getState());
   
-      // fix Certificate Patrol settings
+     if (!(this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 10)) {
+      // fix Certificate Patrol and Observatory settings at first run
       if (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 6) {
          this.prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', true);
       } else {
          this.prefsHandler.setBoolPref('extensions.jondofox.certpatrol_enabled', false);
       }
-
+      if ((this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 0) ||
+          (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 2) ||
+          (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 3) ||
+          (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 4)) {
+         this.prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_jondo', true);
+      } else {
+         this.prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_jondo', false);
+      }
+      if ((this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 1) ||
+          (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 2) ||
+          (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 3) ||
+          (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 4)) {
+         this.prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_tor', true);
+      } else {
+         this.prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_tor', false);
+      }
+      if (this.prefsHandler.getIntPref('extensions.jondofox.observatory.proxy') === 4) {
+         this.prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_without', true);
+      } else {
+         this.prefsHandler.setBoolPref('extensions.jondofox.observatory.use_with_without', false);
+      }
+      this.prefsHandler.setIntPref('extensions.jondofox.observatory.proxy', 10);
+     }
     } catch (e) {
       log("onUIStartup(): " + e);
     }
@@ -1656,6 +1620,12 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("security.ssl3.rsa_des_ede3_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_aes_128_sha", false);
         this.prefsHandler.setBoolPref("security.ssl3.dhe_dss_aes_256_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.dhe_rsa_aes_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.dhe_rsa_aes_256_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.dhe_rsa_camellia_128_sha", false);
+        this.prefsHandler.setBoolPref("security.ssl3.dhe_rsa_camellia_256_sha", false);
+
+
 
         this.prefsHandler.deletePreference("security.ssl3.rsa_fips_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.rsa_seed_sha");
@@ -1683,6 +1653,10 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference("security.ssl3.ecdh_ecdsa_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.dhe_dss_des_ede3_sha");
         this.prefsHandler.deletePreference("security.ssl3.ecdh_rsa_des_ede3_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_rsa_aes_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_rsa_aes_256_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_rsa_camellia_128_sha");
+        this.prefsHandler.deletePreference("security.ssl3.dhe_rsa_camellia_256_sha");
 
         this.prefsHandler.deletePreference("security.ssl3.rsa_seed_sha");
         this.prefsHandler.deletePreference("security.ssl3.dhe_dss_aes_128_sha");
@@ -1726,6 +1700,24 @@ JDFManager.prototype = {
       }
   },
 
+  enforceObservatoryEnabled: function(state) {
+      if (state === this.STATE_JONDO) {
+         this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+             this.prefsHandler.getBoolPref("extensions.jondofox.observatory.use_with_jondo"));
+      }
+      if (state === this.STATE_TOR) {
+         this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+             this.prefsHandler.getBoolPref("extensions.jondofox.observatory.use_with_tor"));
+      }
+      if (state === this.STATE_CUSTOM) {
+         this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+             this.prefsHandler.getBoolPref("extensions.jondofox.observatory.use_with_custom"));
+      }
+      if (state === this.STATE_NONE) {
+         this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+             this.prefsHandler.getBoolPref("extensions.jondofox.observatory.use_with_without"));
+      }
+  },
 
   enforcePluginPref: function(state) {
     var anz = new Object();
@@ -1864,17 +1856,11 @@ JDFManager.prototype = {
           this.setUserAgent_Tor();
 
         } else if (userAgent === 'win') {
-          if (this.ff26) {
-            for (p in this.windowsUAMap) {
+          for (p in this.windowsUAMap) {
               this.prefsHandler.setStringPref(p,
                this.prefsHandler.getStringPref(this.windowsUAMap[p]));
-            }
-          } else {
-            for (p in this.windowsESRUAMap) {
-              this.prefsHandler.setStringPref(p,
-               this.prefsHandler.getStringPref(this.windowsESRUAMap[p]));
-            }
           }
+        
           //  Enable SPDY, because it is default for Firefox
           this.prefsHandler.setBoolPref('network.http.spdy.enabled', true);
           if (this.ff29) {
@@ -2363,6 +2349,10 @@ JDFManager.prototype = {
       // STATE_NONE --> straight disable
       if (state === this.STATE_NONE) {
         this.disableProxy();
+        // Set SSL Observatory settings
+        this.proxyManager.disableProxySSLObservatory();
+        this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+                this.prefsHandler.getStringPref("extensions.jondofox.observatory.use_with_without"));
       } else {
         // State is not 'STATE_NONE' --> enable
         switch (state) {
@@ -2374,6 +2364,12 @@ JDFManager.prototype = {
                       this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"));
             this.proxyManager.setProxySOCKS(this.prefsHandler.getStringPref("extensions.jondofox.jondo.host"), 
                       this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"), 5);
+            // Set SSL Observatory settings
+            this.proxyManager.setProxySSLObservatoryHTTP(
+                      this.prefsHandler.getStringPref("extensions.jondofox.jondo.host"), 
+                      this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"));
+            this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+                      this.prefsHandler.getStringPref("extensions.jondofox.observatory.use_with_jondo"));
             break;
 
           case this.STATE_TOR:
@@ -2389,12 +2385,18 @@ JDFManager.prototype = {
             this.proxyManager.setProxySOCKS(this.prefsHandler.getStringPref(prefix + "socks_host"), 
                       this.prefsHandler.getIntPref(prefix + "socks_port"), 5);
             this.proxyManager.setSocksRemoteDNS(true);
- 
+            // Set SSL Observatory settings
+            this.proxyManager.setProxySSLObservatorySOCKS(
+                      this.prefsHandler.getStringPref(prefix + "socks_host"), 
+                      this.prefsHandler.getIntPref(prefix + "socks_port"));
+            this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
+                      this.prefsHandler.getStringPref("extensions.jondofox.observatory.use_with_tor"));
             break;
 
           case this.STATE_CUSTOM:
             var prefix = "extensions.jondofox.custom.";
             // Set share_proxy_settings to custom.share_proxy_settings
+            this.disableProxy();
             this.prefsHandler.setBoolPref("network.proxy.share_proxy_settings",
                 this.prefsHandler.getBoolPref(prefix + "share_proxy_settings"));
             this.proxyManager.setProxyHTTP(
@@ -2410,7 +2412,8 @@ JDFManager.prototype = {
                 this.prefsHandler.getStringPref(prefix + "socks_host"),
                 this.prefsHandler.getIntPref(prefix + "socks_port"),
                 this.prefsHandler.getIntPref(prefix + "socks_version"));
-
+            // not ready yet, fix it
+            this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled", false);
             break;
 
           default:
