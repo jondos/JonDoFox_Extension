@@ -287,6 +287,8 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.jondofox "JonDoFox-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.menu "Proxy-Menü anzeigen">
 <!ENTITY jondofox.dialogtab.options.update "JonDoBrowser-Updates über JonDonym herunterladen">
+<!ENTITY jondofox.dialogtab.options.cookie "Cookie Controller">
+<!ENTITY jondofox.dialogtab.options.reloadcookie "Website neu laden wenn Cookies Ein/Aus geschaltet werden">
 
 <!-- Edit custom proxy tab -->
 <!ENTITY jondofox.dialogtab.custom.title "Benutzerdefinierte Proxy-Konfiguration">

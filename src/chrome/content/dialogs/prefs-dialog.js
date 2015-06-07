@@ -80,6 +80,9 @@ function loadPrefsGeneral() {
         prefsHandler.getBoolPref('extensions.jondofox.disable_insecure_ssl_nego');
     document.getElementById('checkbox_ssl_mixed').checked =
         prefsHandler.getBoolPref('extensions.jondofox.disable_insecure_ssl_mixed');
+    
+    //Cookie Controller
+    document.getElementById('checkbox_reload_cookie').checked = prefsHandler.getBoolPref('extensions.cookieController.reloadPage');
  
     // Advanced menu in JonDoBrowser
     if (prefsHandler.isPreferenceSet('extensions.jondofox.browser_version')) {
@@ -125,6 +128,7 @@ function writePrefsGeneral() {
       document.getElementById('checkbox_ssl_nego').checked);
     prefsHandler.setBoolPref('extensions.jondofox.disable_insecure_ssl_mixed',
       document.getElementById('checkbox_ssl_mixed').checked);
+    prefsHandler.setBoolPref('extensions.cookieController.reloadPage',document.getElementById('checkbox_reload_cookie').checked);
 
 
     // get man-in.the-middle protection

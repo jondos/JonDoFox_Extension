@@ -83,6 +83,19 @@
 		</box>
               </groupbox>
             </row>
+            
+            <!-- Cookie Controller -->
+            <row align="center">
+              <groupbox>
+                <caption label="&jondofox.dialogtab.options.cookie;"/>
+                
+                  <box>
+                    <!-- Checkbox to toggle 'refresh website when enable/disable Cookies -->
+                    <checkbox id="checkbox_reload_cookie"
+                            label="&jondofox.dialogtab.options.reloadcookie;"/>
+                  </box>
+              </groupbox>
+            </row>
 
             <!-- SSL preferences -->
             <row align="center">
