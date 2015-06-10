@@ -74,16 +74,16 @@ pref("extensions.jondofox.tor.socks_port", 9050);
 // Useragent settings JonDo
 pref("extensions.jondofox.jondo.appname_override", "Netscape");
 pref("extensions.jondofox.jondo.appversion_override", "5.0 (X11)");
-pref("extensions.jondofox.jondo.buildID_override", "20150325203137");
+pref("extensions.jondofox.jondo.buildID_override", "20150514102509");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11;Linux i686; rv:38.0) Gecko/20100101 Firefox/38.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
-pref("extensions.jondofox.jondo.accept_default", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-pref("extensions.jondofox.jondo.image_http_accept", "image/png,image/*;q=0.8,*/*;q=0.5");
+pref("extensions.jondofox.jondo.accept_default","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+pref("extensions.jondofox.jondo.image_http_accept","image/png,image/*;q=0.8,*/*;q=0.5");
 pref("extensions.jondofox.jondo.http.accept_encoding", "gzip, deflate");
 pref("extensions.jondofox.jondo.default_charset", "ISO-8859-1");
 
