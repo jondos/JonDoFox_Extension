@@ -272,7 +272,6 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "verwende SSL Observatory nur mit">
 <!ENTITY jondofox.dialogtab.options.observatory.jondo "verwende SSL Observatory mit JonDo">
 <!ENTITY jondofox.dialogtab.options.observatory.tor "verwende SSL Observatory mit Tor">
-<!ENTITY jondofox.dialogtab.options.observatory.always "verwende SSL Observatory immer">
 <!ENTITY jondofox.dialogtab.options.observatory.always "verwende SSL Observatory ohne Proxy">
 <!ENTITY jondofox.dialogtab.options.observatory.never "keine Validierung von SSL-Zertifikaten">
 <!ENTITY jondofox.dialogtab.options.observatory.certpatrol "verwende Certificate Patrol (lokale Datenbank)">
