@@ -258,6 +258,9 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 
 <!ENTITY jondofox.and "und">
 
+<!-- Ich weis nicht was das ist und wo es hin soll -->
+<!ENTITY jondofox.dialogtab.options.renegotationhelp "Insecure Renegotation seit 2009 als Bug im SSL Protokoll bekannt. Ein Angreifer kann evtl. Zugriff auf Ihre Login Credentials erlangen. Es ist empfehlenswert, Insecure Renegotation zu deaktivieren. Viele Webseiten werden dann aber nicht mehr funktionieren.">
+
 <!-- General configuration tab -->
 <!ENTITY jondofox.dialogtab.options.title "Einstellungen">
 <!ENTITY jondofox.dialogtab.options.header "Schutz gegen Tracking">
@@ -267,14 +270,17 @@ https://anonymous-proxy-servers.net/de/help/jondofox2.html</a>ff. zu finden. Des
 <!ENTITY jondofox.dialogtab.options.flashhelp "Um eine Deanonymsierung via Flash zu vermeiden, ist als erstes eine sichere Konfiguration des Flash Players zu erstellen. Hinweise finden Sie in unserer Online-Hilfe">
 <!ENTITY jondofox.dialogtab.options.SSL "Validierung von SSL-Zertifikaten">
 <!ENTITY jondofox.dialogtab.options.observatory.proxy "verwende SSL Observatory nur mit">
-<!ENTITY jondofox.dialogtab.options.observatory.jondo "verwende SSL Observatory nur mit JonDo">
-<!ENTITY jondofox.dialogtab.options.observatory.tor "verwende SSL Observatory nur mit Tor">
+<!ENTITY jondofox.dialogtab.options.observatory.jondo "verwende SSL Observatory mit JonDo">
+<!ENTITY jondofox.dialogtab.options.observatory.tor "verwende SSL Observatory mit Tor">
 <!ENTITY jondofox.dialogtab.options.observatory.always "verwende SSL Observatory immer">
-<!ENTITY jondofox.dialogtab.options.observatory.alwaysproxy "verwende SSL Observatory mit allen Proxys">
+<!ENTITY jondofox.dialogtab.options.observatory.always "verwende SSL Observatory ohne Proxy">
 <!ENTITY jondofox.dialogtab.options.observatory.never "keine Validierung von SSL-Zertifikaten">
 <!ENTITY jondofox.dialogtab.options.observatory.certpatrol "verwende Certificate Patrol (lokale Datenbank)">
 <!ENTITY jondofox.dialogtab.options.observatory.help "Die Electronic Frontier Foundation (EFF) ist dabei alle SSL-Zertifikate zu sammeln, die im Internet vorkommen, um die Sicherheit beim Surfen auf HTTPS-Seiten zu verbessern. Wenn Sie SSL-Zertifikate an die EFF senden, erhalten Sie eine Warnung, wenn etwas mit dem Zertifikaten nicht stimmt.">
+<!ENTITY jondofox.dialogtab.options.SSLsecure "Erzwingen von sicheren SSL Verbindungen">
 <!ENTITY jondofox.dialogtab.options.sslcipher "Deaktivieren von SSLv3 und schwacher SSL Chiffre (RC4, 3DES)">
+<!ENTITY jondofox.dialogtab.options.sslnego "Deaktivieren von Insecure Renegotation (PayPal, EBay u.a funktionieren nicht)">
+<!ENTITY jondofox.dialogtab.options.sslmixed "Blockieren von Mixed Content (Suchmaschinen für Bilder funktionieren nicht)">
 <!ENTITY jondofox.dialogtab.options.adBlocking "Werbeblocker-Einstellungen">
 <!ENTITY jondofox.dialogtab.options.adBlocker "Aktiviere den Werbeblocker">
 <!ENTITY jondofox.dialogtab.options.filtertext "Filter anzeigen">
