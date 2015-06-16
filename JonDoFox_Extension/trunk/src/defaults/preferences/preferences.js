@@ -78,7 +78,7 @@ pref("extensions.jondofox.jondo.buildID_override", "20150514102509");
 pref("extensions.jondofox.jondo.oscpu_override", "Linux i686");
 pref("extensions.jondofox.jondo.platform_override", "Linux i686");
 pref("extensions.jondofox.jondo.productsub_override", "20100101");
-pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11;Linux i686; rv:38.0) Gecko/20100101 Firefox/38.0");
+pref("extensions.jondofox.jondo.useragent_override", "Mozilla/5.0 (X11; Linux i686; rv:38.0) Gecko/20100101 Firefox/38.0");
 pref("extensions.jondofox.jondo.useragent_vendor", "");
 pref("extensions.jondofox.jondo.useragent_vendorSub", "");
 pref("extensions.jondofox.jondo.accept_languages", "en-US,en");
