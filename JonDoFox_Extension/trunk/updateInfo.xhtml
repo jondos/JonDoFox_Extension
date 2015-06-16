@@ -6,12 +6,18 @@
 <body>
 <h1>JonDoFox - What's New</h1>
 <p>&nbsp;</p>
-<h2>What's New - 0.6.6.15</h2>
+<h2>What's New - 0.6.6.16</h2>
 <ul>
- <li>Added options to enforce secure SSL settings</li>
- <li>Disabled heartbeat user rating system</li>
- <li>Bump user agent fakes to the latest Firefox versions</li>
- <li>Enforce Noscript ABE settings</li>
+<li> bump user agent fakes to the latest Firfox versions (38)</li>
+<li> always display insecure renegotation as broken (security.ssl.treat_unsafe_negotiation_as_broken: true)</li>
+<li> Disabled Javascript sharedWorker and upload of health report</li>
+<li> Fixed SSL Observatory by removing own implementation and force HTTPSEverywhere to use our proxy settings</li>
+<li> Updated secure/insecure SSL cipher because of Logjam attack</li>
+<li> Removed dispostable email services Spamavert and Trash-mail, because these service are not working anymore</li>
+<li> made weak cipher message clearer</li>
+<li> CookieController-Checkbox added for optionally enabling reload on switch</li>
+<li> set maxVersion to 42</li>
+ 
 </ul>
 </body>
 </html>
