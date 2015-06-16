@@ -90,7 +90,7 @@
                 type="radio"
                 observes="enhanced-menu-selected"
                 name="proxy-settings" />
-      <menuseparator observes="enhanced-menu-selected" />
+      <menuseparator observes="enhanced-menu-selected" /> 
       <menuitem id="custom-radio"
                 label=""
                 oncommand="setCustomProxy();"

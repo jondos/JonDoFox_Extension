@@ -2369,7 +2369,7 @@ JDFManager.prototype = {
                       this.prefsHandler.getStringPref("extensions.jondofox.jondo.host"), 
                       this.prefsHandler.getIntPref("extensions.jondofox.jondo.port"));
             this.prefsHandler.setBoolPref("extensions.https_everywhere._observatory.enabled",
-                      this.prefsHandler.getStringPref("extensions.jondofox.observatory.use_with_jondo"));
+                      this.prefsHandler.getBoolPref("extensions.jondofox.observatory.use_with_jondo"));
             break;
 
           case this.STATE_TOR:
