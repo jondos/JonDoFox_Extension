@@ -510,7 +510,7 @@ function writePrefsTempEmail() {
     serviceGroup.value);
   prefsHandler.setBoolPref("extensions.jondofox.temp.email.activated",
     serviceActivated);
-  for (var i = 1; i <= 5; i++) {
+  for (var i = 1; i <= 4; i++) {
     radioElement = document.getElementById("radio" + i);
     radioElement.disabled = !serviceActivated;
     if (radioElement.getAttribute("class") === "bloodyvikingsRecommended" &&
@@ -528,16 +528,16 @@ function onAccept() {
   try {
     // Store all preferences
     writePrefsGeneral();
-    writePrefsCustomProxy();
-    writePrefsTempEmail();
-    // Act according to the plugin checkbox and SSL cipher
     jdfManager.enforcePluginPref(jdfManager.getState());
     jdfManager.enforceSSLPref();
     jdfManager.enforceObservatoryEnabled(jdfManager.getState());
+ 
+    writePrefsCustomProxy();
     // If the current state is 'custom': reset it
     if (prefsHandler.getStringPref('extensions.jondofox.proxy.state') == 'custom') {
       setCustomProxy();
     }
+  writePrefsTempEmail(); 
   } catch (e) {
     log("onAccept(): " + e);
   }
