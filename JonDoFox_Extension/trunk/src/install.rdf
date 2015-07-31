@@ -18,6 +18,8 @@
       </Description>
     </em:targetApplication>
 
+    <em:name>JonDoFox</em:name>
+
     <em:localized>
       <Description>
         <em:locale>en-US</em:locale>
