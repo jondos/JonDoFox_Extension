@@ -13,6 +13,8 @@ const CC = Components.classes;
 const CI = Components.interfaces;
 const CU = Components.utils;
 
+CU.import("resource://gre/modules/commonjs/toolkit/require.js");
+
 ///////////////////////////////////////////////////////////////////////////////
 // Debug stuff
 ///////////////////////////////////////////////////////////////////////////////
@@ -413,6 +415,7 @@ JDFManager.prototype = {
 		log("We got the onUninstalling notification...")
                 JDFManager.prototype.clean = true;
 		JDFManager.prototype.uninstall = true;
+		JDFManager.prototype.removeJDFPrefs();
 	      }
 	    },
             onDisabling: function(addon, needsRestart) {
@@ -1349,6 +1352,340 @@ JDFManager.prototype = {
     } catch (e) {
       log("restartBrowser(): " + e);
     }
+  },
+  
+  removeJDFPrefs: function() {
+  
+    // Mozilla requires us to leave no trace after uninstalling the XPI
+    // thus we remove all our prefs in about:config
+    
+    //Disable warning popups
+    
+    JDFManager.prototype.prefsHandler.setBoolPref("extensions.jondofox.preferences_warning", false);
+    JDFManager.prototype.prefsHandler.setBoolPref("extensions.jondofox.proxy_warning", false);
+    JDFManager.prototype.prefsHandler.setBoolPref("extensions.jondofox.update_warning", false);
+    
+    //Create Array to hold all prefs
+    
+    var prefs_to_reset = new Array(304);
+    
+    prefs_to_reset[0] = "beacon.enabled";
+    prefs_to_reset[1] = "browser.display.use_document_fonts";
+    prefs_to_reset[2] = "browser.sessionstore.upgradeBackup.latestBuildID";
+    prefs_to_reset[3] = "browser.slowStartup.averageTime";
+    prefs_to_reset[4] = "browser.slowStartup.samples";
+    prefs_to_reset[5] = "datareporting.healthreport.lastDataSubmissionRequestedTime";
+    prefs_to_reset[6] = "datareporting.healthreport.pendingDeleteRemoteData";
+    prefs_to_reset[7] = "datareporting.sessions.current.clean";
+    prefs_to_reset[8] = "dwhelper.conversion-enabled";
+    prefs_to_reset[9] = "dwhelper.disable-dwcount-cookie";
+    prefs_to_reset[10] = "dwhelper.download-count";
+    prefs_to_reset[11] = "dwhelper.download-counter";
+    prefs_to_reset[12] = "dwhelper.download-mode";
+    prefs_to_reset[13] = "dwhelper.extended-download-menu";
+    prefs_to_reset[14] = "dwhelper.first-time";
+    prefs_to_reset[15] = "dwhelper.icon-animation";
+    prefs_to_reset[16] = "dwhelper.icon-click";
+    prefs_to_reset[17] = "dwhelper.safe-mode";
+    prefs_to_reset[18] = "dwhelper.share-blacklist";
+    prefs_to_reset[19] = "dwhelper.smartnamer.auto-share";
+    prefs_to_reset[20] = "dwhelper.smartnamer.fname.keep-nonascii";
+    prefs_to_reset[21] = "dwhelper.smartnamer.fname.keep-spaces";
+    prefs_to_reset[22] = "dwhelper.social-share.enabled";
+    prefs_to_reset[23] = "dwhelper.socialshare.enabled";
+    prefs_to_reset[24] = "extensions.CanvasBlocker@kkapsner.de.askOnlyOnce";
+    prefs_to_reset[25] = "extensions.CanvasBlocker@kkapsner.de.blockMode";
+    prefs_to_reset[26] = "extensions.CanvasBlocker@kkapsner.de.whiteList";
+    prefs_to_reset[27] = "extensions.adblockplus.blockableItemsSize";
+    prefs_to_reset[28] = "extensions.adblockplus.patternsbackups";
+    prefs_to_reset[29] = "extensions.adblockplus.savestats";
+    prefs_to_reset[30] = "extensions.adblockplus.showinstatusbar";
+    prefs_to_reset[31] = "extensions.adblockplus.subscriptions_autoupdate";
+    prefs_to_reset[32] = "extensions.adblockplus.subscriptions_exceptionscheckbox";
+    prefs_to_reset[33] = "extensions.autoDisableScopes";
+    prefs_to_reset[34] = "extensions.cookieController.1stPartyOnlyCount";
+    prefs_to_reset[35] = "extensions.cookieController.startOff";
+    prefs_to_reset[36] = "extensions.getAddons.cache.enabled";
+    prefs_to_reset[37] = "extensions.https_everywhere._observatory.enabled";
+    prefs_to_reset[38] = "extensions.https_everywhere._observatory.popup_shown";
+    prefs_to_reset[39] = "extensions.https_everywhere._observatory.proxy_host";
+    prefs_to_reset[40] = "extensions.https_everywhere._observatory.proxy_port";
+    prefs_to_reset[41] = "extensions.https_everywhere._observatory.proxy_type";
+    prefs_to_reset[42] = "extensions.https_everywhere._observatory.use_custom_proxy";
+    prefs_to_reset[43] = "extensions.https_everywhere._observatory.use_tor_proxy";
+    prefs_to_reset[44] = "extensions.https_everywhere.toolbar_hint_shown";
+    prefs_to_reset[45] = "extensions.ui.dictionary.hidden";
+    prefs_to_reset[46] = "extensions.ui.experiment.hidden";
+    prefs_to_reset[47] = "extensions.ui.lastCategory";
+    prefs_to_reset[48] = "extensions.ui.locale.hidden";
+    prefs_to_reset[49] = "extensions.update.notifyUser";
+    prefs_to_reset[50] = "noscript.ABE.migration";
+    prefs_to_reset[51] = "noscript.autoReload";
+    prefs_to_reset[52] = "noscript.canonicalFQDN";
+    prefs_to_reset[53] = "noscript.contentBlocker";
+    prefs_to_reset[54] = "noscript.ctxMenu";
+    prefs_to_reset[55] = "noscript.filterXExceptions";
+    prefs_to_reset[56] = "noscript.firstRunRedirection";
+    prefs_to_reset[57] = "noscript.forbidBookmarklets";
+    prefs_to_reset[58] = "noscript.gtemp";
+    prefs_to_reset[59] = "noscript.showAllowPage";
+    prefs_to_reset[60] = "noscript.showBlockedObjects";
+    prefs_to_reset[61] = "noscript.showDistrust";
+    prefs_to_reset[62] = "noscript.showDomain";
+    prefs_to_reset[63] = "noscript.showGlobal";
+    prefs_to_reset[64] = "noscript.showPermanent";
+    prefs_to_reset[65] = "noscript.showRecentlyBlocked";
+    prefs_to_reset[66] = "noscript.showTempAllowPage";
+    prefs_to_reset[67] = "noscript.showUntrusted";
+    prefs_to_reset[68] = "noscript.showUntrustedPlaceholder";
+    prefs_to_reset[69] = "noscript.subscription.lastCheck";
+    prefs_to_reset[70] = "noscript.temp";
+    prefs_to_reset[71] = "noscript.toolbarToggle";
+    prefs_to_reset[72] = "font.name.sans-serif.x-western";
+    prefs_to_reset[73] = "font.name.serif.x-western";
+    prefs_to_reset[74] = "general.productSub.override";
+    prefs_to_reset[75] = "intl.accept_languages";
+    prefs_to_reset[76] = "intl.charset.default";
+    prefs_to_reset[77] = "media.cache_size";
+    prefs_to_reset[78] = "network.http.spdy.enabled";
+    prefs_to_reset[79] = "network.seer.enabled";
+    prefs_to_reset[80] = "plugin.state.flash";
+    prefs_to_reset[81] = "plugin.state.java";
+    prefs_to_reset[82] = "plugin.state.npctrl";
+    prefs_to_reset[83] = "plugin.state.npdeployjava";
+    prefs_to_reset[84] = "plugin.state.npgoogleupdate";
+    prefs_to_reset[85] = "plugin.state.npintelwebapiipt";
+    prefs_to_reset[86] = "plugin.state.npintelwebapiupdater";
+    prefs_to_reset[87] = "plugin.state.npitunes";
+    prefs_to_reset[88] = "plugin.state.nplwaplugin";
+    prefs_to_reset[89] = "plugin.state.nppdf";
+    prefs_to_reset[90] = "plugin.state.npspwrap";
+    prefs_to_reset[91] = "plugins.hide_infobar_for_missing_plugin";
+    prefs_to_reset[92] = "pref.advanced.images.disable_button.view_image";
+    prefs_to_reset[93] = "pref.advanced.javascript.disable_button.advanced";
+    prefs_to_reset[94] = "pref.privacy.disable_button.cookie_exceptions";
+    prefs_to_reset[95] = "security.ssl3.dhe_dss_aes_128_sha";
+    prefs_to_reset[96] = "security.ssl3.dhe_dss_aes_256_sha";
+    prefs_to_reset[97] = "security.ssl3.dhe_rsa_aes_128_sha";
+    prefs_to_reset[98] = "security.ssl3.dhe_rsa_aes_256_sha";
+    prefs_to_reset[99] = "security.ssl3.dhe_rsa_camellia_128_sha";
+    prefs_to_reset[100] = "security.ssl3.dhe_rsa_camellia_256_sha";
+    prefs_to_reset[101] = "security.ssl3.dhe_rsa_des_ede3_sha";
+    prefs_to_reset[102] = "security.ssl3.ecdhe_ecdsa_rc4_128_sha";
+    prefs_to_reset[103] = "security.ssl3.ecdhe_rsa_des_ede3_sha";
+    prefs_to_reset[104] = "security.ssl3.ecdhe_rsa_rc4_128_sha";
+    prefs_to_reset[105] = "security.ssl3.rsa_des_ede3_sha";
+    prefs_to_reset[106] = "security.ssl3.rsa_rc4_128_md5";
+    prefs_to_reset[107] = "security.ssl3.rsa_rc4_128_sha";
+    prefs_to_reset[108] = "toolkit.startup.last_success";
+    prefs_to_reset[109] = "accessibility.typeaheadfind.flashBar";
+    prefs_to_reset[110] = "app.update.auto";
+    prefs_to_reset[111] = "app.update.lastUpdateTime.addon-background-update-timer";
+    prefs_to_reset[112] = "app.update.lastUpdateTime.background-update-timer";
+    prefs_to_reset[113] = "app.update.lastUpdateTime.blocklist-background-update-timer";
+    prefs_to_reset[114] = "app.update.lastUpdateTime.microsummary-generator-update-timer";
+    prefs_to_reset[115] = "app.update.lastUpdateTime.places-maintenance-timer";
+    prefs_to_reset[116] = "app.update.lastUpdateTime.restart-nag-timer";
+    prefs_to_reset[117] = "app.update.lastUpdateTime.search-engine-update-timer";
+    prefs_to_reset[118] = "app.update.never.3.6";
+    prefs_to_reset[119] = "bcpm.Button.Shown";
+    prefs_to_reset[120] = "browser.aboutHomeSnippets.updateUrl";
+    prefs_to_reset[121] = "browser.cache.disk.capacity";
+    prefs_to_reset[122] = "browser.cache.disk.enable";
+    prefs_to_reset[123] = "browser.cache.disk_cache_ssl";
+    prefs_to_reset[124] = "browser.cache.memory.capacity";
+    prefs_to_reset[125] = "browser.cache.offline.enable";
+    prefs_to_reset[126] = "browser.cache.compression_level";
+    prefs_to_reset[127] = "browser.download.hide_plugins_without_extensions";
+    prefs_to_reset[128] = "browser.download.manager.alertOnEXEOpen";
+    prefs_to_reset[129] = "browser.download.manager.addToRecentDocs";
+    prefs_to_reset[130] = "browser.download.manager.retention";
+    prefs_to_reset[131] = "browser.download.useDownloadDir";
+    prefs_to_reset[132] = "browser.newtab.url";
+    prefs_to_reset[133] = "browser.newtabpage.enabled";
+    prefs_to_reset[134] = "browser.feeds.handler";
+    prefs_to_reset[135] = "browser.feeds.handler.default";
+    prefs_to_reset[136] = "browser.feeds.showFirstRunUI";
+    prefs_to_reset[137] = "browser.fixup.alternate.enabled";
+    prefs_to_reset[138] = "browser.formfill.enable";
+    prefs_to_reset[139] = "browser.history_expire_days";
+    prefs_to_reset[140] = "browser.history_expire_days.mirror";
+    prefs_to_reset[141] = "browser.microsummary.enabled";
+    prefs_to_reset[142] = "browser.migration.version";
+    prefs_to_reset[143] = "browser.offline";
+    prefs_to_reset[144] = "browser.offline-apps.notify";
+    prefs_to_reset[145] = "browser.places.importBookmarksHTML";
+    prefs_to_reset[146] = "browser.places.importDefaults";
+    prefs_to_reset[147] = "browser.places.leftPaneFolderId";
+    prefs_to_reset[148] = "browser.places.migratePostDataAnnotations";
+    prefs_to_reset[149] = "browser.places.smartBookmarksVersion";
+    prefs_to_reset[150] = "browser.places.updateRecentTagsUri";
+    prefs_to_reset[151] = "browser.preferences.advanced.selectedTabIndex";
+    prefs_to_reset[152] = "browser.preferences.privacy.selectedTabIndex";
+    prefs_to_reset[153] = "browser.rights.3.shown";
+    prefs_to_reset[154] = "browser.search.defaultenginename";
+    prefs_to_reset[155] = "browser.search.hiddenOneOffs";
+    prefs_to_reset[156] = "browser.search.selectedEngine";
+    prefs_to_reset[157] = "browser.search.update";
+    prefs_to_reset[158] = "browser.search.useDBForOrder";
+    prefs_to_reset[159] = "browser.sessionstore.enabled";
+    prefs_to_reset[160] = "browser.sessionstore.resume_from_crash";
+    prefs_to_reset[161] = "browser.shell.checkDefaultBrowser";
+    prefs_to_reset[162] = "browser.startup.page";
+    prefs_to_reset[163] = "browser.throbber.url";
+    prefs_to_reset[164] = "font.name.serif.x-western";
+    prefs_to_reset[165] = "font.name.sans-serif.x-western";
+    prefs_to_reset[166] = "general.appname.override";
+    prefs_to_reset[167] = "general.appversion.override";
+    prefs_to_reset[168] = "general.buildID.override";
+    prefs_to_reset[169] = "general.oscpu.override";
+    prefs_to_reset[170] = "general.platform.override";
+    prefs_to_reset[171] = "general.productsub.override";
+    prefs_to_reset[172] = "general.useragent.override";
+    prefs_to_reset[173] = "general.useragent.vendor";
+    prefs_to_reset[174] = "general.useragent.vendorSub";
+    prefs_to_reset[175] = "capability.policy.allowclipboard.Clipboard.cutcopy";
+    prefs_to_reset[176] = "capability.policy.allowclipboard.Clipboard.paste";
+    prefs_to_reset[177] = "capability.policy.allowclipboard.sites";
+    prefs_to_reset[178] = "capability.policy.maonoscript.javascript.enabled";
+    prefs_to_reset[179] = "capability.policy.maonoscript.sites";
+    prefs_to_reset[180] = "capability.policy.policynames";
+    prefs_to_reset[181] = "compact.menu.firstrun";
+    prefs_to_reset[182] = "copyplaintext.default";
+    prefs_to_reset[183] = "copyplaintext.formatting.extra.newline";
+    prefs_to_reset[184] = "copyplaintext.formatting.extra.space";
+    prefs_to_reset[185] = "copyplaintext.formatting.trim";
+    prefs_to_reset[186] = "datareporting.healthreport.service.enabled";
+    prefs_to_reset[187] = "datareporting.healthreport.uploadEnabled";
+    prefs_to_reset[188] = "datareporting.policy.dataSubmissionEnabled";
+    prefs_to_reset[189] = "dom.max_chrome_script_run_time";
+    prefs_to_reset[190] = "dom.event.clipboardevents.enabled";
+    prefs_to_reset[191] = "dom.storage.enabled";
+    prefs_to_reset[192] = "geo.enabled";
+    prefs_to_reset[193] = "intl.accept_languages";
+    prefs_to_reset[194] = "ipv6ident.color";
+    prefs_to_reset[195] = "ipv6ident.colorv4";
+    prefs_to_reset[196] = "ipv6ident.colorv6";
+    prefs_to_reset[197] = "ipv6ident.hiddentab";
+    prefs_to_reset[198] = "ipv6ident.ipv4style";
+    prefs_to_reset[199] = "ipv6ident.newtab";
+    prefs_to_reset[200] = "ipv6ident.urls";
+    prefs_to_reset[201] = "keyword.enabled";
+    prefs_to_reset[202] = "gecko.buildID";
+    prefs_to_reset[203] = "gecko.mstone";
+    prefs_to_reset[204] = "javascript.options.ion.content";
+    prefs_to_reset[205] = "javascript.options.baselinejit.content";
+    prefs_to_reset[206] = "javascript.options.asmjs";
+    prefs_to_reset[207] = "javascript.options.typeinference";
+    prefs_to_reset[208] = "gfx.direct2d.disabled";
+    prefs_to_reset[209] = "layers.acceleration.disabled";
+    prefs_to_reset[210] = "local_install.addonsEnabled";
+    prefs_to_reset[211] = "local_install.addons_view_override";
+    prefs_to_reset[212] = "local_install.disableInstallDelay";
+    prefs_to_reset[213] = "local_install.enableInstall";
+    prefs_to_reset[214] = "local_install.hideToolsBuildID";
+    prefs_to_reset[215] = "local_install.hideToolsExtensionOptionsMenu";
+    prefs_to_reset[216] = "local_install.hideToolsMyConfig";
+    prefs_to_reset[217] = "local_install.hideToolsOpenProfile";
+    prefs_to_reset[218] = "local_install.hideToolsOptionsMenu";
+    prefs_to_reset[219] = "local_install.hideToolsThemeSwitcherMenu";
+    prefs_to_reset[220] = "local_install.prompt_disableInstallDelay";
+    prefs_to_reset[221] = "local_install.promptingToAutoUninstall";
+    prefs_to_reset[222] = "local_install.selected_settings_sub_tab3";
+    prefs_to_reset[223] = "local_install.selected_settings_sub_tab4";
+    prefs_to_reset[224] = "local_install.showAddonsMyConfigImage";
+    prefs_to_reset[225] = "local_install.showEMMenuButton";
+    prefs_to_reset[226] = "local_install.showTMMenuButton";
+    prefs_to_reset[227] = "network.cookie.cookieBehavior";
+    prefs_to_reset[228] = "network.dns.disablePrefetch";
+    prefs_to_reset[229] = "network.http.accept.default";
+    prefs_to_reset[230] = "network.http.max-persistent-connections-per-proxy";
+    prefs_to_reset[231] = "network.http.pipelining.maxrequests";
+    prefs_to_reset[232] = "network.http.proxy.keep-alive";
+    prefs_to_reset[233] = "network.prefetch-next";
+    prefs_to_reset[234] = "network.protocol-handler.warn-external.file";
+    prefs_to_reset[235] = "network.protocol-handler.warn-external.mailto";
+    prefs_to_reset[236] = "network.protocol-handler.warn-external.news";
+    prefs_to_reset[237] = "network.protocol-handler.warn-external.nntp";
+    prefs_to_reset[238] = "network.protocol-handler.warn-external.snews";
+    prefs_to_reset[239] = "network.proxy.ftp";
+    prefs_to_reset[240] = "network.proxy.ftp_port";
+    prefs_to_reset[241] = "network.proxy.gopher";
+    prefs_to_reset[242] = "network.proxy.gopher_port";
+    prefs_to_reset[243] = "network.proxy.http";
+    prefs_to_reset[244] = "network.proxy.http_port";
+    prefs_to_reset[245] = "network.proxy.socks_remote_dns";
+    prefs_to_reset[246] = "network.proxy.ssl";
+    prefs_to_reset[247] = "network.proxy.ssl_port";
+    prefs_to_reset[248] = "network.proxy.socks";
+    prefs_to_reset[249] = "network.proxy.socks_port";
+    prefs_to_reset[250] = "network.proxy.type";
+    prefs_to_reset[251] = "network.websocket.enabled";
+    prefs_to_reset[252] = "pref.advanced.images.disable_button.view_image";
+    prefs_to_reset[253] = "pref.advanced.javascript.disable_button.advanced";
+    prefs_to_reset[254] = "pref.browser.homepage.disable_button.current_page";
+    prefs_to_reset[255] = "pref.browser.language.disable_button.remove";
+    prefs_to_reset[256] = "pref.browser.language.disable_button.up";
+    prefs_to_reset[257] = "pref.privacy.disable_button.cookie_exceptions";
+    prefs_to_reset[258] = "pref.privacy.disable_button.view_cookies";
+    prefs_to_reset[259] = "privacy.clearOnShutdown.passwords";
+    prefs_to_reset[260] = "privacy.cpd.cookies";
+    prefs_to_reset[261] = "privacy.item.passwords";
+    prefs_to_reset[262] = "privacy.sanitize.didShutdownSanitize";
+    prefs_to_reset[263] = "privacy.sanitize.migrateFx3Prefs";
+    prefs_to_reset[264] = "privacy.sanitize.promptOnSanitize";
+    prefs_to_reset[265] = "privacy.sanitize.sanitizeOnShutdown";
+    prefs_to_reset[266] = "profileswitcher.close_before_launch";
+    prefs_to_reset[267] = "profileswitcher.where_show_name";
+    prefs_to_reset[268] = "pttl.menu-add-bookmark";
+    prefs_to_reset[269] = "pttl.menu-append";
+    prefs_to_reset[270] = "pttl.menu-complete-menu";
+    prefs_to_reset[271] = "pttl.menu-def-open";
+    prefs_to_reset[272] = "pttl.menu-def-save";
+    prefs_to_reset[273] = "pttl.menu-save-in-file";
+    prefs_to_reset[274] = "pttl.menu-search-groups-tab";
+    prefs_to_reset[275] = "pttl.menu-search-groups-win";
+    prefs_to_reset[276] = "pttl.menu-send-mail-to";
+    prefs_to_reset[277] = "pttl.menu-send-text-to";
+    prefs_to_reset[278] = "pttl.menu-translate";
+    prefs_to_reset[279] = "pttl.open-type";
+    prefs_to_reset[280] = "pttl.save-directory-default";
+    prefs_to_reset[281] = "pttl.save-extension-default";
+    prefs_to_reset[282] = "pttl.save-with-UTF8";
+    prefs_to_reset[283] = "reloadSearchPlugins";
+    prefs_to_reset[284] = "security.disable_button.openCertManager";
+    prefs_to_reset[285] = "security.disable_button.openDeviceManager";
+    prefs_to_reset[286] = "security.enable_ssl3";
+    prefs_to_reset[287] = "security.tls.version.min";
+    prefs_to_reset[288] = "security.OCSP.enabled";
+    prefs_to_reset[289] = "signon.rememberSignons";
+    prefs_to_reset[290] = "toolkit.telemetry.prompted";
+    prefs_to_reset[291] = "toolkit.telemetry.rejected";
+    prefs_to_reset[292] = "xpinstall.whitelist.add";
+    prefs_to_reset[293] = "xpinstall.whitelist.add.103";
+    prefs_to_reset[294] = "extensions.adblockplus.checkedadblockinstalled";
+    prefs_to_reset[295] = "extensions.adblockplus.checkedtoolbar";
+    prefs_to_reset[296] = "extensions.adblockplus.correctTyposAsked";
+    prefs_to_reset[297] = "extensions.adblockplus.showintoolbar";
+    prefs_to_reset[298] = "extensions.adblockplus.showsubscriptions";
+    prefs_to_reset[299] = "noscript.blockNSWB";
+    prefs_to_reset[300] = "noscript.httpsForcedExceptions";
+    prefs_to_reset[301] = "noscript.options.tabSelectedIndexes";
+    prefs_to_reset[302] = "noscript.policynames";
+    prefs_to_reset[303] = "noscript.untrusted";
+    
+    for(var i = 0; i <= prefs_to_reset.length; i++){
+    
+       require("sdk/preferences/service").reset(prefs_to_reset[i]);
+    
+    }
+    
+    //The following are prefs which cause the XPI to crash, this was before the reset() function was implemented.
+    
+    //JDFManager.prototype.prefsHandler.deletePreference('extensions.https_everywhere._observatory.proxy_type'); <~~~ BÖÖÖÖSSEE
+    //JDFManager.prototype.prefsHandler.deletePreference('noscript.subscription.lastCheck'); <~~~ BÖÖÖSSEEE
+    //JDFManager.prototype.prefsHandler.deletePreference('plugin.state.npgoogleupdate'); <~~~ BÖÖÖSEEEEE
+  
   },
 
   isFirefox4or7or12orNot18: function() {
