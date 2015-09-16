@@ -129,6 +129,10 @@ JDFManager.prototype = {
   // Used by clear Cache function
   // Set to false to only check minor versions
   isOld : false,
+  
+  // Used to check if FF >= 38
+  // To set specific Prefs at the init function
+  isAboveFF38 : true,
 
   // Do we have already checked whether JonDoBrowser is up-to-date
   jdbCheck: false,
@@ -935,6 +939,8 @@ JDFManager.prototype = {
 
   first_start: function() {
      try {
+        this.isFirefox4or7or12orNot18();
+     
         // set non-privacy relevant parameters
         this.prefsHandler.setIntPref("accessibility.typeaheadfind.flashBar", 0);
         this.prefsHandler.setBoolPref("bcpm.Button.Shown", true);
@@ -975,6 +981,14 @@ JDFManager.prototype = {
         this.prefsHandler.setStringPref("browser.startup.homepage", "about:home");
         this.prefsHandler.setIntPref("browser.startup.page", 0);
         this.prefsHandler.setStringPref("browser.throbber.url", "http://www.mozilla.org/");
+        
+        if (this.isAboveFF38 == true){
+        
+           this.prefsHandler.setStringPref("browser.search.countryCode", "US");
+           this.prefsHandler.setBoolPref("browser.search.geoSpecificDefaults", false);
+           this.prefsHandler.setStringPref("browser.search.geoip.url", "");
+        
+        }
 
         this.prefsHandler.setStringPref("capability.policy.allowclipboard.Clipboard.cutcopy", "allAccess");
         this.prefsHandler.setStringPref("capability.policy.allowclipboard.Clipboard.paste", "allAccess");
@@ -996,6 +1010,16 @@ JDFManager.prototype = {
 
         this.prefsHandler.setIntPref("dom.max_chrome_script_run_time", 60);
         this.prefsHandler.setBoolPref("dom.event.clipboardevents.enabled", false);
+        
+        if (this.isAboveFF38 == true){
+        
+           this.prefsHandler.setBoolPref("dom.enable_resource_timing", false);
+           this.prefsHandler.setBoolPref("dom.enable_user_timing", false);
+           this.prefsHandler.setBoolPref("dom.keyboardevent.code.enabled", false);
+           this.prefsHandler.setBoolPref("dom.beforeAfterKeyboardEvent.enabled", false);
+           this.prefsHandler.setBoolPref("dom.keyboardevent.dispatch_during_composition", false);
+        
+        }
 
          // VideoDownloadHelper
         this.prefsHandler.setBoolPref("dwhelper.conversion-enabled", false);
@@ -1075,6 +1099,12 @@ JDFManager.prototype = {
         this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.news", true);
         this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.nntp", true);
         this.prefsHandler.setBoolPref("network.protocol-handler.warn-external.snews", true);
+        
+        if (this.isAboveFF38 == true){
+        
+           this.prefsHandler.setIntPref("network.http.speculative-parallel-limit", 0);
+           
+        }
 
         // NoScript
         this.prefsHandler.setBoolPref("noscript.ABE.wanIpAsLocal", false);
@@ -1187,6 +1217,15 @@ JDFManager.prototype = {
         this.prefsHandler.deletePreference('extensions.jondofox.download_manager_addToRecentDocs');
         this.prefsHandler.deletePreference('extensions.jondofox.formfill.enable');
         this.prefsHandler.deletePreference('extensions.jondofox.browser_cache_memory_capacity');
+        
+        //deactivate WebIDE
+        if (this.isAboveFF38 == true){
+        
+           this.prefsHandler.setBoolPref("devtools.webide.enabled", false);
+           this.prefsHandler.setBoolPref("devtools.webide.autoinstallADBHelper", false);
+           this.prefsHandler.setBoolPref("devtools.webide.autoinstallFxdtAdapters", false);
+        
+        }
 
      } catch (e) {
       log("first_start(): " + e);
@@ -1367,7 +1406,7 @@ JDFManager.prototype = {
     
     //Create Array to hold all prefs
     
-    var prefs_to_reset = new Array(304);
+    var prefs_to_reset = new Array(316);
     
     prefs_to_reset[0] = "beacon.enabled";
     prefs_to_reset[1] = "browser.display.use_document_fonts";
@@ -1673,18 +1712,24 @@ JDFManager.prototype = {
     prefs_to_reset[301] = "noscript.options.tabSelectedIndexes";
     prefs_to_reset[302] = "noscript.policynames";
     prefs_to_reset[303] = "noscript.untrusted";
+    prefs_to_reset[304] = "dom.enable_resource_timing";
+    prefs_to_reset[305] = "dom.enable_user_timing";
+    prefs_to_reset[306] = "dom.keyboardevent.code.enabled";
+    prefs_to_reset[307] = "dom.beforeAfterKeyboardEvent.enabled";
+    prefs_to_reset[308] = "dom.keyboardevent.dispatch_during_composition";
+    prefs_to_reset[309] = "browser.search.countryCode";
+    prefs_to_reset[310] = "browser.search.geoSpecificDefaults";
+    prefs_to_reset[311] = "browser.search.geoip.url";
+    prefs_to_reset[312] = "network.http.speculative-parallel-limit";
+    prefs_to_reset[313] = "devtools.webide.enabled";
+    prefs_to_reset[314] = "devtools.webide.autoinstallADBHelper";
+    prefs_to_reset[315] = "devtools.webide.autoinstallFxdtAdapters";
     
     for(var i = 0; i <= prefs_to_reset.length; i++){
     
        require("sdk/preferences/service").reset(prefs_to_reset[i]);
     
     }
-    
-    //The following are prefs which cause the XPI to crash, this was before the reset() function was implemented.
-    
-    //JDFManager.prototype.prefsHandler.deletePreference('extensions.https_everywhere._observatory.proxy_type'); <~~~ BÖÖÖÖSSEE
-    //JDFManager.prototype.prefsHandler.deletePreference('noscript.subscription.lastCheck'); <~~~ BÖÖÖSSEEE
-    //JDFManager.prototype.prefsHandler.deletePreference('plugin.state.npgoogleupdate'); <~~~ BÖÖÖSEEEEE
   
   },
 
@@ -1700,180 +1745,229 @@ JDFManager.prototype = {
  
     if (versComp.compare(ffVersion, "4.0a1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "7.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "12.0") >= 0) {
       this.ff12 = true;
       isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff12 = false;
     }
     if (versComp.compare(ffVersion, "19.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "19.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "19.0.2") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "20.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "20.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "21.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "22.0") >= 0) {
       this.ff22 = true;
-      isOld = "True";
+      isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff22 = false;
     }
     if (versComp.compare(ffVersion, "23.0") >= 0) {
       this.ff23 = true;
       isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff23 = false;
     }
     if (versComp.compare(ffVersion, "23.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.0") >= 0) {
       this.ff24 = true;
       isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff24 = false;
     }
     if (versComp.compare(ffVersion, "24.5.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.7.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.3.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.2.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.8.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.1.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.4.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.6.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.8.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "24.1.1") >= 0) {
-       isOld = "True";
+       isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "25.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "25.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "26.0") >= 0) {
       this.ff26 = true;
       isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff26 = false;
     }
     if (versComp.compare(ffVersion, "27.0") >= 0) {
       this.ff27 = true;
-      isOld = "True";
+      isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff27 = false;
     }
     if (versComp.compare(ffVersion, "27.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "28.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "18.0a1") < 0) {
       this.notFF18 = true;
       isOld = true;
+      isAboveFF38 = false;
     } else {
       this.notFF18 = false;
     }
     if (versComp.compare(ffVersion, "29.0") >= 0) {
       this.ff29 = true;
       isOld = true;
+      isAboveFF38 = false;
     } else {
       this.ff29 = false;
     }
     if (versComp.compare(ffVersion, "29.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "30.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.5.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.4.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.3.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.2.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.1.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.1.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "31.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "32.0") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "32.0.1") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "32.0.2") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "32.0.3") >= 0) {
        isOld = true;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "33.0") >= 0) {
        isOld = false;
+       isAboveFF38 = false;
     }
     if (versComp.compare(ffVersion, "34.0") >= 0) {
       this.ff34 = true;
+      isAboveFF38 = false;
     } else {
       this.ff34 = false;
     }
     if (versComp.compare(ffVersion, "35.0") >= 0) {
       this.ff35 = true;
+      isAboveFF38 = false;
     } else {
       this.ff35 = false;
     }
     if (versComp.compare(ffVersion, "36.0") >= 0) {
       this.ff36 = true;
+      isAboveFF38 = false;
     } else {
       this.ff36 = false;
     }
     if (versComp.compare(ffVersion, "37.0") >= 0) {
       this.ff37 = true;
+      isAboveFF38 = false;
     } else {
       this.ff37 = false;
     }
