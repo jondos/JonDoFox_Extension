@@ -1982,10 +1982,22 @@ JDFManager.prototype = {
   checkProfileUpdate: function() {
     log("Checking whether we have to update the profile ..");
     try {
-      if (this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.12.0" &&
-	  this.prefsHandler.getStringPref(
-            'extensions.jondofox.profile_version') !== "2.11.0" &&
+      var curr_profile_version_string = this.prefsHandler.getStringPref('extensions.jondofox.profile_version');
+      
+      // If Version is something like 2.11.0 and not 2.11 (need to cut last '.')
+      // IMPORTANT: Versions like 2.11.0.1 are not supported and will most likely break this function!!!!!
+      if(curr_profile_version_string.indexOf(".") !== curr_profile_version_string.lastIndexOf(".")){
+      
+         var a = curr_profile_version_string.slice(0, curr_profile_version_string.lastIndexOf("."));
+         var b = curr_profile_version_string.slice(curr_profile_version_string.lastIndexOf(".")+1, curr_profile_version_string.length);
+      
+         curr_profile_version_string = a + b;
+      
+      }
+      
+      var curr_profile_version = Number.parseFloat(curr_profile_version_string);
+      
+      if (curr_profile_version < 2.110 &&
           this.prefsHandler.getBoolPref('extensions.jondofox.update_warning')) {
           this.jdfUtils.showAlertCheck(this.jdfUtils.
             getString('jondofox.dialog.attention'), this.jdfUtils.
