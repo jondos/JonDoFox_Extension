@@ -94,7 +94,7 @@ pref("extensions.jondofox.tor.buildID_override","");
 pref("extensions.jondofox.tor.oscpu_override", "Windows NT 6.1");
 pref("extensions.jondofox.tor.platform_override","Win32");
 pref("extensions.jondofox.tor.productsub_override","20100101");
-pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:31.0) Gecko/20100101 Firefox/31.0");
+pref("extensions.jondofox.tor.useragent_override", "Mozilla/5.0 (Windows NT 6.1; rv:38.0) Gecko/20100101 Firefox/38.0");
 pref("extensions.jondofox.tor.useragent_vendor", "");
 pref("extensions.jondofox.tor.useragent_vendorSub","");
 pref("extensions.jondofox.tor.accept_languages", "en-us,en");
