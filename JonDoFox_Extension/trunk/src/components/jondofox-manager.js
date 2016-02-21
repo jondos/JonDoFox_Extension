@@ -563,10 +563,14 @@ JDFManager.prototype = {
   onUIStartup: function() {
     var p;
     var prefs;
+    
     log("Starting up, checking conditions ..");
     try {
       // Call init() first
       this.init();
+      
+      // Set shadow prefs on every startup
+      this.applyShadowPrefs();
 
       // Check the OS
       var xulRuntime = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULRuntime); 
@@ -583,7 +587,7 @@ JDFManager.prototype = {
       } else if (xulRuntime.OS === "Darwin") {
          this.os = "darwin";
       }
-
+      
       // Set prefereces at first start
       if (this.prefsHandler.getBoolPref("extensions.jondofox.firstStart")) {
          this.first_start();
@@ -939,6 +943,10 @@ JDFManager.prototype = {
 
   first_start: function() {
      try {
+     
+        //shadow-pref settings
+        this.prefsHandler.setStringPref("extensions.jondofox.network.http.accept-encoding.secure", "gzip, deflate");
+        
         this.isFirefox4or7or12orNot18();
      
         // set non-privacy relevant parameters
@@ -1226,6 +1234,12 @@ JDFManager.prototype = {
            this.prefsHandler.setBoolPref("devtools.webide.autoinstallFxdtAdapters", false);
         
         }
+        
+        //limit standart-fonts to 3 on Windows
+        this.prefsHandler.setStringPref("font.blacklist.underline_offset", "");
+        
+        //fix accept-encoding Header on SSL in FF >= 44
+        this.prefsHandler.setStringPref("network.http.accept-encoding.secure", "gzip, deflate");
 
      } catch (e) {
       log("first_start(): " + e);
@@ -1393,6 +1407,12 @@ JDFManager.prototype = {
     }
   },
   
+  applyShadowPrefs: function() {
+  
+    this.prefsHandler.setStringPref("network.http.accept-encoding.secure", this.prefsHandler.getStringPref("extensions.jondofox.network.http.accept-encoding.secure"));
+  
+  },
+  
   removeJDFPrefs: function() {
   
     // Mozilla requires us to leave no trace after uninstalling the XPI
@@ -1406,7 +1426,7 @@ JDFManager.prototype = {
     
     //Create Array to hold all prefs
     
-    var prefs_to_reset = new Array(316);
+    var prefs_to_reset = new Array(319);
     
     prefs_to_reset[0] = "beacon.enabled";
     prefs_to_reset[1] = "browser.display.use_document_fonts";
@@ -1724,6 +1744,9 @@ JDFManager.prototype = {
     prefs_to_reset[313] = "devtools.webide.enabled";
     prefs_to_reset[314] = "devtools.webide.autoinstallADBHelper";
     prefs_to_reset[315] = "devtools.webide.autoinstallFxdtAdapters";
+    prefs_to_reset[316] = "font.blacklist.underline_offset";
+    prefs_to_reset[317] = "network.http.accept-encoding.secure";
+    prefs_to_reset[318] = "extensions.jondofox.network.http.accept-encoding.secure";
     
     for(var i = 0; i <= prefs_to_reset.length; i++){
     
